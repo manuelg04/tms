@@ -1,0 +1,43 @@
+{
+  "name": "tms-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "overrides": {
+    "postcss": "^8.5.15"
+  },
+  "scripts": {
+    "dev": "npm run dev -w @tms/rndc-api",
+    "dev:rndc": "npm run dev -w @tms/rndc-api",
+    "dev:web": "npm run dev -w @tms/web",
+    "start": "npm run start -w @tms/rndc-api",
+    "build": "npm run build -ws --if-present",
+    "typecheck": "npm run typecheck -ws --if-present",
+    "test": "npm run test -ws --if-present",
+    "rndc:flow": "npm run rndc:flow -w @tms/rndc-api",
+    "rndc:prod-flow": "npm run rndc:prod-flow -w @tms/rndc-api",
+    "rndc:prepare-ops": "npm run rndc:prepare-ops -w @tms/rndc-api",
+    "rndc:loading-order": "npm run rndc:loading-order -w @tms/rndc-api",
+    "rndc:fulfill": "npm run rndc:fulfill -w @tms/rndc-api",
+    "rndc:ping": "npm run rndc:ping -w @tms/rndc-api",
+    "rndc:resend": "npm run rndc:resend -w @tms/rndc-api",
+    "rndc:annul": "npm run rndc:annul -w @tms/rndc-api",
+    "rndc:lookup-pair": "npm run rndc:lookup-pair -w @tms/rndc-api",
+    "rndc:lookup-pairs": "npm run rndc:lookup-pairs -w @tms/rndc-api",
+    "rndc:lookup-owner-vehicle": "npm run rndc:lookup-owner-vehicle -w @tms/rndc-api",
+    "rndc:lookup-owner-vehicles": "npm run rndc:lookup-owner-vehicles -w @tms/rndc-api",
+    "ingest:fleet": "npm run ingest:fleet -w @tms/web --"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.4",
+    "@types/pdfkit": "^0.17.3",
+    "@types/qrcode": "^1.5.5",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}

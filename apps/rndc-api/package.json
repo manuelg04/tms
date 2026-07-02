@@ -1,0 +1,31 @@
+{
+  "name": "@tms/rndc-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "npm run build -w @tms/rndc-core && tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "npm run build -w @tms/rndc-core && tsc -p tsconfig.json",
+    "typecheck": "npm run typecheck -w @tms/rndc-core && tsc --noEmit -p tsconfig.json",
+    "test": "npm run build && node --test \"dist/tests/**/*.test.js\"",
+    "rndc:flow": "npm run build -w @tms/rndc-core && tsx src/cli.ts flow",
+    "rndc:prod-flow": "npm run build -w @tms/rndc-core && tsx src/cli.ts mtm-prod-flow",
+    "rndc:prepare-ops": "npm run build -w @tms/rndc-core && tsx src/cli.ts prepare-ops",
+    "rndc:loading-order": "npm run build -w @tms/rndc-core && tsx src/cli.ts loading-order",
+    "rndc:fulfill": "npm run build -w @tms/rndc-core && tsx src/cli.ts fulfill",
+    "rndc:ping": "npm run build -w @tms/rndc-core && tsx src/cli.ts ping",
+    "rndc:resend": "npm run build -w @tms/rndc-core && tsx src/cli.ts resend",
+    "rndc:annul": "npm run build -w @tms/rndc-core && tsx src/cli.ts annul",
+    "rndc:lookup-pair": "npm run build -w @tms/rndc-core && tsx src/cli.ts lookup-pair",
+    "rndc:lookup-pairs": "npm run build -w @tms/rndc-core && tsx src/cli.ts lookup-pairs",
+    "rndc:lookup-owner-vehicle": "npm run build -w @tms/rndc-core && tsx src/cli.ts lookup-owner-vehicle",
+    "rndc:lookup-owner-vehicles": "npm run build -w @tms/rndc-core && tsx src/cli.ts lookup-owner-vehicles"
+  },
+  "dependencies": {
+    "@tms/rndc-core": "file:../../packages/rndc-core",
+    "convex": "^1.42.1",
+    "express": "^5.1.0"
+  }
+}

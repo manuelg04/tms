@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/rndc-core"
+    },
+    {
+      "path": "./apps/rndc-api"
+    }
+  ]
+}

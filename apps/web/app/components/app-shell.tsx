@@ -24,6 +24,10 @@ const pageMeta: Record<string, PageMeta> = {
   "/documentos": {
     title: "Documentos",
     subtitle: "Historial completo emitido desde el TMS"
+  },
+  "/maestros": {
+    title: "Maestros",
+    subtitle: "Conductores y vehiculos del registro de flota"
   }
 };
 
@@ -56,6 +60,17 @@ const navItems = [
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <path d="M4 1.5h5.5L13 5v9.5H4v-13Z" strokeLinejoin="round" />
         <path d="M9.5 1.5V5H13M6 8h4.5M6 10.5h4.5" />
+      </svg>
+    )
+  },
+  {
+    href: "/maestros",
+    label: "Maestros",
+    icon: (
+      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+        <path d="M5.5 7.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+        <path d="M1.5 14c.4-2.4 1.8-4 4-4s3.6 1.6 4 4" strokeLinecap="round" />
+        <path d="M10.5 5.5h2.2l1.8 2v3h-4V7M11 10.5h3.5M11.2 13.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM14.2 13.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     )
   }

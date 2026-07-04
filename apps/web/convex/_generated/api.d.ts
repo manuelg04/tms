@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as counters from "../counters.js";
 import type * as dashboard from "../dashboard.js";
 import type * as fleet from "../fleet.js";
 import type * as notifications from "../notifications.js";
@@ -20,6 +21,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  counters: typeof counters;
   dashboard: typeof dashboard;
   fleet: typeof fleet;
   notifications: typeof notifications;

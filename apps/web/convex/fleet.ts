@@ -1,5 +1,8 @@
+import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import type { QueryCtx } from "./_generated/server";
 
 const driverInputValidator = v.object({
   document: v.string(),
@@ -53,6 +56,105 @@ const relationInputValidator = v.object({
   matchConfidence: v.optional(v.string()),
   matchBasis: v.optional(v.string()),
   roles: v.optional(v.array(v.string()))
+});
+
+const driverRowValidator = v.object({
+  _id: v.id("drivers"),
+  _creationTime: v.number(),
+  document: v.string(),
+  name: v.optional(v.string()),
+  documentType: v.optional(v.string()),
+  phone: v.optional(v.string()),
+  city: v.optional(v.string()),
+  licenseCategory: v.optional(v.string()),
+  vehicleCount: v.number(),
+  updatedAt: v.number()
+});
+
+const vehicleRowValidator = v.object({
+  _id: v.id("vehicles"),
+  _creationTime: v.number(),
+  plate: v.string(),
+  make: v.optional(v.string()),
+  line: v.optional(v.string()),
+  modelYear: v.optional(v.string()),
+  capacityTn: v.optional(v.string()),
+  ownerDocument: v.optional(v.string()),
+  ownerName: v.optional(v.string()),
+  possessorDocument: v.optional(v.string()),
+  possessorName: v.optional(v.string()),
+  driverCount: v.number(),
+  updatedAt: v.number()
+});
+
+const driverDetailValidator = v.object({
+  _id: v.id("drivers"),
+  _creationTime: v.number(),
+  document: v.string(),
+  documentType: v.optional(v.string()),
+  name: v.optional(v.string()),
+  status: v.optional(v.string()),
+  birthDate: v.optional(v.string()),
+  sex: v.optional(v.string()),
+  bloodType: v.optional(v.string()),
+  address: v.optional(v.string()),
+  city: v.optional(v.string()),
+  phone1: v.optional(v.string()),
+  phone2: v.optional(v.string()),
+  cellphone: v.optional(v.string()),
+  licenseNumber: v.optional(v.string()),
+  licenseCategory: v.optional(v.string()),
+  licenseExpiresAt: v.optional(v.string()),
+  eps: v.optional(v.string()),
+  arp: v.optional(v.string()),
+  pensionFund: v.optional(v.string()),
+  hazmatCourse: v.optional(v.string()),
+  hazmatCourseExpiresAt: v.optional(v.string()),
+  observations: v.optional(v.string()),
+  createdAt: v.number(),
+  updatedAt: v.number(),
+  vehicles: v.array(
+    v.object({
+      vehiclePlate: v.string(),
+      make: v.optional(v.string()),
+      line: v.optional(v.string()),
+      modelYear: v.optional(v.string()),
+      roles: v.optional(v.array(v.string()))
+    })
+  )
+});
+
+const vehicleDetailValidator = v.object({
+  _id: v.id("vehicles"),
+  _creationTime: v.number(),
+  plate: v.string(),
+  make: v.optional(v.string()),
+  line: v.optional(v.string()),
+  modelYear: v.optional(v.string()),
+  color: v.optional(v.string()),
+  bodyType: v.optional(v.string()),
+  configuration: v.optional(v.string()),
+  trailer: v.optional(v.string()),
+  linkType: v.optional(v.string()),
+  capacityTn: v.optional(v.string()),
+  emptyWeightTn: v.optional(v.string()),
+  ownerDocument: v.optional(v.string()),
+  ownerName: v.optional(v.string()),
+  ownerCellphone: v.optional(v.string()),
+  ownerPhone: v.optional(v.string()),
+  possessorDocument: v.optional(v.string()),
+  possessorName: v.optional(v.string()),
+  possessorCellphone: v.optional(v.string()),
+  possessorPhone: v.optional(v.string()),
+  createdAt: v.number(),
+  updatedAt: v.number(),
+  drivers: v.array(
+    v.object({
+      driverDocument: v.string(),
+      name: v.optional(v.string()),
+      roles: v.optional(v.array(v.string()))
+    })
+  )
 });
 
 export const upsertFleetBatch = mutation({
@@ -216,3 +318,222 @@ export const upsertFleetBatch = mutation({
     return result;
   }
 });
+
+export const driversPage = query({
+  args: { paginationOpts: paginationOptsValidator },
+  returns: v.object({
+    page: v.array(driverRowValidator),
+    isDone: v.boolean(),
+    continueCursor: v.string(),
+    splitCursor: v.optional(v.union(v.string(), v.null())),
+    pageStatus: v.optional(v.union(v.literal("SplitRecommended"), v.literal("SplitRequired"), v.null()))
+  }),
+  handler: async (ctx, args) => {
+    const results = await ctx.db.query("drivers").order("desc").paginate(args.paginationOpts);
+    const page = await Promise.all(results.page.map((driver) => toDriverRow(ctx, driver)));
+    return { ...results, page };
+  }
+});
+
+export const vehiclesPage = query({
+  args: { paginationOpts: paginationOptsValidator },
+  returns: v.object({
+    page: v.array(vehicleRowValidator),
+    isDone: v.boolean(),
+    continueCursor: v.string(),
+    splitCursor: v.optional(v.union(v.string(), v.null())),
+    pageStatus: v.optional(v.union(v.literal("SplitRecommended"), v.literal("SplitRequired"), v.null()))
+  }),
+  handler: async (ctx, args) => {
+    const results = await ctx.db.query("vehicles").order("desc").paginate(args.paginationOpts);
+    const page = await Promise.all(results.page.map((vehicle) => toVehicleRow(ctx, vehicle)));
+    return { ...results, page };
+  }
+});
+
+export const driversSearch = query({
+  args: { prefix: v.string() },
+  returns: v.array(driverRowValidator),
+  handler: async (ctx, args) => {
+    const prefix = args.prefix.trim();
+    if (prefix === "") {
+      return [];
+    }
+    const drivers = await ctx.db
+      .query("drivers")
+      .withIndex("by_document", (q) => q.gte("document", prefix).lt("document", prefix + "￿"))
+      .take(25);
+    return await Promise.all(drivers.map((driver) => toDriverRow(ctx, driver)));
+  }
+});
+
+export const vehiclesSearch = query({
+  args: { prefix: v.string() },
+  returns: v.array(vehicleRowValidator),
+  handler: async (ctx, args) => {
+    const prefix = args.prefix.trim().toUpperCase();
+    if (prefix === "") {
+      return [];
+    }
+    const vehicles = await ctx.db
+      .query("vehicles")
+      .withIndex("by_plate", (q) => q.gte("plate", prefix).lt("plate", prefix + "￿"))
+      .take(25);
+    return await Promise.all(vehicles.map((vehicle) => toVehicleRow(ctx, vehicle)));
+  }
+});
+
+export const driverByDocument = query({
+  args: { document: v.string() },
+  returns: v.union(driverRowValidator, v.null()),
+  handler: async (ctx, args) => {
+    const document = args.document.trim();
+    if (document === "") {
+      return null;
+    }
+
+    const driver = await ctx.db
+      .query("drivers")
+      .withIndex("by_document", (q) => q.eq("document", document))
+      .first();
+
+    return driver ? await toDriverRow(ctx, driver) : null;
+  }
+});
+
+export const vehicleByPlate = query({
+  args: { plate: v.string() },
+  returns: v.union(vehicleRowValidator, v.null()),
+  handler: async (ctx, args) => {
+    const plate = args.plate.trim().toUpperCase();
+    if (plate === "") {
+      return null;
+    }
+
+    const vehicle = await ctx.db
+      .query("vehicles")
+      .withIndex("by_plate", (q) => q.eq("plate", plate))
+      .first();
+
+    return vehicle ? await toVehicleRow(ctx, vehicle) : null;
+  }
+});
+
+export const driverDetail = query({
+  args: { document: v.string() },
+  returns: v.union(driverDetailValidator, v.null()),
+  handler: async (ctx, args) => {
+    const document = args.document.trim();
+    if (document === "") {
+      return null;
+    }
+
+    const driver = await ctx.db
+      .query("drivers")
+      .withIndex("by_document", (q) => q.eq("document", document))
+      .first();
+
+    if (!driver) {
+      return null;
+    }
+
+    const relations = await ctx.db
+      .query("driverVehicles")
+      .withIndex("by_driver", (q) => q.eq("driverId", driver._id))
+      .collect();
+    const vehicles = await Promise.all(
+      relations.map(async (rel) => {
+        const vehicle = await ctx.db.get(rel.vehicleId);
+        return {
+          vehiclePlate: rel.vehiclePlate,
+          make: vehicle?.make,
+          line: vehicle?.line,
+          modelYear: vehicle?.modelYear,
+          roles: rel.roles
+        };
+      })
+    );
+
+    return { ...driver, vehicles };
+  }
+});
+
+export const vehicleDetail = query({
+  args: { plate: v.string() },
+  returns: v.union(vehicleDetailValidator, v.null()),
+  handler: async (ctx, args) => {
+    const plate = args.plate.trim().toUpperCase();
+    if (plate === "") {
+      return null;
+    }
+
+    const vehicle = await ctx.db
+      .query("vehicles")
+      .withIndex("by_plate", (q) => q.eq("plate", plate))
+      .first();
+
+    if (!vehicle) {
+      return null;
+    }
+
+    const relations = await ctx.db
+      .query("driverVehicles")
+      .withIndex("by_vehicle", (q) => q.eq("vehicleId", vehicle._id))
+      .collect();
+    const drivers = await Promise.all(
+      relations.map(async (rel) => {
+        const driver = await ctx.db.get(rel.driverId);
+        return {
+          driverDocument: rel.driverDocument,
+          name: driver?.name,
+          roles: rel.roles
+        };
+      })
+    );
+
+    return { ...vehicle, drivers };
+  }
+});
+
+async function toDriverRow(ctx: QueryCtx, driver: Doc<"drivers">) {
+  const vehicles = await ctx.db
+    .query("driverVehicles")
+    .withIndex("by_driver", (q) => q.eq("driverId", driver._id))
+    .collect();
+
+  return {
+    _id: driver._id,
+    _creationTime: driver._creationTime,
+    document: driver.document,
+    name: driver.name,
+    documentType: driver.documentType,
+    phone: driver.cellphone ?? driver.phone1 ?? driver.phone2,
+    city: driver.city,
+    licenseCategory: driver.licenseCategory,
+    vehicleCount: vehicles.length,
+    updatedAt: driver.updatedAt
+  };
+}
+
+async function toVehicleRow(ctx: QueryCtx, vehicle: Doc<"vehicles">) {
+  const drivers = await ctx.db
+    .query("driverVehicles")
+    .withIndex("by_vehicle", (q) => q.eq("vehicleId", vehicle._id))
+    .collect();
+
+  return {
+    _id: vehicle._id,
+    _creationTime: vehicle._creationTime,
+    plate: vehicle.plate,
+    make: vehicle.make,
+    line: vehicle.line,
+    modelYear: vehicle.modelYear,
+    capacityTn: vehicle.capacityTn,
+    ownerDocument: vehicle.ownerDocument,
+    ownerName: vehicle.ownerName,
+    possessorDocument: vehicle.possessorDocument,
+    possessorName: vehicle.possessorName,
+    driverCount: drivers.length,
+    updatedAt: vehicle.updatedAt
+  };
+}

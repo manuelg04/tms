@@ -1,5 +1,5 @@
-import { buildAnnulmentMessages, buildComplianceMessages, buildDriverMasterQuery, buildLoadingOrderMessages, buildMtmReferenceScenario, buildThirdPartyMasterQuery, buildVehicleMasterQuery, endpointFor, endpointTargetFor, endpointUrlFor, generateLoadingOrderDocument, loadConfig, normalizeDriverMaster, normalizeThirdPartyMaster, normalizeVehicleMaster, prepareOperationRequests, RndcClient, RndcFlowError, runDemoFlow, runMtmProductionFlow, saveLocalMasterSnapshot, saveLocalOwnerVehicleSnapshot } from "@tms/rndc-core";
-import type { RndcConfig, RndcDriverMaster, RndcMessageResponse, RndcThirdPartyMaster, RndcVehicleMaster } from "@tms/rndc-core";
+import { applyScenarioOverlay, buildAnnulmentMessages, buildComplianceMessages, buildDriverMasterQuery, buildLoadingOrderMessages, buildMtmProductionScenario, buildThirdPartyMasterQuery, buildVehicleMasterQuery, endpointFor, endpointTargetFor, endpointUrlFor, generateLoadingOrderDocument, loadConfig, loadScenarioOverlay, normalizeDriverMaster, normalizeThirdPartyMaster, normalizeVehicleMaster, prepareOperationRequests, RndcClient, RndcFlowError, runDemoFlow, runMtmProductionFlow, saveLocalMasterSnapshot, saveLocalOwnerVehicleSnapshot } from "@tms/rndc-core";
+import type { DemoScenario, RndcConfig, RndcDriverMaster, RndcMessageResponse, RndcThirdPartyMaster, RndcVehicleMaster } from "@tms/rndc-core";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 
@@ -85,7 +85,8 @@ async function flow(): Promise<void> {
 
 async function mtmProdFlow(): Promise<void> {
   try {
-    const result = await runMtmProductionFlow(loadConfig());
+    const config = loadConfig();
+    const result = await runMtmProductionFlow(config, await buildScenario(config));
     console.log(JSON.stringify(summarizeFlow(result), null, 2));
   } catch (error) {
     if (error instanceof RndcFlowError) {
@@ -104,7 +105,7 @@ async function mtmProdFlow(): Promise<void> {
 
 async function prepareOps(): Promise<void> {
   const config = loadConfig();
-  const result = await prepareOperationRequests(config, buildMtmReferenceScenario(config));
+  const result = await prepareOperationRequests(config, await buildScenario(config));
   console.log(JSON.stringify({
     ok: true,
     runDirectory: result.runDirectory,
@@ -115,7 +116,7 @@ async function prepareOps(): Promise<void> {
 
 async function loadingOrder(): Promise<void> {
   const config = loadConfig();
-  const scenario = buildMtmReferenceScenario(config);
+  const scenario = await buildScenario(config);
   const runDirectory = join(config.outputDir, `${new Date().toISOString().replaceAll(":", "-")}-${scenario.seed}-loading-order`);
   const result = await sendMessageSet(config, buildLoadingOrderMessages(scenario), runDirectory, "loading-order");
   const first = result.responses[0];
@@ -127,7 +128,7 @@ async function loadingOrder(): Promise<void> {
 async function fulfill(): Promise<void> {
   const config = loadConfig();
   const evidencePath = process.argv[3] ? resolve(process.argv[3]) : undefined;
-  const scenario = buildMtmReferenceScenario(config);
+  const scenario = await buildScenario(config);
   const runDirectory = evidencePath ? await applyEvidenceToScenario(evidencePath, scenario) : join(config.outputDir, `${new Date().toISOString().replaceAll(":", "-")}-${scenario.seed}-fulfillment`);
   const result = await sendMessageSet(config, buildComplianceMessages(scenario), runDirectory, "fulfillment");
   console.log(JSON.stringify(result, null, 2));
@@ -164,7 +165,7 @@ async function annul(): Promise<void> {
   const config = loadConfig();
   const evidencePath = resolve(process.argv[3] ?? await latestEvidencePath(config.outputDir));
   const evidence = JSON.parse(await readFile(evidencePath, "utf8"));
-  const scenario = buildMtmReferenceScenario(config);
+  const scenario = await buildScenario(config);
   const cargoNumber = evidence.cargoNumber ?? process.env.RNDC_CARGO_NUMBER ?? (config.mode === "dry-run" ? scenario.cargoNumber : undefined);
   const tripNumber = evidence.tripNumber ?? process.env.RNDC_TRIP_NUMBER ?? (config.mode === "dry-run" ? scenario.tripNumber : undefined);
 
@@ -191,6 +192,12 @@ async function lookupPair(): Promise<void> {
   const result = await lookupAndSavePair(config, input);
   console.log(JSON.stringify(result, null, 2));
   process.exit(result.ok ? 0 : 1);
+}
+
+async function buildScenario(config: RndcConfig): Promise<DemoScenario> {
+  const scenario = buildMtmProductionScenario(config);
+  const overlay = await loadScenarioOverlay();
+  return overlay === undefined ? scenario : applyScenarioOverlay(scenario, overlay);
 }
 
 async function lookupPairs(): Promise<void> {
@@ -522,7 +529,7 @@ function resolveInputPath(value: string): string {
   return resolve(process.env.INIT_CWD ?? process.cwd(), value);
 }
 
-async function applyEvidenceToScenario(evidencePath: string, scenario: ReturnType<typeof buildMtmReferenceScenario>): Promise<string> {
+async function applyEvidenceToScenario(evidencePath: string, scenario: DemoScenario): Promise<string> {
   const evidence = JSON.parse(await readFile(evidencePath, "utf8"));
   scenario.company.rndcNit = evidence.companyRndcNit ?? scenario.company.rndcNit;
   scenario.cargoNumber = evidence.cargoNumber ?? scenario.cargoNumber;

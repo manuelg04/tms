@@ -150,5 +150,11 @@ export default defineSchema({
     createdAt: v.number()
   })
     .index("by_status", ["status"])
-    .index("by_created_at", ["createdAt"])
+    .index("by_created_at", ["createdAt"]),
+
+  counters: defineTable({
+    documentType: v.string(),
+    lastValue: v.number(),
+    updatedAt: v.number()
+  }).index("by_document_type", ["documentType"])
 });

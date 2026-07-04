@@ -10,8 +10,8 @@ export async function runDemoFlow(config: RndcConfig): Promise<RndcFlowResult> {
   return runFlow(config, buildDemoScenario(config), buildFlowMessages);
 }
 
-export async function runMtmProductionFlow(config: RndcConfig): Promise<RndcFlowResult> {
-  return runFlow(config, buildMtmProductionScenario(config), buildMtmProductionFlowMessages);
+export async function runMtmProductionFlow(config: RndcConfig, scenario?: DemoScenario): Promise<RndcFlowResult> {
+  return runFlow(config, scenario ?? buildMtmProductionScenario(config), buildMtmProductionFlowMessages);
 }
 
 async function runFlow(

@@ -268,6 +268,7 @@ export function buildComplianceMessages(scenario: DemoScenario): { name: string;
         NUMMANIFIESTOCARGA: scenario.manifestNumber,
         TIPOCUMPLIDOMANIFIESTO: compliance.manifestType,
         FECHAENTREGADOCUMENTOS: compliance.documentsDeliveryDate,
+        RETENCIONFOPAT: scenario.money.fopatRetention,
         VALORADICIONALHORASCARGUE: compliance.additionalLoadHoursValue,
         VALORADICIONALHORASDESCARGUE: compliance.additionalUnloadHoursValue,
         VALORADICIONALFLETE: compliance.additionalFreightValue,

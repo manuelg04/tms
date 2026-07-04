@@ -7,6 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "node --import tsx --test app/operaciones/form-state.test.ts app/operaciones/operations-config.test.ts app/operaciones/form-autofill.test.ts app/operaciones/consecutivos.test.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "convex:dev": "convex dev",
     "ingest:fleet": "tsx scripts/ingest-fleet.ts"

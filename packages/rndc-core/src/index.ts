@@ -1,4 +1,5 @@
 export * from "./data/demoScenario.js";
+export * from "./data/scenarioOverlay.js";
 export * from "./documents/pdf.js";
 export * from "./rndc/client.js";
 export * from "./rndc/config.js";

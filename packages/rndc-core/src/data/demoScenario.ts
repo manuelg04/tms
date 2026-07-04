@@ -146,6 +146,8 @@ export function buildMtmProductionScenario(config: RndcConfig): DemoScenario {
   const manifestNumber = seed.slice(-7).padStart(7, "0");
   const loadingDate = readEnv("RNDC_LOADING_DATE", "29/06/2026");
   const unloadingDate = readEnv("RNDC_UNLOADING_DATE", "02/07/2026");
+  const loadingAppointmentTime = readEnv("RNDC_LOADING_TIME", "11:02");
+  const unloadingAppointmentTime = readEnv("RNDC_UNLOADING_TIME", "12:06");
   const balancePaymentDate = readEnv("RNDC_BALANCE_PAYMENT_DATE", "07/07/2026");
 
   return {
@@ -261,12 +263,12 @@ export function buildMtmProductionScenario(config: RndcConfig): DemoScenario {
     remesaNumber,
     manifestNumber,
     expeditionDate: loadingDate,
-    loadingAppointment: "2026-06-29 11:02:00",
+    loadingAppointment: `${toIsoDate(loadingDate)} ${loadingAppointmentTime}:00`,
     loadingAppointmentDate: loadingDate,
-    loadingAppointmentTime: "11:02",
-    unloadingAppointment: "2026-07-02 12:06:00",
+    loadingAppointmentTime,
+    unloadingAppointment: `${toIsoDate(unloadingDate)} ${unloadingAppointmentTime}:00`,
     unloadingAppointmentDate: unloadingDate,
-    unloadingAppointmentTime: "12:06",
+    unloadingAppointmentTime,
     balancePaymentDate,
     observations: "CARGAMENTO ENTREGADO EN BUEN ESTADO Y COMPLETO",
     compliance: buildComplianceData({
@@ -441,6 +443,11 @@ function formatIsoDate(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function toIsoDate(ddmmyyyy: string): string {
+  const [day, month, year] = ddmmyyyy.split("/");
+  return `${year}-${month}-${day}`;
 }
 
 function readEnv(name: string, fallback: string): string {

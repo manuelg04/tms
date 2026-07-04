@@ -21,3 +21,6 @@ packages/*/dist/
 tmp/
 *.tsbuildinfo
 .DS_Store
+
+# Playwright MCP session artifacts (may contain PII screenshots)
+.playwright-mcp/

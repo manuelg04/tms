@@ -6,7 +6,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { buildMtmReferenceScenario } from "../data/demoScenario.js";
 import { loadConfig } from "../rndc/config.js";
-import { buildAnnulmentMessages, buildComplianceMessages, buildDriverVehicleMessages, buildLoadingOrderMessages, buildManifestMessages, buildRemesaMessages, prepareOperationRequests } from "../rndc/messages.js";
+import { buildAnnulmentMessages, buildComplianceMessages, buildDriverVehicleMessages, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildLoadingOrderMessages, buildManifestMessages, buildRemesaMessages, prepareOperationRequests } from "../rndc/messages.js";
 import type { RndcXmlRecord } from "../rndc/types.js";
 
 test("builds loading order as RNDC cargo information", () => {
@@ -126,6 +126,63 @@ test("builds compliance messages for remesa before manifest", () => {
   assert.equal(manifestVariables.NUMMANIFIESTOCARGA, "0041464");
   assert.equal(manifestVariables.TIPOCUMPLIDOMANIFIESTO, "C");
   assert.equal(manifestVariables.FECHAENTREGADOCUMENTOS, "30/06/2026");
+});
+
+test("builds fulfill remesa with manifest control and normal delivery fields", () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  const messages = buildFulfillRemesaMessages(scenario);
+  const variables = messages[0].request.variables as RndcXmlRecord;
+
+  assert.deepEqual(messages.map((message) => [message.name, message.request.procesoId]), [
+    ["fulfill-remesa", 5]
+  ]);
+  assert.equal(variables.CONSECUTIVOREMESA, "42196");
+  assert.equal(variables.NUMMANIFIESTOCARGA, "0041464");
+  assert.equal(variables.TIPOCUMPLIDOREMESA, "C");
+  assert.equal(variables.CANTIDADENTREGADA, 34000);
+  assert.equal(variables.FECHALLEGADADESCARGUE, "25/06/2026");
+  assert.equal(variables.HORASALIDADESCARGUECUMPLIDO, "14:06");
+});
+
+test("omits delivered quantity and unloading times when fulfill remesa is suspended", () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  scenario.compliance.remesaType = "S";
+  scenario.compliance.remesaSuspensionReason = "V";
+  const variables = buildFulfillRemesaMessages(scenario)[0].request.variables as RndcXmlRecord;
+
+  assert.equal(variables.TIPOCUMPLIDOREMESA, "S");
+  assert.equal(variables.MOTIVOSUSPENSIONREMESA, "V");
+  assert.equal(variables.CANTIDADENTREGADA, undefined);
+  assert.equal(variables.FECHALLEGADADESCARGUE, undefined);
+  assert.equal(variables.HORALLEGADADESCARGUECUMPLIDO, undefined);
+  assert.equal(variables.FECHAENTRADADESCARGUE, undefined);
+  assert.equal(variables.HORAENTRADADESCARGUECUMPLIDO, undefined);
+  assert.equal(variables.FECHASALIDADESCARGUE, undefined);
+  assert.equal(variables.HORASALIDADESCARGUECUMPLIDO, undefined);
+});
+
+test("builds fulfill manifest suspension and value reason fields conditionally", () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  scenario.compliance.manifestType = "S";
+  scenario.compliance.manifestSuspensionReason = "A";
+  scenario.compliance.suspensionConsequence = "T";
+  scenario.compliance.additionalFreightValue = 250000;
+  scenario.compliance.additionalValueReason = "R";
+  scenario.compliance.freightDiscountValue = 120000;
+  scenario.compliance.discountReason = "F";
+  const messages = buildFulfillManifestMessages(scenario);
+  const variables = messages[0].request.variables as RndcXmlRecord;
+
+  assert.deepEqual(messages.map((message) => [message.name, message.request.procesoId]), [
+    ["fulfill-manifest", 6]
+  ]);
+  assert.equal(variables.TIPOCUMPLIDOMANIFIESTO, "S");
+  assert.equal(variables.MOTIVOSUSPENSIONMANIFIESTO, "A");
+  assert.equal(variables.CONSECUENCIASUSPENSION, "T");
+  assert.equal(variables.VALORADICIONALFLETE, 250000);
+  assert.equal(variables.MOTIVOVALORADICIONAL, "R");
+  assert.equal(variables.VALORDESCUENTOFLETE, 120000);
+  assert.equal(variables.MOTIVOVALORDESCUENTOMANIFIESTO, "F");
 });
 
 test("builds an annulment chain that reverses fulfilled documents first", () => {

@@ -59,7 +59,7 @@ export function RndcConsole() {
 
   const missing = activeOperation.sections
     .flatMap((section) => section.fields)
-    .filter((field) => field.required && readPath(form, field.path).trim() === "")
+    .filter((field) => isRequiredField(activeOperation.id, form, field.path, Boolean(field.required)) && readPath(form, field.path).trim() === "")
     .map((field) => field.label);
 
   function handleChange(path: string, value: string) {
@@ -197,6 +197,50 @@ export function RndcConsole() {
       </div>
     </>
   );
+}
+
+function isRequiredField(operation: Operation, form: FormState, path: string, required: boolean): boolean {
+  if (operation === "fulfill-remesa") {
+    const suspended = readPath(form, "compliance.remesaType") === "S";
+    const normalOnly = new Set([
+      "compliance.deliveredQuantityKg",
+      "compliance.unloadingArrivalDate",
+      "compliance.unloadingArrivalTime",
+      "compliance.unloadingEntryDate",
+      "compliance.unloadingEntryTime",
+      "compliance.unloadingExitDate",
+      "compliance.unloadingExitTime"
+    ]);
+
+    if (suspended && normalOnly.has(path)) {
+      return false;
+    }
+
+    if (suspended && path === "compliance.remesaSuspensionReason") {
+      return true;
+    }
+  }
+
+  if (operation === "fulfill-manifest") {
+    if (readPath(form, "compliance.manifestType") === "S" && (path === "compliance.manifestSuspensionReason" || path === "compliance.suspensionConsequence")) {
+      return true;
+    }
+
+    if (path === "compliance.additionalValueReason" && readNumberPath(form, "compliance.additionalFreightValue") > 0) {
+      return true;
+    }
+
+    if (path === "compliance.discountReason" && readNumberPath(form, "compliance.freightDiscountValue") > 0) {
+      return true;
+    }
+  }
+
+  return required;
+}
+
+function readNumberPath(form: FormState, path: string): number {
+  const parsed = Number(readPath(form, path).replaceAll(",", ""));
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 function TripContextStrip({ form }: { form: FormState }) {

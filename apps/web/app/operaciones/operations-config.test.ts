@@ -111,18 +111,68 @@ const legacyInitialForm = {
     icaRetention: 0,
     icaRetentionPerMille: 3,
     fopatRetention: 4760
+  },
+  compliance: {
+    remesaType: "C",
+    manifestType: "C",
+    remesaSuspensionReason: "",
+    manifestSuspensionReason: "",
+    suspensionConsequence: "",
+    loadedQuantityKg: 34000,
+    deliveredQuantityKg: 34000,
+    unitCode: 1,
+    loadingArrivalDate: "22/06/2026",
+    loadingArrivalTime: "11:02",
+    loadingEntryDate: "22/06/2026",
+    loadingEntryTime: "11:32",
+    loadingExitDate: "22/06/2026",
+    loadingExitTime: "12:02",
+    unloadingArrivalDate: "25/06/2026",
+    unloadingArrivalTime: "12:06",
+    unloadingEntryDate: "25/06/2026",
+    unloadingEntryTime: "12:36",
+    unloadingExitDate: "25/06/2026",
+    unloadingExitTime: "14:06",
+    documentsDeliveryDate: "30/06/2026",
+    additionalLoadHoursValue: 0,
+    additionalUnloadHoursValue: 0,
+    additionalFreightValue: 0,
+    additionalValueReason: "",
+    freightDiscountValue: 0,
+    discountReason: "",
+    overAdvanceValue: 0,
+    observations: "CARGAMENTO ENTREGADO EN BUEN ESTADO Y COMPLETO"
   }
 };
 
-test("initialForm es identico al payload legacy", () => {
+test("initialForm conserva el payload legacy y agrega compliance para cumplidos", () => {
   assert.deepEqual(JSON.parse(JSON.stringify(initialForm)), legacyInitialForm);
 });
 
-test("las 4 operaciones existen con sus ids legacy", () => {
+test("las operaciones siguen el flujo RNDC operativo", () => {
   assert.deepEqual(
     operations.map((o) => o.id),
-    ["loading-order", "remesa", "manifest", "driver-vehicle"]
+    ["loading-order", "remesa", "manifest", "fulfill-remesa", "fulfill-manifest", "driver-vehicle"]
   );
+});
+
+test("las configuraciones de cumplidos exponen campos requeridos clave", () => {
+  const fulfillRemesa = operations.find((operation) => operation.id === "fulfill-remesa");
+  const fulfillManifest = operations.find((operation) => operation.id === "fulfill-manifest");
+
+  assert.equal(fulfillRemesa?.label, "Cumplir remesa");
+  assert.equal(fulfillRemesa?.processIds, "Proceso 5");
+  assert.ok(fulfillRemesa?.sections.flatMap((section) => section.fields).some((field) => field.path === "manifestNumber" && field.required));
+  assert.ok(fulfillRemesa?.sections.flatMap((section) => section.fields).some((field) => field.path === "compliance.remesaType" && field.required));
+  assert.ok(fulfillRemesa?.sections.flatMap((section) => section.fields).some((field) => field.path === "compliance.loadedQuantityKg" && field.required));
+  assert.ok(fulfillRemesa?.sections.flatMap((section) => section.fields).some((field) => field.path === "compliance.unloadingExitTime" && field.required));
+
+  assert.equal(fulfillManifest?.label, "Cumplir manifiesto");
+  assert.equal(fulfillManifest?.processIds, "Proceso 6");
+  assert.ok(fulfillManifest?.sections.flatMap((section) => section.fields).some((field) => field.path === "manifestNumber" && field.required));
+  assert.ok(fulfillManifest?.sections.flatMap((section) => section.fields).some((field) => field.path === "compliance.manifestType" && field.required));
+  assert.ok(fulfillManifest?.sections.flatMap((section) => section.fields).some((field) => field.path === "compliance.documentsDeliveryDate" && field.required));
+  assert.ok(fulfillManifest?.sections.flatMap((section) => section.fields).some((field) => field.path === "compliance.discountReason"));
 });
 
 test("todo path de campo existe en initialForm", () => {

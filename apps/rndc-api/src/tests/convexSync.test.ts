@@ -100,6 +100,47 @@ test("driver-vehicle operations produce no documents", () => {
   assert.equal(record.trip.code, "IV42196");
 });
 
+test("fulfilled remesa and manifest operations upsert their existing documents", () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  const remesa = buildOperationRecord(makeResult({
+    operation: "fulfill-remesa",
+    documents: [],
+    steps: [
+      {
+        name: "fulfill-remesa",
+        title: "Cumplir remesa terrestre de carga",
+        procesoId: 5,
+        accepted: true,
+        radicado: "555000111",
+        requestPath: "/runs/example/requests/05-fulfill-remesa.xml",
+        responsePath: "/runs/example/responses/05-fulfill-remesa.xml"
+      }
+    ]
+  }), scenario);
+  const manifest = buildOperationRecord(makeResult({
+    operation: "fulfill-manifest",
+    documents: [],
+    steps: [
+      {
+        name: "fulfill-manifest",
+        title: "Cumplir manifiesto de carga",
+        procesoId: 6,
+        accepted: true,
+        radicado: "555000222",
+        requestPath: "/runs/example/requests/06-fulfill-manifest.xml",
+        responsePath: "/runs/example/responses/06-fulfill-manifest.xml"
+      }
+    ]
+  }), scenario);
+
+  assert.deepEqual(remesa.documents, [
+    { kind: "remesa", number: "42196", urlPath: undefined, radicado: "555000111" }
+  ]);
+  assert.deepEqual(manifest.documents, [
+    { kind: "manifiesto", number: "0041464", urlPath: undefined, radicado: "555000222" }
+  ]);
+});
+
 test("skips the sync when Convex is not configured", async () => {
   const previousUrl = process.env.CONVEX_URL;
   const previousKey = process.env.RNDC_INGEST_KEY;

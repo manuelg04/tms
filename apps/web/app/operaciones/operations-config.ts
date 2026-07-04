@@ -1,4 +1,4 @@
-export type Operation = "loading-order" | "remesa" | "manifest" | "driver-vehicle";
+export type Operation = "loading-order" | "remesa" | "manifest" | "driver-vehicle" | "fulfill-remesa" | "fulfill-manifest";
 
 export type Field = {
   path: string;
@@ -64,6 +64,43 @@ export const idTypeOptions = [
   { value: "N", label: "NIT" },
   { value: "E", label: "Extranjeria" },
   { value: "P", label: "Pasaporte" }
+];
+
+export const complianceTypeOptions = [
+  { value: "C", label: "Cumplido normal" },
+  { value: "S", label: "Suspension" }
+];
+
+export const suspensionReasonOptions = [
+  { value: "A", label: "Accidente" },
+  { value: "V", label: "Varada" },
+  { value: "S", label: "Siniestro" }
+];
+
+export const suspensionConsequenceOptions = [
+  { value: "C", label: "Cambio de conductor" },
+  { value: "V", label: "Cambio de cabezote/vehiculo" },
+  { value: "R", label: "Cambio de remolque" },
+  { value: "T", label: "Cambio total" },
+  { value: "F", label: "Fin del viaje / perdida total" }
+];
+
+export const additionalValueReasonOptions = [
+  { value: "C", label: "Merma" },
+  { value: "R", label: "Variacion de ruta" },
+  { value: "O", label: "Otro" }
+];
+
+export const discountReasonOptions = [
+  { value: "F", label: "Faltante" },
+  { value: "D", label: "Deterioro" },
+  { value: "C", label: "Merma" },
+  { value: "V", label: "Viaje incompleto" }
+];
+
+export const unitOptions = [
+  { value: "1", label: "Kilogramos" },
+  { value: "2", label: "Galones" }
 ];
 
 export const apiBase = process.env.NEXT_PUBLIC_RNDC_API_URL ?? "http://localhost:3017";
@@ -177,6 +214,37 @@ export const initialForm = {
     icaRetention: 0,
     icaRetentionPerMille: 3,
     fopatRetention: 4760
+  },
+  compliance: {
+    remesaType: "C",
+    manifestType: "C",
+    remesaSuspensionReason: "",
+    manifestSuspensionReason: "",
+    suspensionConsequence: "",
+    loadedQuantityKg: 34000,
+    deliveredQuantityKg: 34000,
+    unitCode: 1,
+    loadingArrivalDate: "22/06/2026",
+    loadingArrivalTime: "11:02",
+    loadingEntryDate: "22/06/2026",
+    loadingEntryTime: "11:32",
+    loadingExitDate: "22/06/2026",
+    loadingExitTime: "12:02",
+    unloadingArrivalDate: "25/06/2026",
+    unloadingArrivalTime: "12:06",
+    unloadingEntryDate: "25/06/2026",
+    unloadingEntryTime: "12:36",
+    unloadingExitDate: "25/06/2026",
+    unloadingExitTime: "14:06",
+    documentsDeliveryDate: "30/06/2026",
+    additionalLoadHoursValue: 0,
+    additionalUnloadHoursValue: 0,
+    additionalFreightValue: 0,
+    additionalValueReason: "",
+    freightDiscountValue: 0,
+    discountReason: "",
+    overAdvanceValue: 0,
+    observations: "CARGAMENTO ENTREGADO EN BUEN ESTADO Y COMPLETO"
   }
 };
 
@@ -279,6 +347,40 @@ export const moneyFields: Field[] = [
   { path: "balancePaymentDate", label: "Fecha pago saldo", code: "FECHAPAGOSALDOMANIFIESTO", span: 3 }
 ];
 
+export const complianceRemesaFields: Field[] = [
+  { path: "compliance.remesaType", label: "Tipo cumplido", code: "TIPOCUMPLIDOREMESA", type: "select", options: complianceTypeOptions, span: 3, required: true },
+  { path: "compliance.remesaSuspensionReason", label: "Motivo suspension", code: "MOTIVOSUSPENSIONREMESA", type: "select", options: suspensionReasonOptions, span: 3, secondary: true },
+  { path: "compliance.loadedQuantityKg", label: "Cantidad cargada", code: "CANTIDADCARGADA", type: "number", span: 3, required: true },
+  { path: "compliance.deliveredQuantityKg", label: "Cantidad entregada", code: "CANTIDADENTREGADA", type: "number", span: 3, required: true },
+  { path: "compliance.unitCode", label: "Unidad de medida", code: "UNIDADMEDIDACAPACIDAD", type: "select", options: unitOptions, span: 3 },
+  { path: "compliance.loadingArrivalDate", label: "Fecha llegada cargue", code: "FECHALLEGADACARGUE", span: 3, secondary: true },
+  { path: "compliance.loadingArrivalTime", label: "Hora llegada cargue", code: "HORALLEGADACARGUEREMESA", span: 2, secondary: true },
+  { path: "compliance.loadingEntryDate", label: "Fecha entrada cargue", code: "FECHAENTRADACARGUE", span: 3, secondary: true },
+  { path: "compliance.loadingEntryTime", label: "Hora entrada cargue", code: "HORAENTRADACARGUEREMESA", span: 2, secondary: true },
+  { path: "compliance.loadingExitDate", label: "Fecha salida cargue", code: "FECHASALIDACARGUE", span: 3, secondary: true },
+  { path: "compliance.loadingExitTime", label: "Hora salida cargue", code: "HORASALIDACARGUEREMESA", span: 2, secondary: true },
+  { path: "compliance.unloadingArrivalDate", label: "Fecha llegada descargue", code: "FECHALLEGADADESCARGUE", span: 3, required: true },
+  { path: "compliance.unloadingArrivalTime", label: "Hora llegada descargue", code: "HORALLEGADADESCARGUECUMPLIDO", span: 2, required: true },
+  { path: "compliance.unloadingEntryDate", label: "Fecha entrada descargue", code: "FECHAENTRADADESCARGUE", span: 3, required: true },
+  { path: "compliance.unloadingEntryTime", label: "Hora entrada descargue", code: "HORAENTRADADESCARGUECUMPLIDO", span: 2, required: true },
+  { path: "compliance.unloadingExitDate", label: "Fecha salida descargue", code: "FECHASALIDADESCARGUE", span: 3, required: true },
+  { path: "compliance.unloadingExitTime", label: "Hora salida descargue", code: "HORASALIDADESCARGUECUMPLIDO", span: 2, required: true }
+];
+
+export const complianceManifestFields: Field[] = [
+  { path: "compliance.manifestType", label: "Tipo cumplido", code: "TIPOCUMPLIDOMANIFIESTO", type: "select", options: complianceTypeOptions, span: 3, required: true },
+  { path: "compliance.manifestSuspensionReason", label: "Motivo suspension", code: "MOTIVOSUSPENSIONMANIFIESTO", type: "select", options: suspensionReasonOptions, span: 3, secondary: true },
+  { path: "compliance.suspensionConsequence", label: "Consecuencia suspension", code: "CONSECUENCIASUSPENSION", type: "select", options: suspensionConsequenceOptions, span: 4, secondary: true },
+  { path: "compliance.additionalLoadHoursValue", label: "Adicional horas cargue", code: "VALORADICIONALHORASCARGUE", type: "number", span: 3 },
+  { path: "compliance.additionalUnloadHoursValue", label: "Adicional horas descargue", code: "VALORADICIONALHORASDESCARGUE", type: "number", span: 3 },
+  { path: "compliance.additionalFreightValue", label: "Valor adicional flete", code: "VALORADICIONALFLETE", type: "number", span: 3 },
+  { path: "compliance.additionalValueReason", label: "Motivo valor adicional", code: "MOTIVOVALORADICIONAL", type: "select", options: additionalValueReasonOptions, span: 3 },
+  { path: "compliance.freightDiscountValue", label: "Descuento flete", code: "VALORDESCUENTOFLETE", type: "number", span: 3 },
+  { path: "compliance.discountReason", label: "Motivo descuento", code: "MOTIVOVALORDESCUENTOMANIFIESTO", type: "select", options: discountReasonOptions, span: 3 },
+  { path: "compliance.overAdvanceValue", label: "Valor sobreanticipo", code: "VALORSOBREANTICIPO", type: "number", span: 3 },
+  { path: "compliance.documentsDeliveryDate", label: "Fecha entrega documentos", code: "FECHAENTREGADOCUMENTOS", span: 3, required: true }
+];
+
 const allFields: Field[] = [
   ...numberFields,
   ...dateFields,
@@ -288,7 +390,9 @@ const allFields: Field[] = [
   ...driverFields,
   ...ownerFields,
   ...holderFields,
-  ...moneyFields
+  ...moneyFields,
+  ...complianceRemesaFields,
+  ...complianceManifestFields
 ];
 
 export function field(path: string): Field {
@@ -302,6 +406,7 @@ export function field(path: string): Field {
 }
 
 export const observationsField: Field = { path: "observations", label: "Observaciones", code: "OBSERVACIONES", type: "textarea" };
+export const complianceObservationsField: Field = { path: "compliance.observations", label: "Observaciones", code: "OBSERVACIONES", type: "textarea" };
 
 export const operations: OperationConfig[] = [
   {
@@ -342,6 +447,35 @@ export const operations: OperationConfig[] = [
       { title: "Vehiculo y conductor", description: "Selecciona placa y conductor desde maestros", fields: [field("vehicle.plate"), field("vehicle.trailerPlate"), field("vehicle.brand"), field("vehicle.configuration"), field("vehicle.rndcConfigurationCode"), field("driver.idType"), field("driver.id"), field("driver.fullName"), field("vehicleHolder.idType"), field("vehicleHolder.id"), field("vehicleHolder.fullName")], lookup: true },
       { title: "Ruta y valores", description: "Origen, destino y valores del manifiesto", fields: [field("sender.cityName"), field("sender.cityCode"), field("recipient.cityName"), field("recipient.cityCode"), field("money.freightValue"), field("money.advanceValue"), field("money.sourceRetention"), field("money.icaRetention"), field("money.icaRetentionPerMille"), field("money.fopatRetention")] },
       { title: "Observaciones", description: "Texto libre impreso en el documento", fields: [observationsField] }
+    ]
+  },
+  {
+    id: "fulfill-remesa",
+    label: "Cumplir remesa",
+    title: "Cumplir remesa",
+    action: "Cumplir remesa",
+    processIds: "Proceso 5",
+    sections: [
+      { title: "Remesa a cumplir", fields: [field("remesaNumber"), field("manifestNumber")] },
+      { title: "Tipo de cumplido", fields: [field("compliance.remesaType"), field("compliance.remesaSuspensionReason")] },
+      { title: "Cantidades", fields: [field("compliance.loadedQuantityKg"), field("compliance.deliveredQuantityKg"), field("compliance.unitCode")] },
+      { title: "Tiempos en origen (cargue)", description: "Solo si no se registraron al expedir la remesa", fields: [field("compliance.loadingArrivalDate"), field("compliance.loadingArrivalTime"), field("compliance.loadingEntryDate"), field("compliance.loadingEntryTime"), field("compliance.loadingExitDate"), field("compliance.loadingExitTime")], collapsible: true },
+      { title: "Tiempos en destino (descargue)", fields: [field("compliance.unloadingArrivalDate"), field("compliance.unloadingArrivalTime"), field("compliance.unloadingEntryDate"), field("compliance.unloadingEntryTime"), field("compliance.unloadingExitDate"), field("compliance.unloadingExitTime")] },
+      { title: "Observaciones", fields: [complianceObservationsField] }
+    ]
+  },
+  {
+    id: "fulfill-manifest",
+    label: "Cumplir manifiesto",
+    title: "Cumplir manifiesto",
+    action: "Cumplir manifiesto",
+    processIds: "Proceso 6",
+    sections: [
+      { title: "Manifiesto a cumplir", description: "Requiere que todas las remesas del manifiesto esten cumplidas", fields: [field("manifestNumber")] },
+      { title: "Tipo de cumplido", fields: [field("compliance.manifestType"), field("compliance.manifestSuspensionReason"), field("compliance.suspensionConsequence")] },
+      { title: "Valores del cumplido", fields: [field("compliance.additionalLoadHoursValue"), field("compliance.additionalUnloadHoursValue"), field("compliance.additionalFreightValue"), field("compliance.additionalValueReason"), field("compliance.freightDiscountValue"), field("compliance.discountReason"), field("compliance.overAdvanceValue")] },
+      { title: "Entrega de documentos", fields: [field("compliance.documentsDeliveryDate")] },
+      { title: "Observaciones", fields: [complianceObservationsField] }
     ]
   },
   {

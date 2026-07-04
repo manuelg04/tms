@@ -19,5 +19,7 @@ test("cada operacion consume sus contadores", () => {
   assert.deepEqual(countersForOperation("loading-order"), ["orden_cargue"]);
   assert.deepEqual(countersForOperation("remesa"), ["remesa"]);
   assert.deepEqual(countersForOperation("manifest"), ["manifiesto"]);
+  assert.deepEqual(countersForOperation("fulfill-remesa"), []);
+  assert.deepEqual(countersForOperation("fulfill-manifest"), []);
   assert.deepEqual(countersForOperation("driver-vehicle"), []);
 });

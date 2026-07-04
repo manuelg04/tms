@@ -20,7 +20,7 @@ export type SyncableStep = {
 
 export type SyncableResult = {
   ok: boolean;
-  operation: "loading-order" | "remesa" | "manifest" | "driver-vehicle";
+  operation: "loading-order" | "remesa" | "manifest" | "driver-vehicle" | "fulfill-remesa" | "fulfill-manifest";
   mode: "dry-run" | "live";
   startedAt: string;
   finishedAt: string;
@@ -68,6 +68,8 @@ const documentPlans: Record<SyncableResult["operation"], { kind: string; numberK
   "loading-order": { kind: "orden_cargue", numberKey: "loadingOrder", stepName: "issue-loading-order" },
   remesa: { kind: "remesa", numberKey: "remesa", stepName: "issue-remesa" },
   manifest: { kind: "manifiesto", numberKey: "manifest", stepName: "issue-manifest" },
+  "fulfill-remesa": { kind: "remesa", numberKey: "remesa", stepName: "fulfill-remesa" },
+  "fulfill-manifest": { kind: "manifiesto", numberKey: "manifest", stepName: "fulfill-manifest" },
   "driver-vehicle": undefined
 };
 

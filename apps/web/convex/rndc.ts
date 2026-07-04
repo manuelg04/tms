@@ -5,7 +5,9 @@ const operationValidator = v.union(
   v.literal("loading-order"),
   v.literal("remesa"),
   v.literal("manifest"),
-  v.literal("driver-vehicle")
+  v.literal("driver-vehicle"),
+  v.literal("fulfill-remesa"),
+  v.literal("fulfill-manifest")
 );
 
 const modeValidator = v.union(v.literal("dry-run"), v.literal("live"));
@@ -48,7 +50,9 @@ const okTripStatus: Record<string, string> = {
   "loading-order": "orden_emitida",
   remesa: "remesa_emitida",
   manifest: "manifiesto_emitido",
-  "driver-vehicle": "maestros_actualizados"
+  "driver-vehicle": "maestros_actualizados",
+  "fulfill-remesa": "remesa_cumplida",
+  "fulfill-manifest": "manifiesto_cumplido"
 };
 
 export const recordOperation = mutation({
@@ -106,7 +110,7 @@ export const recordOperation = mutation({
       });
     }
 
-    const documentStatus = args.ok ? ("authorized" as const) : ("rejected" as const);
+    const documentStatus = args.ok && (args.operation === "fulfill-remesa" || args.operation === "fulfill-manifest") ? ("fulfilled" as const) : args.ok ? ("authorized" as const) : ("rejected" as const);
     const documentIds = [];
 
     for (const document of args.documents) {

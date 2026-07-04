@@ -464,6 +464,9 @@ function buildComplianceData(input: {
   return {
     remesaType: readEnv("RNDC_REMESA_COMPLIANCE_TYPE", "C"),
     manifestType: readEnv("RNDC_MANIFEST_COMPLIANCE_TYPE", "C"),
+    remesaSuspensionReason: "",
+    manifestSuspensionReason: "",
+    suspensionConsequence: "",
     loadedQuantityKg: Number(process.env.RNDC_LOADED_QUANTITY_KG ?? input.quantityKg),
     deliveredQuantityKg: Number(process.env.RNDC_DELIVERED_QUANTITY_KG ?? input.quantityKg),
     unitCode: Number(process.env.RNDC_CAPACITY_UNIT_CODE ?? 1),
@@ -483,7 +486,9 @@ function buildComplianceData(input: {
     additionalLoadHoursValue: Number(process.env.RNDC_ADDITIONAL_LOAD_HOURS_VALUE ?? 0),
     additionalUnloadHoursValue: Number(process.env.RNDC_ADDITIONAL_UNLOAD_HOURS_VALUE ?? 0),
     additionalFreightValue: Number(process.env.RNDC_ADDITIONAL_FREIGHT_VALUE ?? 0),
+    additionalValueReason: "",
     freightDiscountValue: Number(process.env.RNDC_FREIGHT_DISCOUNT_VALUE ?? 0),
+    discountReason: "",
     overAdvanceValue: Number(process.env.RNDC_OVER_ADVANCE_VALUE ?? 0),
     observations: readEnv("RNDC_COMPLIANCE_OBSERVATIONS", input.observations)
   };

@@ -2,12 +2,12 @@ import express from "express";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildDriverVehicleMessages, buildFailureResponse, buildLoadingOrderMessages, buildManifestMessages, buildMtmReferenceScenario, buildRemesaMessages, generateLoadingOrderDocument, generateManifestDocument, generateRemesaDocument, loadConfig, RndcClient, runDemoFlow } from "@tms/rndc-core";
-import type { CargoData, CompanyParty, DemoScenario, GeneratedDocument, MoneyData, PersonData, RndcConfig, RndcFlowResult, RndcFlowStep, RndcMessageRequest, RndcMessageResponse, VehicleData } from "@tms/rndc-core";
+import { buildDriverVehicleMessages, buildFailureResponse, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildLoadingOrderMessages, buildManifestMessages, buildMtmReferenceScenario, buildRemesaMessages, generateLoadingOrderDocument, generateManifestDocument, generateRemesaDocument, loadConfig, RndcClient, runDemoFlow } from "@tms/rndc-core";
+import type { CargoData, CompanyParty, ComplianceData, DemoScenario, GeneratedDocument, MoneyData, PersonData, RndcConfig, RndcFlowResult, RndcFlowStep, RndcMessageRequest, RndcMessageResponse, VehicleData } from "@tms/rndc-core";
 import { syncOperationToConvex } from "./convexSync.js";
 import type { ConvexSyncStatus } from "./convexSync.js";
 
-type FormOperation = "loading-order" | "remesa" | "manifest" | "driver-vehicle";
+type FormOperation = "loading-order" | "remesa" | "manifest" | "driver-vehicle" | "fulfill-remesa" | "fulfill-manifest";
 
 type FormMessage = {
   name: string;
@@ -123,6 +123,14 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}): express.Expr
     void submitForm(req, res, next, readConfig, "manifest", buildManifestMessages);
   });
 
+  app.post("/rndc/forms/fulfill-remesa", (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "fulfill-remesa", buildFulfillRemesaMessages);
+  });
+
+  app.post("/rndc/forms/fulfill-manifest", (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "fulfill-manifest", buildFulfillManifestMessages);
+  });
+
   app.post("/rndc/forms/driver-vehicle", (req, res, next) => {
     void submitForm(req, res, next, readConfig, "driver-vehicle", buildDriverVehicleMessages);
   });
@@ -233,6 +241,14 @@ function operationDocumentNumber(operation: FormOperation, scenario: DemoScenari
     return scenario.manifestNumber;
   }
 
+  if (operation === "fulfill-remesa") {
+    return scenario.remesaNumber;
+  }
+
+  if (operation === "fulfill-manifest") {
+    return scenario.manifestNumber;
+  }
+
   return `${scenario.driver.id}-${scenario.vehicle.plate}`;
 }
 
@@ -294,6 +310,17 @@ const requiredFormFields: Record<FormOperation, string[]> = {
     "money.freightValue",
     "money.advanceValue"
   ],
+  "fulfill-remesa": [
+    "remesaNumber",
+    "manifestNumber",
+    "compliance.remesaType",
+    "compliance.loadedQuantityKg"
+  ],
+  "fulfill-manifest": [
+    "manifestNumber",
+    "compliance.manifestType",
+    "compliance.documentsDeliveryDate"
+  ],
   "driver-vehicle": [
     "driver.idType",
     "driver.id",
@@ -329,7 +356,50 @@ const requiredFormFields: Record<FormOperation, string[]> = {
 
 function collectMissingFormFields(operation: FormOperation, payload: unknown): string[] {
   const record = isRecord(payload) ? payload : {};
-  return requiredFormFields[operation].filter((path) => !hasFormValue(record, path));
+  const missing = requiredFormFields[operation].filter((path) => !hasFormValue(record, path));
+  const compliance = child(record, "compliance");
+
+  if (operation === "fulfill-remesa") {
+    if (readString(compliance, "remesaType", "") === "C") {
+      pushMissing(record, missing, [
+        "compliance.deliveredQuantityKg",
+        "compliance.unloadingArrivalDate",
+        "compliance.unloadingArrivalTime",
+        "compliance.unloadingEntryDate",
+        "compliance.unloadingEntryTime",
+        "compliance.unloadingExitDate",
+        "compliance.unloadingExitTime"
+      ]);
+    }
+
+    if (readString(compliance, "remesaType", "") === "S") {
+      pushMissing(record, missing, ["compliance.remesaSuspensionReason"]);
+    }
+  }
+
+  if (operation === "fulfill-manifest") {
+    if (readString(compliance, "manifestType", "") === "S") {
+      pushMissing(record, missing, ["compliance.manifestSuspensionReason", "compliance.suspensionConsequence"]);
+    }
+
+    if (readNumber(compliance, "additionalFreightValue", 0) > 0) {
+      pushMissing(record, missing, ["compliance.additionalValueReason"]);
+    }
+
+    if (readNumber(compliance, "freightDiscountValue", 0) > 0) {
+      pushMissing(record, missing, ["compliance.discountReason"]);
+    }
+  }
+
+  return missing;
+}
+
+function pushMissing(record: Record<string, unknown>, missing: string[], paths: string[]): void {
+  for (const path of paths) {
+    if (!hasFormValue(record, path) && !missing.includes(path)) {
+      missing.push(path);
+    }
+  }
 }
 
 function hasFormValue(record: Record<string, unknown>, path: string): boolean {
@@ -429,6 +499,10 @@ async function sendFormMessage(client: RndcClient, config: RndcConfig, request: 
 }
 
 async function buildOperationDocuments(operation: FormOperation, scenario: DemoScenario, steps: SavedFormStep[], config: RndcConfig): Promise<GeneratedDocument[]> {
+  if (operation === "fulfill-remesa" || operation === "fulfill-manifest") {
+    return [];
+  }
+
   if (operation === "loading-order") {
     return [await generateLoadingOrderDocument(scenario, steps[0]?.radicado ?? "PENDIENTE", config.pdfDir)];
   }
@@ -476,6 +550,7 @@ function buildScenarioFromForm(config: RndcConfig, payload: unknown): DemoScenar
   applyVehicle(scenario.vehicle, child(record, "vehicle"));
   applyCargo(scenario.cargo, child(record, "cargo"));
   applyMoney(scenario.money, child(record, "money"));
+  applyCompliance(scenario.compliance, child(record, "compliance"));
 
   return scenario;
 }
@@ -501,7 +576,8 @@ function scenarioToForm(scenario: DemoScenario): Record<string, unknown> {
     recipient: scenario.recipient,
     vehicle: scenario.vehicle,
     cargo: scenario.cargo,
-    money: scenario.money
+    money: scenario.money,
+    compliance: scenario.compliance
   };
 }
 
@@ -569,6 +645,38 @@ function applyMoney(target: MoneyData, record: Record<string, unknown>): void {
   target.icaRetention = readNumber(record, "icaRetention", target.icaRetention);
   target.icaRetentionPerMille = readNumber(record, "icaRetentionPerMille", target.icaRetentionPerMille);
   target.fopatRetention = readNumber(record, "fopatRetention", target.fopatRetention);
+}
+
+function applyCompliance(target: ComplianceData, record: Record<string, unknown>): void {
+  target.remesaType = readString(record, "remesaType", target.remesaType);
+  target.manifestType = readString(record, "manifestType", target.manifestType);
+  target.remesaSuspensionReason = readOptionalString(record, "remesaSuspensionReason", target.remesaSuspensionReason);
+  target.manifestSuspensionReason = readOptionalString(record, "manifestSuspensionReason", target.manifestSuspensionReason);
+  target.suspensionConsequence = readOptionalString(record, "suspensionConsequence", target.suspensionConsequence);
+  target.loadedQuantityKg = readNumber(record, "loadedQuantityKg", target.loadedQuantityKg);
+  target.deliveredQuantityKg = readNumber(record, "deliveredQuantityKg", target.deliveredQuantityKg);
+  target.unitCode = readNumber(record, "unitCode", target.unitCode);
+  target.loadingArrivalDate = readDate(record, "loadingArrivalDate", target.loadingArrivalDate);
+  target.loadingArrivalTime = readString(record, "loadingArrivalTime", target.loadingArrivalTime);
+  target.loadingEntryDate = readDate(record, "loadingEntryDate", target.loadingEntryDate);
+  target.loadingEntryTime = readString(record, "loadingEntryTime", target.loadingEntryTime);
+  target.loadingExitDate = readDate(record, "loadingExitDate", target.loadingExitDate);
+  target.loadingExitTime = readString(record, "loadingExitTime", target.loadingExitTime);
+  target.unloadingArrivalDate = readDate(record, "unloadingArrivalDate", target.unloadingArrivalDate);
+  target.unloadingArrivalTime = readString(record, "unloadingArrivalTime", target.unloadingArrivalTime);
+  target.unloadingEntryDate = readDate(record, "unloadingEntryDate", target.unloadingEntryDate);
+  target.unloadingEntryTime = readString(record, "unloadingEntryTime", target.unloadingEntryTime);
+  target.unloadingExitDate = readDate(record, "unloadingExitDate", target.unloadingExitDate);
+  target.unloadingExitTime = readString(record, "unloadingExitTime", target.unloadingExitTime);
+  target.documentsDeliveryDate = readDate(record, "documentsDeliveryDate", target.documentsDeliveryDate);
+  target.additionalLoadHoursValue = readNumber(record, "additionalLoadHoursValue", target.additionalLoadHoursValue);
+  target.additionalUnloadHoursValue = readNumber(record, "additionalUnloadHoursValue", target.additionalUnloadHoursValue);
+  target.additionalFreightValue = readNumber(record, "additionalFreightValue", target.additionalFreightValue);
+  target.additionalValueReason = readOptionalString(record, "additionalValueReason", target.additionalValueReason);
+  target.freightDiscountValue = readNumber(record, "freightDiscountValue", target.freightDiscountValue);
+  target.discountReason = readOptionalString(record, "discountReason", target.discountReason);
+  target.overAdvanceValue = readNumber(record, "overAdvanceValue", target.overAdvanceValue);
+  target.observations = readString(record, "observations", target.observations);
 }
 
 function summarizeFlow(result: RndcFlowResult) {

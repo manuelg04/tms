@@ -155,6 +155,9 @@ export type MoneyData = {
 export type ComplianceData = {
   remesaType: string;
   manifestType: string;
+  remesaSuspensionReason?: string;
+  manifestSuspensionReason?: string;
+  suspensionConsequence?: string;
   loadedQuantityKg: number;
   deliveredQuantityKg: number;
   unitCode: number;
@@ -174,7 +177,9 @@ export type ComplianceData = {
   additionalLoadHoursValue: number;
   additionalUnloadHoursValue: number;
   additionalFreightValue: number;
+  additionalValueReason?: string;
   freightDiscountValue: number;
+  discountReason?: string;
   overAdvanceValue: number;
   observations: string;
 };

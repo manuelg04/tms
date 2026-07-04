@@ -3,7 +3,7 @@ import { join } from "node:path";
 import type { DemoScenario, RndcConfig, RndcMessageRequest, RndcXmlRecord } from "./types.js";
 import { buildRndcXml, maskSecrets, rawXml } from "./xml.js";
 
-type RndcFlowMessage = { name: string; title: string; request: RndcMessageRequest; optional?: boolean };
+export type RndcFlowMessage = { name: string; title: string; request: RndcMessageRequest; optional?: boolean };
 
 export function buildFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
   return [
@@ -231,8 +231,9 @@ export function buildIssuanceMessages(scenario: DemoScenario): RndcFlowMessage[]
   ];
 }
 
-export function buildComplianceMessages(scenario: DemoScenario): { name: string; title: string; request: RndcMessageRequest }[] {
+export function buildFulfillRemesaMessages(scenario: DemoScenario): RndcFlowMessage[] {
   const compliance = scenario.compliance;
+  const isSuspended = compliance.remesaType === "S";
 
   return [
     {
@@ -241,9 +242,11 @@ export function buildComplianceMessages(scenario: DemoScenario): { name: string;
       request: createMessage(5, {
         NUMNITEMPRESATRANSPORTE: scenario.company.rndcNit,
         CONSECUTIVOREMESA: scenario.remesaNumber,
+        NUMMANIFIESTOCARGA: scenario.manifestNumber,
         TIPOCUMPLIDOREMESA: compliance.remesaType,
+        MOTIVOSUSPENSIONREMESA: isSuspended ? compliance.remesaSuspensionReason : undefined,
         CANTIDADCARGADA: compliance.loadedQuantityKg,
-        CANTIDADENTREGADA: compliance.deliveredQuantityKg,
+        CANTIDADENTREGADA: isSuspended ? undefined : compliance.deliveredQuantityKg,
         UNIDADMEDIDACAPACIDAD: compliance.unitCode,
         FECHALLEGADACARGUE: compliance.loadingArrivalDate,
         HORALLEGADACARGUEREMESA: compliance.loadingArrivalTime,
@@ -251,15 +254,23 @@ export function buildComplianceMessages(scenario: DemoScenario): { name: string;
         HORAENTRADACARGUEREMESA: compliance.loadingEntryTime,
         FECHASALIDACARGUE: compliance.loadingExitDate,
         HORASALIDACARGUEREMESA: compliance.loadingExitTime,
-        FECHALLEGADADESCARGUE: compliance.unloadingArrivalDate,
-        HORALLEGADADESCARGUECUMPLIDO: compliance.unloadingArrivalTime,
-        FECHAENTRADADESCARGUE: compliance.unloadingEntryDate,
-        HORAENTRADADESCARGUECUMPLIDO: compliance.unloadingEntryTime,
-        FECHASALIDADESCARGUE: compliance.unloadingExitDate,
-        HORASALIDADESCARGUECUMPLIDO: compliance.unloadingExitTime,
+        FECHALLEGADADESCARGUE: isSuspended ? undefined : compliance.unloadingArrivalDate,
+        HORALLEGADADESCARGUECUMPLIDO: isSuspended ? undefined : compliance.unloadingArrivalTime,
+        FECHAENTRADADESCARGUE: isSuspended ? undefined : compliance.unloadingEntryDate,
+        HORAENTRADADESCARGUECUMPLIDO: isSuspended ? undefined : compliance.unloadingEntryTime,
+        FECHASALIDADESCARGUE: isSuspended ? undefined : compliance.unloadingExitDate,
+        HORASALIDADESCARGUECUMPLIDO: isSuspended ? undefined : compliance.unloadingExitTime,
         OBSERVACIONES: compliance.observations
       })
-    },
+    }
+  ];
+}
+
+export function buildFulfillManifestMessages(scenario: DemoScenario): RndcFlowMessage[] {
+  const compliance = scenario.compliance;
+  const isSuspended = compliance.manifestType === "S";
+
+  return [
     {
       name: "fulfill-manifest",
       title: "Cumplir manifiesto de carga",
@@ -267,16 +278,27 @@ export function buildComplianceMessages(scenario: DemoScenario): { name: string;
         NUMNITEMPRESATRANSPORTE: scenario.company.rndcNit,
         NUMMANIFIESTOCARGA: scenario.manifestNumber,
         TIPOCUMPLIDOMANIFIESTO: compliance.manifestType,
+        MOTIVOSUSPENSIONMANIFIESTO: isSuspended ? compliance.manifestSuspensionReason : undefined,
+        CONSECUENCIASUSPENSION: isSuspended ? compliance.suspensionConsequence : undefined,
         FECHAENTREGADOCUMENTOS: compliance.documentsDeliveryDate,
         RETENCIONFOPAT: scenario.money.fopatRetention,
         VALORADICIONALHORASCARGUE: compliance.additionalLoadHoursValue,
         VALORADICIONALHORASDESCARGUE: compliance.additionalUnloadHoursValue,
         VALORADICIONALFLETE: compliance.additionalFreightValue,
+        MOTIVOVALORADICIONAL: compliance.additionalFreightValue > 0 ? compliance.additionalValueReason : undefined,
         VALORDESCUENTOFLETE: compliance.freightDiscountValue,
+        MOTIVOVALORDESCUENTOMANIFIESTO: compliance.freightDiscountValue > 0 ? compliance.discountReason : undefined,
         VALORSOBREANTICIPO: compliance.overAdvanceValue,
         OBSERVACIONES: compliance.observations
       })
     }
+  ];
+}
+
+export function buildComplianceMessages(scenario: DemoScenario): RndcFlowMessage[] {
+  return [
+    ...buildFulfillRemesaMessages(scenario),
+    ...buildFulfillManifestMessages(scenario)
   ];
 }
 

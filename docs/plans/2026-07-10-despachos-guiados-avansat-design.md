@@ -8,7 +8,7 @@ Diseño anterior: `docs/plans/2026-07-09-phases-1-3-tms-rndc-design.md`
 
 Convertir el expediente actual en el flujo principal para despachar y documentar viajes de Transportes MTM, conservando la experiencia visual existente y trasladando la terminología y el orden operativo que los usuarios conocen de Avansat Básico.
 
-El producto no será una copia de Avansat. Será una experiencia guiada que permita completar, desde un solo despacho, la orden de cargue, las remesas, el manifiesto, los tiempos logísticos y los cumplidos, reutilizando la información ya registrada y ocultando la complejidad técnica del RNDC.
+El producto no será una copia de Avansat. Será una experiencia guiada que permita completar, desde un solo despacho, la orden de cargue, las remesas, el manifiesto, los tiempos logísticos y los cumplidos, reutilizando la información ya registrada y ocultando la complejidad técnica del RNDC. `Documentos e historial` será una vista transversal disponible durante todo el recorrido, no un paso final bloqueado.
 
 ## Decisión de producto
 
@@ -47,6 +47,7 @@ Sería familiar, pero conservaría la navegación fragmentada y la repetición d
 - No se integrará con la DIAN.
 - Los campos económicos del viaje, como flete, anticipo, retención, ICA, FOPAT y neto a pagar, no implican integración tributaria con DIAN.
 - Las coordenadas de un lugar podrán conservarse si el RNDC las exige, pero serán datos del sitio, no seguimiento del vehículo.
+- Un identificador de Empresa de Monitoreo de Flota podrá conservarse como metadato regulatorio cuando el RNDC lo exija. No incluirá credenciales, ubicación, consulta ni seguimiento GPS.
 - No se realizará ninguna llamada real al RNDC hasta completar autenticación, despliegue, validación y prueba controlada.
 - La apariencia visual actual se mantendrá como base. Este diseño cambia el proceso, la jerarquía y las acciones, no la identidad visual.
 
@@ -55,19 +56,19 @@ Sería familiar, pero conservaría la navegación fragmentada y la repetición d
 | Término | Significado canónico |
 |---|---|
 | Orden de servicio | Solicitud comercial o referencia del cliente. No es un documento RNDC. |
-| Despacho | Flujo de trabajo visible que reúne la preparación, documentación y cierre de un servicio. |
+| Despacho | Nombre visible de la cola de trabajo que reúne la preparación, documentación y cierre de un servicio. No es el identificador de seguimiento llamado `Despacho` en Control Tráfico de Avansat. |
 | Expediente de viaje | Registro persistente que contiene toda la información, documentos, evidencia e historial del despacho. |
-| Orden de cargue | Documento y proceso oficial inicial que prepara la carga y puede originar una o varias remesas. |
-| Remesa | Documento de la carga, remitente, destinatario, sitios, citas, mercancía y condiciones de entrega. |
+| Orden de cargue | Documento operativo local que prepara la carga y puede originar una o varias remesas. Al transmitirse, se relaciona con la `Información de carga` del proceso RNDC 1, pero conservará estados y números separados. |
+| Remesa | Documento de la carga, remitente, destinatario, sitios, citas, mercancía y condiciones de entrega. Su clase será `Remesa municipal` o `Remesa terrestre de carga`. |
 | Viaje | Ejecución operativa asociada al vehículo, conductor, remesas y manifiesto. |
 | Manifiesto | Documento oficial que formaliza el viaje y vincula una o varias remesas. |
 | Cargue y descargue | Tiempos y hechos logísticos reales de origen y destino. |
 | Cumplido inicial | Cierre o transmisión de cada remesa con sus datos reales de entrega. |
-| Cumplido final | Cierre del manifiesto después de cumplir todas las remesas o registrar una excepción autorizada. |
+| Cumplido final | Cierre del manifiesto después de cumplir todas las remesas asociadas. |
 | Anulación | Reversión oficial controlada que exige motivo, observación, actor y fecha. |
 | Conciliación | Consulta oficial para resolver un resultado incierto sin reenviar automáticamente. |
 
-`Información de carga` podrá aparecer como ayuda técnica o nombre RNDC secundario. El nombre principal visible será `Orden de cargue`.
+`Información de carga` podrá aparecer como ayuda técnica o nombre RNDC secundario. El nombre principal visible será `Orden de cargue`. El estado local de la orden, su estado de impresión y el resultado o radicado de la transmisión RNDC permanecerán separados.
 
 ## Flujo objetivo
 
@@ -84,7 +85,7 @@ El operador inicia un `Nuevo despacho` y registra o selecciona:
 - Fechas mínima y máxima de cargue cuando apliquen.
 - Vehículo y conductor iniciales, si ya están disponibles.
 
-El consecutivo será automático. El operador podrá guardar el despacho como borrador y salir sin perder información.
+El número de expediente y los consecutivos documentales serán automáticos. Los rangos de orden, remesa y manifiesto serán independientes por organización, agencia y tipo documental, y conservarán sus ceros iniciales. El operador podrá guardar el despacho como borrador y salir sin perder información.
 
 La orden no podrá anularse directamente cuando ya tenga remesas oficiales asociadas. La interfaz explicará qué documentos deben reversarse primero.
 
@@ -100,6 +101,8 @@ El expediente permitirá una o varias remesas. Cada remesa heredará los datos c
 
 El flujo normal partirá de una orden de cargue. `Crear remesa sin orden` será una excepción secundaria y controlada, no la acción principal.
 
+La clase de remesa se elegirá entre `Remesa municipal` y `Remesa terrestre de carga`. No se confundirá con el alcance municipal o intermunicipal del viaje ni con el tipo de manifiesto.
+
 ### 3. Vehículo y conductor
 
 El operador seleccionará conductor, vehículo, remolque, propietario, poseedor y segundo conductor cuando aplique. La interfaz mostrará vigencias y datos faltantes de los maestros antes de permitir un envío oficial.
@@ -113,12 +116,15 @@ La pantalla mostrará solamente remesas elegibles según origen, destino, tipo d
 El manifiesto incluirá:
 
 - Fecha de expedición y entrega estimada.
-- Tipo municipal o intermunicipal.
+- Alcance de la operación municipal o intermunicipal.
+- Tipo de manifiesto según su catálogo propio, separado de la clase de remesa.
 - Vehículo, remolque, propietario, poseedor y conductores.
 - Flete, anticipo, retenciones, ICA, FOPAT, ajustes y neto a pagar.
 - Responsables del cargue y descargue.
 - Agencia y fecha de pago.
 - Observaciones.
+
+La entrega estimada será editable. La diferencia de ocho días observada en la muestra exportada sólo se convertirá en valor predeterminado si MTM la confirma como regla de negocio; no se codificará como una inferencia del archivo.
 
 `Crear manifiesto vacío` y `Transbordo` serán acciones avanzadas separadas del flujo normal.
 
@@ -137,41 +143,42 @@ Una acción explícita iniciará la secuencia oficial. Para un expediente persis
 
 La secuencia normal será:
 
-1. Registrar la orden de cargue.
+1. Transmitir la `Información de carga` RNDC asociada a la orden de cargue.
 2. Expedir cada remesa pendiente.
 3. Registrar la información de viaje y expedir el manifiesto.
 4. Guardar toda la evidencia antes de confirmar el cambio de estado.
 
 El operador podrá continuar desde el último documento autorizado cuando una secuencia quede parcial. Ningún documento ya autorizado se reenviará.
 
-### 6. Documentos
+### Vista transversal. Documentos e historial
 
-El expediente mostrará las representaciones PDF, XML enmascarado, respuesta, radicado, estado oficial, fecha y actor de cada operación.
+El expediente mostrará desde el primer borrador las representaciones disponibles, PDF, XML enmascarado, respuesta, radicado, estado oficial, fecha y actor de cada operación. La vista acumulará resultados a medida que avance el despacho y nunca bloqueará la siguiente etapa.
 
 `Impreso` será una propiedad separada de `Autorizado`, `Rechazado`, `Cumplido` o `Anulado`.
 
-### 7. Cargue y descargue
+### 6. Cargue y descargue
 
-El operador registrará manualmente:
+El operador registrará manualmente cinco eventos en origen y cinco en destino:
 
 - Llegada.
 - Entrada.
 - Inicio.
 - Fin.
 - Salida.
-- Observaciones y novedades.
+
+La llegada de cargue, la llegada de descargue y la entrega o llegada final serán conceptos distintos. Cada grupo permitirá observaciones y novedades.
 
 Estos datos pertenecerán al expediente y podrán alimentar los cumplidos. No dependerán de GPS, puntos de control ni Control Tráfico.
 
-### 8. Cumplido inicial
+### 7. Cumplido inicial
 
 Cada remesa se cumplirá de forma individual. El operador revisará cantidades entregadas, tiempos, novedades, suspensión y motivos cuando apliquen.
 
 El sistema destacará el plazo operativo aplicable y conservará la evidencia del proceso.
 
-### 9. Cumplido final
+### 8. Cumplido final
 
-El manifiesto podrá cumplirse cuando todas sus remesas estén cumplidas o exista una excepción autorizada y auditada.
+El manifiesto sólo podrá cumplirse cuando todas sus remesas estén cumplidas. Cualquier excepción futura permanecerá bloqueada hasta demostrar su respaldo normativo y RNDC.
 
 El cierre mostrará vehículo, conductor, ruta, remesas, valores, tiempos reales, entrega y novedades. El resultado dejará el expediente en `Cumplido`.
 
@@ -179,7 +186,7 @@ El cierre mostrará vehículo, conductor, ruta, remesas, valores, tiempos reales
 
 La página `Despachos` será una cola orientada a la siguiente acción. Permitirá buscar y filtrar por:
 
-- Número de despacho o expediente.
+- Número de expediente.
 - Orden de cargue.
 - Remesa.
 - Manifiesto.
@@ -253,6 +260,10 @@ Al confirmar una etapa o solicitar una operación RNDC se guardará una fotograf
 
 Los maestros podrán cambiar sin alterar despachos históricos.
 
+Los números que identifican documentos o personas se conservarán como texto de extremo a extremo. Esto incluye consecutivos con ceros iniciales, números y radicados RNDC, códigos DANE, remesas, remisiones, clientes, pólizas, placas, remolques, identificaciones, teléfonos, licencias y SOAT.
+
+El valor declarado de la mercancía y de la remesa permanecerá separado de la liquidación del viaje. Flete, anticipo, retenciones, ICA, FOPAT, ajustes y neto a pagar tendrán campos y validaciones propios.
+
 ### Documentos oficiales
 
 `documents` seguirá representando orden de cargue, remesa y manifiesto. Cada documento mantendrá separados:
@@ -260,6 +271,8 @@ Los maestros podrán cambiar sin alterar despachos históricos.
 - Estado local.
 - Estado de emisión oficial.
 - Estado de impresión.
+- Consecutivo interno y número electrónico RNDC cuando ambos existan.
+- Radicados de emisión, cargue, descargue, cumplimiento, reversa y anulación cuando apliquen.
 - Cumplimiento.
 - Corrección.
 - Anulación.
@@ -275,6 +288,10 @@ Existirá una sola ruta protegida para cualquier acción oficial:
 `Interfaz → gateway Next.js → intención durable → worker RNDC → evidencia permanente → transición oficial`
 
 La consola de compatibilidad usará el mismo gateway o quedará restringida a desarrollo y soporte.
+
+El gateway recibirá la identidad del expediente y la acción solicitada, no campos RNDC confiados al navegador. El servidor validará, asignará consecutivos y creará una fotografía inmutable antes de encolar la operación.
+
+Un consumidor persistente reclamará las operaciones, renovará su lease y recuperará trabajo pendiente después de un reinicio. La información de viaje del proceso 2 y el manifiesto del proceso 4 serán pasos durables separados, para que el éxito parcial nunca obligue a reenviar el proceso 2.
 
 Para expedientes persistidos:
 
@@ -331,6 +348,7 @@ Los documentos personales y teléfonos estarán enmascarados en listados y expor
 - `trips` continuará como proyección compatible mientras existan consumidores antiguos.
 - La consola `/operaciones` no será la ruta normal de despacho.
 - Los datos demostrativos se identificarán como prueba y no se mezclarán con datos oficiales.
+- Todo registro importado conservará su procedencia y una restricción `officialActionsBlocked` aplicada por el servidor hasta completar su validación.
 
 ## Estrategia de pruebas
 
@@ -343,13 +361,16 @@ La cobertura mínima incluirá:
 - Fotografías históricas inmutables.
 - Orden de cargue antes de remesas y manifiesto.
 - Una y varias remesas.
+- Rangos de consecutivos por organización, agencia y tipo documental.
+- Clase de remesa, alcance de viaje y tipo de manifiesto como conceptos independientes.
 - Validación estricta sin datos de referencia.
 - Secuencia parcial y reanudación segura.
 - Idempotencia y doble clic.
 - Conciliación con coincidencia y sin coincidencia.
 - Fallo de evidencia permanente.
-- Cargue, descargue y llegada manual.
+- Diez eventos de cargue y descargue, más entrega o llegada final manual.
 - Cumplido inicial antes del final.
+- Bloqueo del cumplido final mientras exista una remesa pendiente.
 - Anulación según estado.
 - Búsqueda paginada y exportación.
 - Permisos por rol.
@@ -361,23 +382,25 @@ La cobertura mínima incluirá:
 - Un operador completa `Orden de cargue → Remesas → Manifiesto → Cumplidos` desde un solo despacho.
 - Los nombres visibles son `Orden de cargue`, `Remesa`, `Viaje`, `Manifiesto`, `Cumplido inicial` y `Cumplido`.
 - `Despachos` es la cola principal y `Expediente de viaje` es el registro detallado.
-- El consecutivo de orden, remesa y manifiesto es automático y seguro.
+- El consecutivo de orden, remesa y manifiesto es automático, conserva ceros iniciales y usa un rango independiente por organización, agencia y tipo documental.
 - Una orden admite varias remesas y un manifiesto admite varias remesas.
 - Los datos conocidos se autocompletan y sólo se piden las diferencias.
 - Un borrador se puede guardar, cerrar, reabrir, editar y completar.
-- La orden de cargue se autoriza antes de emitir remesas y manifiesto.
+- La `Información de carga` RNDC asociada a la orden se autoriza antes de emitir remesas y manifiesto, sin mezclar su radicado con el estado local o de impresión de la orden.
 - Un envío desde un expediente incompleto falla incluso en `dry-run`.
 - Ningún dato faltante se sustituye silenciosamente por el escenario de referencia.
 - Toda operación oficial se registra antes del envío y guarda evidencia antes de confirmar éxito.
 - Un doble clic o retry no crea documentos duplicados.
 - Un resultado incierto exige conciliación y no permite reenvío automático.
 - La conciliación verifica el documento esperado antes de confirmar éxito.
-- Los tiempos de cargue, descargue y llegada se pueden registrar sin GPS.
+- Los cinco tiempos de origen, los cinco de destino y la entrega o llegada final se pueden registrar manualmente sin GPS.
 - El cumplido inicial y el final permanecen como etapas diferentes.
+- El cumplido final permanece bloqueado hasta cumplir todas las remesas.
 - Anular exige motivo, observación, usuario y fecha.
 - Los listados tienen búsqueda de servidor, paginación y exportación a Excel.
 - La experiencia móvil no tiene desbordamiento horizontal ni controles cubiertos.
-- No aparecen campos de operador GPS, credenciales GPS, puntos de control ni DIAN en el flujo normal.
+- No aparecen campos de operador GPS, credenciales GPS, puntos de control ni DIAN en el flujo normal ni en manifiesto vacío, transbordo o acciones avanzadas.
+- `Despachos` no crea ni muestra el identificador de Control Tráfico de Avansat; el registro interno se identifica como `Número de expediente`.
 
 ## Condición de producción
 

@@ -1,9 +1,45 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { DemoScenario, RndcConfig, RndcMessageRequest, RndcXmlRecord } from "./types.js";
-import { buildRndcXml, maskSecrets, rawXml } from "./xml.js";
+import { buildRndcXml, escapeXml, maskSecrets, rawXml } from "./xml.js";
 
 export type RndcFlowMessage = { name: string; title: string; request: RndcMessageRequest; optional?: boolean };
+
+export const PROCESS_38_OFFICIAL_VARIABLES = [
+  "HORACITAPACTADADESCARGUE",
+  "HORACITAPACTADACARGUE",
+  "FECHACITAPACTADADESCARGUE",
+  "FECHACITAPACTADACARGUE",
+  "CODSEDEPROPIETARIO",
+  "NUMIDPROPIETARIO",
+  "CODTIPOIDPROPIETARIO",
+  "CODSEDEDESTINATARIO",
+  "NUMIDDESTINATARIO",
+  "CODTIPOIDDESTINATARIO",
+  "CONSECUTIVOREMESA",
+  "MOTIVOCAMBIO",
+  "CODIGOCAMBIO"
+] as const;
+
+export type RemesaCorrectionReasonCode = 1 | 2 | 3;
+
+export type RemesaCorrectionInput = {
+  remesaNumber: string;
+  reasonCode: RemesaCorrectionReasonCode;
+  change:
+    | { code: 1; appointmentDate: string; appointmentTime: string }
+    | { code: 2; appointmentDate: string; appointmentTime: string }
+    | { code: 3; idType: string; id: string; siteCode: string }
+    | { code: 4; idType: string; id: string; siteCode: string };
+};
+
+export type TargetedAnnulmentInput =
+  | { target: "manifest-compliance"; companyRndcNit: string; manifestNumber: string; reasonCode?: string; observations?: string }
+  | { target: "remesa-compliance"; companyRndcNit: string; remesaNumber: string; reasonCode?: string; observations?: string }
+  | { target: "manifest"; companyRndcNit: string; manifestNumber: string; reasonCode?: string; observations?: string }
+  | { target: "remesa"; companyRndcNit: string; remesaNumber: string; reverseReasonCode?: string; reasonCode?: string; observations?: string }
+  | { target: "trip-information"; companyRndcNit: string; tripNumber: string; reasonCode?: string }
+  | { target: "cargo-information"; companyRndcNit: string; cargoNumber: string; reasonCode?: string };
 
 export function buildFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
   return [
@@ -136,13 +172,7 @@ export function buildFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
         CODRESPONSABLEPAGODESCARGUE: "D",
         ACEPTACIONELECTRONICA: "SI",
         OBSERVACIONES: scenario.observations,
-        REMESASMAN: rawXml([
-          '<REMESASMAN procesoid="43">',
-          "<REMESA>",
-          `<CONSECUTIVOREMESA>${scenario.remesaNumber}</CONSECUTIVOREMESA>`,
-          "</REMESA>",
-          "</REMESASMAN>"
-        ].join(""))
+        REMESASMAN: manifestRemesasXml(scenario)
       })
     }
   ];
@@ -231,6 +261,49 @@ export function buildIssuanceMessages(scenario: DemoScenario): RndcFlowMessage[]
   ];
 }
 
+export function buildRemesaCorrectionMessage(input: RemesaCorrectionInput): RndcFlowMessage {
+  const base = {
+    CONSECUTIVOREMESA: input.remesaNumber,
+    MOTIVOCAMBIO: input.reasonCode,
+    CODIGOCAMBIO: input.change.code
+  };
+  let variables: RndcXmlRecord;
+
+  if (input.change.code === 1) {
+    variables = {
+      ...base,
+      FECHACITAPACTADACARGUE: input.change.appointmentDate,
+      HORACITAPACTADACARGUE: input.change.appointmentTime
+    };
+  } else if (input.change.code === 2) {
+    variables = {
+      ...base,
+      FECHACITAPACTADADESCARGUE: input.change.appointmentDate,
+      HORACITAPACTADADESCARGUE: input.change.appointmentTime
+    };
+  } else if (input.change.code === 3) {
+    variables = {
+      ...base,
+      CODTIPOIDDESTINATARIO: input.change.idType,
+      NUMIDDESTINATARIO: input.change.id,
+      CODSEDEDESTINATARIO: input.change.siteCode
+    };
+  } else {
+    variables = {
+      ...base,
+      CODTIPOIDPROPIETARIO: input.change.idType,
+      NUMIDPROPIETARIO: input.change.id,
+      CODSEDEPROPIETARIO: input.change.siteCode
+    };
+  }
+
+  return {
+    name: "correct-remesa",
+    title: "Corregir remesa terrestre de carga",
+    request: createMessage(38, variables)
+  };
+}
+
 export function buildFulfillRemesaMessages(scenario: DemoScenario): RndcFlowMessage[] {
   const compliance = scenario.compliance;
   const isSuspended = compliance.remesaType === "S";
@@ -300,6 +373,83 @@ export function buildComplianceMessages(scenario: DemoScenario): RndcFlowMessage
     ...buildFulfillRemesaMessages(scenario),
     ...buildFulfillManifestMessages(scenario)
   ];
+}
+
+export function buildTargetedAnnulmentMessage(input: TargetedAnnulmentInput): RndcFlowMessage {
+  if (input.target === "manifest-compliance") {
+    return {
+      name: "annul-manifest-compliance",
+      title: "Anular cumplido de manifiesto",
+      request: createMessage(29, {
+        NUMNITEMPRESATRANSPORTE: input.companyRndcNit,
+        NUMMANIFIESTOCARGA: input.manifestNumber,
+        CODMOTIVOANULACIONCUMPLIDO: input.reasonCode ?? "O",
+        OBSERVACIONES: input.observations
+      })
+    };
+  }
+
+  if (input.target === "remesa-compliance") {
+    return {
+      name: "annul-remesa-compliance",
+      title: "Anular cumplido de remesa",
+      request: createMessage(28, {
+        NUMNITEMPRESATRANSPORTE: input.companyRndcNit,
+        CONSECUTIVOREMESA: input.remesaNumber,
+        CODMOTIVOANULACIONCUMPLIDO: input.reasonCode ?? "O",
+        OBSERVACIONES: input.observations
+      })
+    };
+  }
+
+  if (input.target === "manifest") {
+    return {
+      name: "annul-manifest",
+      title: "Anular manifiesto de carga",
+      request: createMessage(32, {
+        NUMNITEMPRESATRANSPORTE: input.companyRndcNit,
+        NUMMANIFIESTOCARGA: input.manifestNumber,
+        MOTIVOANULACIONMANIFIESTO: input.reasonCode ?? "S",
+        OBSERVACIONES: input.observations
+      })
+    };
+  }
+
+  if (input.target === "remesa") {
+    return {
+      name: "annul-remesa",
+      title: "Anular remesa terrestre de carga",
+      request: createMessage(9, {
+        NUMNITEMPRESATRANSPORTE: input.companyRndcNit,
+        CONSECUTIVOREMESA: input.remesaNumber,
+        MOTIVOREVERSAREMESA: input.reverseReasonCode ?? "A",
+        MOTIVOANULACIONREMESA: input.reasonCode ?? "S",
+        OBSERVACIONES: input.observations
+      })
+    };
+  }
+
+  if (input.target === "trip-information") {
+    return {
+      name: "annul-trip-information",
+      title: "Anular informacion del viaje",
+      request: createMessage(8, {
+        NUMNITEMPRESATRANSPORTE: input.companyRndcNit,
+        CONSECUTIVOINFORMACIONVIAJE: input.tripNumber,
+        MOTIVOANULACIONINFOVIAJE: input.reasonCode ?? "S"
+      })
+    };
+  }
+
+  return {
+    name: "annul-cargo-information",
+    title: "Anular informacion de carga",
+    request: createMessage(7, {
+      NUMNITEMPRESATRANSPORTE: input.companyRndcNit,
+      CONSECUTIVOINFORMACIONCARGA: input.cargoNumber,
+      MOTIVOANULACIONINFOCARGA: input.reasonCode ?? "S"
+    })
+  };
 }
 
 export function buildAnnulmentMessages(scenario: { company: { rndcNit: string }; cargoNumber: string; tripNumber: string; remesaNumber: string; manifestNumber: string }): { name: string; title: string; request: RndcMessageRequest; optional?: boolean }[] {
@@ -490,4 +640,20 @@ function renameMessage(message: RndcFlowMessage, name: string, title = message.t
     name,
     title
   };
+}
+
+function manifestRemesasXml(scenario: DemoScenario) {
+  const remesas = scenario.manifestRemesas?.length
+    ? scenario.manifestRemesas
+    : [{ number: scenario.remesaNumber }];
+
+  return rawXml([
+    '<REMESASMAN procesoid="43">',
+    ...remesas.flatMap((remesa) => [
+      "<REMESA>",
+      `<CONSECUTIVOREMESA>${escapeXml(remesa.number)}</CONSECUTIVOREMESA>`,
+      "</REMESA>"
+    ]),
+    "</REMESASMAN>"
+  ].join(""));
 }

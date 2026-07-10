@@ -152,6 +152,36 @@ export type MoneyData = {
   fopatRetention: number;
 };
 
+export type ManifestRemesaData = {
+  number: string;
+  quantityKg?: number;
+  nature?: string;
+  productName?: string;
+  packageName?: string;
+  senderName?: string;
+  recipientName?: string;
+};
+
+export type ManifestRemesaSummary = {
+  number: string;
+  quantityKg: number;
+  nature: string;
+  productName: string;
+  packageName: string;
+  senderName: string;
+  recipientName: string;
+};
+
+export type RndcManifestAcceptance = {
+  id: string;
+  manifestRadicado: string;
+  type: "C" | "T";
+  acceptedAt: string;
+  actorIdType?: string;
+  actorId?: string;
+  observation?: string;
+};
+
 export type ComplianceData = {
   remesaType: string;
   manifestType: string;
@@ -206,6 +236,7 @@ export type DemoScenario = {
   cargoNumber: string;
   tripNumber: string;
   remesaNumber: string;
+  manifestRemesas?: ManifestRemesaData[];
   manifestNumber: string;
   expeditionDate: string;
   loadingAppointment: string;

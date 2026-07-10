@@ -3,23 +3,59 @@ import { mkdir } from "node:fs/promises";
 import { basename, join } from "node:path";
 import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
-import type { DemoScenario, GeneratedDocument, RndcFlowStep } from "../rndc/types.js";
+import type { DemoScenario, GeneratedDocument, ManifestRemesaSummary, RndcConfig, RndcFlowStep, RndcManifestAcceptance } from "../rndc/types.js";
 
-type AuthorizationData = {
+export type AuthorizationData = {
   loadingOrderAuthorization: string;
   remesaAuthorization: string;
   manifestAuthorization: string;
   seguridadQr: string;
   observacionesQr: string;
+  acceptances: RndcManifestAcceptance[];
 };
 
-export async function generateDocuments(scenario: DemoScenario, steps: RndcFlowStep[], pdfDir: string): Promise<GeneratedDocument[]> {
+export function resolveManifestRemesas(scenario: DemoScenario): ManifestRemesaSummary[] {
+  const remesas = scenario.manifestRemesas?.length
+    ? scenario.manifestRemesas
+    : [{ number: scenario.remesaNumber }];
+
+  return remesas.map((remesa) => ({
+    number: remesa.number,
+    quantityKg: remesa.quantityKg ?? scenario.cargo.quantityKg,
+    nature: remesa.nature ?? scenario.cargo.nature,
+    productName: remesa.productName ?? scenario.cargo.productName,
+    packageName: remesa.packageName ?? scenario.cargo.packageName,
+    senderName: remesa.senderName ?? scenario.sender.name,
+    recipientName: remesa.recipientName ?? scenario.recipient.name
+  }));
+}
+
+export function formatManifestAcceptances(acceptances: RndcManifestAcceptance[]): string {
+  if (acceptances.length === 0) {
+    return "Pendiente";
+  }
+
+  return acceptances.map((acceptance) => {
+    const actor = acceptance.type === "C" ? "Conductor" : "Titular";
+    const identity = [acceptance.actorIdType, acceptance.actorId].filter(Boolean).join(" ");
+    const parts = [`${actor}${identity ? ` ${identity}` : ""}`, acceptance.acceptedAt, acceptance.observation].filter(Boolean);
+    return parts.join(" - ");
+  }).join(" | ");
+}
+
+export function documentFooterText(mode: RndcConfig["mode"]): string {
+  return mode === "dry-run"
+    ? "MODO PRUEBA - Documento sin validez oficial generado con datos de prueba."
+    : "Documento generado por el sistema TMS. Verifique su estado oficial en RNDC.";
+}
+
+export async function generateDocuments(scenario: DemoScenario, steps: RndcFlowStep[], pdfDir: string, mode: RndcConfig["mode"] = "dry-run"): Promise<GeneratedDocument[]> {
   await mkdir(pdfDir, { recursive: true });
 
   const authorization = readAuthorization(steps);
   const loadingOrderDocument = await generateLoadingOrderDocument(scenario, authorization.loadingOrderAuthorization, pdfDir);
-  const remesaDocument = await generateRemesaDocument(scenario, authorization, pdfDir);
-  const manifestDocument = await generateManifestDocument(scenario, authorization, pdfDir);
+  const remesaDocument = await generateRemesaDocument(scenario, authorization, pdfDir, mode);
+  const manifestDocument = await generateManifestDocument(scenario, authorization, pdfDir, mode);
 
   return [
     loadingOrderDocument,
@@ -35,17 +71,17 @@ export async function generateLoadingOrderDocument(scenario: DemoScenario, autho
   return { kind: "loading-order", number: scenario.cargoNumber, path, urlPath: `/pdf/${basename(path)}` };
 }
 
-export async function generateRemesaDocument(scenario: DemoScenario, authorization: Partial<AuthorizationData>, pdfDir: string): Promise<GeneratedDocument> {
+export async function generateRemesaDocument(scenario: DemoScenario, authorization: Partial<AuthorizationData>, pdfDir: string, mode: RndcConfig["mode"] = "dry-run"): Promise<GeneratedDocument> {
   await mkdir(pdfDir, { recursive: true });
   const path = join(pdfDir, `remesa-${scenario.remesaNumber}.pdf`);
-  await writeRemesaPdf(path, scenario, completeAuthorization(authorization));
+  await writeRemesaPdf(path, scenario, completeAuthorization(authorization), mode);
   return { kind: "remesa", number: scenario.remesaNumber, path, urlPath: `/pdf/${basename(path)}` };
 }
 
-export async function generateManifestDocument(scenario: DemoScenario, authorization: Partial<AuthorizationData>, pdfDir: string): Promise<GeneratedDocument> {
+export async function generateManifestDocument(scenario: DemoScenario, authorization: Partial<AuthorizationData>, pdfDir: string, mode: RndcConfig["mode"] = "dry-run"): Promise<GeneratedDocument> {
   await mkdir(pdfDir, { recursive: true });
   const path = join(pdfDir, `manifiesto-${scenario.manifestNumber}.pdf`);
-  await writeManifestPdf(path, scenario, completeAuthorization(authorization));
+  await writeManifestPdf(path, scenario, completeAuthorization(authorization), mode);
   return { kind: "manifest", number: scenario.manifestNumber, path, urlPath: `/pdf/${basename(path)}` };
 }
 
@@ -59,7 +95,8 @@ function readAuthorization(steps: RndcFlowStep[]): AuthorizationData {
     remesaAuthorization: remesa?.response.radicado ?? "PENDIENTE",
     manifestAuthorization: manifest?.response.radicado ?? "PENDIENTE",
     seguridadQr: manifest?.response.seguridadQr ?? "PENDIENTE",
-    observacionesQr: manifest?.response.observacionesQr ?? "PENDIENTE"
+    observacionesQr: manifest?.response.observacionesQr ?? "PENDIENTE",
+    acceptances: []
   };
 }
 
@@ -69,7 +106,8 @@ function completeAuthorization(authorization: Partial<AuthorizationData>): Autho
     remesaAuthorization: authorization.remesaAuthorization ?? "PENDIENTE",
     manifestAuthorization: authorization.manifestAuthorization ?? "PENDIENTE",
     seguridadQr: authorization.seguridadQr ?? "PENDIENTE",
-    observacionesQr: authorization.observacionesQr ?? "PENDIENTE"
+    observacionesQr: authorization.observacionesQr ?? "PENDIENTE",
+    acceptances: authorization.acceptances ?? []
   };
 }
 
@@ -228,7 +266,7 @@ function drawSignatureBoxes(doc: PDFKit.PDFDocument, x: number, y: number, width
   doc.text("RECIBIDO", x + cellWidth, y + 5, { width: cellWidth, align: "center" });
 }
 
-async function writeRemesaPdf(path: string, scenario: DemoScenario, authorization: AuthorizationData): Promise<void> {
+async function writeRemesaPdf(path: string, scenario: DemoScenario, authorization: AuthorizationData, mode: RndcConfig["mode"]): Promise<void> {
   const doc = new PDFDocument({ size: "LETTER", margin: 36 });
   const stream = createWriteStream(path);
   doc.pipe(stream);
@@ -241,7 +279,7 @@ async function writeRemesaPdf(path: string, scenario: DemoScenario, authorizatio
 
   twoColumns(doc, [
     ["FECHA", isoFromRndcDate(scenario.expeditionDate)],
-    ["OFICINA", "TMS DEMO"],
+    ["OFICINA", scenario.company.cityName],
     ["PLACA", scenario.vehicle.plate],
     ["CONDUCTOR", scenario.driver.fullName],
     ["CEDULA", scenario.driver.id]
@@ -249,7 +287,7 @@ async function writeRemesaPdf(path: string, scenario: DemoScenario, authorizatio
     ["REMESA No.", scenario.remesaNumber],
     ["NUMERO AUTORIZACION", authorization.remesaAuthorization],
     ["ORDEN DE CARGUE", scenario.cargoNumber],
-    ["MODO", "RNDC DEMO"]
+    ["MODO", mode === "dry-run" ? "RNDC PRUEBA" : "RNDC"]
   ]);
 
   sectionTitle(doc, "Remitente / Lugar de Cargue");
@@ -275,13 +313,13 @@ async function writeRemesaPdf(path: string, scenario: DemoScenario, authorizatio
   doc.font("Helvetica-Bold").text("OBSERVACIONES:");
   doc.font("Helvetica").text(`${scenario.observations}, --`);
   signatureRow(doc, ["Elaborado por", "Recibi a satisfaccion"]);
-  footer(doc);
+  footer(doc, mode);
 
   doc.end();
   await waitForStream(stream);
 }
 
-async function writeManifestPdf(path: string, scenario: DemoScenario, authorization: AuthorizationData): Promise<void> {
+async function writeManifestPdf(path: string, scenario: DemoScenario, authorization: AuthorizationData, mode: RndcConfig["mode"]): Promise<void> {
   const doc = new PDFDocument({ size: "LETTER", layout: "landscape", margin: 28 });
   const stream = createWriteStream(path);
   doc.pipe(stream);
@@ -324,20 +362,18 @@ async function writeManifestPdf(path: string, scenario: DemoScenario, authorizat
     ["TELEFONO CONDUCTOR", scenario.driver.phone],
     ["LICENCIA", scenario.driver.licenseNumber ?? scenario.driver.id],
     ["CIUDAD CONDUCTOR", scenario.driver.cityName]
-  ], 5);
+  ], 5, 24);
 
   sectionTitle(doc, "Informacion de la mercancia transportada");
-  table(doc, ["Nro. Remesa", "Unidad", "Cantidad", "Naturaleza", "Producto", "Remitente", "Destinatario"], [
-    [
-      scenario.remesaNumber,
+  table(doc, ["Nro. Remesa", "Unidad", "Cantidad", "Naturaleza", "Producto", "Remitente", "Destinatario"], resolveManifestRemesas(scenario).map((remesa) => [
+      remesa.number,
       "Kilogramos",
-      String(scenario.cargo.quantityKg),
-      scenario.cargo.nature,
-      `${scenario.cargo.packageName} - ${scenario.cargo.productName}`,
-      scenario.sender.name,
-      scenario.recipient.name
-    ]
-  ]);
+      String(remesa.quantityKg),
+      remesa.nature,
+      `${remesa.packageName} - ${remesa.productName}`,
+      remesa.senderName,
+      remesa.recipientName
+    ]), 24);
 
   const netToPay = scenario.money.freightValue - scenario.money.sourceRetention - scenario.money.icaRetention - scenario.money.fopatRetention;
   sectionTitle(doc, "Valores");
@@ -349,7 +385,7 @@ async function writeManifestPdf(path: string, scenario: DemoScenario, authorizat
     ["VALOR NETO A PAGAR", money(netToPay)],
     ["VALOR ANTICIPO", money(scenario.money.advanceValue)],
     ["SALDO A PAGAR", money(netToPay - scenario.money.advanceValue)]
-  ], 4);
+  ], 4, 24);
 
   const qrPayload = [
     `MEC:${authorization.manifestAuthorization}`,
@@ -366,14 +402,15 @@ async function writeManifestPdf(path: string, scenario: DemoScenario, authorizat
     `Seguro:${authorization.seguridadQr}`
   ].join("|");
   const qr = await QRCode.toDataURL(qrPayload, { margin: 1, width: 110 });
-  doc.image(qr, 632, 404, { width: 84 });
-  doc.font("Helvetica").fontSize(7).text("QR RNDC", 632, 490, { width: 84, align: "center" });
-
-  const observationsY = Math.max(doc.y + 4, 404);
+  const observationsY = Math.max(doc.y + 4, 390);
+  doc.image(qr, 632, observationsY, { width: 84 });
+  doc.font("Helvetica").fontSize(7).text("QR RNDC", 632, observationsY + 86, { width: 84, align: "center" });
   doc.font("Helvetica-Bold").fontSize(8).text("OBSERVACIONES", 350, observationsY, { width: 260 });
-  doc.font("Helvetica").fontSize(7).text(`${scenario.observations}. CEL CONDUC: ${scenario.driver.phone}`, 350, observationsY + 13, { width: 260, height: 56 });
+  doc.font("Helvetica").fontSize(7).text(`${scenario.observations}. CEL CONDUC: ${scenario.driver.phone}`, 350, observationsY + 13, { width: 260, height: 28 });
+  doc.font("Helvetica-Bold").fontSize(7).text("ACEPTACION ELECTRONICA", 350, observationsY + 43, { width: 260 });
+  doc.font("Helvetica").fontSize(6.5).text(formatManifestAcceptances(authorization.acceptances), 350, observationsY + 54, { width: 260, height: 28 });
   signatureRow(doc, ["Firma y huella titular manifiesto", "Firma y huella del conductor"]);
-  footer(doc);
+  footer(doc, mode);
 
   doc.end();
   await waitForStream(stream);
@@ -422,13 +459,11 @@ function partyBlock(doc: PDFKit.PDFDocument, party: DemoScenario["sender"], appo
   ], 2);
 }
 
-function keyValueGrid(doc: PDFKit.PDFDocument, rows: [string, string | number][], columns: number): void {
+function keyValueGrid(doc: PDFKit.PDFDocument, rows: [string, string | number][], columns: number, rowHeight = 30): void {
   const startX = doc.page.margins.left;
   const width = doc.page.width - doc.page.margins.left - doc.page.margins.right;
   const colWidth = width / columns;
   const startY = doc.y;
-  const rowHeight = 30;
-
   rows.forEach(([label, value], index) => {
     const col = index % columns;
     const row = Math.floor(index / columns);
@@ -443,7 +478,7 @@ function keyValueGrid(doc: PDFKit.PDFDocument, rows: [string, string | number][]
   resetX(doc);
 }
 
-function table(doc: PDFKit.PDFDocument, headers: string[], rows: string[][]): void {
+function table(doc: PDFKit.PDFDocument, headers: string[], rows: string[][], rowHeight = 36): void {
   const startX = doc.page.margins.left;
   const width = doc.page.width - doc.page.margins.left - doc.page.margins.right;
   const colWidth = width / headers.length;
@@ -456,12 +491,11 @@ function table(doc: PDFKit.PDFDocument, headers: string[], rows: string[][]): vo
 
   let y = headerY + headerHeight;
   rows.forEach((row) => {
-    const height = 36;
-    doc.rect(startX, y, width, height).strokeColor("#cfd4dc").stroke();
+    doc.rect(startX, y, width, rowHeight).strokeColor("#cfd4dc").stroke();
     row.forEach((value, index) => {
-      doc.font("Helvetica").fontSize(6.8).fillColor("#111111").text(value, startX + index * colWidth + 4, y + 8, { width: colWidth - 8, height: 22 });
+      doc.font("Helvetica").fontSize(6.8).fillColor("#111111").text(value, startX + index * colWidth + 4, y + 6, { width: colWidth - 8, height: rowHeight - 8 });
     });
-    y += height;
+    y += rowHeight;
   });
 
   doc.y = y + 6;
@@ -480,8 +514,8 @@ function signatureRow(doc: PDFKit.PDFDocument, labels: string[]): void {
   });
 }
 
-function footer(doc: PDFKit.PDFDocument): void {
-  doc.font("Helvetica").fontSize(7).fillColor("#666666").text("Documento generado por TMS demo con datos de prueba.", doc.page.margins.left, doc.page.height - doc.page.margins.bottom - 10, {
+function footer(doc: PDFKit.PDFDocument, mode: RndcConfig["mode"]): void {
+  doc.font("Helvetica").fontSize(7).fillColor("#666666").text(documentFooterText(mode), doc.page.margins.left, doc.page.height - doc.page.margins.bottom - 10, {
     width: doc.page.width - doc.page.margins.left - doc.page.margins.right,
     align: "center"
   });

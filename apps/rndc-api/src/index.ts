@@ -6,8 +6,14 @@ import { buildDriverVehicleMessages, buildFailureResponse, buildFulfillManifestM
 import type { CargoData, CompanyParty, ComplianceData, DemoScenario, GeneratedDocument, MoneyData, PersonData, RndcConfig, RndcFlowResult, RndcFlowStep, RndcMessageRequest, RndcMessageResponse, VehicleData } from "@tms/rndc-core";
 import { syncOperationToConvex } from "./convexSync.js";
 import type { ConvexSyncStatus } from "./convexSync.js";
+import { assessFormFopat, registerPhaseOneRoutes } from "./phaseOneRoutes.js";
+import type { FormFopatAssessment } from "./phaseOneRoutes.js";
+import { assertRuntimeCanStart, assessRuntimeSafety, authenticateServiceRequest, createJsonLogger, getRequestContext, isLegacyMessageAllowed, readRndcRuntimeSettings, requestContextMiddleware, sendApiError } from "./runtimeSecurity.js";
+import type { RndcAppHooks, RndcLogger, RndcRuntimeSettings } from "./runtimeSecurity.js";
+import { readDurableEvidenceContext, storeDurableEvidenceToConvex } from "./durableEvidence.js";
+import type { DurableEvidenceReport, DurableEvidenceStore } from "./durableEvidence.js";
 
-type FormOperation = "loading-order" | "remesa" | "manifest" | "driver-vehicle" | "fulfill-remesa" | "fulfill-manifest";
+export type FormOperation = "loading-order" | "remesa" | "manifest" | "driver-vehicle" | "fulfill-remesa" | "fulfill-manifest";
 
 type FormMessage = {
   name: string;
@@ -53,39 +59,62 @@ type FormResult = {
   };
   documents: GeneratedDocument[];
   steps: SavedFormStep[];
+  fopat?: FormFopatAssessment;
   convexSync?: ConvexSyncStatus;
+  durableEvidence?: DurableEvidenceReport;
 };
 
-export function createRndcApp(overrides: Partial<RndcConfig> = {}): express.Express {
+type RndcAppRuntimeHooks = RndcAppHooks & {
+  evidenceStore?: DurableEvidenceStore;
+};
+
+export function createRndcApp(overrides: Partial<RndcConfig> = {}, hooks: RndcAppRuntimeHooks = {}): express.Express {
   const app = express();
   const readConfig = () => loadConfig(overrides);
   const initialConfig = readConfig();
+  const runtimeSettings = readRndcRuntimeSettings();
+  const evidenceStore = hooks.evidenceStore ?? storeDurableEvidenceToConvex;
+  const requireServiceAuthentication = createServiceAuthenticationMiddleware(readConfig, runtimeSettings);
+  const requireOperationalReadiness = createOperationalReadinessMiddleware(readConfig, runtimeSettings);
 
-  app.use(cors);
+  app.disable("x-powered-by");
+  app.use(requestContextMiddleware);
+  app.use(securityHeaders);
+  app.use(createRequestLoggingMiddleware(hooks.logger));
+  app.use(createLegacyCorsMiddleware(initialConfig, runtimeSettings));
   app.use(express.json({ limit: "1mb" }));
-  app.use("/rndc", requireApiKey);
-  app.use("/pdf", express.static(initialConfig.pdfDir));
+  app.get(["/healthz", "/health"], (_req, res) => {
+    res.json({ ok: true, status: "alive" });
+  });
 
-  app.get("/health", (_req, res) => {
-    const config = readConfig();
-    res.json({
-      ok: true,
-      mode: config.mode,
-      transport: config.transport,
-      environment: config.environment,
-      endpointUrl: config.endpointUrl,
-      wstestUrl: config.wstestUrl,
-      endpointUrls: config.endpointUrls,
-      wstestUrls: config.wstestUrls,
-      hasUsername: Boolean(config.username && config.username !== "DRY_RUN_USER"),
-      hasPassword: Boolean(config.password && config.password !== "DRY_RUN_PASSWORD"),
-      companyNit: config.companyNit,
-      companyDv: config.companyDv,
-      companyRndcNit: config.companyRndcNit
+  app.get("/readyz", (_req, res) => {
+    const report = assessRuntimeSafety(readConfig(), runtimeSettings);
+
+    if (report.ready) {
+      res.json({ ok: true, status: "ready", mode: report.mode });
+      return;
+    }
+
+    res.status(503).json({
+      ok: false,
+      status: "not_ready",
+      mode: report.mode,
+      issues: report.issues
     });
   });
 
-  app.get("/rndc/forms/reference", (_req, res) => {
+  app.use("/rndc", requireServiceAuthentication);
+  app.use("/rndc", createDurableEvidenceMiddleware(runtimeSettings));
+  app.use("/pdf", requireServiceAuthentication, express.static(initialConfig.pdfDir, {
+    dotfiles: "deny",
+    fallthrough: true,
+    index: false,
+    setHeaders: (res) => {
+      res.setHeader("Content-Disposition", "attachment");
+    }
+  }));
+
+  app.get("/rndc/forms/reference", requireOperationalReadiness, (_req, res) => {
     const config = readConfig();
     const scenario = buildMtmReferenceScenario(config);
     res.json({
@@ -111,31 +140,33 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}): express.Expr
     });
   });
 
-  app.post("/rndc/forms/loading-order", (req, res, next) => {
-    void submitForm(req, res, next, readConfig, "loading-order", buildLoadingOrderMessages);
+  app.post("/rndc/forms/loading-order", requireOperationalReadiness, (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "loading-order", buildLoadingOrderMessages, evidenceStore);
   });
 
-  app.post("/rndc/forms/remesa", (req, res, next) => {
-    void submitForm(req, res, next, readConfig, "remesa", buildRemesaMessages);
+  app.post("/rndc/forms/remesa", requireOperationalReadiness, (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "remesa", buildRemesaMessages, evidenceStore);
   });
 
-  app.post("/rndc/forms/manifest", (req, res, next) => {
-    void submitForm(req, res, next, readConfig, "manifest", buildManifestMessages);
+  app.post("/rndc/forms/manifest", requireOperationalReadiness, (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "manifest", buildManifestMessages, evidenceStore);
   });
 
-  app.post("/rndc/forms/fulfill-remesa", (req, res, next) => {
-    void submitForm(req, res, next, readConfig, "fulfill-remesa", buildFulfillRemesaMessages);
+  app.post("/rndc/forms/fulfill-remesa", requireOperationalReadiness, (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "fulfill-remesa", buildFulfillRemesaMessages, evidenceStore);
   });
 
-  app.post("/rndc/forms/fulfill-manifest", (req, res, next) => {
-    void submitForm(req, res, next, readConfig, "fulfill-manifest", buildFulfillManifestMessages);
+  app.post("/rndc/forms/fulfill-manifest", requireOperationalReadiness, (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "fulfill-manifest", buildFulfillManifestMessages, evidenceStore);
   });
 
-  app.post("/rndc/forms/driver-vehicle", (req, res, next) => {
-    void submitForm(req, res, next, readConfig, "driver-vehicle", buildDriverVehicleMessages);
+  app.post("/rndc/forms/driver-vehicle", requireOperationalReadiness, (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "driver-vehicle", buildDriverVehicleMessages, evidenceStore);
   });
 
-  app.post("/rndc/message", async (req, res, next) => {
+  registerPhaseOneRoutes(app, readConfig, requireOperationalReadiness, evidenceStore);
+
+  app.post("/rndc/message", createLegacyMessageMiddleware(readConfig, runtimeSettings), requireOperationalReadiness, async (req, res, next) => {
     try {
       const config = readConfig();
       const client = new RndcClient(config);
@@ -152,7 +183,7 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}): express.Expr
     }
   });
 
-  app.post("/rndc/flows/demo", async (_req, res, next) => {
+  app.post("/rndc/flows/demo", createDryRunOnlyMiddleware(readConfig), requireOperationalReadiness, async (_req, res, next) => {
     try {
       const config = readConfig();
       const result = await runDemoFlow(config);
@@ -162,14 +193,12 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}): express.Expr
     }
   });
 
-  app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    const message = error instanceof Error ? error.message : "Unexpected error";
-    const result = typeof error === "object" && error !== null && "result" in error ? (error as { result: unknown }).result : undefined;
-    res.status(500).json({
-      ok: false,
-      error: message,
-      result: isFlowResult(result) ? summarizeFlow(result) : result
-    });
+  app.use((req, res) => {
+    sendApiError(req, res, 404, "NOT_FOUND", "Route not found");
+  });
+
+  app.use((_error: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    sendApiError(req, res, 500, "INTERNAL_ERROR", "Unexpected server error");
   });
 
   return app;
@@ -183,7 +212,8 @@ async function submitForm(
   next: express.NextFunction,
   readConfig: () => RndcConfig,
   operation: FormOperation,
-  buildMessages: (scenario: DemoScenario) => FormMessage[]
+  buildMessages: (scenario: DemoScenario) => FormMessage[],
+  evidenceStore: DurableEvidenceStore
 ): Promise<void> {
   let operationKey: string | undefined;
 
@@ -204,6 +234,27 @@ async function submitForm(
     }
 
     const scenario = buildScenarioFromForm(config, req.body);
+    const fopat = assessFormFopat(operation, req.body, scenario, config.mode);
+
+    if (fopat?.blocked) {
+      const context = getRequestContext(req);
+      res.status(422).json({
+        ok: false,
+        error: {
+          code: "FOPAT_REVIEW_REQUIRED",
+          message: "FOPAT applicability must be resolved before a live RNDC submission"
+        },
+        fopat: fopat.assessment,
+        requestId: context.requestId,
+        correlationId: context.correlationId
+      });
+      return;
+    }
+
+    if (fopat) {
+      scenario.money.fopatRetention = fopat.amountToUse;
+    }
+
     operationKey = `${operation}:${operationDocumentNumber(operation, scenario)}`;
 
     if (inFlightOperations.has(operationKey)) {
@@ -216,8 +267,19 @@ async function submitForm(
     }
 
     inFlightOperations.add(operationKey);
-    const result = await runFormOperation(config, scenario, operation, buildMessages(scenario));
-    result.convexSync = await syncOperationToConvex(result, scenario);
+    const result = await runFormOperation(config, scenario, operation, buildMessages(scenario), fopat?.assessment);
+    result.convexSync = req.header("X-TMS-Durable-Operation") === "true"
+      ? { synced: false, reason: "Durable gateway owns persistence for this operation" }
+      : await syncOperationToConvex(result, scenario);
+    const durableContext = readDurableEvidenceContext((name) => req.header(name));
+
+    if (durableContext.requested && "context" in durableContext) {
+      result.durableEvidence = await evidenceStore(result, durableContext.context, {
+        outputDir: config.outputDir,
+        pdfDir: config.pdfDir
+      });
+    }
+
     res.status(result.ok ? 200 : 422).json(result);
   } catch (error) {
     next(error);
@@ -420,7 +482,13 @@ function hasFormValue(record: Record<string, unknown>, path: string): boolean {
   return typeof current === "string" && current.trim() !== "";
 }
 
-async function runFormOperation(config: RndcConfig, scenario: DemoScenario, operation: FormOperation, messages: FormMessage[]): Promise<FormResult> {
+async function runFormOperation(
+  config: RndcConfig,
+  scenario: DemoScenario,
+  operation: FormOperation,
+  messages: FormMessage[],
+  fopat?: FormFopatAssessment
+): Promise<FormResult> {
   const client = new RndcClient(config);
   const startedAt = new Date().toISOString();
   const runDirectory = join(config.outputDir, `${startedAt.replaceAll(":", "-")}-${scenario.seed}-${operation}`);
@@ -483,7 +551,8 @@ async function runFormOperation(config: RndcConfig, scenario: DemoScenario, oper
       holderId: scenario.vehicleHolder.id
     },
     documents,
-    steps
+    steps,
+    fopat
   };
 
   await writeFile(evidencePath, `${JSON.stringify(result, null, 2)}\n`, "utf8");
@@ -508,7 +577,7 @@ async function buildOperationDocuments(operation: FormOperation, scenario: DemoS
   }
 
   if (operation === "remesa") {
-    return [await generateRemesaDocument(scenario, { remesaAuthorization: steps[0]?.radicado }, config.pdfDir)];
+    return [await generateRemesaDocument(scenario, { remesaAuthorization: steps[0]?.radicado }, config.pdfDir, config.mode)];
   }
 
   if (operation === "manifest") {
@@ -517,7 +586,7 @@ async function buildOperationDocuments(operation: FormOperation, scenario: DemoS
       manifestAuthorization: manifest?.radicado,
       seguridadQr: manifest?.seguridadQr,
       observacionesQr: manifest?.observacionesQr
-    }, config.pdfDir)];
+    }, config.pdfDir, config.mode)];
   }
 
   return [];
@@ -551,6 +620,7 @@ function buildScenarioFromForm(config: RndcConfig, payload: unknown): DemoScenar
   applyCargo(scenario.cargo, child(record, "cargo"));
   applyMoney(scenario.money, child(record, "money"));
   applyCompliance(scenario.compliance, child(record, "compliance"));
+  applyManifestRemesas(scenario, record);
 
   return scenario;
 }
@@ -679,6 +749,51 @@ function applyCompliance(target: ComplianceData, record: Record<string, unknown>
   target.observations = readString(record, "observations", target.observations);
 }
 
+function applyManifestRemesas(scenario: DemoScenario, record: Record<string, unknown>): void {
+  const value = record.manifestRemesas;
+
+  if (!Array.isArray(value)) {
+    return;
+  }
+
+  const remesas = value.flatMap((item) => {
+    if (!isRecord(item)) {
+      return [];
+    }
+
+    const number = readOptionalString(item, "number", undefined);
+    if (!number) {
+      return [];
+    }
+
+    return [{
+      number,
+      quantityKg: optionalNumberValue(item, "quantityKg"),
+      nature: readOptionalString(item, "nature", undefined),
+      productName: readOptionalString(item, "productName", undefined),
+      packageName: readOptionalString(item, "packageName", undefined),
+      senderName: readOptionalString(item, "senderName", undefined),
+      recipientName: readOptionalString(item, "recipientName", undefined)
+    }];
+  });
+
+  if (remesas.length > 0) {
+    scenario.manifestRemesas = remesas;
+  }
+}
+
+function optionalNumberValue(record: Record<string, unknown>, name: string): number | undefined {
+  const value = record[name];
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+  if (typeof value === "string" && value.trim()) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+  return undefined;
+}
+
 function summarizeFlow(result: RndcFlowResult) {
   return {
     ok: result.ok,
@@ -716,48 +831,163 @@ function summarizeStep(step: RndcFlowStep) {
   };
 }
 
-function cors(req: express.Request, res: express.Response, next: express.NextFunction): void {
-  const origin = req.headers.origin;
-
-  if (origin && isAllowedOrigin(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Api-Key");
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  }
-
-  res.setHeader("Vary", "Origin");
-
-  if (req.method === "OPTIONS") {
-    res.status(204).end();
-    return;
-  }
-
+function securityHeaders(_req: express.Request, res: express.Response, next: express.NextFunction): void {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "no-referrer");
+  res.setHeader("Cache-Control", "no-store");
   next();
 }
 
-function isAllowedOrigin(origin: string): boolean {
-  const configured = process.env.WEB_ORIGIN;
+function createRequestLoggingMiddleware(logger: RndcLogger | undefined): express.RequestHandler {
+  return (req, res, next) => {
+    if (logger) {
+      const context = getRequestContext(req);
+      const path = req.path;
+      res.on("finish", () => {
+        logger({
+          level: res.statusCode >= 500 ? "error" : res.statusCode >= 400 ? "warn" : "info",
+          event: "request.completed",
+          timestamp: new Date().toISOString(),
+          requestId: context.requestId,
+          correlationId: context.correlationId,
+          method: req.method,
+          path,
+          status: res.statusCode,
+          durationMs: Date.now() - context.startedAt
+        });
+      });
+    }
 
-  if (configured) {
-    return configured.split(",").map((value) => value.trim()).includes(origin);
-  }
-
-  return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
-}
-
-function requireApiKey(req: express.Request, res: express.Response, next: express.NextFunction): void {
-  const requiredKey = process.env.RNDC_API_KEY;
-
-  if (!requiredKey || req.headers["x-api-key"] === requiredKey) {
     next();
-    return;
-  }
-
-  res.status(401).json({ ok: false, error: "Missing or invalid X-Api-Key header" });
+  };
 }
 
-function isFlowResult(value: unknown): value is RndcFlowResult {
-  return typeof value === "object" && value !== null && "steps" in value && Array.isArray((value as { steps?: unknown }).steps);
+function createDurableEvidenceMiddleware(settings: RndcRuntimeSettings): express.RequestHandler {
+  return (req, res, next) => {
+    const durableContext = readDurableEvidenceContext((name) => req.header(name));
+
+    if (!durableContext.requested) {
+      next();
+      return;
+    }
+
+    const requestContext = getRequestContext(req);
+
+    if ("error" in durableContext) {
+      res.status(400).json({
+        ok: false,
+        error: {
+          code: "INVALID_DURABLE_EVIDENCE_CONTEXT",
+          message: durableContext.error
+        },
+        requestId: requestContext.requestId,
+        correlationId: requestContext.correlationId
+      });
+      return;
+    }
+
+    if (!settings.convexUrl || !settings.convexIngestKey) {
+      res.status(503).json({
+        ok: false,
+        error: {
+          code: "DURABLE_STORAGE_NOT_CONFIGURED",
+          message: "Durable evidence storage is not configured"
+        },
+        requestId: requestContext.requestId,
+        correlationId: requestContext.correlationId
+      });
+      return;
+    }
+
+    next();
+  };
+}
+
+function createLegacyCorsMiddleware(config: RndcConfig, settings: RndcRuntimeSettings): express.RequestHandler {
+  const enabled = config.mode === "dry-run"
+    && settings.nodeEnvironment !== "production"
+    && settings.legacyApiKeyEnabled
+    && settings.allowedOrigins.length > 0;
+
+  return (req, res, next) => {
+    const origin = req.headers.origin;
+
+    if (!enabled || !origin || !settings.allowedOrigins.includes(origin)) {
+      next();
+      return;
+    }
+
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Api-Key, X-Request-Id, X-Correlation-Id");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.setHeader("Vary", "Origin");
+
+    if (req.method === "OPTIONS") {
+      res.status(204).end();
+      return;
+    }
+
+    next();
+  };
+}
+
+function createServiceAuthenticationMiddleware(
+  readConfig: () => RndcConfig,
+  settings: RndcRuntimeSettings
+): express.RequestHandler {
+  return (req, res, next) => {
+    if (authenticateServiceRequest(req, readConfig(), settings)) {
+      next();
+      return;
+    }
+
+    res.setHeader("WWW-Authenticate", "Bearer");
+    sendApiError(req, res, 401, "SERVICE_AUTH_REQUIRED", "Service authentication required");
+  };
+}
+
+function createOperationalReadinessMiddleware(
+  readConfig: () => RndcConfig,
+  settings: RndcRuntimeSettings
+): express.RequestHandler {
+  return (req, res, next) => {
+    const report = assessRuntimeSafety(readConfig(), settings);
+
+    if (report.ready) {
+      next();
+      return;
+    }
+
+    sendApiError(req, res, 503, "LIVE_MODE_NOT_READY", report.mode === "live"
+      ? "Live RNDC operations are not ready"
+      : "RNDC operations are not ready");
+  };
+}
+
+function createLegacyMessageMiddleware(
+  readConfig: () => RndcConfig,
+  settings: RndcRuntimeSettings
+): express.RequestHandler {
+  return (req, res, next) => {
+    if (isLegacyMessageAllowed(readConfig(), settings)) {
+      next();
+      return;
+    }
+
+    sendApiError(req, res, 404, "LEGACY_ENDPOINT_DISABLED", "Legacy endpoint is disabled");
+  };
+}
+
+function createDryRunOnlyMiddleware(readConfig: () => RndcConfig): express.RequestHandler {
+  return (req, res, next) => {
+    if (readConfig().mode === "dry-run") {
+      next();
+      return;
+    }
+
+    sendApiError(req, res, 404, "LEGACY_ENDPOINT_DISABLED", "Legacy endpoint is disabled");
+  };
 }
 
 function child(record: Record<string, unknown>, name: string): Record<string, unknown> {
@@ -828,7 +1058,19 @@ const currentFile = fileURLToPath(import.meta.url);
 
 if (process.argv[1] === currentFile) {
   const port = Number(process.env.PORT ?? 3017);
-  createRndcApp().listen(port, () => {
-    console.log(`RNDC TMS demo listening on http://localhost:${port}`);
+  const config = loadConfig();
+  const runtimeSettings = readRndcRuntimeSettings();
+  const logger = createJsonLogger();
+  assertRuntimeCanStart(config, runtimeSettings);
+  createRndcApp(config, { logger }).listen(port, () => {
+    logger({
+      level: "info",
+      event: "server.started",
+      timestamp: new Date().toISOString(),
+      port
+    });
   });
 }
+
+export { assertRuntimeCanStart, assessRuntimeSafety, createJsonLogger, readRndcRuntimeSettings } from "./runtimeSecurity.js";
+export type { RndcAppHooks, RndcAuthMode, RndcLogEntry, RndcLogger, RndcRequestContext, RndcRuntimeSettings, RuntimeSafetyIssue, RuntimeSafetyReport } from "./runtimeSecurity.js";

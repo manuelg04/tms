@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp } from "node:fs/promises";
+import { mkdtemp, readFile } from "node:fs/promises";
 import { ServerResponse } from "node:http";
 import type { IncomingHttpHeaders, IncomingMessage } from "node:http";
 import type { Socket } from "node:net";
@@ -11,6 +11,8 @@ import { createRndcApp } from "../index.js";
 
 process.env.CONVEX_URL = "";
 process.env.RNDC_INGEST_KEY = "";
+process.env.AUTH_MODE = "service";
+process.env.RNDC_SERVICE_TOKEN = "test-service-token-with-more-than-32-characters";
 
 class MockSocket extends Duplex {
   readonly chunks: Buffer[] = [];
@@ -41,7 +43,10 @@ async function requestJson(app: ReturnType<typeof createRndcApp>, path: string, 
   const mockSocket = new MockSocket();
   const socket = mockSocket as unknown as Socket;
   const body = options.body === undefined ? "" : JSON.stringify(options.body);
-  const headers = Object.fromEntries(Object.entries(options.headers ?? {}).map(([key, value]) => [key.toLowerCase(), value]));
+  const headers = Object.fromEntries(Object.entries({
+    Authorization: `Bearer ${process.env.RNDC_SERVICE_TOKEN}`,
+    ...options.headers
+  }).map(([key, value]) => [key.toLowerCase(), value]));
   const req = Readable.from(body ? [Buffer.from(body)] : []) as MockIncomingMessage;
   Object.assign(req, {
     method: options.method ?? "GET",
@@ -97,6 +102,131 @@ test("posts a remesa form through the RNDC backend in dry run mode", async () =>
   ]);
   assert.match(body.evidencePath as string, /result\.json$/);
   assert.equal((body.documents as { kind: string }[])[0].kind, "remesa");
+});
+
+test("builds a manifest form with every saved remesa", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-multi-remesa-"));
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  });
+  const response = await requestJson(app, "/rndc/forms/manifest", {
+    method: "POST",
+    body: {
+      manifestNumber: "0041464",
+      remesaNumber: "42196",
+      manifestRemesas: [
+        { number: "42196", quantityKg: 17000, productName: "Carga A" },
+        { number: "42197", quantityKg: 17000, productName: "Carga B" }
+      ]
+    }
+  });
+  const steps = response.body.steps as { procesoId: number; requestPath: string }[];
+  const manifestStep = steps.find((step) => step.procesoId === 4);
+
+  assert.ok(manifestStep);
+  const xml = await readFile(manifestStep.requestPath, "utf8");
+
+  assert.equal(response.status, 200);
+  assert.match(xml, /<CONSECUTIVOREMESA>42196<\/CONSECUTIVOREMESA>/);
+  assert.match(xml, /<CONSECUTIVOREMESA>42197<\/CONSECUTIVOREMESA>/);
+});
+
+test("keeps the selected remesa number when a broader manifest remesa list is present", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-selected-remesa-"));
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  });
+  const response = await requestJson(app, "/rndc/forms/remesa", {
+    method: "POST",
+    body: {
+      remesaNumber: "42197",
+      cargoNumber: "000044579",
+      manifestRemesas: [{ number: "42196" }, { number: "42197" }]
+    }
+  });
+  const step = (response.body.steps as { requestPath: string }[])[0];
+  const xml = await readFile(step.requestPath, "utf8");
+
+  assert.equal(response.status, 200);
+  assert.match(xml, /<CONSECUTIVOREMESA>42197<\/CONSECUTIVOREMESA>/);
+  assert.doesNotMatch(xml, /<CONSECUTIVOREMESA>42196<\/CONSECUTIVOREMESA>/);
+});
+
+test("validates durable evidence references before sending and stores the completed form evidence", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-durable-evidence-"));
+  process.env.CONVEX_URL = "https://convex.example";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  const stored: Array<{ context: Record<string, string | undefined>; evidencePath: unknown }> = [];
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  }, {
+    evidenceStore: async (result, context) => {
+      stored.push({
+        context,
+        evidencePath: (result as Record<string, unknown>).evidencePath
+      });
+      return {
+        stored: true,
+        artifacts: [{
+          artifactId: "artifact-1",
+          kind: "other",
+          fileName: "result.json",
+          sha256: "hash",
+          size: 10,
+          existing: false
+        }]
+      };
+    }
+  });
+
+  try {
+    const invalid = await requestJson(app, "/rndc/forms/remesa", {
+      method: "POST",
+      headers: { "X-TMS-Durable-Operation": "true" },
+      body: { remesaNumber: "42196" }
+    });
+    const valid = await requestJson(app, "/rndc/forms/remesa", {
+      method: "POST",
+      headers: {
+        "X-TMS-Durable-Operation": "true",
+        "X-TMS-Organization-Id": "org-1",
+        "X-TMS-Expediente-Id": "exp-1",
+        "X-TMS-Document-Id": "doc-1",
+        "X-TMS-Operation-Id": "op-1"
+      },
+      body: { remesaNumber: "42196" }
+    });
+
+    assert.equal(invalid.status, 400);
+    assert.equal(stored.length, 1);
+    assert.deepEqual(stored[0].context, {
+      organizationId: "org-1",
+      expedienteId: "exp-1",
+      documentId: "doc-1",
+      operationId: "op-1"
+    });
+    assert.match(stored[0].evidencePath as string, /result\.json$/);
+    assert.deepEqual(valid.body.durableEvidence, {
+      stored: true,
+      artifacts: [{
+        artifactId: "artifact-1",
+        kind: "other",
+        fileName: "result.json",
+        sha256: "hash",
+        size: 10,
+        existing: false
+      }]
+    });
+  } finally {
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
 });
 
 test("posts fulfill remesa and fulfill manifest forms in dry run mode", async () => {
@@ -158,6 +288,8 @@ test("posts fulfill remesa and fulfill manifest forms in dry run mode", async ()
 
 test("rejects incomplete live-mode forms before contacting RNDC", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-live-"));
+  process.env.CONVEX_URL = "https://example.invalid";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
   const app = createRndcApp({
     outputDir: join(base, "runs"),
     pdfDir: join(base, "pdfs"),
@@ -183,10 +315,14 @@ test("rejects incomplete live-mode forms before contacting RNDC", async () => {
   assert.ok(Array.isArray(body.missingFields));
   assert.ok(body.missingFields.includes("cargoNumber"));
   assert.ok(body.missingFields.includes("sender.id"));
+  process.env.CONVEX_URL = "";
+  process.env.RNDC_INGEST_KEY = "";
 });
 
 test("rejects suspended fulfill forms without required suspension reasons in live mode", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-live-fulfill-"));
+  process.env.CONVEX_URL = "https://example.invalid";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
   const app = createRndcApp({
     outputDir: join(base, "runs"),
     pdfDir: join(base, "pdfs"),
@@ -230,26 +366,32 @@ test("rejects suspended fulfill forms without required suspension reasons in liv
   assert.ok(Array.isArray(manifestBody.missingFields));
   assert.ok(manifestBody.missingFields.includes("compliance.manifestSuspensionReason"));
   assert.ok(manifestBody.missingFields.includes("compliance.suspensionConsequence"));
+  process.env.CONVEX_URL = "";
+  process.env.RNDC_INGEST_KEY = "";
 });
 
-test("requires the API key on RNDC routes when configured", async () => {
+test("supports the legacy API key only with an explicit dry-run flag", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-key-"));
+  process.env.RNDC_API_KEY = "test-key";
+  process.env.RNDC_ENABLE_LEGACY_API_KEY = "true";
   const app = createRndcApp({
     outputDir: join(base, "runs"),
     pdfDir: join(base, "pdfs"),
     mode: "dry-run"
   });
-  process.env.RNDC_API_KEY = "test-key";
 
   try {
-    const denied = await requestJson(app, "/rndc/forms/reference");
+    const denied = await requestJson(app, "/rndc/forms/reference", {
+      headers: { Authorization: "" }
+    });
     const allowed = await requestJson(app, "/rndc/forms/reference", {
-      headers: { "X-Api-Key": "test-key" }
+      headers: { Authorization: "", "X-Api-Key": "test-key" }
     });
 
     assert.equal(denied.status, 401);
     assert.equal(allowed.status, 200);
   } finally {
     delete process.env.RNDC_API_KEY;
+    delete process.env.RNDC_ENABLE_LEGACY_API_KEY;
   }
 });

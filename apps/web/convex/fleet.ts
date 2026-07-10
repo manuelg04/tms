@@ -3,6 +3,7 @@ import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
+import { requireActor } from "./model/access";
 
 const driverInputValidator = v.object({
   document: v.string(),
@@ -160,6 +161,7 @@ const vehicleDetailValidator = v.object({
 export const upsertFleetBatch = mutation({
   args: {
     ingestKey: v.string(),
+    organizationId: v.optional(v.id("organizations")),
     drivers: v.array(driverInputValidator),
     vehicles: v.array(vehicleInputValidator),
     relations: v.array(relationInputValidator)
@@ -199,6 +201,7 @@ export const upsertFleetBatch = mutation({
 
       if (existing) {
         await ctx.db.patch(existing._id, {
+          organizationId: args.organizationId ?? existing.organizationId,
           documentType: driver.documentType ?? existing.documentType,
           name: driver.name ?? existing.name,
           status: driver.status ?? existing.status,
@@ -223,7 +226,7 @@ export const upsertFleetBatch = mutation({
         });
         result.driversUpdated += 1;
       } else {
-        await ctx.db.insert("drivers", { ...driver, createdAt: now, updatedAt: now });
+        await ctx.db.insert("drivers", { ...driver, organizationId: args.organizationId, createdAt: now, updatedAt: now });
         result.driversInserted += 1;
       }
     }
@@ -236,6 +239,7 @@ export const upsertFleetBatch = mutation({
 
       if (existing) {
         await ctx.db.patch(existing._id, {
+          organizationId: args.organizationId ?? existing.organizationId,
           make: vehicle.make ?? existing.make,
           line: vehicle.line ?? existing.line,
           modelYear: vehicle.modelYear ?? existing.modelYear,
@@ -258,20 +262,18 @@ export const upsertFleetBatch = mutation({
         });
         result.vehiclesUpdated += 1;
       } else {
-        await ctx.db.insert("vehicles", { ...vehicle, createdAt: now, updatedAt: now });
+        await ctx.db.insert("vehicles", { ...vehicle, organizationId: args.organizationId, createdAt: now, updatedAt: now });
         result.vehiclesInserted += 1;
       }
     }
 
     for (const relation of args.relations) {
-      const driver = await ctx.db
-        .query("drivers")
-        .withIndex("by_document", (q) => q.eq("document", relation.driverDocument))
-        .first();
-      const vehicle = await ctx.db
-        .query("vehicles")
-        .withIndex("by_plate", (q) => q.eq("plate", relation.vehiclePlate))
-        .first();
+      const driver = args.organizationId
+        ? await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", args.organizationId).eq("document", relation.driverDocument)).first()
+        : await ctx.db.query("drivers").withIndex("by_document", (q) => q.eq("document", relation.driverDocument)).first();
+      const vehicle = args.organizationId
+        ? await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", args.organizationId).eq("plate", relation.vehiclePlate)).first()
+        : await ctx.db.query("vehicles").withIndex("by_plate", (q) => q.eq("plate", relation.vehiclePlate)).first();
 
       if (!driver || !vehicle) {
         result.relationsSkipped.push({
@@ -329,7 +331,8 @@ export const driversPage = query({
     pageStatus: v.optional(v.union(v.literal("SplitRecommended"), v.literal("SplitRequired"), v.null()))
   }),
   handler: async (ctx, args) => {
-    const results = await ctx.db.query("drivers").order("desc").paginate(args.paginationOpts);
+    const actor = await requireActor(ctx);
+    const results = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId)).order("desc").paginate(args.paginationOpts);
     const page = await Promise.all(results.page.map((driver) => toDriverRow(ctx, driver)));
     return { ...results, page };
   }
@@ -345,7 +348,8 @@ export const vehiclesPage = query({
     pageStatus: v.optional(v.union(v.literal("SplitRecommended"), v.literal("SplitRequired"), v.null()))
   }),
   handler: async (ctx, args) => {
-    const results = await ctx.db.query("vehicles").order("desc").paginate(args.paginationOpts);
+    const actor = await requireActor(ctx);
+    const results = await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId)).order("desc").paginate(args.paginationOpts);
     const page = await Promise.all(results.page.map((vehicle) => toVehicleRow(ctx, vehicle)));
     return { ...results, page };
   }
@@ -355,13 +359,14 @@ export const driversSearch = query({
   args: { prefix: v.string() },
   returns: v.array(driverRowValidator),
   handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
     const prefix = args.prefix.trim();
     if (prefix === "") {
       return [];
     }
     const drivers = await ctx.db
       .query("drivers")
-      .withIndex("by_document", (q) => q.gte("document", prefix).lt("document", prefix + "￿"))
+      .withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).gte("document", prefix).lt("document", prefix + "￿"))
       .take(25);
     return await Promise.all(drivers.map((driver) => toDriverRow(ctx, driver)));
   }
@@ -371,13 +376,14 @@ export const vehiclesSearch = query({
   args: { prefix: v.string() },
   returns: v.array(vehicleRowValidator),
   handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
     const prefix = args.prefix.trim().toUpperCase();
     if (prefix === "") {
       return [];
     }
     const vehicles = await ctx.db
       .query("vehicles")
-      .withIndex("by_plate", (q) => q.gte("plate", prefix).lt("plate", prefix + "￿"))
+      .withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).gte("plate", prefix).lt("plate", prefix + "￿"))
       .take(25);
     return await Promise.all(vehicles.map((vehicle) => toVehicleRow(ctx, vehicle)));
   }
@@ -387,6 +393,7 @@ export const driverByDocument = query({
   args: { document: v.string() },
   returns: v.union(driverRowValidator, v.null()),
   handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
     const document = args.document.trim();
     if (document === "") {
       return null;
@@ -394,7 +401,7 @@ export const driverByDocument = query({
 
     const driver = await ctx.db
       .query("drivers")
-      .withIndex("by_document", (q) => q.eq("document", document))
+      .withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", document))
       .first();
 
     return driver ? await toDriverRow(ctx, driver) : null;
@@ -405,6 +412,7 @@ export const vehicleByPlate = query({
   args: { plate: v.string() },
   returns: v.union(vehicleRowValidator, v.null()),
   handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
     const plate = args.plate.trim().toUpperCase();
     if (plate === "") {
       return null;
@@ -412,7 +420,7 @@ export const vehicleByPlate = query({
 
     const vehicle = await ctx.db
       .query("vehicles")
-      .withIndex("by_plate", (q) => q.eq("plate", plate))
+      .withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).eq("plate", plate))
       .first();
 
     return vehicle ? await toVehicleRow(ctx, vehicle) : null;
@@ -423,6 +431,7 @@ export const driverDetail = query({
   args: { document: v.string() },
   returns: v.union(driverDetailValidator, v.null()),
   handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
     const document = args.document.trim();
     if (document === "") {
       return null;
@@ -430,7 +439,7 @@ export const driverDetail = query({
 
     const driver = await ctx.db
       .query("drivers")
-      .withIndex("by_document", (q) => q.eq("document", document))
+      .withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", document))
       .first();
 
     if (!driver) {
@@ -454,7 +463,8 @@ export const driverDetail = query({
       })
     );
 
-    return { ...driver, vehicles };
+    const { organizationId: _organizationId, ...safeDriver } = driver;
+    return { ...safeDriver, vehicles };
   }
 });
 
@@ -462,6 +472,7 @@ export const vehicleDetail = query({
   args: { plate: v.string() },
   returns: v.union(vehicleDetailValidator, v.null()),
   handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
     const plate = args.plate.trim().toUpperCase();
     if (plate === "") {
       return null;
@@ -469,7 +480,7 @@ export const vehicleDetail = query({
 
     const vehicle = await ctx.db
       .query("vehicles")
-      .withIndex("by_plate", (q) => q.eq("plate", plate))
+      .withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).eq("plate", plate))
       .first();
 
     if (!vehicle) {
@@ -491,7 +502,8 @@ export const vehicleDetail = query({
       })
     );
 
-    return { ...vehicle, drivers };
+    const { organizationId: _organizationId, ...safeVehicle } = vehicle;
+    return { ...safeVehicle, drivers };
   }
 });
 

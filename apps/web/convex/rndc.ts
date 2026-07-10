@@ -110,7 +110,6 @@ export const recordOperation = mutation({
       });
     }
 
-    const documentStatus = args.ok && (args.operation === "fulfill-remesa" || args.operation === "fulfill-manifest") ? ("fulfilled" as const) : args.ok ? ("authorized" as const) : ("rejected" as const);
     const documentIds = [];
 
     for (const document of args.documents) {
@@ -118,11 +117,26 @@ export const recordOperation = mutation({
         .query("documents")
         .withIndex("by_kind_and_number", (q) => q.eq("kind", document.kind).eq("number", document.number))
         .first();
+      const isFulfillment = args.operation === "fulfill-remesa" || args.operation === "fulfill-manifest";
+      const currentOfficialState = existing?.officialState ?? legacyOfficialState(existing?.status);
+      const officialState = args.ok ? (isFulfillment ? ("fulfilled" as const) : ("authorized" as const)) : currentOfficialState;
+      const status = args.ok ? officialState : existing?.status ?? ("rejected" as const);
+      const fulfillmentState = isFulfillment
+        ? args.ok
+          ? ("fulfilled" as const)
+          : ("rejected" as const)
+        : existing?.fulfillmentState ?? ("not_requested" as const);
 
       if (existing) {
         await ctx.db.patch(existing._id, {
           tripId,
-          status: documentStatus,
+          status,
+          officialState,
+          fulfillmentState,
+          correctionState: existing.correctionState ?? "none",
+          annulmentState: existing.annulmentState ?? "none",
+          reconciliationState: existing.reconciliationState ?? "not_needed",
+          acceptanceState: existing.acceptanceState ?? (document.kind === "manifiesto" ? "pending" : "not_applicable"),
           rndcRadicado: document.radicado ?? existing.rndcRadicado,
           mode: args.mode,
           pdfUrlPath: document.urlPath ?? existing.pdfUrlPath,
@@ -135,7 +149,13 @@ export const recordOperation = mutation({
           await ctx.db.insert("documents", {
             tripId,
             kind: document.kind,
-            status: documentStatus,
+            status,
+            officialState,
+            fulfillmentState,
+            correctionState: "none",
+            annulmentState: "none",
+            reconciliationState: "not_needed",
+            acceptanceState: document.kind === "manifiesto" ? "pending" : "not_applicable",
             number: document.number,
             rndcRadicado: document.radicado,
             mode: args.mode,
@@ -181,6 +201,14 @@ export const recordOperation = mutation({
     return { tripId, documentIds };
   }
 });
+
+function legacyOfficialState(status?: string): "draft" | "pending" | "authorized" | "fulfilled" | "annulled" {
+  if (status === "draft" || status === "pending" || status === "authorized" || status === "fulfilled" || status === "annulled") {
+    return status;
+  }
+
+  return "pending";
+}
 
 function buildNotificationBody(args: {
   operation: string;

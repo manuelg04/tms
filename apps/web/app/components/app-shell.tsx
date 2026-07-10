@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { apiBase } from "../lib/labels";
+import { useDemoUser } from "../providers";
 
 type PageMeta = {
   title: string;
@@ -17,9 +17,17 @@ const pageMeta: Record<string, PageMeta> = {
     title: "Panel de operacion",
     subtitle: "Estado en vivo de tus documentos RNDC"
   },
+  "/expedientes": {
+    title: "Expedientes de viaje",
+    subtitle: "Ordenes, asignaciones y documentos oficiales en un solo flujo"
+  },
+  "/expedientes/nuevo": {
+    title: "Nuevo expediente",
+    subtitle: "Crea la orden de servicio y prepara el viaje"
+  },
   "/operaciones": {
     title: "Operaciones RNDC",
-    subtitle: "Emite ordenes de cargue, remesas y manifiestos"
+    subtitle: "Consola tecnica de compatibilidad en modo de prueba"
   },
   "/documentos": {
     title: "Documentos",
@@ -45,8 +53,18 @@ const navItems = [
     )
   },
   {
+    href: "/expedientes",
+    label: "Expedientes",
+    icon: (
+      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+        <path d="M1.5 4.5h5l1.4 1.7h6.6v7.3h-13v-9Z" strokeLinejoin="round" />
+        <path d="M3 4.5V2.3h4.8l1.2 1.5h4v2.4" strokeLinejoin="round" />
+      </svg>
+    )
+  },
+  {
     href: "/operaciones",
-    label: "Operaciones",
+    label: "Operaciones RNDC",
     icon: (
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <path d="M14.5 1.5 7 9M14.5 1.5l-4.5 13-2.5-5.5L2 6.5l12.5-5Z" strokeLinejoin="round" />
@@ -80,14 +98,18 @@ type RndcMode = "dry-run" | "live" | "offline";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const meta = pageMeta[pathname] ?? pageMeta["/"];
-  const unread = useQuery(api.notifications.unreadCount, {});
+  const { loading, user } = useDemoUser();
+  const unread = useQuery(api.notifications.unreadCount, user ? {} : "skip");
   const [mode, setMode] = useState<RndcMode>("offline");
+  const meta = resolvePageMeta(pathname);
 
   useEffect(() => {
-    let cancelled = false;
+    if (pathname === "/login" || !user) {
+      return;
+    }
 
-    fetch(`${apiBase}/health`)
+    let cancelled = false;
+    fetch("/api/rndc/health", { cache: "no-store" })
       .then((response) => response.json())
       .then((body: { mode?: RndcMode }) => {
         if (!cancelled && (body.mode === "dry-run" || body.mode === "live")) {
@@ -103,7 +125,15 @@ export function AppShell({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [pathname, user]);
+
+  if (pathname === "/login") {
+    return <main className="login-shell">{children}</main>;
+  }
+
+  if (loading) {
+    return <div className="full-page-state">Validando sesion…</div>;
+  }
 
   return (
     <div className="app">
@@ -120,7 +150,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <span className="nav-label">Operacion</span>
           {navItems.map((item) => (
             <Link
-              className={pathname === item.href ? "nav-item active" : "nav-item"}
+              className={isActivePath(pathname, item.href) ? "nav-item active" : "nav-item"}
               href={item.href}
               key={item.href}
             >
@@ -152,6 +182,18 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className={mode === "live" ? "mode-chip live" : mode === "offline" ? "mode-chip offline" : "mode-chip"}>
               {mode === "live" ? "En vivo" : mode === "offline" ? "API sin conexion" : "Modo prueba"}
             </span>
+            {user ? (
+              <div className="user-menu">
+                <span className="user-avatar" aria-hidden>{user.name.slice(0, 1)}</span>
+                <span className="user-summary">
+                  <strong>{user.name}</strong>
+                  <small>{roleLabel(user.role)}</small>
+                </span>
+                <button className="user-logout" onClick={() => void logout()} type="button">
+                  Salir
+                </button>
+              </div>
+            ) : null}
           </div>
         </header>
 
@@ -159,4 +201,28 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
     </div>
   );
+}
+
+function resolvePageMeta(pathname: string): PageMeta {
+  if (pathname.startsWith("/expedientes/") && pathname !== "/expedientes/nuevo") {
+    return {
+      title: "Expediente de viaje",
+      subtitle: "Orden, flota y documentos oficiales en un solo lugar"
+    };
+  }
+
+  return pageMeta[pathname] ?? pageMeta["/"];
+}
+
+function isActivePath(pathname: string, href: string): boolean {
+  return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function roleLabel(role: "admin" | "operator" | "auditor"): string {
+  return role === "admin" ? "Administrador" : role === "auditor" ? "Auditor" : "Operador";
+}
+
+async function logout(): Promise<void> {
+  await fetch("/api/auth/logout", { method: "POST" });
+  window.location.assign("/login");
 }

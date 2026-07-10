@@ -48,7 +48,7 @@ async function runFlow(
     }
   }
 
-  const documents = await generateDocuments(scenario, steps, config.pdfDir);
+  const documents = await generateDocuments(scenario, steps, config.pdfDir, config.mode);
   const result = assembleResult(config, scenario, startedAt, runDirectory, steps, documents);
   result.evidencePath = await saveResult(result, runDirectory);
   return result;

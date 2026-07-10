@@ -6,6 +6,7 @@ dist/
 .env
 .env.local
 .env.*.local
+.demo-auth.json
 runs/
 output/pdf/
 output/ingesta/
@@ -14,6 +15,7 @@ apps/*/dist/
 apps/*/.next/
 apps/*/.vercel/
 apps/*/.convex/
+apps/*/.demo-auth.json
 apps/*/runs/
 apps/*/output/pdf/
 apps/*/local/

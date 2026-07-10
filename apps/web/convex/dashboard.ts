@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { query } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
+import { requireActor } from "./model/access";
 
 const documentStatusValidator = v.union(
   v.literal("draft"),
@@ -60,8 +61,9 @@ export const overview = query({
     lastActivity: v.union(v.number(), v.null())
   }),
   handler: async (ctx) => {
-    const documents = await ctx.db.query("documents").order("desc").take(1000);
-    const trips = await ctx.db.query("trips").order("desc").take(1000);
+    const actor = await requireActor(ctx);
+    const documents = await ctx.db.query("documents").withIndex("by_organization", (q) => q.eq("organizationId", actor.organizationId)).order("desc").take(1000);
+    const trips = await ctx.db.query("trips").withIndex("by_organization", (q) => q.eq("organizationId", actor.organizationId)).order("desc").take(1000);
 
     const countByStatus = (status: Doc<"documents">["status"]) =>
       documents.filter((document) => document.status === status).length;
@@ -83,8 +85,9 @@ export const recentDocuments = query({
   args: { limit: v.optional(v.number()) },
   returns: v.array(documentRowValidator),
   handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
     const limit = Math.min(Math.max(args.limit ?? 15, 1), 50);
-    const documents = await ctx.db.query("documents").order("desc").take(limit);
+    const documents = await ctx.db.query("documents").withIndex("by_organization", (q) => q.eq("organizationId", actor.organizationId)).order("desc").take(limit);
     return await Promise.all(documents.map((document) => toDocumentRow(ctx, document)));
   }
 });
@@ -103,40 +106,42 @@ export const documentsPage = query({
     pageStatus: v.optional(v.union(v.literal("SplitRecommended"), v.literal("SplitRequired"), v.null()))
   }),
   handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
     const { paginationOpts, kind, status } = args;
-    const results = await buildDocumentsQuery(ctx, kind, status).paginate(paginationOpts);
+    const results = await buildDocumentsQuery(ctx, actor.organizationId, kind, status).paginate(paginationOpts);
     const page = await Promise.all(results.page.map((document) => toDocumentRow(ctx, document)));
     return { ...results, page };
   }
 });
 
-function buildDocumentsQuery(ctx: QueryCtx, kind: Doc<"documents">["kind"] | undefined, status: Doc<"documents">["status"] | undefined) {
+function buildDocumentsQuery(ctx: QueryCtx, organizationId: Id<"organizations">, kind: Doc<"documents">["kind"] | undefined, status: Doc<"documents">["status"] | undefined) {
   if (kind && status) {
     return ctx.db
       .query("documents")
-      .withIndex("by_kind_and_status", (q) => q.eq("kind", kind).eq("status", status))
+      .withIndex("by_organization_kind_and_status", (q) => q.eq("organizationId", organizationId).eq("kind", kind).eq("status", status))
       .order("desc");
   }
 
   if (status) {
     return ctx.db
       .query("documents")
-      .withIndex("by_status", (q) => q.eq("status", status))
+      .withIndex("by_organization_and_status", (q) => q.eq("organizationId", organizationId).eq("status", status))
       .order("desc");
   }
 
   if (kind) {
     return ctx.db
       .query("documents")
-      .withIndex("by_kind", (q) => q.eq("kind", kind))
+      .withIndex("by_organization_and_kind", (q) => q.eq("organizationId", organizationId).eq("kind", kind))
       .order("desc");
   }
 
-  return ctx.db.query("documents").order("desc");
+  return ctx.db.query("documents").withIndex("by_organization", (q) => q.eq("organizationId", organizationId)).order("desc");
 }
 
 async function toDocumentRow(ctx: QueryCtx, document: Doc<"documents">) {
   const trip = await ctx.db.get(document.tripId as Id<"trips">);
+  const scopedTrip = trip?.organizationId === document.organizationId ? trip : null;
 
   return {
     _id: document._id,
@@ -149,15 +154,15 @@ async function toDocumentRow(ctx: QueryCtx, document: Doc<"documents">) {
     pdfUrlPath: document.pdfUrlPath,
     errorText: document.errorText,
     updatedAt: document.updatedAt,
-    trip: trip
+    trip: scopedTrip
       ? {
-          _id: trip._id,
-          code: trip.code,
-          status: trip.status,
-          originCity: trip.originCity,
-          destinationCity: trip.destinationCity,
-          vehiclePlate: trip.vehiclePlate,
-          driverName: trip.driverName
+          _id: scopedTrip._id,
+          code: scopedTrip.code,
+          status: scopedTrip.status,
+          originCity: scopedTrip.originCity,
+          destinationCity: scopedTrip.destinationCity,
+          vehiclePlate: scopedTrip.vehiclePlate,
+          driverName: scopedTrip.driverName
         }
       : null
   };

@@ -15,9 +15,9 @@
     "dev:rndc": "npm run dev -w @tms/rndc-api",
     "dev:web": "npm run dev -w @tms/web",
     "start": "npm run start -w @tms/rndc-api",
-    "build": "npm run build -ws --if-present",
-    "typecheck": "npm run typecheck -ws --if-present",
-    "test": "npm run test -ws --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
     "rndc:flow": "npm run rndc:flow -w @tms/rndc-api",
     "rndc:prod-flow": "npm run rndc:prod-flow -w @tms/rndc-api",
     "rndc:prepare-ops": "npm run rndc:prepare-ops -w @tms/rndc-api",
@@ -30,7 +30,9 @@
     "rndc:lookup-pairs": "npm run rndc:lookup-pairs -w @tms/rndc-api",
     "rndc:lookup-owner-vehicle": "npm run rndc:lookup-owner-vehicle -w @tms/rndc-api",
     "rndc:lookup-owner-vehicles": "npm run rndc:lookup-owner-vehicles -w @tms/rndc-api",
-    "ingest:fleet": "npm run ingest:fleet -w @tms/web --"
+    "ingest:fleet": "npm run ingest:fleet -w @tms/web --",
+    "auth:setup-demo": "npm run auth:setup-demo -w @tms/web",
+    "demo:bootstrap": "npm run demo:bootstrap -w @tms/web"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

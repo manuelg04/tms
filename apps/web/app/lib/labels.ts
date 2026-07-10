@@ -1,4 +1,4 @@
-export const apiBase = process.env.NEXT_PUBLIC_RNDC_API_URL ?? "http://localhost:3017";
+export const apiBase = "/api/rndc";
 
 export const kindLabels: Record<string, string> = {
   orden_cargue: "Orden de cargue",

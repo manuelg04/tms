@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { requireActor } from "./model/access";
 
 export const list = query({
   args: {},
@@ -14,7 +15,10 @@ export const list = query({
     })
   ),
   handler: async (ctx) => {
-    const notifications = await ctx.db.query("notifications").order("desc").take(30);
+    const actor = await requireActor(ctx);
+    const notifications = (await ctx.db.query("notifications").order("desc").take(200))
+      .filter((notification) => notification.organizationId === actor.organizationId && (!notification.userId || notification.userId === actor._id))
+      .slice(0, 30);
     return notifications.map((notification) => ({
       _id: notification._id,
       _creationTime: notification._creationTime,
@@ -30,11 +34,12 @@ export const unreadCount = query({
   args: {},
   returns: v.number(),
   handler: async (ctx) => {
+    const actor = await requireActor(ctx);
     const unread = await ctx.db
       .query("notifications")
-      .withIndex("by_status", (q) => q.eq("status", "unread"))
+      .withIndex("by_organization_and_status", (q) => q.eq("organizationId", actor.organizationId).eq("status", "unread"))
       .take(100);
-    return unread.length;
+    return unread.filter((notification) => !notification.userId || notification.userId === actor._id).length;
   }
 });
 
@@ -42,15 +47,17 @@ export const markAllRead = mutation({
   args: {},
   returns: v.number(),
   handler: async (ctx) => {
+    const actor = await requireActor(ctx);
     const unread = await ctx.db
       .query("notifications")
-      .withIndex("by_status", (q) => q.eq("status", "unread"))
+      .withIndex("by_organization_and_status", (q) => q.eq("organizationId", actor.organizationId).eq("status", "unread"))
       .take(200);
 
-    for (const notification of unread) {
+    const scoped = unread.filter((notification) => !notification.userId || notification.userId === actor._id);
+    for (const notification of scoped) {
       await ctx.db.patch(notification._id, { status: "read" });
     }
 
-    return unread.length;
+    return scoped.length;
   }
 });

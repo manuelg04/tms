@@ -96,7 +96,7 @@ export function RndcConsole() {
       }
       setForm(payload);
 
-      const response = await fetch(`${apiBase}/rndc/forms/${activeOperation.id}`, {
+      const response = await fetch(`${apiBase}/forms/${activeOperation.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

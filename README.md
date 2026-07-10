@@ -7,7 +7,7 @@ Monorepo for a mini TMS that keeps RNDC document operations in a dedicated backe
 ```text
 apps/
   rndc-api/      Express API and CLI entrypoints for RNDC operations
-  web/           Next.js app skeleton with Convex schema
+  web/           Authenticated Next.js operator app and Convex domain model
 packages/
   rndc-core/     RNDC XML, SOAP client, flow logic, parsing, evidence, and PDFs
 docs/
@@ -22,12 +22,38 @@ The 2026 RNDC webservice guide is stored at:
 docs/rndc/GUIA-Uso-del-Web-Service-RNDC-V5-2026.pdf
 ```
 
+The official data and error exports supplied on July 9, 2026 are preserved with integrity hashes under `docs/rndc/dictionaries/2026-07-09/`.
+
 ## Development
 
 Install dependencies from the repo root:
 
 ```bash
 npm install
+```
+
+Configure the local dummy users and server-to-server credentials:
+
+```bash
+npm run auth:setup-demo
+```
+
+The generated password and the three dummy accounts are saved in the ignored, owner-only file `apps/web/.demo-auth.json`. The accounts cover administrator, operator, and auditor access.
+
+After connecting `apps/web` to a Convex development deployment, set that deployment's `CONVEX_AUTH_JWKS` and `RNDC_INGEST_KEY` from `apps/web/.env.local`, then publish the schema and functions:
+
+```bash
+cd apps/web
+npx convex env set CONVEX_AUTH_JWKS '<value from .env.local>'
+npx convex env set RNDC_INGEST_KEY '<value from .env.local>'
+npx convex dev --once
+cd ../..
+```
+
+Create the idempotent local workspace with one order, an assigned fleet, two remesas, and one manifest:
+
+```bash
+npm run demo:bootstrap
 ```
 
 Run the RNDC backend:
@@ -42,7 +68,7 @@ Run the web app:
 npm run dev:web
 ```
 
-The web app is a live dashboard backed by Convex with three pages: Panel (`/`), Operaciones (`/operaciones`), and Documentos (`/documentos`). Convex credentials live in `apps/web/.env.local` (see `NEXT_PUBLIC_CONVEX_URL`, `CONVEX_DEPLOYMENT`, `CONVEX_DEPLOY_KEY`).
+The main operator flow lives under `/expedientes`. It persists customers, locations, service orders, assignments, several remesas per manifest, official document states, operational events, protected evidence, and durable RNDC operations. The older `/operaciones` console remains available only as a compatibility surface.
 
 Push Convex schema and functions after editing `apps/web/convex/`:
 
@@ -50,7 +76,7 @@ Push Convex schema and functions after editing `apps/web/convex/`:
 cd apps/web && npx convex dev --once
 ```
 
-The RNDC backend records every form operation in Convex when `CONVEX_URL` and `RNDC_INGEST_KEY` are set in the root `.env`. The same `RNDC_INGEST_KEY` value must be set on the Convex deployment with `npx convex env set RNDC_INGEST_KEY <value>`.
+The browser never receives the RNDC service credential. Typed same-origin routes register each action in Convex before the backend is called. The backend preserves masked request XML, response XML, result JSON, and generated PDFs in protected Convex storage when durable operation headers are present.
 
 Run the existing RNDC dry-run flow:
 
@@ -122,6 +148,8 @@ npm test
 
 RNDC communication still happens through XML/SOAP. Convex is for application data, live status, notifications, storage, and audit history.
 
+The exact preparation, rehearsal, controlled live test, evidence, rollback, and monitoring checklist is in `docs/rndc/GUIA-PRIMERA-PRUEBA-REAL-Y-PRODUCCION.md`.
+
 ## Safety
 
-Do not use `RNDC_MODE=live` with fake data against production. Accepted production records become official RNDC records.
+The repository defaults to `RNDC_MODE=dry-run`. Demo authentication blocks live RNDC traffic even if an environment variable is changed accidentally. Do not use `RNDC_MODE=live` with fake data against production; accepted records become official RNDC records.

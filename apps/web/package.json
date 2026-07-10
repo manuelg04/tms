@@ -4,13 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "test": "node --import tsx --test app/operaciones/form-state.test.ts app/operaciones/operations-config.test.ts app/operaciones/form-autofill.test.ts app/operaciones/consecutivos.test.ts",
+    "test": "node --import tsx --test app/lib/auth.test.ts app/lib/auth-client.test.ts app/lib/rndc-action-config.test.ts app/api/auth/auth-routes.test.ts app/api/rndc/gateway.test.ts app/operaciones/form-state.test.ts app/operaciones/operations-config.test.ts app/operaciones/form-autofill.test.ts app/operaciones/consecutivos.test.ts convex/model/documentLifecycle.test.ts convex/model/operationState.test.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "convex:dev": "convex dev",
-    "ingest:fleet": "tsx scripts/ingest-fleet.ts"
+    "ingest:fleet": "tsx scripts/ingest-fleet.ts",
+    "auth:setup-demo": "tsx scripts/setup-demo-auth.ts",
+    "demo:bootstrap": "tsx scripts/bootstrap-demo-workspace.ts"
   },
   "dependencies": {
     "convex": "^1.42.0",

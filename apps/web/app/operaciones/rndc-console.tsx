@@ -18,7 +18,8 @@ import { ActionBar } from "./action-bar";
 import { ResultPanel } from "./result-panel";
 import { VehicleLookup, DriverLookup } from "./lookup";
 import { applyPatches } from "./form-autofill";
-import { counterFieldPath, countersForOperation, formatConsecutivo, parseConsecutivo, type CounterType } from "./consecutivos";
+import { counterFieldPath, formatConsecutivo, type CounterType } from "./consecutivos";
+import { reserveSuggestedCounters } from "./counter-reservation";
 
 export function RndcConsole() {
   const [form, setForm] = useState<FormState>(initialForm);
@@ -32,7 +33,7 @@ export function RndcConsole() {
   const activeOperation = operations.find((operation) => operation.id === active) ?? operations[0];
   const counters = useQuery(api.counters.peekAll, {});
   const nextConsecutivo = useMutation(api.counters.next);
-  const ensureAtLeast = useMutation(api.counters.ensureAtLeast);
+  const claimConsecutivo = useMutation(api.counters.claimExact);
   const suggestions: Partial<Record<CounterType, string>> = {};
 
   for (const row of counters ?? []) {
@@ -80,20 +81,13 @@ export function RndcConsole() {
     setError("");
 
     try {
-      let payload = form;
-      for (const type of countersForOperation(activeOperation.id)) {
-        const path = counterFieldPath[type];
-        const current = readPath(payload, path);
-        if (suggestions[type] !== undefined && current === suggestions[type]) {
-          try {
-            const consumed = await nextConsecutivo({ documentType: type });
-            payload = setPath(payload, path, formatConsecutivo(type, consumed));
-          } catch {
-            // Sin Convex (o contador sin sembrar) el envio no se bloquea:
-            // va con el numero visible en el campo, sin reservar.
-          }
-        }
-      }
+      const payload = await reserveSuggestedCounters({
+        form,
+        operation: activeOperation.id,
+        suggestions,
+        reserve: async (type) => await nextConsecutivo({ documentType: type }),
+        claim: async (type, value) => await claimConsecutivo({ documentType: type, value })
+      });
       setForm(payload);
 
       const response = await fetch(`${apiBase}/forms/${activeOperation.id}`, {
@@ -112,21 +106,12 @@ export function RndcConsole() {
 
       setResult(body);
 
-      if (body.ok) {
-        for (const type of countersForOperation(activeOperation.id)) {
-          const manual = parseConsecutivo(readPath(payload, counterFieldPath[type]));
-          if (manual !== null) {
-            void ensureAtLeast({ documentType: type, value: manual }).catch(() => undefined);
-          }
-        }
-      }
-
       if (!body.ok) {
         setError(body.steps.find((step) => step.errorText)?.errorText ?? "RNDC rechazo la operacion.");
       }
-    } catch {
+    } catch (cause) {
       setResult(null);
-      setError("No hay conexion con el servicio RNDC local.");
+      setError(cause instanceof Error ? cause.message : "No hay conexion con el servicio RNDC local.");
     } finally {
       setPending(false);
     }

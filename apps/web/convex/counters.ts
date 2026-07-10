@@ -32,6 +32,29 @@ export const next = mutation({
   }
 });
 
+export const claimExact = mutation({
+  args: { documentType: v.string(), value: v.number() },
+  returns: v.number(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin", "operator"]);
+    const row = await ctx.db
+      .query("counters")
+      .withIndex("by_organization_and_document_type", (q) => q.eq("organizationId", actor.organizationId).eq("documentType", args.documentType))
+      .unique();
+
+    if (!row) {
+      throw new ConvexError(`Contador sin sembrar: ${args.documentType}`);
+    }
+
+    if (!Number.isSafeInteger(args.value) || args.value <= row.lastValue) {
+      throw new ConvexError(`Consecutivo no disponible: ${args.documentType}`);
+    }
+
+    await ctx.db.patch(row._id, { lastValue: args.value, updatedAt: Date.now() });
+    return args.value;
+  }
+});
+
 export const ensureAtLeast = mutation({
   args: { documentType: v.string(), value: v.number() },
   returns: v.null(),

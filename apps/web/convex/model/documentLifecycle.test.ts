@@ -39,6 +39,18 @@ test("an RNDC rejection changes the attempt but not the official document state"
   assert.deepEqual(applyDocumentEvent(authorized, "attempt_rejected"), authorized);
 });
 
+test("discarding an uncertain dry-run submission restores its draft state", () => {
+  const pending: Lifecycle = {
+    officialState: "pending",
+    fulfillmentState: "not_requested",
+    correctionState: "none",
+    annulmentState: "none",
+    reconciliationState: "not_needed"
+  };
+
+  assert.equal(applyDocumentEvent(pending, "submission_abandoned").officialState, "draft");
+});
+
 test("a rejected fulfillment preserves an authorized manifest", () => {
   const authorized: Lifecycle = {
     officialState: "authorized",
@@ -74,6 +86,39 @@ test("correction and annulment have independent lifecycle fields", () => {
   assert.equal(annulled.officialState, "annulled");
   assert.equal(annulled.annulmentState, "annulled");
   assert.equal(annulled.correctionState, "corrected");
+});
+
+test("annulling a fulfillment reopens the document without annulling it", () => {
+  const fulfilled: Lifecycle = {
+    officialState: "fulfilled",
+    fulfillmentState: "fulfilled",
+    correctionState: "none",
+    annulmentState: "none",
+    reconciliationState: "not_needed"
+  };
+  const reversing = applyDocumentEvent(fulfilled, "fulfillment_annulment_started");
+  const reopened = applyDocumentEvent(reversing, "fulfillment_annulment_succeeded");
+
+  assert.equal(reversing.officialState, "fulfilled");
+  assert.equal(reversing.fulfillmentState, "annulment_pending");
+  assert.equal(reopened.officialState, "authorized");
+  assert.equal(reopened.fulfillmentState, "not_requested");
+  assert.equal(reopened.annulmentState, "none");
+});
+
+test("a rejected fulfillment annulment preserves the fulfilled document", () => {
+  const fulfilled: Lifecycle = {
+    officialState: "fulfilled",
+    fulfillmentState: "fulfilled",
+    correctionState: "none",
+    annulmentState: "none",
+    reconciliationState: "not_needed"
+  };
+  const reversing = applyDocumentEvent(fulfilled, "fulfillment_annulment_started");
+  const rejected = applyDocumentEvent(reversing, "fulfillment_annulment_rejected");
+
+  assert.equal(rejected.officialState, "fulfilled");
+  assert.equal(rejected.fulfillmentState, "fulfilled");
 });
 
 test("a reconciliation mismatch never overwrites the official state", () => {

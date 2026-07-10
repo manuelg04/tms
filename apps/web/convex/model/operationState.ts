@@ -70,3 +70,7 @@ export function chooseExistingOperation(
 
   return requestMatch ?? businessMatch ?? null;
 }
+
+export function blocksAnotherDocumentOperation(status: string): boolean {
+  return status === "queued" || status === "claimed" || status === "uncertain" || status === "reconciling";
+}

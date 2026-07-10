@@ -104,6 +104,71 @@ test("posts a remesa form through the RNDC backend in dry run mode", async () =>
   assert.equal((body.documents as { kind: string }[])[0].kind, "remesa");
 });
 
+test("rejects a gateway mode mismatch before running an RNDC form", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-mode-mismatch-"));
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  });
+  const response = await requestJson(app, "/rndc/forms/remesa", {
+    method: "POST",
+    headers: { "X-TMS-Expected-Mode": "live" },
+    body: { remesaNumber: "42196" }
+  });
+
+  assert.equal(response.status, 409);
+  assert.equal((response.body.error as Record<string, unknown>).code, "RNDC_MODE_MISMATCH");
+});
+
+test("requires an expected mode on every durable RNDC request", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-mode-required-"));
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  });
+  const response = await requestJson(app, "/rndc/forms/remesa", {
+    method: "POST",
+    headers: {
+      "X-TMS-Durable-Operation": "true",
+      "X-TMS-Organization-Id": "org-1",
+      "X-TMS-Expediente-Id": "exp-1",
+      "X-TMS-Operation-Id": "op-1"
+    },
+    body: { remesaNumber: "42196" }
+  });
+
+  assert.equal(response.status, 400);
+  assert.equal((response.body.error as Record<string, unknown>).code, "RNDC_EXPECTED_MODE_REQUIRED");
+});
+
+test("rejects live RNDC writes that do not have a durable operation", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-live-durable-required-"));
+  process.env.CONVEX_URL = "https://example.invalid";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "live",
+    username: "LIVE_USER",
+    password: "LIVE_PASSWORD",
+    companyNit: "900773684",
+    companyDv: "9",
+    companyRndcNit: "9007736849"
+  });
+  const response = await requestJson(app, "/rndc/forms/remesa", {
+    method: "POST",
+    headers: { "X-TMS-Expected-Mode": "live" },
+    body: { remesaNumber: "42196" }
+  });
+
+  assert.equal(response.status, 403);
+  assert.equal((response.body.error as Record<string, unknown>).code, "DURABLE_OPERATION_REQUIRED");
+  process.env.CONVEX_URL = "";
+  process.env.RNDC_INGEST_KEY = "";
+});
+
 test("builds a manifest form with every saved remesa", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-multi-remesa-"));
   const app = createRndcApp({
@@ -156,6 +221,52 @@ test("keeps the selected remesa number when a broader manifest remesa list is pr
   assert.doesNotMatch(xml, /<CONSECUTIVOREMESA>42196<\/CONSECUTIVOREMESA>/);
 });
 
+test("rejects incomplete persisted expediente forms in dry run instead of using reference data", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-persisted-payload-"));
+  process.env.CONVEX_URL = "https://convex.example";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  let evidenceCalls = 0;
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  }, {
+    durableContextValidator: async () => true,
+    evidenceStore: async () => {
+      evidenceCalls += 1;
+      return { stored: true, artifacts: [] };
+    }
+  });
+
+  try {
+    const response = await requestJson(app, "/rndc/forms/remesa", {
+      method: "POST",
+      headers: {
+        "X-TMS-Durable-Operation": "true",
+        "X-TMS-Expected-Mode": "dry-run",
+        "X-TMS-Organization-Id": "org-1",
+        "X-TMS-Expediente-Id": "exp-1",
+        "X-TMS-Document-Id": "doc-1",
+        "X-TMS-Operation-Id": "op-1",
+        "X-TMS-Operation-Type": "emit_remesa",
+        "X-TMS-Lease-Owner": "worker-1",
+        "X-Correlation-Id": "op-1"
+      },
+      body: { remesaNumber: "42196" }
+    });
+
+    assert.equal(response.status, 400);
+    assert.equal(response.body.ok, false);
+    assert.ok(Array.isArray(response.body.missingFields));
+    assert.ok(response.body.missingFields.includes("cargoNumber"));
+    assert.ok(response.body.missingFields.includes("sender.id"));
+    assert.equal(evidenceCalls, 0);
+  } finally {
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
+});
+
 test("validates durable evidence references before sending and stores the completed form evidence", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-durable-evidence-"));
   process.env.CONVEX_URL = "https://convex.example";
@@ -166,6 +277,7 @@ test("validates durable evidence references before sending and stores the comple
     pdfDir: join(base, "pdfs"),
     mode: "dry-run"
   }, {
+    durableContextValidator: async () => true,
     evidenceStore: async (result, context) => {
       stored.push({
         context,
@@ -195,12 +307,37 @@ test("validates durable evidence references before sending and stores the comple
       method: "POST",
       headers: {
         "X-TMS-Durable-Operation": "true",
+        "X-TMS-Expected-Mode": "dry-run",
         "X-TMS-Organization-Id": "org-1",
         "X-TMS-Expediente-Id": "exp-1",
         "X-TMS-Document-Id": "doc-1",
-        "X-TMS-Operation-Id": "op-1"
+        "X-TMS-Operation-Id": "op-1",
+        "X-TMS-Operation-Type": "emit_remesa",
+        "X-TMS-Lease-Owner": "worker-1",
+        "X-Correlation-Id": "op-1"
       },
-      body: { remesaNumber: "42196" }
+      body: {
+        remesaNumber: "42196",
+        cargoNumber: "000044579",
+        loadingAppointmentDate: "10/07/2026",
+        loadingAppointmentTime: "08:00",
+        unloadingAppointmentDate: "11/07/2026",
+        unloadingAppointmentTime: "16:00",
+        sender: { idType: "N", id: "900123456", siteCode: "001" },
+        recipient: { idType: "N", id: "900654321", siteCode: "001" },
+        cargo: {
+          shortDescription: "CARGA GENERAL",
+          merchandiseCode: "009988",
+          packageCode: "1",
+          natureCode: "1",
+          quantityKg: 34000
+        },
+        cargoPolicy: {
+          number: "POL-VALID-1",
+          expirationDate: "31/12/2026",
+          insurerNit: "860002400"
+        }
+      }
     });
 
     assert.equal(invalid.status, 400);
@@ -209,7 +346,10 @@ test("validates durable evidence references before sending and stores the comple
       organizationId: "org-1",
       expedienteId: "exp-1",
       documentId: "doc-1",
-      operationId: "op-1"
+      operationId: "op-1",
+      expectedMode: "dry-run",
+      operationType: "emit_remesa",
+      leaseOwner: "worker-1"
     });
     assert.match(stored[0].evidencePath as string, /result\.json$/);
     assert.deepEqual(valid.body.durableEvidence, {
@@ -223,6 +363,291 @@ test("validates durable evidence references before sending and stores the comple
         existing: false
       }]
     });
+  } finally {
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
+});
+
+test("durable forms never inherit omitted values from the MTM reference scenario", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-no-reference-fallback-"));
+  process.env.CONVEX_URL = "https://convex.example";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  }, {
+    durableContextValidator: async () => true,
+    evidenceStore: async () => ({ stored: true, artifacts: [] })
+  });
+
+  try {
+    const response = await requestJson(app, "/rndc/forms/manifest", {
+      method: "POST",
+      headers: durableHeaders("dry-run", "op-no-reference-fallback", "emit_manifest"),
+      body: {
+        manifestNumber: "0099001",
+        tripNumber: "VIAJE-9001",
+        remesaNumber: "REM-9001",
+        cargoNumber: "CARGO-9001",
+        expeditionDate: "10/07/2026",
+        balancePaymentDate: "15/07/2026",
+        driver: { idType: "C", id: "1000000001" },
+        vehicle: { plate: "ABC123" },
+        vehicleHolder: { idType: "C", id: "1000000002" },
+        sender: { cityCode: "68001000" },
+        recipient: { cityCode: "11001000" },
+        money: { freightValue: 1250000, advanceValue: 250000, icaRetentionPerMille: 0 }
+      }
+    });
+    const steps = response.body.steps as { requestPath: string }[];
+    const xml = (await Promise.all(steps.map((step) => readFile(step.requestPath, "utf8")))).join("\n");
+
+    assert.equal(response.status, 200);
+    assert.doesNotMatch(xml, /R41537/);
+    assert.doesNotMatch(xml, /CARGAMENTO ENTREGADO EN BUEN ESTADO Y COMPLETO/);
+    assert.doesNotMatch(xml, /<RETENCIONICAMANIFIESTOCARGA>3<\/RETENCIONICAMANIFIESTOCARGA>/);
+    assert.doesNotMatch(xml, /<RETENCIONFOPAT>4760<\/RETENCIONFOPAT>/);
+  } finally {
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
+});
+
+test("rejects non-finite required numeric strings before building durable RNDC XML", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-invalid-numeric-"));
+  process.env.CONVEX_URL = "https://convex.example";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  }, { durableContextValidator: async () => true });
+
+  try {
+    const response = await requestJson(app, "/rndc/forms/remesa", {
+      method: "POST",
+      headers: durableHeaders("dry-run", "op-invalid-numeric", "emit_remesa"),
+      body: {
+        remesaNumber: "42196",
+        cargoNumber: "000044579",
+        loadingAppointmentDate: "10/07/2026",
+        loadingAppointmentTime: "08:00",
+        unloadingAppointmentDate: "11/07/2026",
+        unloadingAppointmentTime: "16:00",
+        sender: { idType: "N", id: "900123456", siteCode: "001" },
+        recipient: { idType: "N", id: "900654321", siteCode: "001" },
+        cargo: {
+          shortDescription: "CARGA GENERAL",
+          merchandiseCode: "009988",
+          packageCode: "1",
+          natureCode: "1",
+          quantityKg: "Infinity"
+        },
+        cargoPolicy: {
+          number: "POL-VALID-1",
+          expirationDate: "31/12/2026",
+          insurerNit: "860002400"
+        }
+      }
+    });
+
+    assert.equal(response.status, 400);
+    assert.equal(response.body.ok, false);
+    assert.ok((response.body.missingFields as string[]).includes("cargo.quantityKg"));
+  } finally {
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
+});
+
+test("blocks live document writes even when a durable context already exists", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-form-transport-"));
+  process.env.CONVEX_URL = "https://example.invalid";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "live",
+    transport: "soap",
+    environment: "test",
+    endpointUrlOverride: "http://127.0.0.1:1/rndc",
+    timeoutMs: 100,
+    username: "LIVE_USER",
+    password: "LIVE_PASSWORD",
+    companyNit: "900773684",
+    companyDv: "9",
+    companyRndcNit: "9007736849"
+  }, { durableContextValidator: async () => true });
+
+  try {
+    const response = await requestJson(app, "/rndc/forms/remesa", {
+      method: "POST",
+      headers: durableHeaders("live", "op-form-transport", "emit_remesa"),
+      body: {
+        remesaNumber: "42196",
+        cargoNumber: "000044579",
+        loadingAppointmentDate: "10/07/2026",
+        loadingAppointmentTime: "08:00",
+        unloadingAppointmentDate: "11/07/2026",
+        unloadingAppointmentTime: "16:00",
+        sender: { idType: "N", id: "900123456", siteCode: "001" },
+        recipient: { idType: "N", id: "900654321", siteCode: "001" },
+        cargo: {
+          shortDescription: "CARGA GENERAL",
+          merchandiseCode: "009988",
+          packageCode: "1",
+          natureCode: "1",
+          quantityKg: 34000
+        },
+        cargoPolicy: {
+          number: "POL-VALID-1",
+          expirationDate: "31/12/2026",
+          insurerNit: "860002400"
+        }
+      }
+    });
+    assert.equal(response.status, 403);
+    assert.equal((response.body.error as Record<string, unknown>).code, "LIVE_WRITES_DISABLED");
+  } finally {
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
+});
+
+test("durable remesas use the persisted cargo policy instead of deriving one from a scenario seed", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-cargo-policy-"));
+  process.env.CONVEX_URL = "https://convex.example";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  }, {
+    durableContextValidator: async () => true,
+    evidenceStore: async () => ({ stored: true, artifacts: [] })
+  });
+
+  try {
+    const response = await requestJson(app, "/rndc/forms/remesa", {
+      method: "POST",
+      headers: durableHeaders("dry-run", "op-cargo-policy", "emit_remesa"),
+      body: {
+        seed: "SHOULD-NOT-BECOME-A-POLICY",
+        remesaNumber: "REM-9001",
+        cargoNumber: "CARGO-9001",
+        loadingAppointmentDate: "10/07/2026",
+        loadingAppointmentTime: "08:00",
+        unloadingAppointmentDate: "11/07/2026",
+        unloadingAppointmentTime: "16:00",
+        sender: { idType: "N", id: "900123456", siteCode: "001" },
+        recipient: { idType: "N", id: "900654321", siteCode: "001" },
+        cargo: {
+          shortDescription: "CARGA GENERAL",
+          merchandiseCode: "009988",
+          packageCode: "1",
+          natureCode: "1",
+          quantityKg: 34000
+        },
+        vehicle: {
+          soatExpirationDate: "30/11/2026",
+          insurerNit: "800100200"
+        },
+        cargoPolicy: {
+          number: "POL-9001",
+          expirationDate: "31/12/2026",
+          insurerNit: "860002400"
+        }
+      }
+    });
+    const step = (response.body.steps as { requestPath: string }[])[0];
+    const xml = await readFile(step.requestPath, "utf8");
+
+    assert.equal(response.status, 200);
+    assert.match(xml, /<NUMPOLIZATRANSPORTE>POL-9001<\/NUMPOLIZATRANSPORTE>/);
+    assert.doesNotMatch(xml, /159/);
+  } finally {
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
+});
+
+test("rejects an untrusted durable operation context before building or sending RNDC data", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-durable-context-"));
+  process.env.CONVEX_URL = "https://convex.example";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  let evidenceCalls = 0;
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  }, {
+    durableContextValidator: async () => false,
+    evidenceStore: async () => {
+      evidenceCalls += 1;
+      return { stored: true, artifacts: [] };
+    }
+  });
+
+  try {
+    const response = await requestJson(app, "/rndc/forms/remesa", {
+      method: "POST",
+      headers: {
+        "X-TMS-Durable-Operation": "true",
+        "X-TMS-Expected-Mode": "dry-run",
+        "X-TMS-Organization-Id": "org-1",
+        "X-TMS-Expediente-Id": "exp-1",
+        "X-TMS-Document-Id": "doc-1",
+        "X-TMS-Operation-Id": "op-1",
+        "X-TMS-Operation-Type": "emit_remesa",
+        "X-TMS-Lease-Owner": "worker-1",
+        "X-Correlation-Id": "op-1"
+      },
+      body: { remesaNumber: "42196" }
+    });
+
+    assert.equal(response.status, 409);
+    assert.equal((response.body.error as Record<string, unknown>).code, "INVALID_DURABLE_OPERATION_CONTEXT");
+    assert.equal(evidenceCalls, 0);
+  } finally {
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
+});
+
+test("rejects a durable operation when its persisted action does not match the RNDC route", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-durable-route-"));
+  process.env.CONVEX_URL = "https://convex.example";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  }, {
+    durableContextValidator: async () => true,
+    evidenceStore: async () => ({ stored: true, artifacts: [] })
+  });
+
+  try {
+    const response = await requestJson(app, "/rndc/forms/remesa", {
+      method: "POST",
+      headers: {
+        "X-TMS-Durable-Operation": "true",
+        "X-TMS-Expected-Mode": "dry-run",
+        "X-TMS-Organization-Id": "org-1",
+        "X-TMS-Expediente-Id": "exp-1",
+        "X-TMS-Document-Id": "doc-1",
+        "X-TMS-Operation-Id": "op-1",
+        "X-TMS-Operation-Type": "emit_manifest",
+        "X-TMS-Lease-Owner": "worker-1",
+        "X-Correlation-Id": "op-1"
+      },
+      body: { remesaNumber: "42196" }
+    });
+
+    assert.equal(response.status, 409);
+    assert.equal((response.body.error as Record<string, unknown>).code, "DURABLE_OPERATION_ROUTE_MISMATCH");
   } finally {
     process.env.CONVEX_URL = "";
     process.env.RNDC_INGEST_KEY = "";
@@ -286,7 +711,7 @@ test("posts fulfill remesa and fulfill manifest forms in dry run mode", async ()
   assert.deepEqual(manifestBody.documents, []);
 });
 
-test("rejects incomplete live-mode forms before contacting RNDC", async () => {
+test("blocks incomplete live-mode forms before validation or RNDC contact", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-live-"));
   process.env.CONVEX_URL = "https://example.invalid";
   process.env.RNDC_INGEST_KEY = "test-ingest-key";
@@ -299,9 +724,10 @@ test("rejects incomplete live-mode forms before contacting RNDC", async () => {
     companyNit: "900773684",
     companyDv: "9",
     companyRndcNit: "9007736849"
-  });
+  }, { durableContextValidator: async () => true });
   const response = await requestJson(app, "/rndc/forms/remesa", {
     method: "POST",
+    headers: durableHeaders("live", "op-live-incomplete", "emit_remesa"),
     body: {
       remesaNumber: "42196",
       driver: { idType: "C", id: "80756632" },
@@ -310,16 +736,13 @@ test("rejects incomplete live-mode forms before contacting RNDC", async () => {
   });
   const body = response.body;
 
-  assert.equal(response.status, 400);
-  assert.equal(body.ok, false);
-  assert.ok(Array.isArray(body.missingFields));
-  assert.ok(body.missingFields.includes("cargoNumber"));
-  assert.ok(body.missingFields.includes("sender.id"));
+  assert.equal(response.status, 403);
+  assert.equal((body.error as Record<string, unknown>).code, "LIVE_WRITES_DISABLED");
   process.env.CONVEX_URL = "";
   process.env.RNDC_INGEST_KEY = "";
 });
 
-test("rejects suspended fulfill forms without required suspension reasons in live mode", async () => {
+test("blocks suspended live fulfill forms before validation or RNDC contact", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-live-fulfill-"));
   process.env.CONVEX_URL = "https://example.invalid";
   process.env.RNDC_INGEST_KEY = "test-ingest-key";
@@ -332,9 +755,10 @@ test("rejects suspended fulfill forms without required suspension reasons in liv
     companyNit: "900773684",
     companyDv: "9",
     companyRndcNit: "9007736849"
-  });
+  }, { durableContextValidator: async () => true });
   const remesa = await requestJson(app, "/rndc/forms/fulfill-remesa", {
     method: "POST",
+    headers: durableHeaders("live", "op-live-fulfill-remesa", "fulfill_remesa"),
     body: {
       remesaNumber: "42196",
       manifestNumber: "0041464",
@@ -347,6 +771,7 @@ test("rejects suspended fulfill forms without required suspension reasons in liv
   const remesaBody = remesa.body;
   const manifest = await requestJson(app, "/rndc/forms/fulfill-manifest", {
     method: "POST",
+    headers: durableHeaders("live", "op-live-fulfill-manifest", "fulfill_manifest"),
     body: {
       manifestNumber: "0041464",
       compliance: {
@@ -357,17 +782,51 @@ test("rejects suspended fulfill forms without required suspension reasons in liv
   });
   const manifestBody = manifest.body;
 
-  assert.equal(remesa.status, 400);
-  assert.equal(remesaBody.ok, false);
-  assert.ok(Array.isArray(remesaBody.missingFields));
-  assert.ok(remesaBody.missingFields.includes("compliance.remesaSuspensionReason"));
-  assert.equal(manifest.status, 400);
-  assert.equal(manifestBody.ok, false);
-  assert.ok(Array.isArray(manifestBody.missingFields));
-  assert.ok(manifestBody.missingFields.includes("compliance.manifestSuspensionReason"));
-  assert.ok(manifestBody.missingFields.includes("compliance.suspensionConsequence"));
+  assert.equal(remesa.status, 403);
+  assert.equal((remesaBody.error as Record<string, unknown>).code, "LIVE_WRITES_DISABLED");
+  assert.equal(manifest.status, 403);
+  assert.equal((manifestBody.error as Record<string, unknown>).code, "LIVE_WRITES_DISABLED");
   process.env.CONVEX_URL = "";
   process.env.RNDC_INGEST_KEY = "";
+});
+
+test("rejects unsupported fulfillment types before building durable RNDC XML", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-invalid-fulfillment-type-"));
+  process.env.CONVEX_URL = "https://convex.example";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  }, { durableContextValidator: async () => true });
+
+  try {
+    const remesa = await requestJson(app, "/rndc/forms/fulfill-remesa", {
+      method: "POST",
+      headers: durableHeaders("dry-run", "op-invalid-remesa-type", "fulfill_remesa"),
+      body: {
+        remesaNumber: "42196",
+        manifestNumber: "0041464",
+        compliance: { remesaType: "X", loadedQuantityKg: 34000 }
+      }
+    });
+    const manifest = await requestJson(app, "/rndc/forms/fulfill-manifest", {
+      method: "POST",
+      headers: durableHeaders("dry-run", "op-invalid-manifest-type", "fulfill_manifest"),
+      body: {
+        manifestNumber: "0041464",
+        compliance: { manifestType: "X", documentsDeliveryDate: "30/06/2026" }
+      }
+    });
+
+    assert.equal(remesa.status, 400);
+    assert.ok((remesa.body.missingFields as string[]).includes("compliance.remesaType"));
+    assert.equal(manifest.status, 400);
+    assert.ok((manifest.body.missingFields as string[]).includes("compliance.manifestType"));
+  } finally {
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
 });
 
 test("supports the legacy API key only with an explicit dry-run flag", async () => {
@@ -395,3 +854,17 @@ test("supports the legacy API key only with an explicit dry-run flag", async () 
     delete process.env.RNDC_ENABLE_LEGACY_API_KEY;
   }
 });
+
+function durableHeaders(mode: "dry-run" | "live", operationId: string, operationType: string): Record<string, string> {
+  return {
+    "X-TMS-Durable-Operation": "true",
+    "X-TMS-Expected-Mode": mode,
+    "X-TMS-Organization-Id": "org-1",
+    "X-TMS-Expediente-Id": "exp-1",
+    "X-TMS-Document-Id": "doc-1",
+    "X-TMS-Operation-Id": operationId,
+    "X-TMS-Operation-Type": operationType,
+    "X-TMS-Lease-Owner": `worker-${operationId}`,
+    "X-Correlation-Id": operationId
+  };
+}

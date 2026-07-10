@@ -102,7 +102,7 @@ export function buildFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
         PREREMESAS: rawXml([
           '<PREREMESAS procesoid="44">',
           "<MANPREREMESA>",
-          `<CONSECUTIVOINFORMACIONCARGA>${scenario.cargoNumber}</CONSECUTIVOINFORMACIONCARGA>`,
+          `<CONSECUTIVOINFORMACIONCARGA>${escapeXml(scenario.cargoNumber)}</CONSECUTIVOINFORMACIONCARGA>`,
           "</MANPREREMESA>",
           "</PREREMESAS>"
         ].join(""))
@@ -129,9 +129,9 @@ export function buildFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
         NUMIDDESTINATARIO: scenario.recipient.id,
         CODSEDEDESTINATARIO: scenario.recipient.siteCode,
         DUENOPOLIZA: "E",
-        NUMPOLIZATRANSPORTE: `159${scenario.seed.slice(-8)}`,
-        FECHAVENCIMIENTOPOLIZACARGA: scenario.vehicle.soatExpirationDate,
-        COMPANIASEGURO: scenario.vehicle.insurerNit,
+        NUMPOLIZATRANSPORTE: scenario.cargoPolicy.number,
+        FECHAVENCIMIENTOPOLIZACARGA: scenario.cargoPolicy.expirationDate,
+        COMPANIASEGURO: scenario.cargoPolicy.insurerNit,
         HORASPACTOCARGA: 1,
         MINUTOSPACTOCARGA: 0,
         HORASPACTODESCARGUE: 2,

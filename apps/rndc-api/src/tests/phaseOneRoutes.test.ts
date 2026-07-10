@@ -147,6 +147,21 @@ function authorizedHeaders(): Record<string, string> {
   return { Authorization: `Bearer ${serviceToken}` };
 }
 
+function durableAuthorizedHeaders(operationId: string, operationType: string): Record<string, string> {
+  return {
+    ...authorizedHeaders(),
+    "X-TMS-Durable-Operation": "true",
+    "X-TMS-Expected-Mode": "live",
+    "X-TMS-Organization-Id": "org-1",
+    "X-TMS-Expediente-Id": "exp-1",
+    "X-TMS-Document-Id": "doc-1",
+    "X-TMS-Operation-Id": operationId,
+    "X-TMS-Operation-Type": operationType,
+    "X-TMS-Lease-Owner": `worker-${operationId}`,
+    "X-Correlation-Id": operationId
+  };
+}
+
 test("phase one routes require service authentication", async () => {
   await withEnvironment({ AUTH_MODE: "service", RNDC_SERVICE_TOKEN: serviceToken }, async () => {
     const app = createRndcApp(await dryRunConfig("tms-rndc-phase-one-auth-"));
@@ -198,16 +213,18 @@ test("process 38 route validates input and persists masked dry-run evidence", as
   });
 });
 
-test("failed RNDC transport still preserves the masked request evidence", async () => {
+test("live corrections are blocked before transport or evidence creation", async () => {
   await withEnvironment({
     AUTH_MODE: "service",
     RNDC_SERVICE_TOKEN: serviceToken,
     CONVEX_URL: "https://example.invalid",
     RNDC_INGEST_KEY: "test-ingest-key"
   }, async () => {
-    const app = createRndcApp(await liveConfig("tms-rndc-phase-one-failed-evidence-"));
+    const app = createRndcApp(await liveConfig("tms-rndc-phase-one-failed-evidence-"), {
+      durableContextValidator: async () => true
+    });
     const response = await request(app, "/rndc/corrections/remesa", {
-      headers: authorizedHeaders(),
+      headers: durableAuthorizedHeaders("op-failed-evidence", "correct_remesa"),
       body: {
         remesaNumber: "97102",
         reasonCode: 1,
@@ -215,13 +232,10 @@ test("failed RNDC transport still preserves the masked request evidence", async 
       }
     });
     const body = record(response.body);
-    const requestEvidence = await readFile(record(body.request).path as string, "utf8");
 
-    assert.equal(response.status, 502);
-    assert.match(requestEvidence, /<procesoid>38<\/procesoid>/);
-    assert.match(requestEvidence, /<username>\*\*\*<\/username>/);
-    assert.match(requestEvidence, /<password>\*\*\*<\/password>/);
-    assert.doesNotMatch(requestEvidence, /LIVE_USER|LIVE_PASSWORD/);
+    assert.equal(response.status, 403);
+    assert.equal(record(body.error).code, "LIVE_WRITES_DISABLED");
+    assert.equal(body.request, undefined);
   });
 });
 
@@ -375,15 +389,17 @@ test("dry-run continues with a FOPAT warning while live mode fails closed before
     const liveOverrides = await liveConfig("tms-rndc-phase-one-fopat-live-review-");
     const liveOutput = liveOverrides.outputDir as string;
     const scenario = buildMtmReferenceScenario(loadConfig(liveOverrides));
-    const live = await request(createRndcApp(liveOverrides), "/rndc/forms/manifest", {
-      headers: authorizedHeaders(),
+    const live = await request(createRndcApp(liveOverrides, {
+      durableContextValidator: async () => true
+    }), "/rndc/forms/manifest", {
+      headers: durableAuthorizedHeaders("op-fopat-live", "emit_manifest"),
       body: scenario
     });
     const liveBody = record(live.body);
 
-    assert.equal(live.status, 422);
-    assert.equal(record(liveBody.error).code, "FOPAT_REVIEW_REQUIRED");
-    assert.equal(record(record(liveBody.fopat).result).status, "review-required");
+    assert.equal(live.status, 403);
+    assert.equal(record(liveBody.error).code, "LIVE_WRITES_DISABLED");
+    assert.equal(liveBody.fopat, undefined);
     assert.equal(existsSync(liveOutput), false);
   });
 });

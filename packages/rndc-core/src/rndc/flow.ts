@@ -7,11 +7,19 @@ import { buildFlowMessages, buildMtmProductionFlowMessages } from "./messages.js
 import type { DemoScenario, FlowStepName, RndcConfig, RndcFlowResult, RndcFlowStep, RndcMessageRequest, RndcMessageResponse } from "./types.js";
 
 export async function runDemoFlow(config: RndcConfig): Promise<RndcFlowResult> {
+  assertScenarioFlowMode(config);
   return runFlow(config, buildDemoScenario(config), buildFlowMessages);
 }
 
 export async function runMtmProductionFlow(config: RndcConfig, scenario?: DemoScenario): Promise<RndcFlowResult> {
+  assertScenarioFlowMode(config);
   return runFlow(config, scenario ?? buildMtmProductionScenario(config), buildMtmProductionFlowMessages);
+}
+
+function assertScenarioFlowMode(config: RndcConfig): void {
+  if (config.mode === "live") {
+    throw new Error("Legacy RNDC scenario flows are disabled in live mode; official writes require a durable request context");
+  }
 }
 
 async function runFlow(

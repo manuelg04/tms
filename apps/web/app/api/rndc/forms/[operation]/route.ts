@@ -14,10 +14,15 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ operation: string }> }
 ): Promise<Response> {
-  const authorization = authorizeGatewayRequest(request, "submit_rndc");
+  const permission = process.env.NODE_ENV === "production" ? "override_rndc" : "submit_rndc";
+  const authorization = authorizeGatewayRequest(request, permission);
 
   if (authorization instanceof Response) {
     return authorization;
+  }
+
+  if ((process.env.RNDC_MODE ?? "dry-run") !== "dry-run") {
+    return jsonResponse({ error: "Legacy RNDC forms are available only in dry-run mode" }, 403);
   }
 
   const { operation } = await context.params;

@@ -1,5 +1,5 @@
 export type OfficialDocumentState = "draft" | "pending" | "authorized" | "fulfilled" | "annulled";
-export type FulfillmentState = "not_requested" | "pending" | "fulfilled" | "rejected";
+export type FulfillmentState = "not_requested" | "pending" | "fulfilled" | "rejected" | "annulment_pending";
 export type CorrectionState = "none" | "pending" | "corrected" | "rejected";
 export type AnnulmentState = "none" | "pending" | "annulled" | "rejected";
 export type ReconciliationState = "not_needed" | "pending" | "confirmed" | "mismatch";
@@ -16,9 +16,13 @@ export type DocumentEvent =
   | "submission_started"
   | "submission_succeeded"
   | "attempt_rejected"
+  | "submission_abandoned"
   | "fulfillment_started"
   | "fulfillment_succeeded"
   | "fulfillment_rejected"
+  | "fulfillment_annulment_started"
+  | "fulfillment_annulment_succeeded"
+  | "fulfillment_annulment_rejected"
   | "correction_started"
   | "correction_succeeded"
   | "correction_rejected"
@@ -49,6 +53,9 @@ export function applyDocumentEvent(lifecycle: DocumentLifecycle, event: Document
       return { ...lifecycle, officialState: "authorized" };
     case "attempt_rejected":
       return lifecycle;
+    case "submission_abandoned":
+      requireOfficialState(lifecycle, ["pending"], event);
+      return { ...lifecycle, officialState: "draft" };
     case "fulfillment_started":
       requireOfficialState(lifecycle, ["authorized"], event);
       return { ...lifecycle, fulfillmentState: "pending" };
@@ -58,6 +65,15 @@ export function applyDocumentEvent(lifecycle: DocumentLifecycle, event: Document
     case "fulfillment_rejected":
       requireOfficialState(lifecycle, ["authorized"], event);
       return { ...lifecycle, fulfillmentState: "rejected" };
+    case "fulfillment_annulment_started":
+      requireOfficialState(lifecycle, ["fulfilled"], event);
+      return { ...lifecycle, fulfillmentState: "annulment_pending" };
+    case "fulfillment_annulment_succeeded":
+      requireOfficialState(lifecycle, ["fulfilled", "authorized"], event);
+      return { ...lifecycle, officialState: "authorized", fulfillmentState: "not_requested" };
+    case "fulfillment_annulment_rejected":
+      requireOfficialState(lifecycle, ["fulfilled"], event);
+      return { ...lifecycle, fulfillmentState: "fulfilled" };
     case "correction_started":
       requireOfficialState(lifecycle, ["authorized", "fulfilled"], event);
       return { ...lifecycle, correctionState: "pending" };

@@ -162,3 +162,11 @@ test("skips the sync when Convex is not configured", async () => {
     }
   }
 });
+
+test("refuses legacy Convex sync for live results", async () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  const status = await syncOperationToConvex(makeResult({ mode: "live" }), scenario);
+
+  assert.equal(status.synced, false);
+  assert.match(status.reason ?? "", /disabled outside isolated dry-run/);
+});

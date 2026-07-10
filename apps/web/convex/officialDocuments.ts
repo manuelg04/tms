@@ -2,7 +2,7 @@ import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
-import { appendAudit, requireActor, requireSameOrganization, requireServiceKey } from "./model/access";
+import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
 import {
   applyDocumentEvent,
   initialDocumentLifecycle,
@@ -16,24 +16,6 @@ const kindValidator = v.union(
   v.literal("manifiesto"),
   v.literal("cumplido"),
   v.literal("anulacion")
-);
-
-const eventValidator = v.union(
-  v.literal("submission_started"),
-  v.literal("submission_succeeded"),
-  v.literal("attempt_rejected"),
-  v.literal("fulfillment_started"),
-  v.literal("fulfillment_succeeded"),
-  v.literal("fulfillment_rejected"),
-  v.literal("correction_started"),
-  v.literal("correction_succeeded"),
-  v.literal("correction_rejected"),
-  v.literal("annulment_started"),
-  v.literal("annulment_succeeded"),
-  v.literal("annulment_rejected"),
-  v.literal("reconciliation_started"),
-  v.literal("reconciliation_confirmed"),
-  v.literal("reconciliation_mismatch")
 );
 
 const acceptanceStateValidator = v.union(
@@ -55,6 +37,7 @@ const documentOutputValidator = v.object({
   status: v.string(),
   number: v.optional(v.string()),
   rndcRadicado: v.optional(v.string()),
+  issuanceRadicado: v.optional(v.string()),
   mode: v.optional(v.union(v.literal("dry-run"), v.literal("live"))),
   pdfUrlPath: v.optional(v.string()),
   errorText: v.optional(v.string()),
@@ -170,125 +153,6 @@ export const createDraft = mutation({
   }
 });
 
-export const recordAcceptanceFromService = mutation({
-  args: {
-    serviceKey: v.string(),
-    documentId: v.id("documents"),
-    rndcOperationId: v.optional(v.id("rndcOperations")),
-    state: acceptanceStateValidator,
-    actorName: v.optional(v.string()),
-    actorDocument: v.optional(v.string()),
-    recordedAt: v.optional(v.number()),
-    detailsJson: v.optional(v.string())
-  },
-  returns: documentOutputValidator,
-  handler: async (ctx, args) => {
-    requireServiceKey(args.serviceKey);
-    const document = await ctx.db.get("documents", args.documentId);
-
-    if (!document || !document.organizationId || document.kind !== "manifiesto") {
-      throw new ConvexError({ code: "NOT_FOUND", message: "Scoped manifest document not found" });
-    }
-
-    if (args.rndcOperationId) {
-      const operation = await ctx.db.get("rndcOperations", args.rndcOperationId);
-      if (!operation || operation.documentId !== document._id || operation.organizationId !== document.organizationId) {
-        throw new ConvexError({ code: "FORBIDDEN", message: "Acceptance operation does not belong to the manifest" });
-      }
-    }
-
-    const recordedAt = args.recordedAt ?? Date.now();
-    await ctx.db.patch("documents", document._id, {
-      acceptanceState: args.state,
-      acceptanceActorName: args.actorName,
-      acceptanceActorDocument: args.actorDocument,
-      acceptanceRecordedAt: recordedAt,
-      updatedAt: recordedAt
-    });
-
-    if (document.expedienteId) {
-      await ctx.db.insert("expedienteEvents", {
-        organizationId: document.organizationId,
-        expedienteId: document.expedienteId,
-        eventType: "manifest_acceptance_updated",
-        title: `Aceptación electrónica ${args.state}`,
-        occurredAt: recordedAt
-      });
-    }
-
-    await appendAudit(ctx, {
-      organizationId: document.organizationId,
-      actorType: "service",
-      action: "official_document.acceptance_updated",
-      entityType: "document",
-      entityId: document._id,
-      detailsJson: args.detailsJson,
-      createdAt: recordedAt
-    });
-    const updated = await ctx.db.get("documents", document._id);
-
-    if (!updated) {
-      throw new ConvexError({ code: "INTERNAL", message: "Manifest could not be reloaded" });
-    }
-
-    return updated;
-  }
-});
-
-export const applyLifecycleEventFromService = mutation({
-  args: {
-    serviceKey: v.string(),
-    documentId: v.id("documents"),
-    rndcOperationId: v.optional(v.id("rndcOperations")),
-    event: eventValidator,
-    radicado: v.optional(v.string()),
-    errorText: v.optional(v.string()),
-    detailsJson: v.optional(v.string())
-  },
-  returns: documentOutputValidator,
-  handler: async (ctx, args) => {
-    requireServiceKey(args.serviceKey);
-    return await applyLifecycle(ctx, {
-      documentId: args.documentId,
-      rndcOperationId: args.rndcOperationId,
-      event: args.event,
-      radicado: args.radicado,
-      errorText: args.errorText,
-      detailsJson: args.detailsJson,
-      actorType: "service"
-    });
-  }
-});
-
-export const applyManualLifecycleEvent = mutation({
-  args: {
-    actorToken: v.optional(v.string()),
-    documentId: v.id("documents"),
-    event: eventValidator,
-    radicado: v.optional(v.string()),
-    reason: v.string()
-  },
-  returns: documentOutputValidator,
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken, ["admin"]);
-    const document = await ctx.db.get("documents", args.documentId);
-
-    if (!document || !document.organizationId) {
-      throw new ConvexError({ code: "NOT_FOUND", message: "Scoped document not found" });
-    }
-
-    requireSameOrganization(actor, document.organizationId);
-    return await applyLifecycle(ctx, {
-      documentId: document._id,
-      event: args.event,
-      radicado: args.radicado,
-      reason: args.reason,
-      actorType: "user",
-      actorId: actor._id
-    });
-  }
-});
-
 export const listForExpediente = query({
   args: { actorToken: v.optional(v.string()), expedienteId: v.id("expedientes") },
   returns: v.array(documentOutputValidator),
@@ -305,7 +169,69 @@ export const listForExpediente = query({
   }
 });
 
-async function applyLifecycle(
+export async function recordAcceptance(
+  ctx: MutationCtx,
+  input: {
+    documentId: Id<"documents">;
+    rndcOperationId?: Id<"rndcOperations">;
+    state: "not_applicable" | "pending" | "accepted" | "delegated" | "rejected";
+    actorName?: string;
+    actorDocument?: string;
+    recordedAt?: number;
+    detailsJson?: string;
+  }
+): Promise<Doc<"documents">> {
+  const document = await ctx.db.get("documents", input.documentId);
+
+  if (!document || !document.organizationId || document.kind !== "manifiesto") {
+    throw new ConvexError({ code: "NOT_FOUND", message: "Scoped manifest document not found" });
+  }
+
+  if (input.rndcOperationId) {
+    const operation = await ctx.db.get("rndcOperations", input.rndcOperationId);
+    if (!operation || operation.documentId !== document._id || operation.organizationId !== document.organizationId) {
+      throw new ConvexError({ code: "FORBIDDEN", message: "Acceptance operation does not belong to the manifest" });
+    }
+  }
+
+  const recordedAt = input.recordedAt ?? Date.now();
+  await ctx.db.patch("documents", document._id, {
+    acceptanceState: input.state,
+    acceptanceActorName: input.actorName,
+    acceptanceActorDocument: input.actorDocument,
+    acceptanceRecordedAt: recordedAt,
+    updatedAt: recordedAt
+  });
+
+  if (document.expedienteId) {
+    await ctx.db.insert("expedienteEvents", {
+      organizationId: document.organizationId,
+      expedienteId: document.expedienteId,
+      eventType: "manifest_acceptance_updated",
+      title: `Aceptación electrónica ${input.state}`,
+      occurredAt: recordedAt
+    });
+  }
+
+  await appendAudit(ctx, {
+    organizationId: document.organizationId,
+    actorType: "service",
+    action: "official_document.acceptance_updated",
+    entityType: "document",
+    entityId: document._id,
+    detailsJson: input.detailsJson,
+    createdAt: recordedAt
+  });
+  const updated = await ctx.db.get("documents", document._id);
+
+  if (!updated) {
+    throw new ConvexError({ code: "INTERNAL", message: "Manifest could not be reloaded" });
+  }
+
+  return updated;
+}
+
+export async function applyLifecycle(
   ctx: MutationCtx,
   input: {
     documentId: Id<"documents">;
@@ -345,8 +271,11 @@ async function applyLifecycle(
   const now = Date.now();
   await ctx.db.patch("documents", document._id, {
     ...lifecycle,
-    status: lifecycle.officialState,
+    status: input.event === "attempt_rejected" ? "rejected" : lifecycle.officialState,
     rndcRadicado: input.radicado ?? document.rndcRadicado,
+    issuanceRadicado: input.event === "submission_succeeded" && input.radicado
+      ? input.radicado
+      : document.issuanceRadicado,
     errorText: input.errorText,
     updatedAt: now
   });
@@ -418,9 +347,13 @@ function lifecycleEventTitle(event: DocumentEvent): string {
     submission_started: "Envio RNDC iniciado",
     submission_succeeded: "Documento autorizado en modo de prueba",
     attempt_rejected: "Intento RNDC rechazado",
+    submission_abandoned: "Simulacion RNDC descartada",
     fulfillment_started: "Cumplido RNDC iniciado",
     fulfillment_succeeded: "Documento cumplido en modo de prueba",
     fulfillment_rejected: "Cumplido RNDC rechazado",
+    fulfillment_annulment_started: "Reversion de cumplido RNDC iniciada",
+    fulfillment_annulment_succeeded: "Cumplido RNDC revertido",
+    fulfillment_annulment_rejected: "Reversion de cumplido RNDC rechazada",
     correction_started: "Correccion de remesa iniciada",
     correction_succeeded: "Remesa corregida en modo de prueba",
     correction_rejected: "Correccion de remesa rechazada",

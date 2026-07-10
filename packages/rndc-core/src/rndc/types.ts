@@ -143,6 +143,12 @@ export type CargoData = {
   declaredValue: number;
 };
 
+export type CargoPolicyData = {
+  number: string;
+  expirationDate: string;
+  insurerNit: string;
+};
+
 export type MoneyData = {
   freightValue: number;
   advanceValue: number;
@@ -232,6 +238,7 @@ export type DemoScenario = {
   recipient: CompanyParty;
   vehicle: VehicleData;
   cargo: CargoData;
+  cargoPolicy: CargoPolicyData;
   money: MoneyData;
   cargoNumber: string;
   tripNumber: string;

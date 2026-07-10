@@ -66,23 +66,28 @@ export async function generateDocuments(scenario: DemoScenario, steps: RndcFlowS
 
 export async function generateLoadingOrderDocument(scenario: DemoScenario, authorization: string, pdfDir: string): Promise<GeneratedDocument> {
   await mkdir(pdfDir, { recursive: true });
-  const path = join(pdfDir, `orden-cargue-${scenario.cargoNumber}.pdf`);
+  const path = join(pdfDir, `orden-cargue-${documentFileSegment(scenario.cargoNumber)}.pdf`);
   await writeLoadingOrderPdf(path, scenario, authorization);
   return { kind: "loading-order", number: scenario.cargoNumber, path, urlPath: `/pdf/${basename(path)}` };
 }
 
 export async function generateRemesaDocument(scenario: DemoScenario, authorization: Partial<AuthorizationData>, pdfDir: string, mode: RndcConfig["mode"] = "dry-run"): Promise<GeneratedDocument> {
   await mkdir(pdfDir, { recursive: true });
-  const path = join(pdfDir, `remesa-${scenario.remesaNumber}.pdf`);
+  const path = join(pdfDir, `remesa-${documentFileSegment(scenario.remesaNumber)}.pdf`);
   await writeRemesaPdf(path, scenario, completeAuthorization(authorization), mode);
   return { kind: "remesa", number: scenario.remesaNumber, path, urlPath: `/pdf/${basename(path)}` };
 }
 
 export async function generateManifestDocument(scenario: DemoScenario, authorization: Partial<AuthorizationData>, pdfDir: string, mode: RndcConfig["mode"] = "dry-run"): Promise<GeneratedDocument> {
   await mkdir(pdfDir, { recursive: true });
-  const path = join(pdfDir, `manifiesto-${scenario.manifestNumber}.pdf`);
+  const path = join(pdfDir, `manifiesto-${documentFileSegment(scenario.manifestNumber)}.pdf`);
   await writeManifestPdf(path, scenario, completeAuthorization(authorization), mode);
   return { kind: "manifest", number: scenario.manifestNumber, path, urlPath: `/pdf/${basename(path)}` };
+}
+
+export function documentFileSegment(value: string): string {
+  const segment = value.trim().replace(/[^A-Za-z0-9_-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
+  return segment || "sin-numero";
 }
 
 function readAuthorization(steps: RndcFlowStep[]): AuthorizationData {

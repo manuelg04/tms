@@ -4,6 +4,7 @@ import { query } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { requireActor } from "./model/access";
+import { dashboardStatus, type DashboardStatus } from "./model/dashboardStatus";
 
 const documentStatusValidator = v.union(
   v.literal("draft"),
@@ -64,9 +65,9 @@ export const overview = query({
     const actor = await requireActor(ctx);
     const documents = await ctx.db.query("documents").withIndex("by_organization", (q) => q.eq("organizationId", actor.organizationId)).order("desc").take(1000);
     const trips = await ctx.db.query("trips").withIndex("by_organization", (q) => q.eq("organizationId", actor.organizationId)).order("desc").take(1000);
+    const statuses = documents.map(dashboardStatus);
 
-    const countByStatus = (status: Doc<"documents">["status"]) =>
-      documents.filter((document) => document.status === status).length;
+    const countByStatus = (status: DashboardStatus) => statuses.filter((candidate) => candidate === status).length;
 
     return {
       totalDocuments: documents.length,
@@ -147,7 +148,7 @@ async function toDocumentRow(ctx: QueryCtx, document: Doc<"documents">) {
     _id: document._id,
     _creationTime: document._creationTime,
     kind: document.kind,
-    status: document.status,
+    status: dashboardStatus(document),
     number: document.number,
     rndcRadicado: document.rndcRadicado,
     mode: document.mode,

@@ -387,3 +387,12 @@ test("prepares multiple remesa rows and acceptance text for the manifest PDF", (
   assert.match(documentFooterText("dry-run"), /MODO PRUEBA/);
   assert.doesNotMatch(documentFooterText("live"), /demo|prueba/i);
 });
+
+test("sanitizes official document numbers before using them in PDF file names", () => {
+  const documentFileSegment = requireApi<(value: string) => string>("documentFileSegment");
+  const segment = documentFileSegment("../../REM \\ 9001");
+
+  assert.ok(segment.length > 0);
+  assert.doesNotMatch(segment, /[\\/]/);
+  assert.doesNotMatch(segment, /\.\./);
+});

@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { loadConfig } from "../rndc/config.js";
-import { runDemoFlow } from "../rndc/flow.js";
+import { runDemoFlow, runMtmProductionFlow } from "../rndc/flow.js";
 
 test("dry-run flow creates evidence and PDFs without live credentials", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-"));
@@ -48,4 +48,22 @@ test("dry-run flow creates evidence and PDFs without live credentials", async ()
     assert.equal(step.accepted, true);
     assert.equal(step.response.endpointUrl, "http://rndcpruebas.mintransporte.gov.co:8080/soap/IBPMServices");
   }
+});
+
+test("legacy scenario flows refuse live mode before creating evidence or contacting RNDC", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-live-flow-block-"));
+  const config = loadConfig({
+    mode: "live",
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    username: "LIVE_USER",
+    password: "LIVE_PASSWORD",
+    companyNit: "900773684",
+    companyDv: "9",
+    companyRndcNit: "9007736849"
+  });
+
+  await assert.rejects(runDemoFlow(config), /durable request context/i);
+  await assert.rejects(runMtmProductionFlow(config), /durable request context/i);
+  assert.equal(existsSync(join(base, "runs")), false);
 });

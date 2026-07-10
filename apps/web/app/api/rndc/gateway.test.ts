@@ -41,9 +41,12 @@ test("protects the health route and exposes only the safe mode", async () => {
 test("allows operators through the typed form gateway and keeps the service secret server-side", async () => {
   let authorization = "";
   let backendUrl = "";
+  let expectedMode = "";
   globalThis.fetch = async (input, init) => {
     backendUrl = String(input);
-    authorization = new Headers(init?.headers).get("authorization") ?? "";
+    const headers = new Headers(init?.headers);
+    authorization = headers.get("authorization") ?? "";
+    expectedMode = headers.get("x-tms-expected-mode") ?? "";
     return Response.json({ ok: true, mode: "dry-run" });
   };
   const request = authenticatedRequest("http://localhost/api/rndc/forms/remesa", "operator", {
@@ -56,6 +59,7 @@ test("allows operators through the typed form gateway and keeps the service secr
   assert.equal(response.status, 200);
   assert.equal(backendUrl, "http://localhost:3017/rndc/forms/remesa");
   assert.equal(authorization, `Bearer ${serviceToken}`);
+  assert.equal(expectedMode, "dry-run");
 });
 
 test("rejects auditors and unknown form operations before calling the backend", async () => {
@@ -79,7 +83,9 @@ test("builds server-only durable evidence references and reads the backend stora
     organizationId: "org-1",
     expedienteId: "exp-1",
     documentId: "doc-1",
-    operationId: "op-1"
+    operationId: "op-1",
+    operationType: "emit_remesa",
+    leaseOwner: "worker-1"
   });
 
   assert.equal(headers["X-TMS-Durable-Operation"], "true");
@@ -87,6 +93,8 @@ test("builds server-only durable evidence references and reads the backend stora
   assert.equal(headers["X-TMS-Expediente-Id"], "exp-1");
   assert.equal(headers["X-TMS-Document-Id"], "doc-1");
   assert.equal(headers["X-TMS-Operation-Id"], "op-1");
+  assert.equal(headers["X-TMS-Operation-Type"], "emit_remesa");
+  assert.equal(headers["X-TMS-Lease-Owner"], "worker-1");
   assert.equal(durableEvidenceWasStored({ durableEvidence: { stored: true } }), true);
   assert.equal(durableEvidenceWasStored({ durableEvidence: { stored: false } }), false);
   assert.equal(durableEvidenceWasStored({ ok: true }), false);

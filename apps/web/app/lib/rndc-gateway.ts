@@ -6,6 +6,8 @@ export type DurableEvidenceHeaderInput = {
   expedienteId: string;
   documentId?: string;
   operationId: string;
+  operationType: string;
+  leaseOwner: string;
 };
 
 export function authorizeGatewayRequest(request: Request, permission: Permission): DemoUser | Response {
@@ -41,6 +43,7 @@ export async function forwardRndcRequest(path: string, init: RequestInit = {}): 
   const headers = new Headers(init.headers);
   headers.set("Authorization", `Bearer ${serviceToken}`);
   headers.set("Accept", "application/json");
+  headers.set("X-TMS-Expected-Mode", safeRndcMode());
 
   try {
     const backendResponse = await fetch(`${baseUrl.replace(/\/$/, "")}${path}`, {
@@ -83,7 +86,9 @@ export function buildDurableEvidenceHeaders(input: DurableEvidenceHeaderInput): 
     "X-TMS-Organization-Id": input.organizationId,
     "X-TMS-Expediente-Id": input.expedienteId,
     ...(input.documentId ? { "X-TMS-Document-Id": input.documentId } : {}),
-    "X-TMS-Operation-Id": input.operationId
+    "X-TMS-Operation-Id": input.operationId,
+    "X-TMS-Operation-Type": input.operationType,
+    "X-TMS-Lease-Owner": input.leaseOwner
   };
 }
 

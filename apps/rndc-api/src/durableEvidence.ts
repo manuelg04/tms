@@ -10,6 +10,16 @@ export type DurableEvidenceContext = {
   expedienteId: string;
   documentId?: string;
   operationId: string;
+  expectedMode: "dry-run" | "live";
+};
+
+export type DurableOperationContext = DurableEvidenceContext & {
+  operationType: string;
+  leaseOwner: string;
+};
+
+export type DurableContextValidationInput = DurableOperationContext & {
+  payloadJson: string;
 };
 
 export type DurableEvidenceKind = "request_xml" | "response_xml" | "pdf" | "other";
@@ -43,6 +53,8 @@ export type DurableEvidenceStore = (
   directories: { outputDir: string; pdfDir: string }
 ) => Promise<DurableEvidenceReport>;
 
+export type DurableContextValidator = (context: DurableContextValidationInput) => Promise<boolean>;
+
 export type DurableEvidenceReport = {
   stored: boolean;
   artifacts: Array<ExistingDurableEvidence & { existing: boolean }>;
@@ -51,7 +63,7 @@ export type DurableEvidenceReport = {
 
 type DurableEvidenceContextResult =
   | { requested: false }
-  | { requested: true; context: DurableEvidenceContext }
+  | { requested: true; context: DurableOperationContext }
   | { requested: true; error: string };
 
 type EvidenceSource = {
@@ -69,14 +81,25 @@ export function readDurableEvidenceContext(getHeader: (name: string) => string |
   const expedienteId = cleanHeader(getHeader("X-TMS-Expediente-Id"));
   const documentId = cleanHeader(getHeader("X-TMS-Document-Id"));
   const operationId = cleanHeader(getHeader("X-TMS-Operation-Id"));
+  const expectedMode = cleanHeader(getHeader("X-TMS-Expected-Mode"));
+  const operationType = cleanHeader(getHeader("X-TMS-Operation-Type"));
+  const leaseOwner = cleanHeader(getHeader("X-TMS-Lease-Owner"));
 
-  if (!organizationId || !expedienteId || !operationId) {
+  if (!organizationId || !expedienteId || !operationId || !operationType || !leaseOwner || (expectedMode !== "dry-run" && expectedMode !== "live")) {
     return { requested: true, error: "Durable evidence references are incomplete" };
   }
 
   return {
     requested: true,
-    context: { organizationId, expedienteId, ...(documentId ? { documentId } : {}), operationId }
+    context: {
+      organizationId,
+      expedienteId,
+      ...(documentId ? { documentId } : {}),
+      operationId,
+      expectedMode,
+      operationType,
+      leaseOwner
+    }
   };
 }
 
@@ -225,6 +248,35 @@ export async function storeDurableEvidenceToConvex(
       artifacts: [],
       error: safeStorageError(cause)
     };
+  }
+}
+
+export async function validateDurableContextWithConvex(
+  context: DurableContextValidationInput,
+  environment: { CONVEX_URL?: string; RNDC_INGEST_KEY?: string } = process.env
+): Promise<boolean> {
+  const convexUrl = environment.CONVEX_URL?.trim();
+  const serviceKey = environment.RNDC_INGEST_KEY?.trim();
+
+  if (!convexUrl || !serviceKey) {
+    return false;
+  }
+
+  try {
+    const client = new ConvexHttpClient(convexUrl);
+    return await client.query(anyApi.rndcOperations.validateDurableContextForService, {
+      serviceKey,
+      organizationId: context.organizationId,
+      expedienteId: context.expedienteId,
+      ...(context.documentId ? { documentId: context.documentId } : {}),
+      operationId: context.operationId,
+      mode: context.expectedMode,
+      operationType: context.operationType,
+      leaseOwner: context.leaseOwner,
+      payloadJson: context.payloadJson
+    }) as boolean;
+  } catch {
+    return false;
   }
 }
 

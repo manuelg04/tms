@@ -13,7 +13,8 @@ const context = {
   organizationId: "org-1",
   expedienteId: "exp-1",
   documentId: "doc-1",
-  operationId: "op-1"
+  operationId: "op-1",
+  expectedMode: "dry-run" as const
 };
 
 test("stores masked form XML, result JSON, and generated PDFs as durable evidence", async () => {
@@ -79,7 +80,10 @@ test("requires complete server-provided references for durable operations", () =
     "X-TMS-Durable-Operation": "true",
     "X-TMS-Organization-Id": "org-1",
     "X-TMS-Expediente-Id": "exp-1",
-    "X-TMS-Operation-Id": "op-1"
+    "X-TMS-Operation-Id": "op-1",
+    "X-TMS-Expected-Mode": "dry-run",
+    "X-TMS-Operation-Type": "emit_remesa",
+    "X-TMS-Lease-Owner": "worker-1"
   });
   const valid = readDurableEvidenceContext((name) => headers.get(name) ?? undefined);
   headers.delete("X-TMS-Operation-Id");
@@ -90,7 +94,10 @@ test("requires complete server-provided references for durable operations", () =
     context: {
       organizationId: "org-1",
       expedienteId: "exp-1",
-      operationId: "op-1"
+      operationId: "op-1",
+      expectedMode: "dry-run",
+      operationType: "emit_remesa",
+      leaseOwner: "worker-1"
     }
   });
   assert.deepEqual(invalid, { requested: true, error: "Durable evidence references are incomplete" });

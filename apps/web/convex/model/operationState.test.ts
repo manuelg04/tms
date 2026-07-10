@@ -8,6 +8,7 @@ type OperationModule = {
     now: number
   ) => boolean;
   chooseExistingOperation?: (requestMatch?: string | null, businessMatch?: string | null) => string | null;
+  blocksAnotherDocumentOperation?: (status: string) => boolean;
 };
 
 const modulePath = "./operationState";
@@ -15,6 +16,7 @@ const operationModule = (await import(modulePath).catch(() => ({}))) as Operatio
 const nextOperationState = operationModule.nextOperationState ?? (() => "missing");
 const canClaimOperation = operationModule.canClaimOperation ?? (() => false);
 const chooseExistingOperation = operationModule.chooseExistingOperation ?? (() => null);
+const blocksAnotherDocumentOperation = operationModule.blocksAnotherDocumentOperation ?? (() => false);
 
 test("an uncertain operation must reconcile before it can finish", () => {
   assert.equal(nextOperationState("claimed", "mark_uncertain"), "uncertain");
@@ -42,4 +44,14 @@ test("request and business idempotency keys converge on one operation", () => {
   assert.equal(chooseExistingOperation("op-1", "op-1"), "op-1");
   assert.equal(chooseExistingOperation(null, null), null);
   assert.throws(() => chooseExistingOperation("op-1", "op-2"), /idempotency conflict/i);
+});
+
+test("queued, claimed, uncertain, and reconciling operations lock the same document", () => {
+  assert.equal(blocksAnotherDocumentOperation("queued"), true);
+  assert.equal(blocksAnotherDocumentOperation("claimed"), true);
+  assert.equal(blocksAnotherDocumentOperation("uncertain"), true);
+  assert.equal(blocksAnotherDocumentOperation("reconciling"), true);
+  assert.equal(blocksAnotherDocumentOperation("failed"), false);
+  assert.equal(blocksAnotherDocumentOperation("succeeded"), false);
+  assert.equal(blocksAnotherDocumentOperation("cancelled"), false);
 });

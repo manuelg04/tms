@@ -25,7 +25,8 @@ const fulfillmentStateValidator = v.union(
   v.literal("not_requested"),
   v.literal("pending"),
   v.literal("fulfilled"),
-  v.literal("rejected")
+  v.literal("rejected"),
+  v.literal("annulment_pending")
 );
 
 const correctionStateValidator = v.union(
@@ -135,6 +136,8 @@ const documentValidator = v.object({
   kind: v.string(),
   number: v.optional(v.string()),
   rndcRadicado: v.optional(v.string()),
+  issuanceRadicado: v.optional(v.string()),
+  mode: v.optional(v.union(v.literal("dry-run"), v.literal("live"))),
   status: v.string(),
   officialState: v.optional(officialStateValidator),
   fulfillmentState: v.optional(fulfillmentStateValidator),
@@ -928,6 +931,8 @@ export const detail = query({
         kind: document.kind,
         number: document.number,
         rndcRadicado: document.rndcRadicado,
+        issuanceRadicado: document.issuanceRadicado,
+        mode: document.mode,
         status: document.status,
         officialState: document.officialState,
         fulfillmentState: document.fulfillmentState,

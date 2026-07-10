@@ -2,6 +2,7 @@ import { applyScenarioOverlay, buildAnnulmentMessages, buildComplianceMessages, 
 import type { DemoScenario, RndcConfig, RndcDriverMaster, RndcMessageResponse, RndcThirdPartyMaster, RndcVehicleMaster } from "@tms/rndc-core";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
+import { assertLegacyCliCommandAllowed } from "./cliSafety.js";
 
 const command = process.argv[2] ?? "flow";
 
@@ -66,7 +67,9 @@ async function ping(): Promise<void> {
 
 async function flow(): Promise<void> {
   try {
-    const result = await runDemoFlow(loadConfig());
+    const config = loadConfig();
+    assertLegacyCliCommandAllowed(config, "flow");
+    const result = await runDemoFlow(config);
     console.log(JSON.stringify(summarizeFlow(result), null, 2));
   } catch (error) {
     if (error instanceof RndcFlowError) {
@@ -86,6 +89,7 @@ async function flow(): Promise<void> {
 async function mtmProdFlow(): Promise<void> {
   try {
     const config = loadConfig();
+    assertLegacyCliCommandAllowed(config, "mtm-prod-flow");
     const result = await runMtmProductionFlow(config, await buildScenario(config));
     console.log(JSON.stringify(summarizeFlow(result), null, 2));
   } catch (error) {
@@ -105,6 +109,7 @@ async function mtmProdFlow(): Promise<void> {
 
 async function prepareOps(): Promise<void> {
   const config = loadConfig();
+  assertLegacyCliCommandAllowed(config, "prepare-ops");
   const result = await prepareOperationRequests(config, await buildScenario(config));
   console.log(JSON.stringify({
     ok: true,
@@ -116,6 +121,7 @@ async function prepareOps(): Promise<void> {
 
 async function loadingOrder(): Promise<void> {
   const config = loadConfig();
+  assertLegacyCliCommandAllowed(config, "loading-order");
   const scenario = await buildScenario(config);
   const runDirectory = join(config.outputDir, `${new Date().toISOString().replaceAll(":", "-")}-${scenario.seed}-loading-order`);
   const result = await sendMessageSet(config, buildLoadingOrderMessages(scenario), runDirectory, "loading-order");
@@ -127,6 +133,7 @@ async function loadingOrder(): Promise<void> {
 
 async function fulfill(): Promise<void> {
   const config = loadConfig();
+  assertLegacyCliCommandAllowed(config, "fulfill");
   const evidencePath = process.argv[3] ? resolve(process.argv[3]) : undefined;
   const scenario = await buildScenario(config);
   const runDirectory = evidencePath ? await applyEvidenceToScenario(evidencePath, scenario) : join(config.outputDir, `${new Date().toISOString().replaceAll(":", "-")}-${scenario.seed}-fulfillment`);
@@ -137,6 +144,7 @@ async function fulfill(): Promise<void> {
 
 async function resend(): Promise<void> {
   const config = loadConfig();
+  assertLegacyCliCommandAllowed(config, "resend");
   const requestPath = resolve(process.argv[3] ?? await latestManifestRequest(config.outputDir));
   const requestXml = await readFile(requestPath, "utf8");
   const procesoId = readProcesoId(requestXml);
@@ -163,6 +171,7 @@ async function resend(): Promise<void> {
 
 async function annul(): Promise<void> {
   const config = loadConfig();
+  assertLegacyCliCommandAllowed(config, "annul");
   const evidencePath = resolve(process.argv[3] ?? await latestEvidencePath(config.outputDir));
   const evidence = JSON.parse(await readFile(evidencePath, "utf8"));
   const scenario = await buildScenario(config);

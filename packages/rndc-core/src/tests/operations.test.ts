@@ -107,6 +107,18 @@ test("uses the scenario ICA per-mille rate in the manifest message", () => {
   assert.equal(manifestVariables.RETENCIONICAMANIFIESTOCARGA, 5);
 });
 
+test("escapes the cargo number embedded in the trip remesa XML", () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  scenario.cargoNumber = "CARGO<&9001";
+
+  const manifest = buildManifestMessages(scenario);
+  const tripVariables = manifest[0].request.variables as RndcXmlRecord;
+  const preremesa = tripVariables.PREREMESAS as { kind: string; xml: string };
+
+  assert.match(preremesa.xml, /CARGO&lt;&amp;9001/);
+  assert.doesNotMatch(preremesa.xml, /CARGO<&9001/);
+});
+
 test("builds compliance messages for remesa before manifest", () => {
   const scenario = buildMtmReferenceScenario(loadConfig());
   const messages = buildComplianceMessages(scenario);

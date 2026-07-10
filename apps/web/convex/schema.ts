@@ -61,7 +61,8 @@ const fulfillmentState = v.union(
   v.literal("not_requested"),
   v.literal("pending"),
   v.literal("fulfilled"),
-  v.literal("rejected")
+  v.literal("rejected"),
+  v.literal("annulment_pending")
 );
 
 const correctionState = v.union(
@@ -149,6 +150,7 @@ export default defineSchema({
     status: documentStatus,
     number: v.optional(v.string()),
     rndcRadicado: v.optional(v.string()),
+    issuanceRadicado: v.optional(v.string()),
     mode: v.optional(rndcMode),
     pdfUrlPath: v.optional(v.string()),
     errorText: v.optional(v.string()),
@@ -573,6 +575,7 @@ export default defineSchema({
     resultRadicado: v.optional(v.string()),
     resultJson: v.optional(v.string()),
     lastError: v.optional(v.string()),
+    reconciledByOperationId: v.optional(v.id("rndcOperations")),
     createdBy: v.id("users"),
     createdAt: v.number(),
     updatedAt: v.number()
@@ -582,7 +585,9 @@ export default defineSchema({
     .index("by_status_and_available_at", ["status", "availableAt"])
     .index("by_status_and_lease_expiration", ["status", "leaseExpiresAt"])
     .index("by_expediente_and_created_at", ["expedienteId", "createdAt"])
-    .index("by_document_and_created_at", ["documentId", "createdAt"]),
+    .index("by_expediente_and_status", ["expedienteId", "status"])
+    .index("by_document_and_created_at", ["documentId", "createdAt"])
+    .index("by_document_and_status", ["documentId", "status"]),
 
   rndcRequestKeys: defineTable({
     organizationId: v.id("organizations"),

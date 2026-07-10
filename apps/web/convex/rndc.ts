@@ -78,12 +78,17 @@ export const recordOperation = mutation({
       throw new ConvexError({ code: "UNAUTHORIZED", message: "Invalid ingest key" });
     }
 
+    if (args.mode !== "dry-run") {
+      throw new ConvexError({ code: "LEGACY_INGEST_DISABLED", message: "Legacy RNDC ingestion is isolated to dry-run records" });
+    }
+
     const now = Date.now();
     const tripStatus = args.ok ? okTripStatus[args.operation] ?? "actualizado" : "revision";
-    const existingTrip = await ctx.db
+    const tripCandidates = await ctx.db
       .query("trips")
       .withIndex("by_code", (q) => q.eq("code", args.trip.code))
-      .first();
+      .collect();
+    const existingTrip = tripCandidates.find((trip) => !trip.organizationId && !trip.expedienteId);
 
     let tripId;
 
@@ -113,12 +118,18 @@ export const recordOperation = mutation({
     const documentIds = [];
 
     for (const document of args.documents) {
-      const existing = await ctx.db
+      const documentCandidates = await ctx.db
         .query("documents")
         .withIndex("by_kind_and_number", (q) => q.eq("kind", document.kind).eq("number", document.number))
-        .first();
+        .collect();
+      const existing = documentCandidates.find((candidate) => !candidate.organizationId && !candidate.expedienteId);
       const isFulfillment = args.operation === "fulfill-remesa" || args.operation === "fulfill-manifest";
       const currentOfficialState = existing?.officialState ?? legacyOfficialState(existing?.status);
+
+      if (isFulfillment && (!existing || (args.ok && currentOfficialState !== "authorized" && currentOfficialState !== "fulfilled"))) {
+        continue;
+      }
+
       const officialState = args.ok ? (isFulfillment ? ("fulfilled" as const) : ("authorized" as const)) : currentOfficialState;
       const status = args.ok ? officialState : existing?.status ?? ("rejected" as const);
       const fulfillmentState = isFulfillment
@@ -138,6 +149,7 @@ export const recordOperation = mutation({
           reconciliationState: existing.reconciliationState ?? "not_needed",
           acceptanceState: existing.acceptanceState ?? (document.kind === "manifiesto" ? "pending" : "not_applicable"),
           rndcRadicado: document.radicado ?? existing.rndcRadicado,
+          issuanceRadicado: args.operation === "manifest" && args.ok ? document.radicado ?? existing.issuanceRadicado : existing.issuanceRadicado,
           mode: args.mode,
           pdfUrlPath: document.urlPath ?? existing.pdfUrlPath,
           errorText: args.ok ? undefined : args.errorText,
@@ -158,6 +170,7 @@ export const recordOperation = mutation({
             acceptanceState: document.kind === "manifiesto" ? "pending" : "not_applicable",
             number: document.number,
             rndcRadicado: document.radicado,
+            issuanceRadicado: args.operation === "manifest" && args.ok ? document.radicado : undefined,
             mode: args.mode,
             pdfUrlPath: document.urlPath,
             errorText: args.ok ? undefined : args.errorText,

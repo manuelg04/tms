@@ -207,6 +207,11 @@ export const initialForm = {
     quantityKg: 34000,
     declaredValue: 40000000
   },
+  cargoPolicy: {
+    number: "1590041464",
+    expirationDate: "23/03/2027",
+    insurerNit: "8110191907"
+  },
   money: {
     freightValue: 4760000,
     advanceValue: 3808000,
@@ -287,6 +292,12 @@ export const cargoFields: Field[] = [
   { path: "cargo.natureCode", label: "Codigo naturaleza", code: "CODNATURALEZACARGA", span: 2 },
   { path: "cargo.quantityKg", label: "Cantidad kg", code: "CANTIDADINFORMACIONCARGA", type: "number", span: 3, required: true },
   { path: "cargo.declaredValue", label: "Valor declarado", type: "number", span: 3 }
+];
+
+export const cargoPolicyFields: Field[] = [
+  { path: "cargoPolicy.number", label: "Numero poliza de carga", code: "NUMPOLIZATRANSPORTE", span: 3, required: true },
+  { path: "cargoPolicy.expirationDate", label: "Vigencia final poliza", code: "FECHAVENCIMIENTOPOLIZACARGA", span: 3, required: true },
+  { path: "cargoPolicy.insurerNit", label: "NIT aseguradora de carga", code: "COMPANIASEGURO", span: 3, required: true }
 ];
 
 export const vehicleFields: Field[] = [
@@ -386,6 +397,7 @@ const allFields: Field[] = [
   ...dateFields,
   ...routeFields,
   ...cargoFields,
+  ...cargoPolicyFields,
   ...vehicleFields,
   ...driverFields,
   ...ownerFields,
@@ -431,7 +443,7 @@ export const operations: OperationConfig[] = [
     processIds: "Proceso 3",
     sections: [
       { title: "Documento", description: "Numeros y fechas del documento", fields: [field("remesaNumber"), field("cargoNumber"), field("loadingAppointmentDate"), field("loadingAppointmentTime"), field("unloadingAppointmentDate"), field("unloadingAppointmentTime")] },
-      { title: "Carga y seguro", description: "Que se transporta y como se asegura", fields: [...cargoFields, field("vehicle.soatNumber"), field("vehicle.soatExpirationDate"), field("vehicle.insurerNit")] },
+      { title: "Carga y seguro", description: "Que se transporta y como se asegura", fields: [...cargoFields, ...cargoPolicyFields] },
       { title: "Remitente y destinatario", description: "Origen, destino y partes", fields: routeFields, collapsible: true },
       { title: "Observaciones", description: "Texto libre impreso en el documento", fields: [observationsField] }
     ]

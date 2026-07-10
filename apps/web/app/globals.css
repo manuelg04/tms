@@ -706,6 +706,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  min-width: 0;
 }
 
 .field-section {
@@ -715,6 +716,12 @@ button {
   box-shadow: var(--shadow);
   padding: 14px 16px 16px;
   margin: 0;
+  min-width: 0;
+}
+
+.ops-layout > *,
+.result-panel {
+  min-width: 0;
 }
 
 .field-section legend {
@@ -2358,6 +2365,24 @@ button {
   line-height: 1.45;
 }
 
+.rail-readiness-warning {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0 10px 8px;
+  border: 1px solid #efc46b;
+  border-radius: var(--radius-sm);
+  background: #fff8e8;
+  color: #81520b;
+  padding: 9px 10px;
+  font-size: 9.5px;
+  line-height: 1.4;
+}
+
+.rail-readiness-warning strong {
+  font-size: 10.5px;
+}
+
 .rail-action {
   width: calc(100% - 20px);
   display: grid;
@@ -2604,6 +2629,7 @@ button {
 
   .action-rail-head,
   .rndc-action-rail > p,
+  .rail-readiness-warning,
   .rail-divider,
   .queue-summary,
   .queue-row,
@@ -2658,7 +2684,7 @@ button {
 
   .sidebar {
     flex-wrap: nowrap;
-    overflow-x: auto;
+    overflow: hidden;
     scrollbar-width: none;
   }
 
@@ -2673,9 +2699,60 @@ button {
   }
 
   .sidebar .nav {
-    flex: 0 0 auto;
+    min-width: 0;
+    flex: 1 1 auto;
     overflow-x: auto;
     scrollbar-width: none;
+  }
+
+  .panel-head {
+    min-width: 0;
+  }
+
+  .panel-head .ops-tabs {
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .panel-head .ops-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ops-tab {
+    flex: 0 0 auto;
+  }
+
+  .field-grid.semantic {
+    grid-template-columns: 1fr;
+  }
+
+  .field-grid.semantic .field,
+  .field-grid.semantic .field.span-2,
+  .field-grid.semantic .field.span-4,
+  .field-grid.semantic .field.span-6 {
+    grid-column: 1 / -1;
+  }
+
+  .context-strip {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .context-strip span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .action-bar {
+    position: static;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .action-bar .primary-action {
+    width: 100%;
   }
 
   .nav-item {

@@ -104,6 +104,11 @@ const legacyInitialForm = {
     quantityKg: 34000,
     declaredValue: 40000000
   },
+  cargoPolicy: {
+    number: "1590041464",
+    expirationDate: "23/03/2027",
+    insurerNit: "8110191907"
+  },
   money: {
     freightValue: 4760000,
     advanceValue: 3808000,

@@ -118,6 +118,10 @@ export function buildOperationRecord(result: SyncableResult, scenario: DemoScena
 }
 
 export async function syncOperationToConvex(result: SyncableResult, scenario: DemoScenario): Promise<ConvexSyncStatus> {
+  if (result.mode !== "dry-run") {
+    return { synced: false, reason: "Legacy Convex sync is disabled outside isolated dry-run records" };
+  }
+
   const convexUrl = process.env.CONVEX_URL;
   const ingestKey = process.env.RNDC_INGEST_KEY;
 

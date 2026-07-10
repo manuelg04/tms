@@ -7,6 +7,8 @@ import { useMutation, useQuery } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
+import { reconciliationPlanForOperation } from "../../../convex/model/reconciliationOutcome";
+import { validateDurableActionPayload } from "../../lib/rndc-action-preflight";
 import { useDemoUser } from "../../providers";
 import { StatusBadge } from "../status-badge";
 
@@ -20,6 +22,7 @@ export default function ExpedienteDetailPage() {
   const expedienteId = params.id as Id<"expedientes">;
   const detailResult = useQuery(api.expedientes.detail, { expedienteId });
   const operations = useQuery(api.rndcOperations.listForExpediente, { expedienteId, limit: 30 });
+  const uncertainOperations = useQuery(api.rndcOperations.listUncertainForExpediente, { expedienteId });
   const evidence = useQuery(api.evidence.listForExpediente, { expedienteId, limit: 50 });
   const { user } = useDemoUser();
   const [modal, setModal] = useState<Modal>(null);
@@ -51,6 +54,18 @@ export default function ExpedienteDetailPage() {
   const manifest = detail.documents.find((document) => document.kind === "manifiesto") ?? null;
   const remesaDocuments = detail.documents.filter((document) => document.kind === "remesa");
   const manifestAnnulled = manifest?.officialState === "annulled" || manifest?.annulmentState === "annulled";
+  const emissionPreflights = [
+    ...detail.remesas.map((remesa) => validateDurableActionPayload("emit_remesa", buildRndcPayload(detail, remesa))),
+    validateDurableActionPayload("emit_manifest", buildRndcPayload(detail))
+  ];
+  const fulfillmentPreflights = [
+    ...detail.remesas.map((remesa) => validateDurableActionPayload("fulfill_remesa", buildRemesaFulfillmentPayload(detail, remesa))),
+    validateDurableActionPayload("fulfill_manifest", buildManifestFulfillmentPayload(detail))
+  ];
+  const emissionMissingCount = countPreflightFields(emissionPreflights);
+  const fulfillmentMissingCount = countPreflightFields(fulfillmentPreflights);
+  const emissionReady = detail.remesas.length > 0 && emissionPreflights.every((result) => result.ok);
+  const fulfillmentReady = fulfillmentPreflights.every((result) => result.ok);
   const remesasAuthorized = remesaDocuments.length === detail.remesas.length
     && remesaDocuments.every((document) => isIssuedState(document.officialState) && document.annulmentState !== "annulled");
   const emissionComplete = Boolean(isIssuedState(manifest?.officialState) && remesasAuthorized);
@@ -59,10 +74,13 @@ export default function ExpedienteDetailPage() {
     && remesaDocuments.length === detail.remesas.length
     && remesaDocuments.every((document) => document.fulfillmentState === "fulfilled")
   );
-  const canRunFulfillment = emissionComplete && !fulfillmentComplete && !manifestAnnulled;
+  const canRunFulfillment = emissionComplete && fulfillmentReady && !fulfillmentComplete && !manifestAnnulled;
   const canAddRemesa = !manifest || manifest.officialState === "draft" || manifest.officialState === "pending";
   const canCorrect = remesaDocuments.some((document) => isIssuedState(document.officialState) && document.annulmentState !== "annulled");
   const canAnnul = detail.documents.some((document) => isIssuedState(document.officialState) && document.annulmentState !== "annulled");
+  const canReconcile = (uncertainOperations ?? []).some((operation) =>
+    operation.status === "uncertain" && Boolean(reconciliationPlanForOperation(operation.operationType))
+  );
   const completedChecks = detail.complianceChecks.filter((check) => check.status === "passed").length;
   const openNovelties = detail.novelties.filter((novelty) => novelty.status === "open");
 
@@ -147,20 +165,14 @@ export default function ExpedienteDetailPage() {
           documentId: document._id,
           remesa,
           businessKey: `fulfill-remesa:${document._id}`,
-          payload: {
-            ...buildRndcPayload(detail, remesa),
-            compliance: { remesaType: "C", loadedQuantityKg: remesa?.cargoWeightKg ?? detail.serviceOrder.cargoWeightKg ?? 0 }
-          }
+          payload: buildRemesaFulfillmentPayload(detail, remesa)
         });
       }
       await submitRndcAction("fulfill_manifest", {
         detail,
         documentId: manifest._id,
         businessKey: `fulfill-manifest:${manifest._id}`,
-        payload: {
-          ...buildRndcPayload(detail),
-          compliance: { manifestType: "C", documentsDeliveryDate: formatRndcDate(Date.now()) }
-        }
+        payload: buildManifestFulfillmentPayload(detail)
       });
       setNotice({ tone: "ok", text: "El cumplido de remesas y manifiesto termino en modo de prueba." });
     } catch (cause) {
@@ -185,7 +197,7 @@ export default function ExpedienteDetailPage() {
         simulateTimeout: true
       });
     } catch {
-      setNotice({ tone: "wait", text: "El timeout simulado quedo en estado incierto. Usa Consultar y conciliar para recuperarlo sin reenvio." });
+      setNotice({ tone: "wait", text: "El timeout simulado quedo en estado incierto y no se reenviara automaticamente. Revisa la operacion registrada." });
     } finally {
       setBusy("");
     }
@@ -254,11 +266,24 @@ export default function ExpedienteDetailPage() {
       }
 
       if (modal === "reconcile") {
+        const candidates = (uncertainOperations ?? []).filter((operation) =>
+          operation.documentId === documentId
+          && operation.status === "uncertain"
+          && Boolean(reconciliationPlanForOperation(operation.operationType))
+        );
+
+        if (candidates.length !== 1) {
+          throw new Error(candidates.length === 0
+            ? "El documento no tiene una operacion incierta conciliable."
+            : "El documento tiene varias operaciones inciertas. Selecciona la operacion exacta desde la cola antes de conciliar.");
+        }
+
         await submitRndcAction("reconcile", {
           detail,
           documentId,
+          originalOperationId: candidates[0]._id,
           businessKey: `reconcile:${documentId}:${Date.now()}`,
-          payload: { documentType: documentTypeForQuery(document), documentNumber: document.number }
+          payload: {}
         });
         setNotice({ tone: "ok", text: "La consulta de conciliacion quedo guardada sin borrar evidencia anterior." });
       }
@@ -396,11 +421,12 @@ export default function ExpedienteDetailPage() {
         <aside className="rndc-action-rail" aria-label="Acciones RNDC">
           <div className="action-rail-head"><span className="rail-icon"><SignalIcon /></span><div><span className="eyebrow">Canal oficial</span><h3>Acciones RNDC</h3></div></div>
           <p>Las acciones se registran antes del envio y nunca se repiten automaticamente.</p>
-          <button className="rail-action primary" disabled={!canEdit || Boolean(busy) || manifestAnnulled || emissionComplete} onClick={() => void runEmission()} type="button"><SendIcon /><span><strong>{busy === "emit" ? "Emitiendo…" : "Emitir documentos"}</strong><small>{manifestAnnulled ? "Manifiesto anulado" : emissionComplete ? "Documentos autorizados" : "Remesas y manifiesto"}</small></span></button>
-          <button className="rail-action" disabled={!canEdit || Boolean(busy) || detail.documents.length === 0} onClick={() => setModal("reconcile")} type="button"><SearchIcon /><span><strong>Consultar y conciliar</strong><small>Confirmar estado oficial</small></span></button>
+          {!emissionReady ? <div className="rail-readiness-warning"><strong>Preparacion documental pendiente</strong><span>Faltan {emissionMissingCount} datos oficiales en identificaciones, codigos, poliza o tiempos. El TMS no los completara con valores inventados.</span></div> : null}
+          <button className="rail-action primary" disabled={!canEdit || Boolean(busy) || manifestAnnulled || emissionComplete || !emissionReady} onClick={() => void runEmission()} type="button"><SendIcon /><span><strong>{busy === "emit" ? "Emitiendo…" : "Emitir documentos"}</strong><small>{manifestAnnulled ? "Manifiesto anulado" : emissionComplete ? "Documentos autorizados" : !emissionReady ? `${emissionMissingCount} datos de preparacion pendientes` : "Remesas y manifiesto"}</small></span></button>
+          <button className="rail-action" disabled={!canEdit || Boolean(busy) || !canReconcile} onClick={() => setModal("reconcile")} type="button"><SearchIcon /><span><strong>Consultar y conciliar</strong><small>{canReconcile ? "Confirmar una operacion incierta" : "Sin operaciones inciertas"}</small></span></button>
           <button className="rail-action" disabled={!canEdit || Boolean(busy) || !manifest} onClick={() => setModal("acceptance")} type="button"><SignatureIcon /><span><strong>Consultar aceptacion</strong><small>Proceso 73 por fechas</small></span></button>
           <button className="rail-action" disabled={!canEdit || Boolean(busy) || !canCorrect} onClick={() => setModal("correct")} type="button"><EditIcon /><span><strong>Corregir remesa</strong><small>Proceso 38 controlado</small></span></button>
-          <button className="rail-action" disabled={!canEdit || Boolean(busy) || !canRunFulfillment} onClick={() => void runFulfillment()} type="button"><CheckIcon /><span><strong>{busy === "fulfill" ? "Cumpliendo…" : "Cumplir documentos"}</strong><small>{manifestAnnulled ? "Manifiesto anulado" : fulfillmentComplete ? "Cumplidos completos" : !emissionComplete ? "Autoriza primero" : "Remesas antes del manifiesto"}</small></span></button>
+          <button className="rail-action" disabled={!canEdit || Boolean(busy) || !canRunFulfillment} onClick={() => void runFulfillment()} type="button"><CheckIcon /><span><strong>{busy === "fulfill" ? "Cumpliendo…" : "Cumplir documentos"}</strong><small>{manifestAnnulled ? "Manifiesto anulado" : fulfillmentComplete ? "Cumplidos completos" : !emissionComplete ? "Autoriza primero" : !fulfillmentReady ? `${fulfillmentMissingCount} datos de cumplido pendientes` : "Remesas antes del manifiesto"}</small></span></button>
           <button className="rail-action danger" disabled={!canEdit || Boolean(busy) || !canAnnul} onClick={() => setModal("annul")} type="button"><CancelIcon /><span><strong>Anular documento</strong><small>Solo el seleccionado</small></span></button>
           {process.env.NEXT_PUBLIC_ENABLE_TIMEOUT_SIMULATION === "true" ? <button className="rail-action diagnostic" disabled={!canEdit || Boolean(busy) || !manifest} onClick={() => void runTimeoutProbe()} type="button"><ClockIcon /><span><strong>{busy === "timeout" ? "Simulando…" : "Probar recuperacion"}</strong><small>Timeout local sin reenvio</small></span></button> : null}
           <div className="rail-divider" />
@@ -420,6 +446,7 @@ async function submitRndcAction(
   input: {
     detail: Detail;
     documentId?: Id<"documents">;
+    originalOperationId?: Id<"rndcOperations">;
     remesa?: RemesaRow;
     businessKey: string;
     payload: Record<string, unknown>;
@@ -434,6 +461,7 @@ async function submitRndcAction(
       organizationId: input.detail.expediente.organizationId,
       expedienteId: input.detail.expediente._id,
       documentId: input.documentId,
+      originalOperationId: input.originalOperationId,
       expedienteRemesaId: input.remesa?._id,
       requestKey,
       businessKey: input.businessKey,
@@ -491,6 +519,30 @@ function buildRndcPayload(detail: Detail, selectedRemesa?: RemesaRow): Record<st
     }),
     fopat: { operationType: detail.loadingLocation.city === detail.unloadingLocation.city ? "municipal" : "intermunicipal" }
   };
+}
+
+function buildRemesaFulfillmentPayload(detail: Detail, remesa?: RemesaRow): Record<string, unknown> {
+  return {
+    ...buildRndcPayload(detail, remesa),
+    compliance: {
+      remesaType: "C",
+      loadedQuantityKg: remesa?.cargoWeightKg ?? detail.serviceOrder.cargoWeightKg ?? 0
+    }
+  };
+}
+
+function buildManifestFulfillmentPayload(detail: Detail): Record<string, unknown> {
+  return {
+    ...buildRndcPayload(detail),
+    compliance: {
+      manifestType: "C",
+      documentsDeliveryDate: formatRndcDate(Date.now())
+    }
+  };
+}
+
+function countPreflightFields(results: ReturnType<typeof validateDurableActionPayload>[]): number {
+  return new Set(results.flatMap((result) => [...result.missingFields, ...result.invalidFields])).size;
 }
 
 function ModalPanel({ modal, detail, busy, onClose, onNovelty, onRemesa, onSpecial }: { modal: Exclude<Modal, null>; detail: Detail; busy: boolean; onClose: () => void; onNovelty: (event: FormEvent<HTMLFormElement>) => void; onRemesa: (event: FormEvent<HTMLFormElement>) => void; onSpecial: (event: FormEvent<HTMLFormElement>) => void }) {
@@ -589,10 +641,6 @@ function numberValue(data: FormData, key: string): number | undefined {
   if (!value) return undefined;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : undefined;
-}
-
-function documentTypeForQuery(document: DocumentRow): string {
-  return document.kind === "manifiesto" ? "manifest" : document.kind === "remesa" ? "remesa" : "cargo";
 }
 
 function readActionError(cause: unknown): string {

@@ -109,6 +109,7 @@ export function buildDemoScenario(config: RndcConfig): DemoScenario {
       quantityKg: 34000,
       declaredValue: 40000000
     },
+    cargoPolicy: buildCargoPolicy(seed),
     money: {
       freightValue: 4760000,
       advanceValue: 3808000,
@@ -250,6 +251,7 @@ export function buildMtmProductionScenario(config: RndcConfig): DemoScenario {
       quantityKg: 34000,
       declaredValue: 40000000
     },
+    cargoPolicy: buildCargoPolicy(seed),
     money: {
       freightValue: 4760000,
       advanceValue: 3808000,
@@ -391,6 +393,7 @@ export function buildMtmReferenceScenario(config: RndcConfig): DemoScenario {
       quantityKg: 34000,
       declaredValue: 40000000
     },
+    cargoPolicy: buildCargoPolicy(seed),
     money: {
       freightValue: 4760000,
       advanceValue: 3808000,
@@ -452,6 +455,14 @@ function toIsoDate(ddmmyyyy: string): string {
 
 function readEnv(name: string, fallback: string): string {
   return process.env[name] && process.env[name] !== "" ? process.env[name] : fallback;
+}
+
+function buildCargoPolicy(seed: string): DemoScenario["cargoPolicy"] {
+  return {
+    number: readEnv("RNDC_CARGO_POLICY_NUMBER", `159${seed.slice(-8)}`),
+    expirationDate: readEnv("RNDC_CARGO_POLICY_EXPIRATION_DATE", "23/03/2027"),
+    insurerNit: readEnv("RNDC_CARGO_POLICY_INSURER_NIT", "8110191907")
+  };
 }
 
 function buildComplianceData(input: {

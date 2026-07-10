@@ -10,8 +10,8 @@ import { assessFormFopat, registerPhaseOneRoutes } from "./phaseOneRoutes.js";
 import type { FormFopatAssessment } from "./phaseOneRoutes.js";
 import { assertRuntimeCanStart, assessRuntimeSafety, authenticateServiceRequest, createJsonLogger, getRequestContext, isLegacyMessageAllowed, readRndcRuntimeSettings, requestContextMiddleware, sendApiError } from "./runtimeSecurity.js";
 import type { RndcAppHooks, RndcLogger, RndcRuntimeSettings } from "./runtimeSecurity.js";
-import { readDurableEvidenceContext, storeDurableEvidenceToConvex } from "./durableEvidence.js";
-import type { DurableEvidenceReport, DurableEvidenceStore } from "./durableEvidence.js";
+import { readDurableEvidenceContext, storeDurableEvidenceToConvex, validateDurableContextWithConvex } from "./durableEvidence.js";
+import type { DurableContextValidator, DurableEvidenceReport, DurableEvidenceStore } from "./durableEvidence.js";
 
 export type FormOperation = "loading-order" | "remesa" | "manifest" | "driver-vehicle" | "fulfill-remesa" | "fulfill-manifest";
 
@@ -66,6 +66,7 @@ type FormResult = {
 
 type RndcAppRuntimeHooks = RndcAppHooks & {
   evidenceStore?: DurableEvidenceStore;
+  durableContextValidator?: DurableContextValidator;
 };
 
 export function createRndcApp(overrides: Partial<RndcConfig> = {}, hooks: RndcAppRuntimeHooks = {}): express.Express {
@@ -74,6 +75,7 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}, hooks: RndcAp
   const initialConfig = readConfig();
   const runtimeSettings = readRndcRuntimeSettings();
   const evidenceStore = hooks.evidenceStore ?? storeDurableEvidenceToConvex;
+  const durableContextValidator = hooks.durableContextValidator ?? validateDurableContextWithConvex;
   const requireServiceAuthentication = createServiceAuthenticationMiddleware(readConfig, runtimeSettings);
   const requireOperationalReadiness = createOperationalReadinessMiddleware(readConfig, runtimeSettings);
 
@@ -104,7 +106,8 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}, hooks: RndcAp
   });
 
   app.use("/rndc", requireServiceAuthentication);
-  app.use("/rndc", createDurableEvidenceMiddleware(runtimeSettings));
+  app.use("/rndc", createExpectedModeMiddleware(readConfig));
+  app.use("/rndc", createDurableEvidenceMiddleware(runtimeSettings, durableContextValidator));
   app.use("/pdf", requireServiceAuthentication, express.static(initialConfig.pdfDir, {
     dotfiles: "deny",
     fallthrough: true,
@@ -220,7 +223,7 @@ async function submitForm(
   try {
     const config = readConfig();
 
-    if (config.mode === "live") {
+    if (config.mode === "live" || req.header("X-TMS-Durable-Operation") === "true") {
       const missingFields = collectMissingFormFields(operation, req.body);
 
       if (missingFields.length > 0) {
@@ -233,7 +236,8 @@ async function submitForm(
       }
     }
 
-    const scenario = buildScenarioFromForm(config, req.body);
+    const allowReferenceDefaults = config.mode === "dry-run" && req.header("X-TMS-Durable-Operation") !== "true";
+    const scenario = buildScenarioFromForm(config, req.body, allowReferenceDefaults);
     const fopat = assessFormFopat(operation, req.body, scenario, config.mode);
 
     if (fopat?.blocked) {
@@ -280,7 +284,7 @@ async function submitForm(
       });
     }
 
-    res.status(result.ok ? 200 : 422).json(result);
+    res.status(result.ok ? 200 : result.steps.some((step) => step.status === 0) ? 502 : 422).json(result);
   } catch (error) {
     next(error);
   } finally {
@@ -353,13 +357,15 @@ const requiredFormFields: Record<FormOperation, string[]> = {
     "cargo.packageCode",
     "cargo.natureCode",
     "cargo.quantityKg",
-    "vehicle.soatExpirationDate",
-    "vehicle.insurerNit"
+    "cargoPolicy.number",
+    "cargoPolicy.expirationDate",
+    "cargoPolicy.insurerNit"
   ],
   manifest: [
     "manifestNumber",
     "tripNumber",
     "remesaNumber",
+    "cargoNumber",
     "expeditionDate",
     "balancePaymentDate",
     "driver.idType",
@@ -370,18 +376,32 @@ const requiredFormFields: Record<FormOperation, string[]> = {
     "sender.cityCode",
     "recipient.cityCode",
     "money.freightValue",
-    "money.advanceValue"
+    "money.advanceValue",
+    "money.icaRetentionPerMille"
   ],
   "fulfill-remesa": [
     "remesaNumber",
     "manifestNumber",
     "compliance.remesaType",
-    "compliance.loadedQuantityKg"
+    "compliance.loadedQuantityKg",
+    "compliance.unitCode",
+    "compliance.loadingArrivalDate",
+    "compliance.loadingArrivalTime",
+    "compliance.loadingEntryDate",
+    "compliance.loadingEntryTime",
+    "compliance.loadingExitDate",
+    "compliance.loadingExitTime"
   ],
   "fulfill-manifest": [
     "manifestNumber",
     "compliance.manifestType",
-    "compliance.documentsDeliveryDate"
+    "compliance.documentsDeliveryDate",
+    "money.freightValue",
+    "compliance.additionalLoadHoursValue",
+    "compliance.additionalUnloadHoursValue",
+    "compliance.additionalFreightValue",
+    "compliance.freightDiscountValue",
+    "compliance.overAdvanceValue"
   ],
   "driver-vehicle": [
     "driver.idType",
@@ -403,6 +423,11 @@ const requiredFormFields: Record<FormOperation, string[]> = {
     "vehicleOwner.cityCode",
     "vehicleHolder.idType",
     "vehicleHolder.id",
+    "vehicleHolder.firstName",
+    "vehicleHolder.firstLastName",
+    "vehicleHolder.phone",
+    "vehicleHolder.address",
+    "vehicleHolder.cityCode",
     "vehicle.plate",
     "vehicle.rndcConfigurationCode",
     "vehicle.lineCode",
@@ -416,13 +441,35 @@ const requiredFormFields: Record<FormOperation, string[]> = {
   ]
 };
 
+const requiredNumericFormFields: Record<FormOperation, string[]> = {
+  "loading-order": ["cargo.quantityKg"],
+  remesa: ["cargo.quantityKg"],
+  manifest: ["money.freightValue", "money.advanceValue", "money.icaRetentionPerMille"],
+  "fulfill-remesa": ["compliance.loadedQuantityKg", "compliance.unitCode"],
+  "fulfill-manifest": [
+    "money.freightValue",
+    "compliance.additionalLoadHoursValue",
+    "compliance.additionalUnloadHoursValue",
+    "compliance.additionalFreightValue",
+    "compliance.freightDiscountValue",
+    "compliance.overAdvanceValue"
+  ],
+  "driver-vehicle": ["vehicle.emptyWeightKg", "vehicle.capacityKg"]
+};
+
 function collectMissingFormFields(operation: FormOperation, payload: unknown): string[] {
   const record = isRecord(payload) ? payload : {};
   const missing = requiredFormFields[operation].filter((path) => !hasFormValue(record, path));
   const compliance = child(record, "compliance");
 
   if (operation === "fulfill-remesa") {
-    if (readString(compliance, "remesaType", "") === "C") {
+    const remesaType = readString(compliance, "remesaType", "");
+
+    if (remesaType !== "C" && remesaType !== "S" && !missing.includes("compliance.remesaType")) {
+      missing.push("compliance.remesaType");
+    }
+
+    if (remesaType === "C") {
       pushMissing(record, missing, [
         "compliance.deliveredQuantityKg",
         "compliance.unloadingArrivalDate",
@@ -432,15 +479,25 @@ function collectMissingFormFields(operation: FormOperation, payload: unknown): s
         "compliance.unloadingExitDate",
         "compliance.unloadingExitTime"
       ]);
+
+      if (!hasFiniteNumericFormValue(record, "compliance.deliveredQuantityKg") && !missing.includes("compliance.deliveredQuantityKg")) {
+        missing.push("compliance.deliveredQuantityKg");
+      }
     }
 
-    if (readString(compliance, "remesaType", "") === "S") {
+    if (remesaType === "S") {
       pushMissing(record, missing, ["compliance.remesaSuspensionReason"]);
     }
   }
 
   if (operation === "fulfill-manifest") {
-    if (readString(compliance, "manifestType", "") === "S") {
+    const manifestType = readString(compliance, "manifestType", "");
+
+    if (manifestType !== "C" && manifestType !== "S" && !missing.includes("compliance.manifestType")) {
+      missing.push("compliance.manifestType");
+    }
+
+    if (manifestType === "S") {
       pushMissing(record, missing, ["compliance.manifestSuspensionReason", "compliance.suspensionConsequence"]);
     }
 
@@ -450,6 +507,12 @@ function collectMissingFormFields(operation: FormOperation, payload: unknown): s
 
     if (readNumber(compliance, "freightDiscountValue", 0) > 0) {
       pushMissing(record, missing, ["compliance.discountReason"]);
+    }
+  }
+
+  for (const path of requiredNumericFormFields[operation]) {
+    if (!hasFiniteNumericFormValue(record, path) && !missing.includes(path)) {
+      missing.push(path);
     }
   }
 
@@ -480,6 +543,28 @@ function hasFormValue(record: Record<string, unknown>, path: string): boolean {
   }
 
   return typeof current === "string" && current.trim() !== "";
+}
+
+function hasFiniteNumericFormValue(record: Record<string, unknown>, path: string): boolean {
+  let current: unknown = record;
+
+  for (const part of path.split(".")) {
+    if (!isRecord(current)) {
+      return false;
+    }
+
+    current = current[part];
+  }
+
+  if (typeof current === "number") {
+    return Number.isFinite(current);
+  }
+
+  if (typeof current !== "string" || current.trim() === "") {
+    return false;
+  }
+
+  return Number.isFinite(Number(current.replaceAll(",", "").trim()));
 }
 
 async function runFormOperation(
@@ -592,8 +677,8 @@ async function buildOperationDocuments(operation: FormOperation, scenario: DemoS
   return [];
 }
 
-function buildScenarioFromForm(config: RndcConfig, payload: unknown): DemoScenario {
-  const scenario = buildMtmReferenceScenario(config);
+function buildScenarioFromForm(config: RndcConfig, payload: unknown, allowReferenceDefaults: boolean): DemoScenario {
+  const scenario = allowReferenceDefaults ? buildMtmReferenceScenario(config) : buildBlankScenario(config);
   const record = isRecord(payload) ? payload : {};
 
   scenario.seed = readString(record, "seed", scenario.seed);
@@ -618,11 +703,135 @@ function buildScenarioFromForm(config: RndcConfig, payload: unknown): DemoScenar
   applyParty(scenario.recipient, child(record, "recipient"));
   applyVehicle(scenario.vehicle, child(record, "vehicle"));
   applyCargo(scenario.cargo, child(record, "cargo"));
+  applyCargoPolicy(scenario.cargoPolicy, child(record, "cargoPolicy"));
   applyMoney(scenario.money, child(record, "money"));
   applyCompliance(scenario.compliance, child(record, "compliance"));
   applyManifestRemesas(scenario, record);
 
   return scenario;
+}
+
+function buildBlankScenario(config: RndcConfig): DemoScenario {
+  const person = (): PersonData => ({
+    idType: "",
+    id: "",
+    firstName: "",
+    firstLastName: "",
+    secondLastName: "",
+    fullName: "",
+    phone: "",
+    address: "",
+    cityName: "",
+    cityCode: ""
+  });
+  const party = (): CompanyParty => ({
+    idType: "",
+    id: "",
+    siteCode: "",
+    siteName: "",
+    name: "",
+    address: "",
+    cityName: "",
+    cityCode: "",
+    latitude: "",
+    longitude: ""
+  });
+
+  return {
+    seed: "",
+    company: {
+      nit: config.companyNit,
+      dv: config.companyDv,
+      rndcNit: config.companyRndcNit,
+      name: "",
+      address: "",
+      phone: "",
+      cityName: ""
+    },
+    driver: person(),
+    vehicleOwner: person(),
+    vehicleHolder: person(),
+    sender: party(),
+    recipient: party(),
+    vehicle: {
+      plate: "",
+      trailerPlate: "",
+      brand: "",
+      configuration: "",
+      rndcConfigurationCode: "",
+      lineCode: "",
+      colorCode: "",
+      modelYear: "",
+      emptyWeightKg: 0,
+      capacityKg: 0,
+      soatNumber: "",
+      soatExpirationDate: "",
+      insurerNit: ""
+    },
+    cargo: {
+      productName: "",
+      shortDescription: "",
+      merchandiseCode: "",
+      packageName: "",
+      packageCode: "",
+      nature: "",
+      natureCode: "",
+      quantityKg: 0,
+      declaredValue: 0
+    },
+    cargoPolicy: {
+      number: "",
+      expirationDate: "",
+      insurerNit: ""
+    },
+    money: {
+      freightValue: 0,
+      advanceValue: 0,
+      sourceRetention: 0,
+      icaRetention: 0,
+      icaRetentionPerMille: 0,
+      fopatRetention: 0
+    },
+    cargoNumber: "",
+    tripNumber: "",
+    remesaNumber: "",
+    manifestNumber: "",
+    expeditionDate: "",
+    loadingAppointment: "",
+    loadingAppointmentDate: "",
+    loadingAppointmentTime: "",
+    unloadingAppointment: "",
+    unloadingAppointmentDate: "",
+    unloadingAppointmentTime: "",
+    balancePaymentDate: "",
+    observations: "",
+    compliance: {
+      remesaType: "",
+      manifestType: "",
+      loadedQuantityKg: 0,
+      deliveredQuantityKg: 0,
+      unitCode: 0,
+      loadingArrivalDate: "",
+      loadingArrivalTime: "",
+      loadingEntryDate: "",
+      loadingEntryTime: "",
+      loadingExitDate: "",
+      loadingExitTime: "",
+      unloadingArrivalDate: "",
+      unloadingArrivalTime: "",
+      unloadingEntryDate: "",
+      unloadingEntryTime: "",
+      unloadingExitDate: "",
+      unloadingExitTime: "",
+      documentsDeliveryDate: "",
+      additionalLoadHoursValue: 0,
+      additionalUnloadHoursValue: 0,
+      additionalFreightValue: 0,
+      freightDiscountValue: 0,
+      overAdvanceValue: 0,
+      observations: ""
+    }
+  };
 }
 
 function scenarioToForm(scenario: DemoScenario): Record<string, unknown> {
@@ -646,6 +855,7 @@ function scenarioToForm(scenario: DemoScenario): Record<string, unknown> {
     recipient: scenario.recipient,
     vehicle: scenario.vehicle,
     cargo: scenario.cargo,
+    cargoPolicy: scenario.cargoPolicy,
     money: scenario.money,
     compliance: scenario.compliance
   };
@@ -706,6 +916,12 @@ function applyCargo(target: CargoData, record: Record<string, unknown>): void {
   target.natureCode = readString(record, "natureCode", target.natureCode);
   target.quantityKg = readNumber(record, "quantityKg", target.quantityKg);
   target.declaredValue = readNumber(record, "declaredValue", target.declaredValue);
+}
+
+function applyCargoPolicy(target: DemoScenario["cargoPolicy"], record: Record<string, unknown>): void {
+  target.number = readString(record, "number", target.number);
+  target.expirationDate = readDate(record, "expirationDate", target.expirationDate);
+  target.insurerNit = readString(record, "insurerNit", target.insurerNit);
 }
 
 function applyMoney(target: MoneyData, record: Record<string, unknown>): void {
@@ -863,8 +1079,11 @@ function createRequestLoggingMiddleware(logger: RndcLogger | undefined): express
   };
 }
 
-function createDurableEvidenceMiddleware(settings: RndcRuntimeSettings): express.RequestHandler {
-  return (req, res, next) => {
+function createDurableEvidenceMiddleware(
+  settings: RndcRuntimeSettings,
+  validateContext: DurableContextValidator
+): express.RequestHandler {
+  return async (req, res, next) => {
     const durableContext = readDurableEvidenceContext((name) => req.header(name));
 
     if (!durableContext.requested) {
@@ -900,8 +1119,85 @@ function createDurableEvidenceMiddleware(settings: RndcRuntimeSettings): express
       return;
     }
 
+    if (req.header("X-Correlation-Id") !== durableContext.context.operationId) {
+      res.status(400).json({
+        ok: false,
+        error: {
+          code: "INVALID_DURABLE_OPERATION_CONTEXT",
+          message: "Durable operation correlation does not match"
+        },
+        requestId: requestContext.requestId,
+        correlationId: requestContext.correlationId
+      });
+      return;
+    }
+
+    const routeOperationType = durableOperationTypeForRequest(req);
+
+    if (!routeOperationType || routeOperationType !== durableContext.context.operationType) {
+      res.status(409).json({
+        ok: false,
+        error: {
+          code: "DURABLE_OPERATION_ROUTE_MISMATCH",
+          message: "Durable operation type does not match the RNDC route"
+        },
+        requestId: requestContext.requestId,
+        correlationId: requestContext.correlationId
+      });
+      return;
+    }
+
+    if (!await validateContext({
+      ...durableContext.context,
+      payloadJson: JSON.stringify(req.body ?? {})
+    })) {
+      res.status(409).json({
+        ok: false,
+        error: {
+          code: "INVALID_DURABLE_OPERATION_CONTEXT",
+          message: "Durable operation context is not active or does not match"
+        },
+        requestId: requestContext.requestId,
+        correlationId: requestContext.correlationId
+      });
+      return;
+    }
+
     next();
   };
+}
+
+function durableOperationTypeForRequest(req: express.Request): string | undefined {
+  const path = req.originalUrl.split("?", 1)[0];
+  const fixed: Record<string, string> = {
+    "/rndc/forms/loading-order": "emit_cargo",
+    "/rndc/forms/remesa": "emit_remesa",
+    "/rndc/forms/manifest": "emit_manifest",
+    "/rndc/forms/fulfill-remesa": "fulfill_remesa",
+    "/rndc/forms/fulfill-manifest": "fulfill_manifest",
+    "/rndc/corrections/remesa": "correct_remesa",
+    "/rndc/reconciliation": "reconcile",
+    "/rndc/acceptances/query": "query_acceptance"
+  };
+
+  if (path in fixed) {
+    return fixed[path];
+  }
+
+  if (path !== "/rndc/annulments/targeted" || !req.body || typeof req.body !== "object") {
+    return undefined;
+  }
+
+  const target = (req.body as Record<string, unknown>).target;
+  const targets: Record<string, string> = {
+    "cargo-information": "annul_cargo",
+    "trip-information": "annul_trip",
+    remesa: "annul_remesa",
+    manifest: "annul_manifest",
+    "remesa-compliance": "annul_remesa_fulfillment",
+    "manifest-compliance": "annul_manifest_fulfillment"
+  };
+  return typeof target === "string" ? targets[target] : undefined;
 }
 
 function createLegacyCorsMiddleware(config: RndcConfig, settings: RndcRuntimeSettings): express.RequestHandler {
@@ -944,6 +1240,46 @@ function createServiceAuthenticationMiddleware(
 
     res.setHeader("WWW-Authenticate", "Bearer");
     sendApiError(req, res, 401, "SERVICE_AUTH_REQUIRED", "Service authentication required");
+  };
+}
+
+function createExpectedModeMiddleware(readConfig: () => RndcConfig): express.RequestHandler {
+  return (req, res, next) => {
+    const expectedMode = req.header("X-TMS-Expected-Mode")?.trim();
+
+    if (req.header("X-TMS-Durable-Operation") === "true" && !expectedMode) {
+      sendApiError(req, res, 400, "RNDC_EXPECTED_MODE_REQUIRED", "Durable RNDC requests must declare the expected mode");
+      return;
+    }
+
+    const config = readConfig();
+    const runtimeReady = assessRuntimeSafety(config, readRndcRuntimeSettings()).ready;
+    const durableOperationType = durableOperationTypeForRequest(req);
+
+    if (config.mode === "live" && runtimeReady && req.method !== "GET" && req.header("X-TMS-Durable-Operation") !== "true") {
+      sendApiError(req, res, 403, "DURABLE_OPERATION_REQUIRED", "Live RNDC writes require a durable operation");
+      return;
+    }
+
+    if (
+      config.mode === "live"
+      && runtimeReady
+      && req.method !== "GET"
+      && req.header("X-TMS-Durable-Operation") === "true"
+      && durableOperationType
+      && durableOperationType !== "reconcile"
+      && durableOperationType !== "query_acceptance"
+    ) {
+      sendApiError(req, res, 403, "LIVE_WRITES_DISABLED", "Official RNDC writes remain disabled until canonical recovery is complete");
+      return;
+    }
+
+    if (!expectedMode || expectedMode === config.mode) {
+      next();
+      return;
+    }
+
+    sendApiError(req, res, 409, "RNDC_MODE_MISMATCH", "RNDC gateway and backend modes do not match");
   };
 }
 

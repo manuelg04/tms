@@ -2,9 +2,11 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import {
   consignmentDraftValidator,
+  fulfillmentDraftValidator,
   loadingOrderDraftValidator,
   logisticsTimesDraftValidator,
   manifestDraftValidator,
+  manifestFulfillmentDraftValidator,
   snapshotKindValidator
 } from "./model/draftValidators";
 
@@ -433,6 +435,7 @@ export default defineSchema({
     agencyCode: v.optional(v.string()),
     loadingOrderDraft: v.optional(loadingOrderDraftValidator),
     manifestDraft: v.optional(manifestDraftValidator),
+    manifestFulfillmentDraft: v.optional(manifestFulfillmentDraftValidator),
     logisticsTimes: v.optional(logisticsTimesDraftValidator),
     createdBy: v.id("users"),
     updatedBy: v.id("users"),
@@ -456,6 +459,7 @@ export default defineSchema({
     consigneeName: v.optional(v.string()),
     consigneeDocument: v.optional(v.string()),
     draft: v.optional(consignmentDraftValidator),
+    fulfillmentDraft: v.optional(fulfillmentDraftValidator),
     officialState: officialDocumentState,
     fulfillmentState,
     correctionState,

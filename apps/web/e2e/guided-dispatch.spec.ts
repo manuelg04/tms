@@ -1,0 +1,69 @@
+import { readFileSync } from "node:fs";
+import { expect, test, type Page } from "@playwright/test";
+
+const password = readPassword();
+
+test.beforeEach(async ({ page }) => {
+  await login(page);
+});
+
+test("dispatch queue shows stage RNDC status and one next action without horizontal overflow", async ({ page }) => {
+  await expect(page.getByRole("heading", { name: "Despachos" })).toBeVisible();
+  await expect(page.getByText("Cola de trabajo", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Nuevo despacho" })).toBeVisible();
+  await expect(page.locator(".dispatch-row").first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(".dispatch-row").first().locator(".rndc-state")).toBeVisible();
+  await expect(page.locator(".dispatch-row").first().locator(".queue-next-action")).toHaveCount(1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
+test("guided creation exposes the five sections and keeps one sticky action", async ({ page }) => {
+  await page.getByRole("link", { name: "Nuevo despacho" }).click();
+  await expect(page.locator("#loading-order-title")).toBeVisible();
+  await expect(page.getByText("Paso 1 de 5")).toHaveText("Paso 1 de 5");
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.locator("#consignments-title")).toBeVisible();
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.locator("#assignment-title")).toBeVisible();
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.locator("#manifest-title")).toBeVisible();
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.locator("#review-title")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Guardar despacho" })).toHaveCount(1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
+test("dispatch detail keeps stages documents and history in one flow", async ({ page }) => {
+  await page.locator(".dispatch-row").first().locator(".queue-next-action").click();
+  await expect(page.getByRole("heading", { level: 1, name: "Expediente de viaje" })).toBeVisible();
+  await expect(page.getByText("Siguiente acción")).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Etapas del despacho" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Documentos e historial" })).toBeVisible();
+  await expect(page.locator(".next-action-card .primary-action")).toHaveCount(1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
+test("mobile navigation opens as a compact menu", async ({ page }, testInfo) => {
+  test.skip(!testInfo.project.name.startsWith("mobile"));
+  const trigger = page.getByRole("button", { name: "Abrir menú" });
+  await expect(trigger).toBeVisible();
+  await trigger.click();
+  await expect(page.locator(".sidebar.open")).toBeVisible();
+  await expect(page.locator(".sidebar.open").getByRole("link", { name: "Despachos" })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
+async function login(page: Page) {
+  const response = await page.request.post("/api/auth/login", {
+    data: { email: "operador@mtm.local", password }
+  });
+  expect(response.ok()).toBe(true);
+  await page.goto("/expedientes");
+}
+
+function readPassword(): string {
+  const source = readFileSync(new URL("../.env.local", import.meta.url), "utf8");
+  const match = /^DEMO_AUTH_PASSWORD=(.*)$/m.exec(source);
+  if (!match) throw new Error("DEMO_AUTH_PASSWORD is not configured");
+  return match[1].trim().replace(/^['\"]|['\"]$/g, "");
+}

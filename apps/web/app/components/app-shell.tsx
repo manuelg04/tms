@@ -18,12 +18,12 @@ const pageMeta: Record<string, PageMeta> = {
     subtitle: "Estado en vivo de tus documentos RNDC"
   },
   "/expedientes": {
-    title: "Expedientes de viaje",
-    subtitle: "Ordenes, asignaciones y documentos oficiales en un solo flujo"
+    title: "Despachos",
+    subtitle: "Cola de trabajo, etapa actual y siguiente acción"
   },
   "/expedientes/nuevo": {
-    title: "Nuevo expediente",
-    subtitle: "Crea la orden de servicio y prepara el viaje"
+    title: "Nuevo despacho",
+    subtitle: "Orden de cargue, remesas, flota, manifiesto y revisión"
   },
   "/operaciones": {
     title: "Operaciones RNDC",
@@ -54,20 +54,11 @@ const navItems = [
   },
   {
     href: "/expedientes",
-    label: "Expedientes",
+    label: "Despachos",
     icon: (
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <path d="M1.5 4.5h5l1.4 1.7h6.6v7.3h-13v-9Z" strokeLinejoin="round" />
         <path d="M3 4.5V2.3h4.8l1.2 1.5h4v2.4" strokeLinejoin="round" />
-      </svg>
-    )
-  },
-  {
-    href: "/operaciones",
-    label: "Operaciones RNDC",
-    icon: (
-      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
-        <path d="M14.5 1.5 7 9M14.5 1.5l-4.5 13-2.5-5.5L2 6.5l12.5-5Z" strokeLinejoin="round" />
       </svg>
     )
   },
@@ -101,7 +92,12 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { loading, user } = useDemoUser();
   const unread = useQuery(api.notifications.unreadCount, user ? {} : "skip");
   const [mode, setMode] = useState<RndcMode>("offline");
+  const [navOpen, setNavOpen] = useState(false);
   const meta = resolvePageMeta(pathname);
+
+  useEffect(() => {
+    setNavOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     if (pathname === "/login" || !user) {
@@ -137,13 +133,14 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="app">
-      <aside className="sidebar" aria-label="Navegacion principal">
+      <aside className={navOpen ? "sidebar open" : "sidebar"} aria-label="Navegacion principal">
         <div className="brand">
           <span className="brand-plate">MTM</span>
           <div className="brand-name">
             <strong>TMS RNDC</strong>
             <span>Transporte de carga</span>
           </div>
+          <button className="mobile-nav-close" aria-label="Cerrar menú" onClick={() => setNavOpen(false)} type="button">×</button>
         </div>
 
         <nav className="nav">
@@ -166,9 +163,11 @@ export function AppShell({ children }: { children: ReactNode }) {
           RNDC · Ministerio de Transporte
         </div>
       </aside>
+      {navOpen ? <button className="mobile-nav-backdrop" aria-label="Cerrar menú" onClick={() => setNavOpen(false)} type="button" /> : null}
 
       <div className="content">
         <header className="topbar">
+          <button className="mobile-nav-trigger" aria-expanded={navOpen} aria-label="Abrir menú" onClick={() => setNavOpen(true)} type="button"><span /><span /><span /></button>
           <div className="topbar-title">
             <h1>{meta.title}</h1>
             <p>{meta.subtitle}</p>

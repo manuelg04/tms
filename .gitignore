@@ -26,3 +26,6 @@ tmp/
 
 # Playwright MCP session artifacts (may contain PII screenshots)
 .playwright-mcp/
+apps/web/test-results/
+apps/web/playwright-report/
+apps/web/blob-report/

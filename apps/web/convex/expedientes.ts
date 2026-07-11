@@ -4,11 +4,24 @@ import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
 import { initialDocumentLifecycle } from "./model/documentLifecycle";
+import type { OfficialDocumentState } from "./model/documentLifecycle";
+import {
+  consignmentMissingFields,
+  deriveDispatchStage,
+  loadingOrderMissingFields,
+  manifestMissingFields,
+  type ConsignmentDraft,
+  type DispatchProjection,
+  type LoadingOrderDraft
+} from "./model/dispatchWorkflow";
+import { dispatchPrimaryAction } from "./model/dispatchPresentation";
 import {
   consignmentDraftValidator,
+  fulfillmentDraftValidator,
   loadingOrderDraftValidator,
   logisticsTimesDraftValidator,
-  manifestDraftValidator
+  manifestDraftValidator,
+  manifestFulfillmentDraftValidator
 } from "./model/draftValidators";
 
 const statusValidator = v.union(
@@ -78,6 +91,7 @@ const expedienteValidator = v.object({
   agencyCode: v.optional(v.string()),
   loadingOrderDraft: v.optional(loadingOrderDraftValidator),
   manifestDraft: v.optional(manifestDraftValidator),
+  manifestFulfillmentDraft: v.optional(manifestFulfillmentDraftValidator),
   logisticsTimes: v.optional(logisticsTimesDraftValidator),
   createdBy: v.id("users"),
   updatedBy: v.id("users"),
@@ -100,6 +114,7 @@ const remesaValidator = v.object({
   consigneeName: v.optional(v.string()),
   consigneeDocument: v.optional(v.string()),
   draft: v.optional(consignmentDraftValidator),
+  fulfillmentDraft: v.optional(fulfillmentDraftValidator),
   officialState: officialStateValidator,
   fulfillmentState: fulfillmentStateValidator,
   correctionState: correctionStateValidator,
@@ -211,12 +226,36 @@ const deliveryEvidenceValidator = v.object({
   })
 });
 
+const dispatchStageValidator = v.union(
+  v.literal("orden_cargue"),
+  v.literal("remesas"),
+  v.literal("vehiculo_conductor"),
+  v.literal("manifiesto"),
+  v.literal("envio_rndc"),
+  v.literal("cargue_descargue"),
+  v.literal("cumplido_inicial"),
+  v.literal("cumplido_final"),
+  v.literal("cumplido"),
+  v.literal("anulado")
+);
+
 const listRowValidator = v.object({
   expediente: expedienteValidator,
   serviceOrderCode: v.string(),
   customerName: v.string(),
   originCity: v.string(),
   destinationCity: v.string(),
+  agencyCode: v.optional(v.string()),
+  orderNumber: v.optional(v.string()),
+  remesaNumbers: v.array(v.string()),
+  manifestNumber: v.optional(v.string()),
+  vehiclePlate: v.optional(v.string()),
+  driverName: v.optional(v.string()),
+  stage: dispatchStageValidator,
+  blockers: v.array(v.string()),
+  rndcStatus: v.string(),
+  nextAction: v.string(),
+  nextActionKind: v.string(),
   remesaCount: v.number(),
   openNoveltyCount: v.number()
 });
@@ -1037,7 +1076,7 @@ async function toListRow(ctx: QueryCtx, expediente: Doc<"expedientes">) {
     throw new ConvexError({ code: "INTEGRITY_ERROR", message: "Service order is missing" });
   }
 
-  const [customer, loadingLocation, unloadingLocation, remesas, openNovelties] = await Promise.all([
+  const [customer, loadingLocation, unloadingLocation, remesas, openNovelties, driver, vehicle, documents, operations] = await Promise.all([
     ctx.db.get("customers", order.customerId),
     ctx.db.get("customerLocations", order.loadingLocationId),
     ctx.db.get("customerLocations", order.unloadingLocationId),
@@ -1048,12 +1087,77 @@ async function toListRow(ctx: QueryCtx, expediente: Doc<"expedientes">) {
     ctx.db
       .query("expedienteNovelties")
       .withIndex("by_expediente_and_opened_at", (q) => q.eq("expedienteId", expediente._id))
-      .collect()
+      .collect(),
+    expediente.driverId ? ctx.db.get("drivers", expediente.driverId) : null,
+    expediente.vehicleId ? ctx.db.get("vehicles", expediente.vehicleId) : null,
+    ctx.db.query("documents").withIndex("by_expediente", (q) => q.eq("expedienteId", expediente._id)).collect(),
+    ctx.db
+      .query("rndcOperations")
+      .withIndex("by_expediente_and_created_at", (q) => q.eq("expedienteId", expediente._id))
+      .order("desc")
+      .take(50)
   ]);
 
   if (!customer || !loadingLocation || !unloadingLocation) {
     throw new ConvexError({ code: "INTEGRITY_ERROR", message: "Expediente master data is incomplete" });
   }
+
+  const latestDocument = (kind: string) => documents
+    .filter((document) => document.kind === kind)
+    .sort((left, right) => right.updatedAt - left.updatedAt)[0];
+  const orderDocument = latestDocument("orden_cargue");
+  const manifestDocument = latestDocument("manifiesto");
+  const orderDraft = (expediente.loadingOrderDraft ?? null) as LoadingOrderDraft | null;
+  const logistics = expediente.logisticsTimes;
+  const siteComplete = (site: typeof logistics extends undefined ? never : NonNullable<typeof logistics>["origin"]) =>
+    Boolean(site?.arrival && site.entry && site.start && site.end && site.exit);
+  const projection: DispatchProjection = {
+    annulled: expediente.status === "cancelled",
+    loadingOrder: orderDraft
+      ? { missingFields: loadingOrderMissingFields(orderDraft), officialState: officialState(orderDocument) }
+      : null,
+    consignments: remesas.map((remesa) => ({
+      missingFields: consignmentMissingFields((remesa.draft ?? null) as ConsignmentDraft | null, orderDraft),
+      officialState: remesa.officialState,
+      fulfillmentState: remesa.fulfillmentState
+    })),
+    assignment: { vehicleAssigned: Boolean(expediente.vehicleId), driverAssigned: Boolean(expediente.driverId) },
+    manifest: expediente.manifestDraft
+      ? {
+          missingFields: manifestMissingFields(expediente.manifestDraft),
+          officialState: officialState(manifestDocument),
+          fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
+        }
+      : null,
+    cargoInfoState: officialState(orderDocument),
+    logistics: {
+      originComplete: siteComplete(logistics?.origin),
+      destinationComplete: siteComplete(logistics?.destination),
+      finalDeliveryRecorded: Boolean(logistics?.finalDelivery)
+    }
+  };
+  const stageResult = deriveDispatchStage(projection);
+  const hasUncertainOperation = operations.some((operation) => operation.status === "uncertain" || operation.status === "reconciling");
+  const hasOperationInFlight = operations.some((operation) => operation.status === "queued" || operation.status === "claimed");
+  const hasRejectedOperation = operations.some((operation) => operation.status === "failed")
+    || documents.some((document) => Boolean(document.errorText));
+  const nextAction = dispatchPrimaryAction({
+    stage: stageResult.stage,
+    blockers: stageResult.blockers,
+    hasRejectedOperation,
+    hasUncertainOperation,
+    hasOperationInFlight,
+    printed: Boolean(expediente.loadingOrderDraft?.printedAt && expediente.manifestDraft?.printedAt)
+  });
+  const rndcStatus = hasUncertainOperation
+    ? "Resultado incierto"
+    : hasRejectedOperation
+      ? "Requiere atención"
+      : hasOperationInFlight
+        ? "En proceso"
+        : documents.length > 0 && documents.every((document) => ["authorized", "fulfilled", "annulled"].includes(document.officialState ?? "draft"))
+          ? "Autorizado"
+          : "Pendiente";
 
   return {
     expediente,
@@ -1061,9 +1165,24 @@ async function toListRow(ctx: QueryCtx, expediente: Doc<"expedientes">) {
     customerName: customer.name,
     originCity: loadingLocation.city,
     destinationCity: unloadingLocation.city,
+    agencyCode: expediente.agencyCode,
+    orderNumber: expediente.loadingOrderDraft?.orderNumber ?? expediente.cargoNumber,
+    remesaNumbers: remesas.flatMap((remesa) => remesa.number ? [remesa.number] : []),
+    manifestNumber: expediente.manifestDraft?.manifestNumber ?? expediente.manifestNumber,
+    vehiclePlate: vehicle?.plate,
+    driverName: driver?.name,
+    stage: stageResult.stage,
+    blockers: stageResult.blockers,
+    rndcStatus,
+    nextAction: nextAction.label,
+    nextActionKind: nextAction.kind,
     remesaCount: remesas.length,
     openNoveltyCount: openNovelties.filter((novelty) => novelty.status === "open").length
   };
+}
+
+function officialState(document: Doc<"documents"> | undefined): OfficialDocumentState {
+  return document?.officialState ?? "draft";
 }
 
 function normalizeCode(value: string): string {

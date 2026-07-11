@@ -17,7 +17,14 @@ import {
   type LoadingOrderDraft
 } from "./model/dispatchWorkflow";
 import { initialDocumentLifecycle, type OfficialDocumentState } from "./model/documentLifecycle";
-import { consignmentDraftValidator, loadingOrderDraftValidator, manifestDraftValidator } from "./model/draftValidators";
+import {
+  consignmentDraftValidator,
+  fulfillmentDraftValidator,
+  loadingOrderDraftValidator,
+  manifestDraftValidator,
+  manifestFulfillmentDraftValidator
+} from "./model/draftValidators";
+import { validateFulfillmentQuantities, validateLogisticsTimeline } from "./model/fulfillmentWorkflow";
 
 const stageValidator = v.union(
   v.literal("orden_cargue"),
@@ -432,6 +439,184 @@ export const saveManifestDraft = mutation({
   }
 });
 
+const logisticsEventInputValidator = v.object({
+  occurredAt: v.number(),
+  observation: v.optional(v.string())
+});
+
+const logisticsSiteInputValidator = v.object({
+  arrival: v.optional(logisticsEventInputValidator),
+  entry: v.optional(logisticsEventInputValidator),
+  start: v.optional(logisticsEventInputValidator),
+  end: v.optional(logisticsEventInputValidator),
+  exit: v.optional(logisticsEventInputValidator)
+});
+
+export const recordLogisticsTimes = mutation({
+  args: {
+    actorToken: v.optional(v.string()),
+    expedienteId: v.id("expedientes"),
+    origin: logisticsSiteInputValidator,
+    destination: logisticsSiteInputValidator,
+    finalDelivery: v.optional(logisticsEventInputValidator)
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+    const expediente = await requireExpediente(ctx, args.expedienteId);
+    requireSameOrganization(actor, expediente.organizationId);
+    const errors = validateLogisticsTimeline({
+      origin: eventTimestamps(args.origin),
+      destination: eventTimestamps(args.destination),
+      finalDelivery: args.finalDelivery?.occurredAt
+    });
+
+    if (errors.length > 0) {
+      throw new ConvexError({ code: "VALIDATION", message: errors[0], data: { errors } });
+    }
+
+    const remesas = await ctx.db
+      .query("expedienteRemesas")
+      .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
+      .collect();
+    const stage = deriveDispatchStage(await buildProjection(ctx, expediente, remesas));
+
+    if (!["cargue_descargue", "cumplido_inicial"].includes(stage.stage)) {
+      throw new ConvexError({ code: "INVALID_STATE", message: "Los tiempos sólo se registran después de autorizar el despacho y antes de cumplirlo" });
+    }
+
+    const now = Date.now();
+    const toRecord = (event: { occurredAt: number; observation?: string } | undefined) => event
+      ? { ...event, recordedAt: now, recordedBy: actor._id }
+      : undefined;
+    const site = (value: typeof args.origin) => ({
+      arrival: toRecord(value.arrival),
+      entry: toRecord(value.entry),
+      start: toRecord(value.start),
+      end: toRecord(value.end),
+      exit: toRecord(value.exit)
+    });
+    const logisticsTimes = {
+      origin: site(args.origin),
+      destination: site(args.destination),
+      finalDelivery: toRecord(args.finalDelivery)
+    };
+    await ctx.db.patch("expedientes", expediente._id, {
+      logisticsTimes,
+      status: "in_progress",
+      startedAt: expediente.startedAt ?? now,
+      updatedBy: actor._id,
+      updatedAt: now
+    });
+    await ctx.db.insert("expedienteEvents", {
+      organizationId: expediente.organizationId,
+      expedienteId: expediente._id,
+      eventType: "logistics_times_recorded",
+      title: "Tiempos de cargue y descargue actualizados",
+      occurredAt: now,
+      actorId: actor._id
+    });
+    await appendAudit(ctx, {
+      organizationId: expediente.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "dispatch.logistics_times_recorded",
+      entityType: "expediente",
+      entityId: expediente._id,
+      createdAt: now
+    });
+    return null;
+  }
+});
+
+export const recordFulfillmentDraft = mutation({
+  args: {
+    actorToken: v.optional(v.string()),
+    expedienteId: v.id("expedientes"),
+    remesaId: v.id("expedienteRemesas"),
+    draft: fulfillmentDraftValidator
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+    const [expediente, remesa] = await Promise.all([
+      requireExpediente(ctx, args.expedienteId),
+      ctx.db.get("expedienteRemesas", args.remesaId)
+    ]);
+    requireSameOrganization(actor, expediente.organizationId);
+
+    if (!remesa || remesa.expedienteId !== expediente._id) {
+      throw new ConvexError({ code: "NOT_FOUND", message: "Remesa no encontrada en este despacho" });
+    }
+
+    if (remesa.officialState !== "authorized" || remesa.fulfillmentState === "fulfilled") {
+      throw new ConvexError({ code: "INVALID_STATE", message: "Sólo una remesa autorizada y pendiente puede preparar su cumplido" });
+    }
+
+    const errors = validateFulfillmentQuantities(args.draft);
+
+    if (errors.length > 0) {
+      throw new ConvexError({ code: "VALIDATION", message: errors[0], data: { errors } });
+    }
+
+    const now = Date.now();
+    await ctx.db.patch("expedienteRemesas", remesa._id, {
+      fulfillmentDraft: args.draft,
+      updatedBy: actor._id,
+      updatedAt: now
+    });
+    await appendAudit(ctx, {
+      organizationId: expediente.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "dispatch.consignment_fulfillment_saved",
+      entityType: "expediente_remesa",
+      entityId: remesa._id,
+      createdAt: now
+    });
+    return null;
+  }
+});
+
+export const recordManifestFulfillmentDraft = mutation({
+  args: {
+    actorToken: v.optional(v.string()),
+    expedienteId: v.id("expedientes"),
+    draft: manifestFulfillmentDraftValidator
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+    const expediente = await requireExpediente(ctx, args.expedienteId);
+    requireSameOrganization(actor, expediente.organizationId);
+    const remesas = await ctx.db
+      .query("expedienteRemesas")
+      .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
+      .collect();
+
+    if (remesas.length === 0 || remesas.some((remesa) => remesa.fulfillmentState !== "fulfilled")) {
+      throw new ConvexError({ code: "INVALID_STATE", message: "Cumple todas las remesas antes de preparar el cumplido final" });
+    }
+
+    const now = Date.now();
+    await ctx.db.patch("expedientes", expediente._id, {
+      manifestFulfillmentDraft: args.draft,
+      updatedBy: actor._id,
+      updatedAt: now
+    });
+    await appendAudit(ctx, {
+      organizationId: expediente.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "dispatch.manifest_fulfillment_saved",
+      entityType: "expediente",
+      entityId: expediente._id,
+      createdAt: now
+    });
+    return null;
+  }
+});
+
 export const prepareEmission = mutation({
   args: { actorToken: v.optional(v.string()), expedienteId: v.id("expedientes") },
   returns: v.object({
@@ -703,6 +888,22 @@ function readTripNumber(payloadJson: string): string | undefined {
   } catch {
     return undefined;
   }
+}
+
+function eventTimestamps(site: {
+  arrival?: { occurredAt: number };
+  entry?: { occurredAt: number };
+  start?: { occurredAt: number };
+  end?: { occurredAt: number };
+  exit?: { occurredAt: number };
+}) {
+  return {
+    arrival: site.arrival?.occurredAt,
+    entry: site.entry?.occurredAt,
+    start: site.start?.occurredAt,
+    end: site.end?.occurredAt,
+    exit: site.exit?.occurredAt
+  };
 }
 
 export const stage = query({

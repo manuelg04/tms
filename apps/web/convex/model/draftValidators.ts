@@ -135,6 +135,22 @@ export const logisticsTimesDraftValidator = v.object({
   finalDelivery: v.optional(logisticsEventRecordValidator)
 });
 
+export const fulfillmentDraftValidator = v.object({
+  deliveredQuantity: v.optional(v.string()),
+  missingQuantity: v.optional(v.string()),
+  surplusQuantity: v.optional(v.string()),
+  returnedQuantity: v.optional(v.string()),
+  unit: v.optional(v.string()),
+  observation: v.optional(v.string()),
+  suspended: v.optional(v.boolean()),
+  reasonCode: v.optional(v.string())
+});
+
+export const manifestFulfillmentDraftValidator = v.object({
+  documentsDeliveryDate: v.optional(v.string()),
+  observation: v.optional(v.string())
+});
+
 export const snapshotKindValidator = v.union(
   v.literal("orden_cargue"),
   v.literal("remesa"),

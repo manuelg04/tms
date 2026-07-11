@@ -253,6 +253,16 @@ export function buildManifestMessages(scenario: DemoScenario): RndcFlowMessage[]
   ];
 }
 
+export function buildTripMessages(scenario: DemoScenario): RndcFlowMessage[] {
+  const messages = buildFlowMessages(scenario);
+  return [renameMessage(findMessage(messages, "trip"), "register-trip")];
+}
+
+export function buildManifestIssueMessages(scenario: DemoScenario): RndcFlowMessage[] {
+  const messages = buildFlowMessages(scenario);
+  return [renameMessage(findMessage(messages, "manifest"), "issue-manifest")];
+}
+
 export function buildIssuanceMessages(scenario: DemoScenario): RndcFlowMessage[] {
   const messages = buildFlowMessages(scenario);
   return [

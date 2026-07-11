@@ -1,6 +1,8 @@
 export type RndcActionName =
   | "emit_loading_order"
   | "emit_remesa"
+  | "register_trip"
+  | "issue_manifest"
   | "emit_manifest"
   | "fulfill_remesa"
   | "fulfill_manifest"
@@ -17,6 +19,7 @@ export type RndcActionName =
 export type RndcActionConfig = {
   operationType:
     | "emit_cargo"
+    | "emit_trip"
     | "emit_remesa"
     | "emit_manifest"
     | "fulfill_remesa"
@@ -38,6 +41,8 @@ export type RndcActionConfig = {
 const actionConfigs: Record<RndcActionName, RndcActionConfig> = {
   emit_loading_order: { operationType: "emit_cargo", backendPath: "/rndc/forms/loading-order", processId: 1, lifecycle: "submission" },
   emit_remesa: { operationType: "emit_remesa", backendPath: "/rndc/forms/remesa", processId: 3, lifecycle: "submission" },
+  register_trip: { operationType: "emit_trip", backendPath: "/rndc/forms/trip", processId: 2, lifecycle: "none" },
+  issue_manifest: { operationType: "emit_manifest", backendPath: "/rndc/forms/manifest-issue", processId: 4, lifecycle: "submission" },
   emit_manifest: { operationType: "emit_manifest", backendPath: "/rndc/forms/manifest", processId: 4, lifecycle: "submission" },
   fulfill_remesa: { operationType: "fulfill_remesa", backendPath: "/rndc/forms/fulfill-remesa", processId: 5, lifecycle: "fulfillment" },
   fulfill_manifest: { operationType: "fulfill_manifest", backendPath: "/rndc/forms/fulfill-manifest", processId: 6, lifecycle: "fulfillment" },

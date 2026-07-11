@@ -36,6 +36,7 @@ const consecutiveDefaults: Record<string, { prefix: string; padding: number }> =
   expediente: { prefix: "DSP-", padding: 6 },
   orden_cargue: { prefix: "", padding: 7 },
   remesa: { prefix: "", padding: 5 },
+  viaje: { prefix: "", padding: 7 },
   manifiesto: { prefix: "", padding: 7 }
 };
 
@@ -437,6 +438,7 @@ export const prepareEmission = mutation({
     code: v.string(),
     orderNumber: v.string(),
     consignmentNumbers: v.array(v.string()),
+    tripNumber: v.string(),
     manifestNumber: v.string(),
     alreadyPrepared: v.boolean()
   }),
@@ -453,11 +455,12 @@ export const prepareEmission = mutation({
       const orderNumber = expediente.loadingOrderDraft?.orderNumber;
       const manifestNumber = expediente.manifestDraft?.manifestNumber;
 
-      if (orderNumber && manifestNumber && remesas.every((remesa) => remesa.number)) {
+      if (orderNumber && manifestNumber && expediente.tripNumber && remesas.every((remesa) => remesa.number)) {
         return {
           code: expediente.code,
           orderNumber,
           consignmentNumbers: remesas.map((remesa) => remesa.number ?? ""),
+          tripNumber: expediente.tripNumber,
           manifestNumber,
           alreadyPrepared: true
         };
@@ -484,6 +487,7 @@ export const prepareEmission = mutation({
     const orderDraft = expediente.loadingOrderDraft as LoadingOrderDraft & { customerId?: Id<"customers"> };
     const manifestDraft = expediente.manifestDraft!;
     const orderNumber = orderDraft.orderNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "orden_cargue", now));
+    const tripNumber = expediente.tripNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "viaje", now));
     const manifestNumber =
       manifestDraft.manifestNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "manifiesto", now));
     const consignmentNumbers: string[] = [];
@@ -541,6 +545,7 @@ export const prepareEmission = mutation({
       manifestDraft: { ...manifestDraft, manifestNumber },
       manifestNumber,
       cargoNumber: orderNumber,
+      tripNumber,
       updatedBy: actor._id,
       updatedAt: now
     });
@@ -563,9 +568,142 @@ export const prepareEmission = mutation({
       detailsJson: JSON.stringify({ orderNumber, consignmentNumbers, manifestNumber }),
       createdAt: now
     });
-    return { code: expediente.code, orderNumber, consignmentNumbers, manifestNumber, alreadyPrepared: false };
+    return { code: expediente.code, orderNumber, consignmentNumbers, tripNumber, manifestNumber, alreadyPrepared: false };
   }
 });
+
+export const emissionInputs = query({
+  args: { actorToken: v.optional(v.string()), expedienteId: v.id("expedientes") },
+  returns: v.union(
+    v.null(),
+    v.object({
+      organizationId: v.id("organizations"),
+      code: v.string(),
+      status: v.string(),
+      tripNumber: v.optional(v.string()),
+      tripEmitted: v.boolean(),
+      order: v.object({
+        number: v.optional(v.string()),
+        payloadJson: v.optional(v.string()),
+        documentId: v.optional(v.id("documents")),
+        officialState: v.string()
+      }),
+      consignments: v.array(
+        v.object({
+          remesaId: v.id("expedienteRemesas"),
+          number: v.optional(v.string()),
+          payloadJson: v.optional(v.string()),
+          documentId: v.optional(v.id("documents")),
+          officialState: v.string()
+        })
+      ),
+      manifest: v.object({
+        number: v.optional(v.string()),
+        payloadJson: v.optional(v.string()),
+        documentId: v.optional(v.id("documents")),
+        officialState: v.string()
+      }),
+      assignmentJson: v.optional(v.string()),
+      operations: v.array(v.object({ operationType: v.string(), status: v.string() }))
+    })
+  ),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken);
+    const expediente = await ctx.db.get("expedientes", args.expedienteId);
+
+    if (!expediente) {
+      return null;
+    }
+
+    requireSameOrganization(actor, expediente.organizationId);
+    const [remesas, documents, snapshots, operations] = await Promise.all([
+      ctx.db
+        .query("expedienteRemesas")
+        .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
+        .collect(),
+      ctx.db.query("documents").withIndex("by_expediente", (q) => q.eq("expedienteId", expediente._id)).collect(),
+      ctx.db
+        .query("dispatchSnapshots")
+        .withIndex("by_expediente_and_taken_at", (q) => q.eq("expedienteId", expediente._id))
+        .order("desc")
+        .take(200),
+      ctx.db
+        .query("rndcOperations")
+        .withIndex("by_expediente_and_created_at", (q) => q.eq("expedienteId", expediente._id))
+        .order("desc")
+        .take(200)
+    ]);
+    const latestByKind = new Map<string, string>();
+    const latestByRemesa = new Map<string, string>();
+
+    for (const snapshot of snapshots) {
+      if (snapshot.kind === "remesa" && snapshot.remesaId) {
+        if (!latestByRemesa.has(snapshot.remesaId)) {
+          latestByRemesa.set(snapshot.remesaId, snapshot.payloadJson);
+        }
+      } else if (!latestByKind.has(snapshot.kind)) {
+        latestByKind.set(snapshot.kind, snapshot.payloadJson);
+      }
+    }
+
+    const documentFor = (kind: string) =>
+      documents
+        .filter((document) => document.kind === kind)
+        .sort((a, b) => b.updatedAt - a.updatedAt)[0];
+    const orderDocument = documentFor("orden_cargue");
+    const manifestDocument = expediente.manifestDocumentId
+      ? documents.find((document) => document._id === expediente.manifestDocumentId)
+      : documentFor("manifiesto");
+    const tripEmitted = operations.some(
+      (operation) =>
+        operation.operationType === "emit_trip" &&
+        operation.status === "succeeded" &&
+        expediente.tripNumber !== undefined &&
+        readTripNumber(operation.payloadJson) === expediente.tripNumber
+    );
+
+    return {
+      organizationId: expediente.organizationId,
+      code: expediente.code,
+      status: expediente.status,
+      tripNumber: expediente.tripNumber,
+      tripEmitted,
+      order: {
+        number: expediente.loadingOrderDraft?.orderNumber ?? expediente.cargoNumber,
+        payloadJson: latestByKind.get("orden_cargue"),
+        documentId: orderDocument?._id,
+        officialState: orderDocument?.officialState ?? "draft"
+      },
+      consignments: remesas.map((remesa) => ({
+        remesaId: remesa._id,
+        number: remesa.number,
+        payloadJson: latestByRemesa.get(remesa._id),
+        documentId: remesa.documentId,
+        officialState: remesa.officialState
+      })),
+      manifest: {
+        number: expediente.manifestDraft?.manifestNumber ?? expediente.manifestNumber,
+        payloadJson: latestByKind.get("manifiesto"),
+        documentId: manifestDocument?._id,
+        officialState: manifestDocument?.officialState ?? "draft"
+      },
+      assignmentJson: latestByKind.get("asignacion"),
+      operations: operations.map((operation) => ({
+        operationType: operation.operationType,
+        status: operation.status
+      }))
+    };
+  }
+});
+
+function readTripNumber(payloadJson: string): string | undefined {
+  try {
+    const parsed = JSON.parse(payloadJson) as { tripNumber?: unknown };
+    return typeof parsed.tripNumber === "string" ? parsed.tripNumber : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 export const stage = query({
   args: { actorToken: v.optional(v.string()), expedienteId: v.id("expedientes") },

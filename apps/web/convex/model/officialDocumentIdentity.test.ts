@@ -188,3 +188,33 @@ test("backfills manifest issuance only from an exact durable emission identity",
   assert.equal(manifestIssuanceOperationMatches({ document, operation: { ...operation, payload: { manifestNumber: "0041951" } } }), false);
   assert.equal(manifestIssuanceOperationMatches({ document, operation: { ...operation, operationType: "fulfill_manifest" } }), false);
 });
+
+test("trip registration binds to the manifest document without a lifecycle plan", async () => {
+  const { bindPayloadToPersistedDocument, lifecyclePlanForOperation } = await import("./officialDocumentIdentity");
+
+  const bound = bindPayloadToPersistedDocument({
+    operationType: "emit_trip",
+    payload: { tripNumber: "0000001", cargoNumber: "0000001" },
+    documentKind: "manifiesto",
+    documentNumber: "0000001"
+  });
+  assert.equal(bound.ok, true);
+
+  const wrongKind = bindPayloadToPersistedDocument({
+    operationType: "emit_trip",
+    payload: { tripNumber: "0000001" },
+    documentKind: "remesa",
+    documentNumber: "00001"
+  });
+  assert.equal(wrongKind.ok, false);
+
+  const missingTrip = bindPayloadToPersistedDocument({
+    operationType: "emit_trip",
+    payload: {},
+    documentKind: "manifiesto",
+    documentNumber: "0000001"
+  });
+  assert.equal(missingTrip.ok, false);
+
+  assert.equal(lifecyclePlanForOperation("emit_trip"), undefined);
+});

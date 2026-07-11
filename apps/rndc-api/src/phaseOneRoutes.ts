@@ -241,12 +241,12 @@ export function assessFormFopat(
   scenario: DemoScenario,
   mode: RndcConfig["mode"]
 ): FormFopatDecision | undefined {
-  if (operation !== "manifest" && operation !== "fulfill-manifest") {
+  if (operation !== "manifest" && operation !== "manifest-issue" && operation !== "fulfill-manifest") {
     return undefined;
   }
 
   const fopat = child(isRecord(payload) ? payload : {}, "fopat");
-  const basis = operation === "manifest"
+  const basis = operation === "manifest" || operation === "manifest-issue"
     ? scenario.money.freightValue
     : scenario.money.freightValue
       + scenario.compliance.additionalLoadHoursValue
@@ -267,7 +267,7 @@ export function assessFormFopat(
 
   return {
     assessment: {
-      stage: operation,
+      stage: operation === "manifest-issue" ? "manifest" : operation,
       basis,
       submittedAmount: scenario.money.fopatRetention,
       result,

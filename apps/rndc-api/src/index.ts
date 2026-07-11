@@ -2,7 +2,7 @@ import express from "express";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildDriverVehicleMessages, buildFailureResponse, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildLoadingOrderMessages, buildManifestMessages, buildMtmReferenceScenario, buildRemesaMessages, generateLoadingOrderDocument, generateManifestDocument, generateRemesaDocument, loadConfig, RndcClient, runDemoFlow } from "@tms/rndc-core";
+import { buildDriverVehicleMessages, buildFailureResponse, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildLoadingOrderMessages, buildManifestIssueMessages, buildManifestMessages, buildMtmReferenceScenario, buildRemesaMessages, buildTripMessages, generateLoadingOrderDocument, generateManifestDocument, generateRemesaDocument, loadConfig, RndcClient, runDemoFlow } from "@tms/rndc-core";
 import type { CargoData, CompanyParty, ComplianceData, DemoScenario, GeneratedDocument, MoneyData, PersonData, RndcConfig, RndcFlowResult, RndcFlowStep, RndcMessageRequest, RndcMessageResponse, VehicleData } from "@tms/rndc-core";
 import { syncOperationToConvex } from "./convexSync.js";
 import type { ConvexSyncStatus } from "./convexSync.js";
@@ -13,7 +13,7 @@ import type { RndcAppHooks, RndcLogger, RndcRuntimeSettings } from "./runtimeSec
 import { readDurableEvidenceContext, storeDurableEvidenceToConvex, validateDurableContextWithConvex } from "./durableEvidence.js";
 import type { DurableContextValidator, DurableEvidenceReport, DurableEvidenceStore } from "./durableEvidence.js";
 
-export type FormOperation = "loading-order" | "remesa" | "manifest" | "driver-vehicle" | "fulfill-remesa" | "fulfill-manifest";
+export type FormOperation = "loading-order" | "remesa" | "trip" | "manifest" | "manifest-issue" | "driver-vehicle" | "fulfill-remesa" | "fulfill-manifest";
 
 type FormMessage = {
   name: string;
@@ -153,6 +153,14 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}, hooks: RndcAp
 
   app.post("/rndc/forms/manifest", requireOperationalReadiness, (req, res, next) => {
     void submitForm(req, res, next, readConfig, "manifest", buildManifestMessages, evidenceStore);
+  });
+
+  app.post("/rndc/forms/trip", requireOperationalReadiness, (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "trip", buildTripMessages, evidenceStore);
+  });
+
+  app.post("/rndc/forms/manifest-issue", requireOperationalReadiness, (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "manifest-issue", buildManifestIssueMessages, evidenceStore);
   });
 
   app.post("/rndc/forms/fulfill-remesa", requireOperationalReadiness, (req, res, next) => {
@@ -303,7 +311,11 @@ function operationDocumentNumber(operation: FormOperation, scenario: DemoScenari
     return scenario.remesaNumber;
   }
 
-  if (operation === "manifest") {
+  if (operation === "trip") {
+    return scenario.tripNumber;
+  }
+
+  if (operation === "manifest" || operation === "manifest-issue") {
     return scenario.manifestNumber;
   }
 
@@ -361,7 +373,35 @@ const requiredFormFields: Record<FormOperation, string[]> = {
     "cargoPolicy.expirationDate",
     "cargoPolicy.insurerNit"
   ],
+  trip: [
+    "tripNumber",
+    "cargoNumber",
+    "driver.idType",
+    "driver.id",
+    "vehicle.plate",
+    "sender.cityCode",
+    "recipient.cityCode",
+    "money.freightValue"
+  ],
   manifest: [
+    "manifestNumber",
+    "tripNumber",
+    "remesaNumber",
+    "cargoNumber",
+    "expeditionDate",
+    "balancePaymentDate",
+    "driver.idType",
+    "driver.id",
+    "vehicle.plate",
+    "vehicleHolder.idType",
+    "vehicleHolder.id",
+    "sender.cityCode",
+    "recipient.cityCode",
+    "money.freightValue",
+    "money.advanceValue",
+    "money.icaRetentionPerMille"
+  ],
+  "manifest-issue": [
     "manifestNumber",
     "tripNumber",
     "remesaNumber",
@@ -444,7 +484,9 @@ const requiredFormFields: Record<FormOperation, string[]> = {
 const requiredNumericFormFields: Record<FormOperation, string[]> = {
   "loading-order": ["cargo.quantityKg"],
   remesa: ["cargo.quantityKg"],
+  trip: ["money.freightValue"],
   manifest: ["money.freightValue", "money.advanceValue", "money.icaRetentionPerMille"],
+  "manifest-issue": ["money.freightValue", "money.advanceValue", "money.icaRetentionPerMille"],
   "fulfill-remesa": ["compliance.loadedQuantityKg", "compliance.unitCode"],
   "fulfill-manifest": [
     "money.freightValue",
@@ -665,7 +707,11 @@ async function buildOperationDocuments(operation: FormOperation, scenario: DemoS
     return [await generateRemesaDocument(scenario, { remesaAuthorization: steps[0]?.radicado }, config.pdfDir, config.mode)];
   }
 
-  if (operation === "manifest") {
+  if (operation === "trip") {
+    return [];
+  }
+
+  if (operation === "manifest" || operation === "manifest-issue") {
     const manifest = steps.find((step) => step.name === "issue-manifest");
     return [await generateManifestDocument(scenario, {
       manifestAuthorization: manifest?.radicado,
@@ -1172,7 +1218,9 @@ function durableOperationTypeForRequest(req: express.Request): string | undefine
   const fixed: Record<string, string> = {
     "/rndc/forms/loading-order": "emit_cargo",
     "/rndc/forms/remesa": "emit_remesa",
+    "/rndc/forms/trip": "emit_trip",
     "/rndc/forms/manifest": "emit_manifest",
+    "/rndc/forms/manifest-issue": "emit_manifest",
     "/rndc/forms/fulfill-remesa": "fulfill_remesa",
     "/rndc/forms/fulfill-manifest": "fulfill_manifest",
     "/rndc/corrections/remesa": "correct_remesa",

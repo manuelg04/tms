@@ -56,6 +56,18 @@ const contracts: Record<string, PayloadContract> = {
     ],
     numbers: ["cargo.quantityKg"]
   },
+  emit_trip: {
+    strings: [
+      "tripNumber",
+      "cargoNumber",
+      "driver.idType",
+      "driver.id",
+      "vehicle.plate",
+      "sender.cityCode",
+      "recipient.cityCode"
+    ],
+    numbers: ["money.freightValue"]
+  },
   emit_manifest: {
     strings: [
       "manifestNumber",

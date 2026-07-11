@@ -254,3 +254,23 @@ test("editing an official consignment or manifest is rejected", () => {
   assert.throws(() => assertStageEditable("manifiesto", { officialState: "pending" }), /documento oficial/i);
   assert.doesNotThrow(() => assertStageEditable("remesa", { officialState: "draft" }));
 });
+
+test("a consignment inherits the order cargo codes when it does not override them", async () => {
+  const { effectiveConsignment } = await import("./dispatchWorkflow");
+  const effective = effectiveConsignment(
+    { consignmentClass: "terrestre_carga", declaredValue: "100" },
+    { ...completeOrder, packagingCode: "0", merchandiseCode: "005229", natureOfCargo: "1" }
+  );
+
+  assert.equal(effective.packagingCode, "0");
+  assert.equal(effective.merchandiseCode, "005229");
+  assert.equal(effective.natureOfCargo, "1");
+
+  const overridden = effectiveConsignment(
+    { merchandiseCode: "009999", natureOfCargo: "2" },
+    { ...completeOrder, merchandiseCode: "005229", natureOfCargo: "1" }
+  );
+
+  assert.equal(overridden.merchandiseCode, "009999");
+  assert.equal(overridden.natureOfCargo, "2");
+});

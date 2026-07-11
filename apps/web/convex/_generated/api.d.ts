@@ -24,6 +24,7 @@ import type * as model_dispatchSnapshot from "../model/dispatchSnapshot.js";
 import type * as model_dispatchWorkflow from "../model/dispatchWorkflow.js";
 import type * as model_documentLifecycle from "../model/documentLifecycle.js";
 import type * as model_draftValidators from "../model/draftValidators.js";
+import type * as model_emissionPlan from "../model/emissionPlan.js";
 import type * as model_officialDocumentIdentity from "../model/officialDocumentIdentity.js";
 import type * as model_operationIntent from "../model/operationIntent.js";
 import type * as model_operationState from "../model/operationState.js";
@@ -56,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   "model/dispatchWorkflow": typeof model_dispatchWorkflow;
   "model/documentLifecycle": typeof model_documentLifecycle;
   "model/draftValidators": typeof model_draftValidators;
+  "model/emissionPlan": typeof model_emissionPlan;
   "model/officialDocumentIdentity": typeof model_officialDocumentIdentity;
   "model/operationIntent": typeof model_operationIntent;
   "model/operationState": typeof model_operationState;

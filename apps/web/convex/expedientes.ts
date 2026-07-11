@@ -4,6 +4,12 @@ import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
 import { initialDocumentLifecycle } from "./model/documentLifecycle";
+import {
+  consignmentDraftValidator,
+  loadingOrderDraftValidator,
+  logisticsTimesDraftValidator,
+  manifestDraftValidator
+} from "./model/draftValidators";
 
 const statusValidator = v.union(
   v.literal("draft"),
@@ -69,6 +75,10 @@ const expedienteValidator = v.object({
   startedAt: v.optional(v.number()),
   completedAt: v.optional(v.number()),
   notes: v.optional(v.string()),
+  agencyCode: v.optional(v.string()),
+  loadingOrderDraft: v.optional(loadingOrderDraftValidator),
+  manifestDraft: v.optional(manifestDraftValidator),
+  logisticsTimes: v.optional(logisticsTimesDraftValidator),
   createdBy: v.id("users"),
   updatedBy: v.id("users"),
   createdAt: v.number(),
@@ -89,6 +99,7 @@ const remesaValidator = v.object({
   cargoWeightKg: v.optional(v.number()),
   consigneeName: v.optional(v.string()),
   consigneeDocument: v.optional(v.string()),
+  draft: v.optional(consignmentDraftValidator),
   officialState: officialStateValidator,
   fulfillmentState: fulfillmentStateValidator,
   correctionState: correctionStateValidator,

@@ -264,3 +264,20 @@ test("prepares masked XML files for the requested RNDC operations", async () => 
   assert.match(await readFile(tripAnnulment.path, "utf8"), /<MOTIVOANULACIONINFOVIAJE>S<\/MOTIVOANULACIONINFOVIAJE>/);
   assert.match(await readFile(cargoAnnulment.path, "utf8"), /<MOTIVOANULACIONINFOCARGA>S<\/MOTIVOANULACIONINFOCARGA>/);
 });
+
+test("splits trip registration and manifest issuance into separate durable messages", async () => {
+  const { buildManifestIssueMessages, buildTripMessages } = await import("../rndc/messages.js");
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  const trip = buildTripMessages(scenario);
+  const manifest = buildManifestIssueMessages(scenario);
+
+  assert.deepEqual(trip.map((message) => [message.name, message.request.procesoId]), [["register-trip", 2]]);
+  assert.deepEqual(manifest.map((message) => [message.name, message.request.procesoId]), [["issue-manifest", 4]]);
+
+  const tripVariables = trip[0].request.variables as RndcXmlRecord;
+  assert.equal(tripVariables.CONSECUTIVOINFORMACIONVIAJE, scenario.tripNumber);
+  assert.equal(tripVariables.NUMPLACA, scenario.vehicle.plate);
+
+  const manifestVariables = manifest[0].request.variables as RndcXmlRecord;
+  assert.equal(manifestVariables.NUMMANIFIESTOCARGA, scenario.manifestNumber);
+});

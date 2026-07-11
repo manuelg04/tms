@@ -118,6 +118,18 @@ export function bindPayloadToPersistedDocument(input: {
     };
   }
 
+  if (input.operationType === "emit_trip") {
+    const tripNumber = isRecord(input.payload) && typeof input.payload.tripNumber === "string"
+      ? input.payload.tripNumber.trim()
+      : "";
+
+    if (input.documentKind !== "manifiesto" || !documentNumber || !tripNumber) {
+      return mismatch();
+    }
+
+    return { ok: true, payload: input.payload, documentNumber };
+  }
+
   const plan = operationIdentityPlans[input.operationType];
   const payloadNumber = readOperationDocumentNumber(input.operationType, input.payload);
 

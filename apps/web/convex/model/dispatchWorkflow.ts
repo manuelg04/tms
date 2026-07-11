@@ -106,6 +106,7 @@ export type PartyDraft = {
   name?: string;
   identificationType?: string;
   identificationNumber?: string;
+  siteCode?: string;
   address?: string;
   cityName?: string;
   municipalityCode?: string;
@@ -140,6 +141,7 @@ export type LoadingOrderDraft = {
   volumeM3?: string;
   packagingCode?: string;
   merchandiseCode?: string;
+  natureOfCargo?: string;
   minLoadingDate?: string;
   maxLoadingDate?: string;
   driverFreight?: string;
@@ -172,6 +174,7 @@ export type ConsignmentDraft = {
   insurancePercent?: string;
   policyNumber?: string;
   insurerName?: string;
+  insurerNit?: string;
   policyExpiresOn?: string;
   remissions?: RemissionLineDraft[];
   unitOfMeasure?: string;
@@ -351,6 +354,9 @@ export function effectiveConsignment(
     recipient: partyComplete(draft.recipient) ? draft.recipient : order?.recipient ?? draft.recipient,
     loading: siteComplete(draft.loading) ? draft.loading : order?.loading ?? draft.loading,
     unloading: siteComplete(draft.unloading) ? draft.unloading : order?.unloading ?? draft.unloading,
+    packagingCode: draft.packagingCode ?? order?.packagingCode,
+    merchandiseCode: draft.merchandiseCode ?? order?.merchandiseCode,
+    natureOfCargo: draft.natureOfCargo ?? order?.natureOfCargo,
     remissions: inheritedRemissions
   };
 }

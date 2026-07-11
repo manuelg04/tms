@@ -1,5 +1,12 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import {
+  consignmentDraftValidator,
+  loadingOrderDraftValidator,
+  logisticsTimesDraftValidator,
+  manifestDraftValidator,
+  snapshotKindValidator
+} from "./model/draftValidators";
 
 const documentStatus = v.union(
   v.literal("draft"),
@@ -423,6 +430,10 @@ export default defineSchema({
     startedAt: v.optional(v.number()),
     completedAt: v.optional(v.number()),
     notes: v.optional(v.string()),
+    agencyCode: v.optional(v.string()),
+    loadingOrderDraft: v.optional(loadingOrderDraftValidator),
+    manifestDraft: v.optional(manifestDraftValidator),
+    logisticsTimes: v.optional(logisticsTimesDraftValidator),
     createdBy: v.id("users"),
     updatedBy: v.id("users"),
     createdAt: v.number(),
@@ -444,6 +455,7 @@ export default defineSchema({
     cargoWeightKg: v.optional(v.number()),
     consigneeName: v.optional(v.string()),
     consigneeDocument: v.optional(v.string()),
+    draft: v.optional(consignmentDraftValidator),
     officialState: officialDocumentState,
     fulfillmentState,
     correctionState,
@@ -588,6 +600,36 @@ export default defineSchema({
     .index("by_expediente_and_status", ["expedienteId", "status"])
     .index("by_document_and_created_at", ["documentId", "createdAt"])
     .index("by_document_and_status", ["documentId", "status"]),
+
+  dispatchSnapshots: defineTable({
+    organizationId: v.id("organizations"),
+    expedienteId: v.id("expedientes"),
+    documentId: v.optional(v.id("documents")),
+    remesaId: v.optional(v.id("expedienteRemesas")),
+    kind: snapshotKindValidator,
+    documentNumber: v.optional(v.string()),
+    payloadJson: v.string(),
+    fingerprint: v.string(),
+    takenAt: v.number(),
+    takenBy: v.id("users")
+  })
+    .index("by_expediente_and_taken_at", ["expedienteId", "takenAt"])
+    .index("by_expediente_kind_and_taken_at", ["expedienteId", "kind", "takenAt"])
+    .index("by_document", ["documentId"])
+    .index("by_remesa", ["remesaId"]),
+
+  counterRanges: defineTable({
+    organizationId: v.id("organizations"),
+    agencyCode: v.string(),
+    documentType: v.string(),
+    prefix: v.string(),
+    padding: v.number(),
+    nextValue: v.number(),
+    endValue: v.optional(v.number()),
+    status: v.union(v.literal("active"), v.literal("inactive")),
+    createdAt: v.number(),
+    updatedAt: v.number()
+  }).index("by_organization_agency_and_type", ["organizationId", "agencyCode", "documentType"]),
 
   rndcRequestKeys: defineTable({
     organizationId: v.id("organizations"),

@@ -1,0 +1,854 @@
+import { ConvexError, v } from "convex/values";
+import { mutation, query } from "./_generated/server";
+import type { Doc, Id } from "./_generated/dataModel";
+import type { MutationCtx, QueryCtx } from "./_generated/server";
+import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
+import { claimNextConsecutive } from "./model/consecutiveRange";
+import { buildDispatchSnapshot, type SnapshotKind } from "./model/dispatchSnapshot";
+import {
+  assertStageEditable,
+  consignmentMissingFields,
+  deriveDispatchStage,
+  effectiveConsignment,
+  loadingOrderMissingFields,
+  manifestMissingFields,
+  type ConsignmentDraft,
+  type DispatchProjection,
+  type LoadingOrderDraft
+} from "./model/dispatchWorkflow";
+import { initialDocumentLifecycle, type OfficialDocumentState } from "./model/documentLifecycle";
+import { consignmentDraftValidator, loadingOrderDraftValidator, manifestDraftValidator } from "./model/draftValidators";
+
+const stageValidator = v.union(
+  v.literal("orden_cargue"),
+  v.literal("remesas"),
+  v.literal("vehiculo_conductor"),
+  v.literal("manifiesto"),
+  v.literal("envio_rndc"),
+  v.literal("cargue_descargue"),
+  v.literal("cumplido_inicial"),
+  v.literal("cumplido_final"),
+  v.literal("cumplido"),
+  v.literal("anulado")
+);
+
+const consecutiveDefaults: Record<string, { prefix: string; padding: number }> = {
+  expediente: { prefix: "DSP-", padding: 6 },
+  orden_cargue: { prefix: "", padding: 7 },
+  remesa: { prefix: "", padding: 5 },
+  manifiesto: { prefix: "", padding: 7 }
+};
+
+export const createDraft = mutation({
+  args: {
+    actorToken: v.optional(v.string()),
+    serviceOrderId: v.id("serviceOrders"),
+    agencyCode: v.optional(v.string()),
+    notes: v.optional(v.string())
+  },
+  returns: v.object({ expedienteId: v.id("expedientes"), code: v.string() }),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+    const order = await ctx.db.get("serviceOrders", args.serviceOrderId);
+
+    if (!order || order.organizationId !== actor.organizationId) {
+      throw new ConvexError({ code: "NOT_FOUND", message: "Orden de servicio no encontrada" });
+    }
+
+    const [customer, loadingLocation, unloadingLocation] = await Promise.all([
+      ctx.db.get("customers", order.customerId),
+      ctx.db.get("customerLocations", order.loadingLocationId),
+      ctx.db.get("customerLocations", order.unloadingLocationId)
+    ]);
+    const now = Date.now();
+    const agencyCode = args.agencyCode?.trim() || "";
+    const code = await claimConsecutive(ctx, actor.organizationId, agencyCode, "expediente", now);
+    const existing = await ctx.db
+      .query("expedientes")
+      .withIndex("by_organization_and_code", (q) => q.eq("organizationId", actor.organizationId).eq("code", code))
+      .unique();
+
+    if (existing) {
+      throw new ConvexError({ code: "CONFLICT", message: `El consecutivo de expediente ${code} ya está en uso` });
+    }
+
+    const loadingOrderDraft: LoadingOrderDraft & { customerId?: Id<"customers"> } = {
+      agencyCode: agencyCode || undefined,
+      customerId: order.customerId,
+      customerReference: order.customerReference,
+      sender: customer
+        ? {
+            name: customer.name,
+            identificationType: customer.identificationType,
+            identificationNumber: customer.identificationNumber,
+            phone: customer.phone
+          }
+        : undefined,
+      loading: loadingLocation
+        ? {
+            siteName: loadingLocation.name,
+            address: loadingLocation.address,
+            cityName: loadingLocation.city,
+            municipalityCode: loadingLocation.municipalityCode,
+            appointmentAt: order.scheduledLoadingAt
+          }
+        : undefined,
+      unloading: unloadingLocation
+        ? {
+            siteName: unloadingLocation.name,
+            address: unloadingLocation.address,
+            cityName: unloadingLocation.city,
+            municipalityCode: unloadingLocation.municipalityCode,
+            appointmentAt: order.scheduledUnloadingAt
+          }
+        : undefined,
+      cargoDescription: order.cargoDescription,
+      cargoQuantity: order.cargoQuantity !== undefined ? String(order.cargoQuantity) : undefined,
+      cargoUnit: order.cargoUnit,
+      generatesConsignment: true
+    };
+    const tripId = await ctx.db.insert("trips", {
+      organizationId: actor.organizationId,
+      code,
+      status: "borrador",
+      originCity: loadingLocation?.city,
+      destinationCity: unloadingLocation?.city,
+      createdAt: now,
+      updatedAt: now
+    });
+    const expedienteId = await ctx.db.insert("expedientes", {
+      organizationId: actor.organizationId,
+      serviceOrderId: args.serviceOrderId,
+      tripId,
+      code,
+      status: "draft",
+      notes: args.notes,
+      agencyCode: agencyCode || undefined,
+      loadingOrderDraft,
+      createdBy: actor._id,
+      updatedBy: actor._id,
+      createdAt: now,
+      updatedAt: now
+    });
+    await ctx.db.patch("trips", tripId, { expedienteId });
+    await ctx.db.insert("expedienteEvents", {
+      organizationId: actor.organizationId,
+      expedienteId,
+      eventType: "dispatch_draft_created",
+      title: "Despacho creado en borrador",
+      occurredAt: now,
+      actorId: actor._id
+    });
+    await appendAudit(ctx, {
+      organizationId: actor.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "dispatch.draft_created",
+      entityType: "expediente",
+      entityId: expedienteId,
+      createdAt: now
+    });
+    return { expedienteId, code };
+  }
+});
+
+export const saveLoadingOrderDraft = mutation({
+  args: {
+    actorToken: v.optional(v.string()),
+    expedienteId: v.id("expedientes"),
+    draft: loadingOrderDraftValidator
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+    const expediente = await requireEditableExpediente(ctx, actor, args.expedienteId);
+    const cargoInfoState = await officialStateFor(ctx, expediente, "orden_cargue");
+    guardEdit(() => assertStageEditable("orden_cargue", { officialState: "draft", cargoInfoState }));
+
+    if (args.draft.customerId) {
+      const customer = await ctx.db.get("customers", args.draft.customerId);
+      if (!customer || customer.organizationId !== expediente.organizationId) {
+        throw new ConvexError({ code: "NOT_FOUND", message: "Cliente no encontrado" });
+      }
+    }
+
+    const now = Date.now();
+    await ctx.db.patch("expedientes", expediente._id, {
+      loadingOrderDraft: args.draft,
+      agencyCode: args.draft.agencyCode ?? expediente.agencyCode,
+      updatedBy: actor._id,
+      updatedAt: now
+    });
+    await appendAudit(ctx, {
+      organizationId: expediente.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "dispatch.loading_order_saved",
+      entityType: "expediente",
+      entityId: expediente._id,
+      createdAt: now
+    });
+    return null;
+  }
+});
+
+export const saveConsignmentsDraft = mutation({
+  args: {
+    actorToken: v.optional(v.string()),
+    expedienteId: v.id("expedientes"),
+    upserts: v.array(
+      v.object({
+        remesaId: v.optional(v.id("expedienteRemesas")),
+        sequence: v.number(),
+        draft: consignmentDraftValidator
+      })
+    ),
+    removals: v.optional(v.array(v.id("expedienteRemesas")))
+  },
+  returns: v.array(v.id("expedienteRemesas")),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+    const expediente = await requireEditableExpediente(ctx, actor, args.expedienteId);
+    const existingRows = await ctx.db
+      .query("expedienteRemesas")
+      .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
+      .collect();
+    const existingById = new Map(existingRows.map((row) => [row._id, row]));
+    const removals = args.removals ?? [];
+    const removalSet = new Set(removals);
+
+    for (const upsert of args.upserts) {
+      if (!Number.isInteger(upsert.sequence) || upsert.sequence < 1) {
+        throw new ConvexError({ code: "INVALID_INPUT", message: "La secuencia de la remesa debe ser un entero positivo" });
+      }
+      if (upsert.remesaId) {
+        const row = existingById.get(upsert.remesaId);
+        if (!row) {
+          throw new ConvexError({ code: "NOT_FOUND", message: "Remesa no encontrada en este despacho" });
+        }
+        if (removalSet.has(upsert.remesaId)) {
+          throw new ConvexError({ code: "INVALID_INPUT", message: "Una remesa no puede actualizarse y eliminarse a la vez" });
+        }
+        guardEdit(() => assertStageEditable("remesa", { officialState: row.officialState }));
+      }
+    }
+
+    for (const remesaId of removals) {
+      const row = existingById.get(remesaId);
+      if (!row) {
+        throw new ConvexError({ code: "NOT_FOUND", message: "Remesa no encontrada en este despacho" });
+      }
+      if (row.officialState !== "draft" || row.documentId) {
+        throw new ConvexError({ code: "INVALID_STATE", message: "Sólo una remesa en borrador sin documento puede eliminarse" });
+      }
+    }
+
+    const finalSequences = new Map<number, string>();
+
+    for (const row of existingRows) {
+      if (!removalSet.has(row._id)) {
+        finalSequences.set(row.sequence, row._id);
+      }
+    }
+
+    for (const upsert of args.upserts) {
+      const currentOwner = finalSequences.get(upsert.sequence);
+      const ownId = upsert.remesaId ?? `new-${upsert.sequence}`;
+
+      if (currentOwner !== undefined && currentOwner !== upsert.remesaId) {
+        throw new ConvexError({ code: "CONFLICT", message: `La secuencia ${upsert.sequence} ya está en uso` });
+      }
+
+      if (upsert.remesaId) {
+        const previous = existingById.get(upsert.remesaId);
+        if (previous && previous.sequence !== upsert.sequence) {
+          finalSequences.delete(previous.sequence);
+        }
+      }
+
+      finalSequences.set(upsert.sequence, ownId);
+    }
+
+    const now = Date.now();
+    const orderDraft = expediente.loadingOrderDraft ?? null;
+    const savedIds: Id<"expedienteRemesas">[] = [];
+
+    for (const remesaId of removals) {
+      await ctx.db.delete("expedienteRemesas", remesaId);
+    }
+
+    for (const upsert of args.upserts) {
+      const effective = effectiveConsignment(upsert.draft, orderDraft);
+      const denormalized = {
+        cargoDescription: effective.remissions?.[0]?.description ?? "",
+        cargoUnit: effective.unitOfMeasure,
+        consigneeName: effective.recipient?.name,
+        consigneeDocument: effective.recipient?.identificationNumber
+      };
+
+      if (upsert.remesaId) {
+        await ctx.db.patch("expedienteRemesas", upsert.remesaId, {
+          sequence: upsert.sequence,
+          draft: upsert.draft,
+          ...denormalized,
+          updatedBy: actor._id,
+          updatedAt: now
+        });
+        savedIds.push(upsert.remesaId);
+      } else {
+        const lifecycle = initialDocumentLifecycle();
+        const remesaId = await ctx.db.insert("expedienteRemesas", {
+          organizationId: expediente.organizationId,
+          expedienteId: expediente._id,
+          sequence: upsert.sequence,
+          draft: upsert.draft,
+          ...denormalized,
+          ...lifecycle,
+          createdBy: actor._id,
+          updatedBy: actor._id,
+          createdAt: now,
+          updatedAt: now
+        });
+        savedIds.push(remesaId);
+      }
+    }
+
+    await ctx.db.patch("expedientes", expediente._id, { updatedBy: actor._id, updatedAt: now });
+    await appendAudit(ctx, {
+      organizationId: expediente.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "dispatch.consignments_saved",
+      entityType: "expediente",
+      entityId: expediente._id,
+      detailsJson: JSON.stringify({ upserts: args.upserts.length, removals: removals.length }),
+      createdAt: now
+    });
+    return savedIds;
+  }
+});
+
+export const saveAssignmentDraft = mutation({
+  args: {
+    actorToken: v.optional(v.string()),
+    expedienteId: v.id("expedientes"),
+    driverId: v.optional(v.union(v.id("drivers"), v.null())),
+    secondDriverId: v.optional(v.union(v.id("drivers"), v.null())),
+    vehicleId: v.optional(v.union(v.id("vehicles"), v.null())),
+    trailerId: v.optional(v.union(v.id("trailers"), v.null()))
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+    const expediente = await requireEditableExpediente(ctx, actor, args.expedienteId);
+    const patch: Partial<Doc<"expedientes">> = { updatedBy: actor._id, updatedAt: Date.now() };
+    const lookups: Array<Promise<void>> = [];
+    const assign = <Key extends "driverId" | "secondDriverId" | "vehicleId" | "trailerId">(
+      key: Key,
+      table: "drivers" | "vehicles" | "trailers"
+    ) => {
+      const value = args[key];
+      if (value === undefined) {
+        return;
+      }
+      if (value === null) {
+        patch[key] = undefined;
+        return;
+      }
+      lookups.push(
+        (async () => {
+          const row = await ctx.db.get(table, value as never);
+          if (!row || (row.organizationId !== undefined && row.organizationId !== expediente.organizationId)) {
+            throw new ConvexError({ code: "NOT_FOUND", message: "Recurso de asignación no encontrado" });
+          }
+          patch[key] = value as never;
+        })()
+      );
+    };
+
+    assign("driverId", "drivers");
+    assign("secondDriverId", "drivers");
+    assign("vehicleId", "vehicles");
+    assign("trailerId", "trailers");
+    await Promise.all(lookups);
+    await ctx.db.patch("expedientes", expediente._id, patch);
+
+    if (expediente.tripId) {
+      const driverId = args.driverId === null ? undefined : args.driverId ?? expediente.driverId;
+      const vehicleId = args.vehicleId === null ? undefined : args.vehicleId ?? expediente.vehicleId;
+      const [driver, vehicle] = await Promise.all([
+        driverId ? ctx.db.get("drivers", driverId) : null,
+        vehicleId ? ctx.db.get("vehicles", vehicleId) : null
+      ]);
+      await ctx.db.patch("trips", expediente.tripId, {
+        driverName: driver?.name,
+        vehiclePlate: vehicle?.plate,
+        updatedAt: Date.now()
+      });
+    }
+
+    await appendAudit(ctx, {
+      organizationId: expediente.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "dispatch.assignment_saved",
+      entityType: "expediente",
+      entityId: expediente._id,
+      createdAt: Date.now()
+    });
+    return null;
+  }
+});
+
+export const saveManifestDraft = mutation({
+  args: {
+    actorToken: v.optional(v.string()),
+    expedienteId: v.id("expedientes"),
+    draft: manifestDraftValidator
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+    const expediente = await requireEditableExpediente(ctx, actor, args.expedienteId);
+    const manifestState = await officialStateFor(ctx, expediente, "manifiesto");
+    guardEdit(() => assertStageEditable("manifiesto", { officialState: manifestState }));
+    const now = Date.now();
+    await ctx.db.patch("expedientes", expediente._id, {
+      manifestDraft: args.draft,
+      updatedBy: actor._id,
+      updatedAt: now
+    });
+    await appendAudit(ctx, {
+      organizationId: expediente.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "dispatch.manifest_saved",
+      entityType: "expediente",
+      entityId: expediente._id,
+      createdAt: now
+    });
+    return null;
+  }
+});
+
+export const prepareEmission = mutation({
+  args: { actorToken: v.optional(v.string()), expedienteId: v.id("expedientes") },
+  returns: v.object({
+    code: v.string(),
+    orderNumber: v.string(),
+    consignmentNumbers: v.array(v.string()),
+    manifestNumber: v.string(),
+    alreadyPrepared: v.boolean()
+  }),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+    const expediente = await requireExpediente(ctx, args.expedienteId);
+    requireSameOrganization(actor, expediente.organizationId);
+    const remesas = await ctx.db
+      .query("expedienteRemesas")
+      .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
+      .collect();
+
+    if (expediente.status === "ready") {
+      const orderNumber = expediente.loadingOrderDraft?.orderNumber;
+      const manifestNumber = expediente.manifestDraft?.manifestNumber;
+
+      if (orderNumber && manifestNumber && remesas.every((remesa) => remesa.number)) {
+        return {
+          code: expediente.code,
+          orderNumber,
+          consignmentNumbers: remesas.map((remesa) => remesa.number ?? ""),
+          manifestNumber,
+          alreadyPrepared: true
+        };
+      }
+    }
+
+    if (expediente.status !== "draft") {
+      throw new ConvexError({ code: "INVALID_STATE", message: "Sólo un despacho en borrador puede prepararse para emisión" });
+    }
+
+    const projection = await buildProjection(ctx, expediente, remesas);
+    const stage = deriveDispatchStage(projection);
+
+    if (["orden_cargue", "remesas", "vehiculo_conductor", "manifiesto"].includes(stage.stage)) {
+      throw new ConvexError({
+        code: "VALIDATION",
+        message: "El despacho tiene datos pendientes y no puede prepararse",
+        data: { stage: stage.stage, blockers: stage.blockers }
+      });
+    }
+
+    const now = Date.now();
+    const agencyCode = expediente.agencyCode ?? "";
+    const orderDraft = expediente.loadingOrderDraft as LoadingOrderDraft & { customerId?: Id<"customers"> };
+    const manifestDraft = expediente.manifestDraft!;
+    const orderNumber = orderDraft.orderNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "orden_cargue", now));
+    const manifestNumber =
+      manifestDraft.manifestNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "manifiesto", now));
+    const consignmentNumbers: string[] = [];
+
+    for (const remesa of remesas) {
+      const number = remesa.number ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "remesa", now));
+      consignmentNumbers.push(number);
+
+      if (remesa.number !== number) {
+        await ctx.db.patch("expedienteRemesas", remesa._id, { number, updatedBy: actor._id, updatedAt: now });
+      }
+    }
+
+    const [driver, secondDriver, vehicle, trailer] = await Promise.all([
+      expediente.driverId ? ctx.db.get("drivers", expediente.driverId) : null,
+      expediente.secondDriverId ? ctx.db.get("drivers", expediente.secondDriverId) : null,
+      expediente.vehicleId ? ctx.db.get("vehicles", expediente.vehicleId) : null,
+      expediente.trailerId ? ctx.db.get("trailers", expediente.trailerId) : null
+    ]);
+    await writeSnapshot(ctx, expediente, actor, "orden_cargue", orderNumber, { ...orderDraft, orderNumber }, now);
+
+    for (let index = 0; index < remesas.length; index += 1) {
+      const remesa = remesas[index];
+      const effective = effectiveConsignment((remesa.draft ?? {}) as ConsignmentDraft, orderDraft);
+      await writeSnapshot(
+        ctx,
+        expediente,
+        actor,
+        "remesa",
+        consignmentNumbers[index],
+        { ...effective, number: consignmentNumbers[index], sequence: remesa.sequence },
+        now,
+        remesa._id
+      );
+    }
+
+    await writeSnapshot(ctx, expediente, actor, "manifiesto", manifestNumber, { ...manifestDraft, manifestNumber }, now);
+    await writeSnapshot(
+      ctx,
+      expediente,
+      actor,
+      "asignacion",
+      undefined,
+      {
+        driver: pickSnapshotFields(driver),
+        secondDriver: pickSnapshotFields(secondDriver),
+        vehicle: pickSnapshotFields(vehicle),
+        trailer: pickSnapshotFields(trailer)
+      },
+      now
+    );
+    await ctx.db.patch("expedientes", expediente._id, {
+      status: "ready",
+      loadingOrderDraft: { ...orderDraft, orderNumber },
+      manifestDraft: { ...manifestDraft, manifestNumber },
+      manifestNumber,
+      cargoNumber: orderNumber,
+      updatedBy: actor._id,
+      updatedAt: now
+    });
+    await ctx.db.insert("expedienteEvents", {
+      organizationId: expediente.organizationId,
+      expedienteId: expediente._id,
+      eventType: "dispatch_prepared",
+      title: "Despacho preparado para emisión",
+      details: `Orden ${orderNumber}, remesas ${consignmentNumbers.join(", ")}, manifiesto ${manifestNumber}`,
+      occurredAt: now,
+      actorId: actor._id
+    });
+    await appendAudit(ctx, {
+      organizationId: expediente.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "dispatch.emission_prepared",
+      entityType: "expediente",
+      entityId: expediente._id,
+      detailsJson: JSON.stringify({ orderNumber, consignmentNumbers, manifestNumber }),
+      createdAt: now
+    });
+    return { code: expediente.code, orderNumber, consignmentNumbers, manifestNumber, alreadyPrepared: false };
+  }
+});
+
+export const stage = query({
+  args: { actorToken: v.optional(v.string()), expedienteId: v.id("expedientes") },
+  returns: v.union(v.null(), v.object({ stage: stageValidator, blockers: v.array(v.string()) })),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken);
+    const expediente = await ctx.db.get("expedientes", args.expedienteId);
+
+    if (!expediente) {
+      return null;
+    }
+
+    requireSameOrganization(actor, expediente.organizationId);
+    const remesas = await ctx.db
+      .query("expedienteRemesas")
+      .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
+      .collect();
+    const projection = await buildProjection(ctx, expediente, remesas);
+    return deriveDispatchStage(projection);
+  }
+});
+
+export const seedCounterRange = mutation({
+  args: {
+    actorToken: v.optional(v.string()),
+    agencyCode: v.optional(v.string()),
+    documentType: v.string(),
+    prefix: v.string(),
+    padding: v.number(),
+    nextValue: v.number(),
+    endValue: v.optional(v.number())
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin"]);
+
+    if (!Number.isSafeInteger(args.nextValue) || args.nextValue < 1 || !Number.isSafeInteger(args.padding) || args.padding < 0) {
+      throw new ConvexError({ code: "INVALID_INPUT", message: "Rango de consecutivos inválido" });
+    }
+
+    const agencyCode = args.agencyCode?.trim() ?? "";
+    const now = Date.now();
+    const existing = await ctx.db
+      .query("counterRanges")
+      .withIndex("by_organization_agency_and_type", (q) =>
+        q.eq("organizationId", actor.organizationId).eq("agencyCode", agencyCode).eq("documentType", args.documentType)
+      )
+      .collect();
+    const active = existing.find((row) => row.status === "active");
+
+    if (active) {
+      if (args.nextValue < active.nextValue) {
+        throw new ConvexError({ code: "INVALID_INPUT", message: "El rango no puede retroceder consecutivos ya usados" });
+      }
+      await ctx.db.patch("counterRanges", active._id, {
+        prefix: args.prefix,
+        padding: args.padding,
+        nextValue: args.nextValue,
+        endValue: args.endValue,
+        updatedAt: now
+      });
+    } else {
+      await ctx.db.insert("counterRanges", {
+        organizationId: actor.organizationId,
+        agencyCode,
+        documentType: args.documentType,
+        prefix: args.prefix,
+        padding: args.padding,
+        nextValue: args.nextValue,
+        endValue: args.endValue,
+        status: "active",
+        createdAt: now,
+        updatedAt: now
+      });
+    }
+
+    await appendAudit(ctx, {
+      organizationId: actor.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "counter_range.seeded",
+      entityType: "counter_range",
+      entityId: `${agencyCode}:${args.documentType}`,
+      detailsJson: JSON.stringify({ prefix: args.prefix, padding: args.padding, nextValue: args.nextValue, endValue: args.endValue }),
+      createdAt: now
+    });
+    return null;
+  }
+});
+
+async function requireExpediente(ctx: QueryCtx, expedienteId: Id<"expedientes">): Promise<Doc<"expedientes">> {
+  const expediente = await ctx.db.get("expedientes", expedienteId);
+
+  if (!expediente) {
+    throw new ConvexError({ code: "NOT_FOUND", message: "Expediente no encontrado" });
+  }
+
+  return expediente;
+}
+
+async function requireEditableExpediente(
+  ctx: QueryCtx,
+  actor: Doc<"users">,
+  expedienteId: Id<"expedientes">
+): Promise<Doc<"expedientes">> {
+  const expediente = await requireExpediente(ctx, expedienteId);
+  requireSameOrganization(actor, expediente.organizationId);
+
+  if (expediente.status !== "draft") {
+    throw new ConvexError({ code: "INVALID_STATE", message: "Sólo un despacho en borrador puede editarse" });
+  }
+
+  return expediente;
+}
+
+function guardEdit(check: () => void): void {
+  try {
+    check();
+  } catch (error) {
+    throw new ConvexError({ code: "INVALID_STATE", message: error instanceof Error ? error.message : String(error) });
+  }
+}
+
+async function officialStateFor(
+  ctx: QueryCtx,
+  expediente: Doc<"expedientes">,
+  kind: "orden_cargue" | "manifiesto"
+): Promise<OfficialDocumentState> {
+  const documents = await ctx.db
+    .query("documents")
+    .withIndex("by_expediente", (q) => q.eq("expedienteId", expediente._id))
+    .collect();
+  const match = documents
+    .filter((document) => document.kind === kind)
+    .sort((a, b) => b.updatedAt - a.updatedAt)[0];
+  return match?.officialState ?? "draft";
+}
+
+async function buildProjection(
+  ctx: QueryCtx,
+  expediente: Doc<"expedientes">,
+  remesas: Doc<"expedienteRemesas">[]
+): Promise<DispatchProjection> {
+  const orderDraft = (expediente.loadingOrderDraft ?? null) as LoadingOrderDraft | null;
+  const [cargoInfoState, manifestState] = await Promise.all([
+    officialStateFor(ctx, expediente, "orden_cargue"),
+    officialStateFor(ctx, expediente, "manifiesto")
+  ]);
+  const manifestDocuments = await ctx.db
+    .query("documents")
+    .withIndex("by_expediente", (q) => q.eq("expedienteId", expediente._id))
+    .collect();
+  const manifestDocument = manifestDocuments
+    .filter((document) => document.kind === "manifiesto")
+    .sort((a, b) => b.updatedAt - a.updatedAt)[0];
+  const logistics = expediente.logisticsTimes;
+  const siteComplete = (site: typeof logistics extends undefined ? never : NonNullable<typeof logistics>["origin"]) =>
+    !!site && !!site.arrival && !!site.entry && !!site.start && !!site.end && !!site.exit;
+
+  return {
+    annulled: expediente.status === "cancelled",
+    loadingOrder: orderDraft
+      ? { missingFields: loadingOrderMissingFields(orderDraft), officialState: cargoInfoState }
+      : null,
+    consignments: remesas.map((remesa) => ({
+      missingFields: consignmentMissingFields((remesa.draft ?? null) as ConsignmentDraft | null, orderDraft),
+      officialState: remesa.officialState,
+      fulfillmentState: remesa.fulfillmentState
+    })),
+    assignment: { vehicleAssigned: !!expediente.vehicleId, driverAssigned: !!expediente.driverId },
+    manifest: expediente.manifestDraft
+      ? {
+          missingFields: manifestMissingFields(expediente.manifestDraft),
+          officialState: manifestState,
+          fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
+        }
+      : null,
+    cargoInfoState,
+    logistics: {
+      originComplete: siteComplete(logistics?.origin),
+      destinationComplete: siteComplete(logistics?.destination),
+      finalDeliveryRecorded: !!logistics?.finalDelivery
+    }
+  };
+}
+
+async function claimConsecutive(
+  ctx: MutationCtx,
+  organizationId: Id<"organizations">,
+  agencyCode: string,
+  documentType: string,
+  now: number
+): Promise<string> {
+  const defaults = consecutiveDefaults[documentType] ?? { prefix: "", padding: 6 };
+  let range = await findActiveRange(ctx, organizationId, agencyCode, documentType);
+
+  if (!range && agencyCode !== "") {
+    range = await findActiveRange(ctx, organizationId, "", documentType);
+  }
+
+  if (!range) {
+    const rangeId = await ctx.db.insert("counterRanges", {
+      organizationId,
+      agencyCode: "",
+      documentType,
+      prefix: defaults.prefix,
+      padding: defaults.padding,
+      nextValue: 1,
+      status: "active",
+      createdAt: now,
+      updatedAt: now
+    });
+    range = await ctx.db.get("counterRanges", rangeId);
+  }
+
+  if (!range) {
+    throw new ConvexError({ code: "INTEGRITY_ERROR", message: "No fue posible reservar el consecutivo" });
+  }
+
+  let claim;
+
+  try {
+    claim = claimNextConsecutive(range);
+  } catch (error) {
+    throw new ConvexError({
+      code: "RANGE_EXHAUSTED",
+      message: error instanceof Error ? error.message : String(error)
+    });
+  }
+
+  await ctx.db.patch("counterRanges", range._id, { nextValue: claim.nextValue, updatedAt: now });
+  return claim.formatted;
+}
+
+async function findActiveRange(
+  ctx: MutationCtx,
+  organizationId: Id<"organizations">,
+  agencyCode: string,
+  documentType: string
+): Promise<Doc<"counterRanges"> | null> {
+  const rows = await ctx.db
+    .query("counterRanges")
+    .withIndex("by_organization_agency_and_type", (q) =>
+      q.eq("organizationId", organizationId).eq("agencyCode", agencyCode).eq("documentType", documentType)
+    )
+    .collect();
+  return rows.find((row) => row.status === "active") ?? null;
+}
+
+async function writeSnapshot(
+  ctx: MutationCtx,
+  expediente: Doc<"expedientes">,
+  actor: Doc<"users">,
+  kind: SnapshotKind,
+  documentNumber: string | undefined,
+  data: unknown,
+  takenAt: number,
+  remesaId?: Id<"expedienteRemesas">
+): Promise<void> {
+  const snapshot = buildDispatchSnapshot(kind, data, { takenAt });
+  await ctx.db.insert("dispatchSnapshots", {
+    organizationId: expediente.organizationId,
+    expedienteId: expediente._id,
+    remesaId,
+    kind,
+    documentNumber,
+    payloadJson: snapshot.payloadJson,
+    fingerprint: snapshot.fingerprint,
+    takenAt,
+    takenBy: actor._id
+  });
+}
+
+function pickSnapshotFields(row: Record<string, unknown> | null): Record<string, unknown> | null {
+  if (!row) {
+    return null;
+  }
+
+  const { _id, _creationTime, createdAt, updatedAt, ...rest } = row as {
+    _id: unknown;
+    _creationTime: unknown;
+    createdAt?: unknown;
+    updatedAt?: unknown;
+  } & Record<string, unknown>;
+  return rest;
+}

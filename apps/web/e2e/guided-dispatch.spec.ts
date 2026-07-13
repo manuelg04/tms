@@ -19,6 +19,7 @@ test("dispatch queue shows stage RNDC status and one next action without horizon
 
 test("guided creation exposes the five sections and keeps one sticky action", async ({ page }) => {
   await page.goto("/expedientes/nuevo");
+  await fillLoadingOrder(page, `GUIDED-${Date.now()}`);
   await expect(page.locator("#loading-order-title")).toBeVisible();
   await expect(page.getByText("Paso 1 de 5")).toHaveText("Paso 1 de 5");
   await page.getByRole("button", { name: "Continuar" }).click();
@@ -29,8 +30,19 @@ test("guided creation exposes the five sections and keeps one sticky action", as
   await expect(page.locator("#manifest-title")).toBeVisible();
   await page.getByRole("button", { name: "Continuar" }).click();
   await expect(page.locator("#review-title")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Guardar despacho" })).toHaveCount(1);
+  await expect(page.getByRole("button", { name: "Abrir despacho" })).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
+test("loading order is saved before optional dispatch stages", async ({ page }) => {
+  await page.goto("/expedientes/nuevo");
+  await fillLoadingOrder(page, `EARLY-${Date.now()}`);
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await expect(page.locator("#consignments-title")).toBeVisible();
+  await expect(page.getByText(/^Despacho DSP-\d+ guardado$/)).toBeVisible();
+  await page.getByRole("button", { name: "Guardar y salir" }).click();
+  await expect(page).toHaveURL(/\/expedientes\/[^/]+$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Expediente de viaje" })).toBeVisible();
 });
 
 test("dispatch detail keeps stages documents and history in one flow", async ({ page }) => {
@@ -94,6 +106,31 @@ async function login(page: Page) {
   });
   expect(response.ok()).toBe(true);
   await page.goto("/expedientes");
+}
+
+async function fillLoadingOrder(page: Page, suffix: string) {
+  await page.getByLabel("Orden de servicio").fill(`OS-${suffix}`);
+  await page.getByLabel("Código del cliente").fill(`CLI-${suffix}`);
+  await page.getByLabel("Cliente o razón social").fill(`Cliente ${suffix}`);
+  await page.getByLabel("Tipo de identificación", { exact: true }).first().fill("NIT");
+  await page.getByLabel("Identificación del cliente").fill(`900${suffix.replace(/\D/g, "").slice(-6)}`);
+  const loading = page.getByRole("group", { name: "Cargue", exact: true });
+  await loading.getByLabel("Lugar").fill("Bodega Bogotá");
+  await loading.getByLabel("Ciudad").fill("Bogotá");
+  await loading.getByLabel("Dirección").fill("Calle 10 # 20-30");
+  await loading.getByLabel("Código municipio RNDC").fill("11001000");
+  await loading.getByLabel("Cita de cargue").fill("2026-07-14T08:00");
+  const unloading = page.getByRole("group", { name: "Descargue", exact: true });
+  await unloading.getByLabel("Lugar").fill("Centro Medellín");
+  await unloading.getByLabel("Ciudad").fill("Medellín");
+  await unloading.getByLabel("Dirección").fill("Carrera 40 # 50-60");
+  await unloading.getByLabel("Código municipio RNDC").fill("05001000");
+  await unloading.getByLabel("Cita de descargue").fill("2026-07-15T14:00");
+  await page.getByLabel("Destinatario", { exact: true }).fill(`Destinatario ${suffix}`);
+  await page.getByLabel("Identificación destinatario", { exact: true }).fill("901234567");
+  await page.getByLabel("Mercancía", { exact: true }).fill("Carga seca");
+  await page.getByLabel("Peso total (TN)").fill("12.5");
+  await page.getByLabel("Tipo de empaque").fill("PAQUETE");
 }
 
 function readPassword(): string {

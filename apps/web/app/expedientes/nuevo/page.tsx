@@ -1,12 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import type { Id } from "../../../convex/_generated/dataModel";
 
 type RemesaDraft = {
+  remesaId?: Id<"expedienteRemesas">;
   consignmentClass: "municipal" | "terrestre_carga";
   description: string;
   weightTons: string;
@@ -34,14 +35,26 @@ const emptyRemesa = (): RemesaDraft => ({
 
 export default function NuevoDespachoPage() {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const me = useQuery(api.access.me, {});
   const [step, setStep] = useState(0);
+  const [expedienteId, setExpedienteId] = useState<Id<"expedientes"> | null>(null);
+  const [expedienteCode, setExpedienteCode] = useState("");
   const [driverDocument, setDriverDocument] = useState("");
   const [vehiclePlate, setVehiclePlate] = useState("");
   const [trailerPlate, setTrailerPlate] = useState("");
   const [remesas, setRemesas] = useState<RemesaDraft[]>([emptyRemesa()]);
+  const [removedRemesaIds, setRemovedRemesaIds] = useState<Id<"expedienteRemesas">[]>([]);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [emitting, setEmitting] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [remesasSaved, setRemesasSaved] = useState(false);
+  const [assignmentSaved, setAssignmentSaved] = useState(false);
+  const [manifestSaved, setManifestSaved] = useState(false);
+  const [issueDate, setIssueDate] = useState("");
+  const [estimatedDeliveryDate, setEstimatedDeliveryDate] = useState("");
+  const [paymentResponsible, setPaymentResponsible] = useState("");
   const [freightTotal, setFreightTotal] = useState("");
   const [advance, setAdvance] = useState("0");
   const [withholdingSource, setWithholdingSource] = useState("0");
@@ -61,191 +74,193 @@ export default function NuevoDespachoPage() {
   const saveManifest = useMutation(api.dispatches.saveManifestDraft);
   const netPayable = useMemo(() => money(freightTotal) - money(advance) - money(withholdingSource) - money(withholdingIca) - money(fopat) + money(adjustments), [freightTotal, advance, withholdingSource, withholdingIca, fopat, adjustments]);
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (step < steps.length - 1) {
-      setStep((current) => Math.min(current + 1, steps.length - 1));
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-
-    if (!me) {
+  async function saveCurrent(action: "continue" | "exit" | "open") {
+    if (!me || !formRef.current) {
       setError("La sesión todavía no está conectada al espacio de trabajo.");
       return;
     }
 
     setSaving(true);
     setError("");
-    const data = new FormData(event.currentTarget);
+    setNotice("");
+    const data = new FormData(formRef.current);
 
     try {
-      const customerCode = requiredText(data, "customerCode");
-      const customerId = await upsertCustomer({
-        organizationId: me.organizationId,
-        code: customerCode,
-        name: requiredText(data, "customerName"),
-        identificationType: optionalText(data, "customerIdType"),
-        identificationNumber: requiredText(data, "customerId"),
-        phone: optionalText(data, "customerPhone"),
-        status: "active"
-      });
-      const loadingLocationId = await upsertLocation({
-        customerId,
-        code: `${customerCode}-ORI`,
-        name: requiredText(data, "originName"),
-        kind: "loading",
-        address: requiredText(data, "originAddress"),
-        city: requiredText(data, "originCity"),
-        municipalityCode: optionalText(data, "originMunicipality"),
-        status: "active"
-      });
-      const unloadingLocationId = await upsertLocation({
-        customerId,
-        code: `${customerCode}-DES`,
-        name: requiredText(data, "destinationName"),
-        kind: "unloading",
-        address: requiredText(data, "destinationAddress"),
-        city: requiredText(data, "destinationCity"),
-        municipalityCode: optionalText(data, "destinationMunicipality"),
-        status: "active"
-      });
-      const serviceOrderId = await upsertOrder({
-        organizationId: me.organizationId,
-        code: requiredText(data, "serviceOrderCode"),
-        customerId,
-        loadingLocationId,
-        unloadingLocationId,
-        status: "confirmed",
-        customerReference: optionalText(data, "customerReference"),
-        cargoDescription: requiredText(data, "cargoDescription"),
-        cargoQuantity: optionalNumber(data, "cargoQuantity"),
-        cargoUnit: optionalText(data, "cargoUnit"),
-        cargoWeightKg: money(requiredText(data, "weightTons")) * 1000,
-        agreedRate: money(requiredText(data, "freightTotal")),
-        currency: "COP",
-        scheduledLoadingAt: dateTime(data, "loadingAppointment"),
-        scheduledUnloadingAt: dateTime(data, "unloadingAppointment"),
-        notes: optionalText(data, "orderObservations")
-      });
-      const created = await createDraft({
-        serviceOrderId,
-        agencyCode: optionalText(data, "agencyCode"),
-        notes: optionalText(data, "orderObservations")
-      });
-      await saveLoadingOrder({
-        expedienteId: created.expedienteId,
-        draft: {
-          agencyCode: optionalText(data, "agencyCode"),
-          customerId,
-          customerReference: optionalText(data, "customerReference"),
-          sender: {
-            name: requiredText(data, "customerName"),
-            identificationType: optionalText(data, "customerIdType"),
-            identificationNumber: requiredText(data, "customerId"),
-            phone: optionalText(data, "customerPhone")
-          },
-          recipient: {
-            name: requiredText(data, "recipientName"),
-            identificationType: optionalText(data, "recipientIdType"),
-            identificationNumber: requiredText(data, "recipientId")
-          },
-          loading: {
-            siteName: requiredText(data, "originName"),
-            address: requiredText(data, "originAddress"),
-            cityName: requiredText(data, "originCity"),
-            municipalityCode: optionalText(data, "originMunicipality"),
-            appointmentAt: requiredDateTime(data, "loadingAppointment")
-          },
-          unloading: {
-            siteName: requiredText(data, "destinationName"),
-            address: requiredText(data, "destinationAddress"),
-            cityName: requiredText(data, "destinationCity"),
-            municipalityCode: optionalText(data, "destinationMunicipality"),
-            appointmentAt: requiredDateTime(data, "unloadingAppointment")
-          },
-          cargoDescription: requiredText(data, "cargoDescription"),
-          cargoQuantity: optionalText(data, "cargoQuantity"),
-          cargoUnit: optionalText(data, "cargoUnit"),
-          weightTons: requiredText(data, "weightTons"),
-          volumeM3: optionalText(data, "volumeM3"),
-          packagingCode: requiredText(data, "packagingCode"),
-          merchandiseCode: optionalText(data, "merchandiseCode"),
-          natureOfCargo: optionalText(data, "natureOfCargo"),
-          observations: optionalText(data, "orderObservations"),
-          generatesConsignment: true
-        }
-      });
-      await saveConsignments({
-        expedienteId: created.expedienteId,
-        upserts: remesas.map((remesa, index) => ({
-          sequence: index + 1,
-          draft: {
-            consignmentClass: remesa.consignmentClass,
-            recipient: remesa.recipientName.trim() ? {
-              name: remesa.recipientName,
-              identificationNumber: remesa.recipientDocument
-            } : undefined,
-            declaredValue: remesa.declaredValue,
-            remissions: [{
-              quantity: optionalText(data, "cargoQuantity"),
-              description: remesa.description.trim() || requiredText(data, "cargoDescription"),
-              weightTons: remesa.weightTons.trim() || requiredText(data, "weightTons")
-            }],
-            unitOfMeasure: optionalText(data, "cargoUnit"),
-            packagingCode: requiredText(data, "packagingCode"),
-            natureOfCargo: optionalText(data, "natureOfCargo"),
-            merchandiseCode: optionalText(data, "merchandiseCode"),
-            generalObservations: optionalText(data, "remesaObservations")
-          }
-        }))
-      });
-      let trailerId;
+      let currentId = expedienteId;
 
-      if (trailerPlate.trim()) {
-        trailerId = await upsertTrailer({
+      if (step === 0) {
+        const customerCode = requiredText(data, "customerCode");
+        const customerId = await upsertCustomer({
           organizationId: me.organizationId,
-          plate: trailerPlate.trim().toUpperCase(),
-          status: "available"
+          code: customerCode,
+          name: requiredText(data, "customerName"),
+          identificationType: optionalText(data, "customerIdType"),
+          identificationNumber: requiredText(data, "customerId"),
+          phone: optionalText(data, "customerPhone"),
+          status: "active"
         });
+        const loadingLocationId = await upsertLocation({
+          customerId,
+          code: `${customerCode}-ORI`,
+          name: requiredText(data, "originName"),
+          kind: "loading",
+          address: requiredText(data, "originAddress"),
+          city: requiredText(data, "originCity"),
+          municipalityCode: optionalText(data, "originMunicipality"),
+          status: "active"
+        });
+        const unloadingLocationId = await upsertLocation({
+          customerId,
+          code: `${customerCode}-DES`,
+          name: requiredText(data, "destinationName"),
+          kind: "unloading",
+          address: requiredText(data, "destinationAddress"),
+          city: requiredText(data, "destinationCity"),
+          municipalityCode: optionalText(data, "destinationMunicipality"),
+          status: "active"
+        });
+        const serviceOrderId = await upsertOrder({
+          organizationId: me.organizationId,
+          code: requiredText(data, "serviceOrderCode"),
+          customerId,
+          loadingLocationId,
+          unloadingLocationId,
+          status: "confirmed",
+          customerReference: optionalText(data, "customerReference"),
+          cargoDescription: requiredText(data, "cargoDescription"),
+          cargoQuantity: optionalNumber(data, "cargoQuantity"),
+          cargoUnit: optionalText(data, "cargoUnit"),
+          cargoWeightKg: money(requiredText(data, "weightTons")) * 1000,
+          agreedRate: money(freightTotal),
+          currency: "COP",
+          scheduledLoadingAt: dateTime(data, "loadingAppointment"),
+          scheduledUnloadingAt: dateTime(data, "unloadingAppointment"),
+          notes: optionalText(data, "orderObservations")
+        });
+        let currentCode = expedienteCode;
+
+        if (!currentId) {
+          const created = await createDraft({
+            serviceOrderId,
+            agencyCode: optionalText(data, "agencyCode"),
+            notes: optionalText(data, "orderObservations")
+          });
+          currentId = created.expedienteId;
+          currentCode = created.code;
+          setExpedienteId(created.expedienteId);
+          setExpedienteCode(created.code);
+          router.replace(`/expedientes/nuevo?expedienteId=${created.expedienteId}`, { scroll: false });
+        }
+
+        await saveLoadingOrder({
+          expedienteId: currentId,
+          draft: loadingOrderDraft(data, customerId)
+        });
+        setNotice(`Despacho ${currentCode} guardado. Puedes salir y continuar más tarde.`);
+      } else {
+        if (!currentId) throw new Error("Guarda primero la orden de cargue.");
+
+        if (step === 1) {
+          const selected = remesas
+            .map((remesa, index) => ({ remesa, index }))
+            .filter(({ remesa }) => hasConsignmentInput(remesa));
+          const savedIds = await saveConsignments({
+            expedienteId: currentId,
+            upserts: selected.map(({ remesa }, index) => ({
+              remesaId: remesa.remesaId,
+              sequence: index + 1,
+              draft: consignmentDraft(data, remesa)
+            })),
+            removals: removedRemesaIds
+          });
+          setRemesas((current) => current.map((remesa, index) => {
+            const savedIndex = selected.findIndex((entry) => entry.index === index);
+            return savedIndex >= 0 ? { ...remesa, remesaId: savedIds[savedIndex] } : remesa;
+          }));
+          setRemovedRemesaIds([]);
+          setRemesasSaved(savedIds.length > 0);
+          setNotice(savedIds.length > 0 ? "Remesas guardadas." : "La etapa de remesas quedó pendiente.");
+        }
+
+        if (step === 2) {
+          if (driverDocument.trim() && !driver) throw new Error("El conductor no existe en maestros.");
+          if (vehiclePlate.trim() && !vehicle) throw new Error("El vehículo no existe en maestros.");
+          let trailerId: Id<"trailers"> | null = null;
+
+          if (trailerPlate.trim()) {
+            trailerId = await upsertTrailer({
+              organizationId: me.organizationId,
+              plate: trailerPlate.trim().toUpperCase(),
+              status: "available"
+            });
+          }
+
+          await saveAssignment({
+            expedienteId: currentId,
+            driverId: driver?._id ?? null,
+            vehicleId: vehicle?._id ?? null,
+            trailerId
+          });
+          setAssignmentSaved(Boolean(driver && vehicle));
+          setNotice(driver && vehicle ? "Vehículo y conductor guardados." : "La asignación quedó pendiente.");
+        }
+
+        if (step === 3) {
+          await saveManifest({
+            expedienteId: currentId,
+            draft: manifestDraft(data, {
+              issueDate,
+              estimatedDeliveryDate,
+              paymentResponsible,
+              advance,
+              withholdingSource,
+              withholdingIca,
+              fopat,
+              adjustments,
+              netPayable
+            })
+          });
+          const complete = Boolean(issueDate && estimatedDeliveryDate && freightTotal && paymentResponsible);
+          setManifestSaved(complete);
+          setNotice(complete ? "Manifiesto guardado." : "El manifiesto quedó guardado como borrador incompleto.");
+        }
       }
 
-      await saveAssignment({
-        expedienteId: created.expedienteId,
-        driverId: driver?._id,
-        vehicleId: vehicle?._id,
-        trailerId
-      });
-      await saveManifest({
-        expedienteId: created.expedienteId,
-        draft: {
-          issueDate: requiredText(data, "issueDate"),
-          estimatedDeliveryDate: requiredText(data, "estimatedDeliveryDate"),
-          operationScope: requiredText(data, "operationScope") as "municipal" | "intermunicipal",
-          manifestType: requiredText(data, "manifestType"),
-          agencyCode: optionalText(data, "agencyCode"),
-          originCityName: requiredText(data, "originCity"),
-          originMunicipalityCode: optionalText(data, "originMunicipality"),
-          destinationCityName: requiredText(data, "destinationCity"),
-          destinationMunicipalityCode: optionalText(data, "destinationMunicipality"),
-          freightTotal: requiredText(data, "freightTotal"),
-          advance,
-          withholdingSource,
-          withholdingIca,
-          fopatContribution: fopat,
-          adjustments,
-          netPayable: String(netPayable),
-          paymentResponsible: requiredText(data, "paymentResponsible"),
-          loadingResponsible: optionalText(data, "loadingResponsible"),
-          unloadingResponsible: optionalText(data, "unloadingResponsible"),
-          paymentDate: optionalText(data, "paymentDate"),
-          observations: optionalText(data, "manifestObservations")
-        }
-      });
-      router.push(`/expedientes/${created.expedienteId}`);
+      if (!currentId) throw new Error("No fue posible identificar el despacho guardado.");
+
+      if (action === "exit" || action === "open") {
+        router.push(`/expedientes/${currentId}`);
+        return;
+      }
+
+      setStep((current) => Math.min(current + 1, steps.length - 1));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setSaving(false);
     } catch (cause) {
       setError(readError(cause));
       setSaving(false);
+    }
+  }
+
+  async function emitLoadingOrder() {
+    if (!expedienteId || !driver || !vehicle) return;
+    setEmitting(true);
+    setError("");
+    setNotice("");
+
+    try {
+      const response = await fetch(`/api/rndc/dispatches/${expedienteId}/emit`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ scope: "orden" })
+      });
+      const result = await response.json() as { error?: string };
+      if (!response.ok) throw new Error(result.error ?? "No fue posible emitir la orden de cargue.");
+      setNotice("Orden de cargue emitida en modo protegido.");
+    } catch (cause) {
+      setError(readError(cause));
+    } finally {
+      setEmitting(false);
     }
   }
 
@@ -253,16 +268,24 @@ export default function NuevoDespachoPage() {
     setRemesas((current) => current.map((remesa, position) => position === index ? { ...remesa, [key]: value } : remesa));
   }
 
+  function removeRemesa(index: number) {
+    const removed = remesas[index];
+    if (removed?.remesaId) setRemovedRemesaIds((current) => [...current, removed.remesaId!]);
+    setRemesas((current) => current.filter((_, position) => position !== index));
+  }
+
   return (
-    <form className="guided-dispatch-form" onSubmit={submit}>
+    <form className="guided-dispatch-form" onSubmit={(event) => event.preventDefault()} ref={formRef}>
       <div className="guided-form-heading">
         <div>
           <span className="eyebrow">Nuevo despacho</span>
           <h2>{steps[step].label}</h2>
-          <p>{step === 0 ? "El número de expediente y los consecutivos documentales se asignarán automáticamente." : steps[step].helper}</p>
+          <p>{step === 0 ? "Al continuar, la orden queda guardada y las demás etapas pueden completarse después." : steps[step].helper}</p>
         </div>
-        <Link className="ghost-button action-link" href="/expedientes">Guardar después</Link>
+        <button className="ghost-button action-link" disabled={saving || !me} onClick={() => void saveCurrent("exit")} type="button">Guardar y salir</button>
       </div>
+
+      {expedienteId ? <div className="inheritance-note" role="status"><span>✓</span><div><strong>Despacho {expedienteCode} guardado</strong><p>La orden ya existe. Puedes salir y continuar las otras etapas en cualquier momento.</p></div></div> : null}
 
       <nav className="creation-stepper" aria-label="Etapas para crear el despacho">
         {steps.map((item, index) => (
@@ -335,12 +358,12 @@ export default function NuevoDespachoPage() {
               <fieldset className="guided-remesa-card" key={index}>
                 <legend>Remesa {index + 1}</legend>
                 <label className="form-field"><span>Clase de remesa</span><select onChange={(event) => updateRemesa(index, "consignmentClass", event.target.value)} value={remesa.consignmentClass}><option value="terrestre_carga">Terrestre de carga</option><option value="municipal">Municipal</option></select></label>
-                <label className="form-field"><span>Valor declarado</span><input min="0" onChange={(event) => updateRemesa(index, "declaredValue", event.target.value)} required type="number" value={remesa.declaredValue} /></label>
+                <label className="form-field"><span>Valor declarado</span><input min="0" onChange={(event) => updateRemesa(index, "declaredValue", event.target.value)} type="number" value={remesa.declaredValue} /></label>
                 <label className="form-field span-2"><span>Mercancía diferente <small>opcional</small></span><input onChange={(event) => updateRemesa(index, "description", event.target.value)} placeholder="Se usará la mercancía de la orden" value={remesa.description} /></label>
                 <label className="form-field"><span>Peso diferente (TN) <small>opcional</small></span><input min="0" onChange={(event) => updateRemesa(index, "weightTons", event.target.value)} step="0.001" type="number" value={remesa.weightTons} /></label>
                 <label className="form-field"><span>Destinatario diferente <small>opcional</small></span><input onChange={(event) => updateRemesa(index, "recipientName", event.target.value)} value={remesa.recipientName} /></label>
                 <label className="form-field"><span>Identificación diferente</span><input onChange={(event) => updateRemesa(index, "recipientDocument", event.target.value)} value={remesa.recipientDocument} /></label>
-                {remesas.length > 1 ? <button className="remove-remesa" onClick={() => setRemesas((current) => current.filter((_, position) => position !== index))} type="button">Quitar remesa</button> : null}
+                {remesas.length > 1 ? <button className="remove-remesa" onClick={() => removeRemesa(index)} type="button">Quitar remesa</button> : null}
               </fieldset>
             ))}
           </div>
@@ -361,18 +384,18 @@ export default function NuevoDespachoPage() {
         <section aria-labelledby="manifest-title" hidden={step !== 3}>
           <StageHeading id="manifest-title" number="04" title="Manifiesto" text="Las remesas, la ruta y la flota ya están vinculadas. Completa la operación y sus valores." />
           <div className="guided-section-grid">
-            <Field label="Fecha de expedición" name="issueDate" required type="date" />
-            <Field label="Entrega estimada" name="estimatedDeliveryDate" required type="date" />
-            <label className="form-field"><span>Alcance de la operación</span><select name="operationScope" required><option value="intermunicipal">Intermunicipal</option><option value="municipal">Municipal</option></select></label>
-            <label className="form-field"><span>Tipo de manifiesto</span><select name="manifestType" required><option value="general">General</option><option value="especial">Especial</option></select></label>
-            <MoneyField label="Flete total" name="freightTotal" onChange={setFreightTotal} required value={freightTotal} />
+            <Field label="Fecha de expedición" name="issueDate" onChange={(event) => setIssueDate(event.target.value)} type="date" value={issueDate} />
+            <Field label="Entrega estimada" name="estimatedDeliveryDate" onChange={(event) => setEstimatedDeliveryDate(event.target.value)} type="date" value={estimatedDeliveryDate} />
+            <label className="form-field"><span>Alcance de la operación</span><select name="operationScope"><option value="intermunicipal">Intermunicipal</option><option value="municipal">Municipal</option></select></label>
+            <label className="form-field"><span>Tipo de manifiesto</span><select name="manifestType"><option value="general">General</option><option value="especial">Especial</option></select></label>
+            <MoneyField label="Flete total" name="freightTotal" onChange={setFreightTotal} value={freightTotal} />
             <MoneyField label="Anticipo" name="advance" onChange={setAdvance} value={advance} />
             <MoneyField label="Retención en la fuente" name="withholdingSource" onChange={setWithholdingSource} value={withholdingSource} />
             <MoneyField label="ICA" name="withholdingIca" onChange={setWithholdingIca} value={withholdingIca} />
             <MoneyField label="FOPAT" name="fopat" onChange={setFopat} value={fopat} />
             <MoneyField label="Ajustes" name="adjustments" onChange={setAdjustments} value={adjustments} />
             <div className="net-payable"><span>Neto a pagar</span><strong>{new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(netPayable)}</strong></div>
-            <Field label="Responsable de pago" name="paymentResponsible" required />
+            <Field label="Responsable de pago" name="paymentResponsible" onChange={(event) => setPaymentResponsible(event.target.value)} value={paymentResponsible} />
             <Field label="Responsable del cargue" name="loadingResponsible" />
             <Field label="Responsable del descargue" name="unloadingResponsible" />
             <Field label="Fecha de pago" name="paymentDate" type="date" />
@@ -381,19 +404,25 @@ export default function NuevoDespachoPage() {
         </section>
 
         <section aria-labelledby="review-title" hidden={step !== 4}>
-          <StageHeading id="review-title" number="05" title="Revisión RNDC" text="Guardar no transmite documentos. El despacho quedará en borrador para revisar bloqueos antes del envío." />
+          <StageHeading id="review-title" number="05" title="Revisión RNDC" text="Cada documento se guarda por separado. Puedes salir ahora o emitir solamente lo que esté listo." />
           <div className="review-mode-banner"><span>PRUEBA</span><div><strong>Modo de ejecución protegido</strong><p>Ninguna acción de este recorrido puede enviar tráfico RNDC real.</p></div></div>
           <div className="creation-review-grid">
-            <ReviewItem label="Orden de cargue" value="Cliente, ruta, citas y mercancía registrados" />
-            <ReviewItem label="Remesas" value={`${remesas.length} ${remesas.length === 1 ? "remesa preparada" : "remesas preparadas"}`} />
+            <ReviewItem label="Orden de cargue" value={expedienteId ? `Guardada en ${expedienteCode}` : "Pendiente de guardar"} warning={!expedienteId} />
+            <ReviewItem label="Remesas" value={remesasSaved ? "Guardadas" : "Pendientes de completar"} warning={!remesasSaved} />
             <ReviewItem label="Vehículo" value={vehicle ? `${vehicle.plate} · ${vehicle.make ?? "Maestro verificado"}` : "Pendiente de completar"} warning={!vehicle} />
             <ReviewItem label="Conductor" value={driver ? `${driver.name ?? driver.document} · Maestro verificado` : "Pendiente de completar"} warning={!driver} />
-            <ReviewItem label="Manifiesto" value={`${remesas.length} remesas · Neto ${new Intl.NumberFormat("es-CO").format(netPayable)} COP`} />
-            <ReviewItem label="Consecutivos" value="Expediente, orden, remesas y manifiesto se asignarán automáticamente" />
+            <ReviewItem label="Manifiesto" value={manifestSaved ? `Completo · Neto ${new Intl.NumberFormat("es-CO").format(netPayable)} COP` : "Pendiente de completar"} warning={!manifestSaved} />
+            <ReviewItem label="Consecutivos" value="Cada número se asignará cuando se prepare ese documento" />
+          </div>
+          <div className="assignment-rule">
+            <strong>Orden de cargue</strong>
+            <p>{assignmentSaved ? "La orden y la asignación están listas para preparar y emitir." : "Para emitirla, completa primero el vehículo y el conductor."}</p>
+            <button className="primary-action" disabled={!expedienteId || !driver || !vehicle || emitting} onClick={() => void emitLoadingOrder()} type="button">{emitting ? "Emitiendo orden…" : "Emitir orden de cargue"}</button>
           </div>
         </section>
       </div>
 
+      {notice ? <div className="inheritance-note" role="status"><span>✓</span><div><strong>{notice}</strong></div></div> : null}
       {error ? <div className="form-error" role="alert" tabIndex={-1}>{error}</div> : null}
       <div className="guided-action-bar">
         <button className="ghost-button" disabled={step === 0 || saving} onClick={() => setStep((current) => Math.max(0, current - 1))} type="button">Anterior</button>
@@ -401,10 +430,10 @@ export default function NuevoDespachoPage() {
         <button
           className="primary-action"
           disabled={saving || !me}
-          onClick={step < steps.length - 1 ? () => { setStep((current) => current + 1); window.scrollTo({ top: 0, behavior: "smooth" }); } : undefined}
-          type={step === steps.length - 1 ? "submit" : "button"}
+          onClick={() => void saveCurrent(step === steps.length - 1 ? "open" : "continue")}
+          type="button"
         >
-          {saving ? "Guardando despacho…" : step === steps.length - 1 ? "Guardar despacho" : "Continuar"}
+          {saving ? "Guardando…" : step === steps.length - 1 ? "Abrir despacho" : "Continuar"}
         </button>
       </div>
     </form>
@@ -429,6 +458,110 @@ function LookupField({ label, onChange, result, valid, value }: { label: string;
 
 function ReviewItem({ label, value, warning = false }: { label: string; value: string; warning?: boolean }) {
   return <div className={warning ? "review-item warning" : "review-item"}><span>{warning ? "!" : "✓"}</span><div><small>{label}</small><strong>{value}</strong></div></div>;
+}
+
+function loadingOrderDraft(data: FormData, customerId: Id<"customers">) {
+  return {
+    agencyCode: optionalText(data, "agencyCode"),
+    customerId,
+    customerReference: optionalText(data, "customerReference"),
+    sender: {
+      name: requiredText(data, "customerName"),
+      identificationType: optionalText(data, "customerIdType"),
+      identificationNumber: requiredText(data, "customerId"),
+      phone: optionalText(data, "customerPhone")
+    },
+    recipient: {
+      name: requiredText(data, "recipientName"),
+      identificationType: optionalText(data, "recipientIdType"),
+      identificationNumber: requiredText(data, "recipientId")
+    },
+    loading: {
+      siteName: requiredText(data, "originName"),
+      address: requiredText(data, "originAddress"),
+      cityName: requiredText(data, "originCity"),
+      municipalityCode: optionalText(data, "originMunicipality"),
+      appointmentAt: requiredDateTime(data, "loadingAppointment")
+    },
+    unloading: {
+      siteName: requiredText(data, "destinationName"),
+      address: requiredText(data, "destinationAddress"),
+      cityName: requiredText(data, "destinationCity"),
+      municipalityCode: optionalText(data, "destinationMunicipality"),
+      appointmentAt: requiredDateTime(data, "unloadingAppointment")
+    },
+    cargoDescription: requiredText(data, "cargoDescription"),
+    cargoQuantity: optionalText(data, "cargoQuantity"),
+    cargoUnit: optionalText(data, "cargoUnit"),
+    weightTons: requiredText(data, "weightTons"),
+    volumeM3: optionalText(data, "volumeM3"),
+    packagingCode: requiredText(data, "packagingCode"),
+    merchandiseCode: optionalText(data, "merchandiseCode"),
+    natureOfCargo: optionalText(data, "natureOfCargo"),
+    observations: optionalText(data, "orderObservations"),
+    generatesConsignment: true
+  };
+}
+
+function hasConsignmentInput(remesa: RemesaDraft): boolean {
+  return Boolean(remesa.declaredValue.trim() || remesa.description.trim() || remesa.weightTons.trim() || remesa.recipientName.trim() || remesa.recipientDocument.trim() || remesa.remesaId);
+}
+
+function consignmentDraft(data: FormData, remesa: RemesaDraft) {
+  return {
+    consignmentClass: remesa.consignmentClass,
+    recipient: remesa.recipientName.trim() ? {
+      name: remesa.recipientName.trim(),
+      identificationNumber: remesa.recipientDocument.trim() || undefined
+    } : undefined,
+    declaredValue: remesa.declaredValue.trim() || undefined,
+    remissions: [{
+      quantity: optionalText(data, "cargoQuantity"),
+      description: remesa.description.trim() || requiredText(data, "cargoDescription"),
+      weightTons: remesa.weightTons.trim() || requiredText(data, "weightTons")
+    }],
+    unitOfMeasure: optionalText(data, "cargoUnit"),
+    packagingCode: requiredText(data, "packagingCode"),
+    natureOfCargo: optionalText(data, "natureOfCargo"),
+    merchandiseCode: optionalText(data, "merchandiseCode"),
+    generalObservations: optionalText(data, "remesaObservations")
+  };
+}
+
+function manifestDraft(data: FormData, values: {
+  issueDate: string;
+  estimatedDeliveryDate: string;
+  paymentResponsible: string;
+  advance: string;
+  withholdingSource: string;
+  withholdingIca: string;
+  fopat: string;
+  adjustments: string;
+  netPayable: number;
+}) {
+  return {
+    issueDate: values.issueDate || undefined,
+    estimatedDeliveryDate: values.estimatedDeliveryDate || undefined,
+    operationScope: (optionalText(data, "operationScope") ?? "intermunicipal") as "municipal" | "intermunicipal",
+    manifestType: optionalText(data, "manifestType"),
+    agencyCode: optionalText(data, "agencyCode"),
+    originCityName: requiredText(data, "originCity"),
+    originMunicipalityCode: optionalText(data, "originMunicipality"),
+    destinationCityName: requiredText(data, "destinationCity"),
+    destinationMunicipalityCode: optionalText(data, "destinationMunicipality"),
+    freightTotal: optionalText(data, "freightTotal"),
+    advance: values.advance,
+    withholdingSource: values.withholdingSource,
+    withholdingIca: values.withholdingIca,
+    fopatContribution: values.fopat,
+    adjustments: values.adjustments,
+    netPayable: String(values.netPayable),
+    paymentResponsible: values.paymentResponsible || undefined,
+    loadingResponsible: optionalText(data, "loadingResponsible"),
+    unloadingResponsible: optionalText(data, "unloadingResponsible"),
+    paymentDate: optionalText(data, "paymentDate"),
+    observations: optionalText(data, "manifestObservations")
+  };
 }
 
 function requiredText(data: FormData, key: string): string {

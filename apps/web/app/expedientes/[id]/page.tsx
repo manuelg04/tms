@@ -2,19 +2,27 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { dispatchPrimaryAction } from "../../../convex/model/dispatchPresentation";
-import type { DispatchStage } from "../../../convex/model/dispatchWorkflow";
+import {
+  consignmentMissingFields,
+  emissionDependencyBlockers,
+  loadingOrderMissingFields,
+  manifestMissingFields,
+  type DispatchStage,
+  type EmissionScope
+} from "../../../convex/model/dispatchWorkflow";
+import type { OfficialDocumentState } from "../../../convex/model/documentLifecycle";
 import { useDemoUser } from "../../providers";
 import { StatusBadge } from "../status-badge";
 import { AdvancedActions, type AdvancedAction } from "../components/advanced-actions";
 import { BlockerList } from "../components/blocker-list";
 import { ConsignmentFulfillmentForm, ManifestFulfillmentForm } from "../components/consignment-fulfillment-form";
-import { DispatchStageNav } from "../components/dispatch-stage-nav";
+import { DocumentHub, type DocumentHubItem } from "../components/document-hub";
 import { DocumentHistory } from "../components/document-history";
 import {
   AssignmentForm,
@@ -51,12 +59,6 @@ export default function DespachoDetailPage() {
   const recordFulfillment = useMutation(api.dispatches.recordFulfillmentDraft);
   const recordManifestFulfillment = useMutation(api.dispatches.recordManifestFulfillmentDraft);
 
-  useEffect(() => {
-    if (stageResult?.stage && stageResult.stage !== "cumplido" && stageResult.stage !== "anulado") {
-      setSelectedStage(stageResult.stage);
-    }
-  }, [stageResult?.stage]);
-
   if (detailResult === undefined || stageResult === undefined) {
     return <div className="full-page-state">Preparando el despacho…</div>;
   }
@@ -80,8 +82,8 @@ export default function DespachoDetailPage() {
     printed: Boolean(detail.expediente.loadingOrderDraft?.printedAt && detail.expediente.manifestDraft?.printedAt)
   });
   const canEdit = user?.role === "operator" || user?.role === "admin";
-  const isDraft = detail.expediente.status === "draft";
-  const formId = canEdit && ["orden_cargue", "remesas", "vehiculo_conductor", "manifiesto", "cargue_descargue", "cumplido_inicial", "cumplido_final"].includes(stageResult.stage)
+  const isEditable = ["draft", "in_progress", "ready"].includes(detail.expediente.status);
+  const formId = canEdit && selectedStage === stageResult.stage && ["orden_cargue", "remesas", "vehiculo_conductor", "manifiesto", "cargue_descargue", "cumplido_inicial", "cumplido_final"].includes(stageResult.stage)
     && !["reconcile", "review_rejection", "wait"].includes(primaryAction.kind)
     ? "stage-primary-form"
     : undefined;
@@ -93,7 +95,7 @@ export default function DespachoDetailPage() {
   }
 
   async function saveOrder(data: FormData) {
-    if (!isDraft) return;
+    if (!isEditable) return;
     await run(async () => {
       const previous = detail.expediente.loadingOrderDraft;
       await saveLoadingOrder({
@@ -102,8 +104,8 @@ export default function DespachoDetailPage() {
           ...previous,
           agencyCode: value(data, "agencyCode"),
           customerReference: value(data, "customerReference"),
-          sender: { ...previous?.sender, name: required(data, "senderName"), identificationNumber: required(data, "senderId") },
-          recipient: { ...previous?.recipient, name: required(data, "recipientName"), identificationNumber: required(data, "recipientId") },
+          sender: { ...previous?.sender, name: required(data, "senderName"), identificationType: required(data, "senderIdType"), identificationNumber: required(data, "senderId"), siteCode: required(data, "senderSiteCode"), municipalityCode: required(data, "loadingMunicipality") },
+          recipient: { ...previous?.recipient, name: required(data, "recipientName"), identificationType: required(data, "recipientIdType"), identificationNumber: required(data, "recipientId"), siteCode: required(data, "recipientSiteCode"), municipalityCode: required(data, "unloadingMunicipality") },
           loading: { ...previous?.loading, siteName: required(data, "loadingName"), cityName: required(data, "loadingCity"), address: required(data, "loadingAddress"), municipalityCode: value(data, "loadingMunicipality"), appointmentAt: timestamp(data, "loadingAppointment") },
           unloading: { ...previous?.unloading, siteName: required(data, "unloadingName"), cityName: required(data, "unloadingCity"), address: required(data, "unloadingAddress"), municipalityCode: value(data, "unloadingMunicipality"), appointmentAt: timestamp(data, "unloadingAppointment") },
           cargoDescription: required(data, "cargoDescription"),
@@ -122,7 +124,7 @@ export default function DespachoDetailPage() {
   }
 
   async function saveRemesas(data: FormData) {
-    if (!isDraft) return;
+    if (!isEditable) return;
     await run(async () => {
       const editableRows = detail.remesas.length > 0 ? detail.remesas.filter((remesa) => remesa.officialState === "draft") : [null];
       await saveConsignments({
@@ -136,6 +138,9 @@ export default function DespachoDetailPage() {
               ...remesa?.draft,
               consignmentClass: (value(data, `${key}_class`) ?? "terrestre_carga") as "municipal" | "terrestre_carga",
               declaredValue: required(data, `${key}_declaredValue`),
+              policyNumber: required(data, `${key}_policyNumber`),
+              policyExpiresOn: required(data, `${key}_policyExpiresOn`),
+              insurerNit: required(data, `${key}_insurerNit`),
               recipient: value(data, `${key}_recipientName`) ? { name: value(data, `${key}_recipientName`), identificationNumber: value(data, `${key}_recipientId`) } : undefined,
               remissions: [{ description: value(data, `${key}_description`), weightTons: value(data, `${key}_weightTons`) }],
               generalObservations: value(data, `${key}_observations`)
@@ -148,7 +153,7 @@ export default function DespachoDetailPage() {
   }
 
   async function saveFleet(values: { driverId?: string; vehicleId?: string }) {
-    if (!isDraft) return;
+    if (!isEditable) return;
     await run(async () => {
       if (!values.driverId || !values.vehicleId) throw new Error("Selecciona un conductor y un vehículo existentes en maestros.");
       await saveAssignment({ expedienteId, driverId: values.driverId as Id<"drivers">, vehicleId: values.vehicleId as Id<"vehicles"> });
@@ -157,7 +162,7 @@ export default function DespachoDetailPage() {
   }
 
   async function saveManifestStage(data: FormData) {
-    if (!isDraft) return;
+    if (!isEditable) return;
     await run(async () => {
       await saveManifest({
         expedienteId,
@@ -249,7 +254,18 @@ export default function DespachoDetailPage() {
     }
     if (primaryAction.kind === "print" || primaryAction.kind === "view") {
       document.getElementById("documentos-historial")?.scrollIntoView({ behavior: "smooth" });
+      return;
     }
+    if (stageResult) setSelectedStage(stageResult.stage);
+    requestAnimationFrame(() => document.getElementById("active-stage-title")?.focus());
+  }
+
+  async function emitScope(scope: Exclude<EmissionScope, "todo">) {
+    await run(async () => {
+      await callDispatchRoute("emit", { scope });
+      const labels = { orden: "La orden de cargue", remesas: "Las remesas", manifiesto: "El manifiesto" };
+      setNotice({ tone: "ok", text: `${labels[scope]} terminó su emisión en modo de prueba y conservó su evidencia.` });
+    });
   }
 
   async function run(action: () => Promise<void>) {
@@ -267,16 +283,16 @@ export default function DespachoDetailPage() {
   async function callDispatchRoute(route: "emit" | "fulfill", body: Record<string, unknown>) {
     const response = await fetch(`/api/rndc/dispatches/${expedienteId}/${route}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const result = await response.json() as { error?: string; detail?: string; blockers?: unknown; nextAction?: string };
-    if (!response.ok) throw new Error(result.detail ?? result.error ?? "La operación RNDC no terminó correctamente.");
+    if (!response.ok) throw new Error(result.detail ?? result.error ?? blockerMessage(result.blockers) ?? "La operación RNDC no terminó correctamente.");
     return result;
   }
 
   const currentForm = renderStage({
     detail,
     selectedStage,
-    isDraft,
-    orderReadOnly: !isDraft || Boolean(orderDocument && orderDocument.officialState !== "draft"),
-    manifestReadOnly: !isDraft || Boolean(manifestDocument && manifestDocument.officialState !== "draft"),
+    isEditable,
+    orderReadOnly: !isEditable || documentState(orderDocument) !== "draft",
+    manifestReadOnly: !isEditable || documentState(manifestDocument) !== "draft",
     saveOrder,
     saveRemesas,
     saveFleet,
@@ -285,6 +301,8 @@ export default function DespachoDetailPage() {
     fulfillRemesas,
     fulfillManifest
   });
+  const documentHubItems = buildDocumentHubItems({ detail, evidence: evidence ?? [], isEditable });
+  const selectedDocument = documentHubItems.find((item) => item.stage === selectedStage);
 
   return (
     <>
@@ -309,12 +327,19 @@ export default function DespachoDetailPage() {
 
       {notice ? <div className={`operation-notice ${notice.tone}`} role="status"><span />{notice.text}<button aria-label="Cerrar aviso" onClick={() => setNotice(null)} type="button">×</button></div> : null}
 
-      <DispatchStageNav currentStage={stageResult.stage} onSelect={(stage) => { setSelectedStage(stage); requestAnimationFrame(() => document.getElementById("active-stage-title")?.focus()); }} selectedStage={selectedStage} />
       <NextActionCard action={primaryAction} blockers={stageResult.blockers} busy={busy} formId={formId} onAction={() => void runPrimaryAction()} />
+
+      <DocumentHub
+        busy={busy}
+        items={documentHubItems}
+        onEdit={(stage) => { setSelectedStage(stage); requestAnimationFrame(() => document.getElementById("active-stage-title")?.focus()); }}
+        onEmit={(scope) => void emitScope(scope)}
+      />
 
       <div className="guided-detail-layout">
         <section className="active-stage-panel" aria-live="polite">
           {currentForm}
+          {canEdit && selectedDocument?.canEdit ? <div className="active-stage-actions"><button className="primary-action" disabled={busy} form="stage-primary-form" type="submit">{busy ? "Guardando…" : "Guardar cambios"}</button></div> : null}
           {selectedStage !== stageResult.stage && stageResult.blockers.length > 0 ? <BlockerList blockers={stageResult.blockers} /> : null}
         </section>
         <aside className="dispatch-side-context">
@@ -334,7 +359,7 @@ export default function DespachoDetailPage() {
 function renderStage(input: {
   detail: Detail;
   selectedStage: DispatchStage;
-  isDraft: boolean;
+  isEditable: boolean;
   orderReadOnly: boolean;
   manifestReadOnly: boolean;
   saveOrder: (data: FormData) => void;
@@ -347,8 +372,8 @@ function renderStage(input: {
 }) {
   const detail = input.detail;
   if (input.selectedStage === "orden_cargue") return <LoadingOrderForm draft={detail.expediente.loadingOrderDraft ?? {}} onSubmit={input.saveOrder} readOnly={input.orderReadOnly} />;
-  if (input.selectedStage === "remesas") return <ConsignmentsForm onSubmit={input.saveRemesas} readOnly={!input.isDraft} remesas={detail.remesas} />;
-  if (input.selectedStage === "vehiculo_conductor") return <AssignmentForm currentDriverDocument={detail.driver?.document} currentVehiclePlate={detail.vehicle?.plate} onSubmit={input.saveFleet} readOnly={!input.isDraft} />;
+  if (input.selectedStage === "remesas") return <ConsignmentsForm onSubmit={input.saveRemesas} readOnly={!input.isEditable} remesas={detail.remesas} />;
+  if (input.selectedStage === "vehiculo_conductor") return <AssignmentForm currentDriverDocument={detail.driver?.document} currentVehiclePlate={detail.vehicle?.plate} onSubmit={input.saveFleet} readOnly={!input.isEditable} />;
   if (input.selectedStage === "manifiesto") return <ManifestForm draft={detail.expediente.manifestDraft ?? {}} onSubmit={input.saveManifestStage} readOnly={input.manifestReadOnly} />;
   if (input.selectedStage === "envio_rndc") return <ReviewStage mode="PRUEBA" summary={[
     { label: "Orden de cargue", value: detail.expediente.loadingOrderDraft?.orderNumber ?? "Se asignará al enviar" },
@@ -359,6 +384,147 @@ function renderStage(input: {
   if (input.selectedStage === "cargue_descargue") return <LogisticsTimesForm destination={detail.expediente.logisticsTimes?.destination} finalDelivery={detail.expediente.logisticsTimes?.finalDelivery} onSubmit={input.saveLogistics} origin={detail.expediente.logisticsTimes?.origin} />;
   if (input.selectedStage === "cumplido_inicial") return <ConsignmentFulfillmentForm onSubmit={input.fulfillRemesas} remesas={detail.remesas} />;
   return <ManifestFulfillmentForm defaultDate={detail.expediente.manifestFulfillmentDraft?.documentsDeliveryDate} defaultObservation={detail.expediente.manifestFulfillmentDraft?.observation} onSubmit={input.fulfillManifest} />;
+}
+
+function buildDocumentHubItems(input: {
+  detail: Detail;
+  evidence: Array<{ _id: Id<"evidenceArtifacts">; documentId?: Id<"documents">; kind: string; createdAt: number }>;
+  isEditable: boolean;
+}): DocumentHubItem[] {
+  const { detail, evidence, isEditable } = input;
+  const orderDocument = latestDocument(detail, "orden_cargue");
+  const manifestDocument = latestDocument(detail, "manifiesto");
+  const remesaDocuments = detail.documents.filter((document) => document.kind === "remesa");
+  const orderState = documentState(orderDocument);
+  const manifestState = documentState(manifestDocument);
+  const remesaState = aggregateOfficialState(detail.remesas.map((remesa) => remesa.officialState));
+  const assignmentBlockers = [
+    ...(!detail.vehicle ? ["Falta asignar el vehículo"] : []),
+    ...(!detail.driver ? ["Falta asignar el conductor"] : [])
+  ];
+  const dependencyInput = {
+    workflowVariant: detail.expediente.workflowVariant,
+    orderOfficialState: orderState,
+    consignmentOfficialStates: detail.remesas.map((remesa) => remesa.officialState)
+  };
+  const orderBlockers = isOfficial(orderState) ? [] : unique([
+    ...loadingOrderMissingFields(detail.expediente.loadingOrderDraft),
+    ...assignmentBlockers,
+    ...emissionDependencyBlockers("orden", dependencyInput)
+  ]);
+  const remesaBlockers = isOfficial(remesaState) ? [] : unique([
+    ...(detail.remesas.length === 0 ? ["Agrega al menos una remesa"] : detail.remesas.flatMap((remesa) => consignmentMissingFields(remesa.draft, detail.expediente.loadingOrderDraft).map((blocker) => `Remesa ${remesa.sequence}: ${blocker}`))),
+    ...emissionDependencyBlockers("remesas", dependencyInput)
+  ]);
+  const manifestBlockers = isOfficial(manifestState) ? [] : unique([
+    ...manifestMissingFields(detail.expediente.manifestDraft),
+    ...assignmentBlockers,
+    ...emissionDependencyBlockers("manifiesto", dependencyInput)
+  ]);
+  const fulfillmentComplete = manifestDocument?.fulfillmentState === "fulfilled" && detail.remesas.every((remesa) => remesa.fulfillmentState === "fulfilled");
+  const fulfillmentState = fulfillmentComplete ? "fulfilled" : isOfficial(manifestState) ? "pending" : "draft";
+  const fulfilledRemesas = detail.remesas.filter((remesa) => remesa.fulfillmentState === "fulfilled").length;
+
+  return [
+    {
+      key: "order",
+      title: "Orden de cargue",
+      description: "Documento de salida",
+      number: detail.expediente.loadingOrderDraft?.orderNumber ?? detail.expediente.cargoNumber,
+      state: orderState,
+      stage: "orden_cargue",
+      scope: "orden",
+      blockers: orderBlockers,
+      canEdit: isEditable && orderState === "draft",
+      pdfHref: pdfHref(evidence, orderDocument ? [orderDocument._id] : [])
+    },
+    {
+      key: "consignments",
+      title: "Remesas",
+      description: `${detail.remesas.length} vinculadas`,
+      number: detail.remesas.flatMap((remesa) => remesa.number ? [remesa.number] : []).join(", ") || undefined,
+      state: remesaState,
+      stage: "remesas",
+      scope: "remesas",
+      blockers: remesaBlockers,
+      canEdit: isEditable && (detail.remesas.length === 0 || detail.remesas.some((remesa) => remesa.officialState === "draft")),
+      pdfHref: pdfHref(evidence, remesaDocuments.map((document) => document._id))
+    },
+    {
+      key: "assignment",
+      title: "Vehículo y conductor",
+      description: "Recursos del viaje",
+      number: [detail.vehicle?.plate, detail.driver?.name ?? detail.driver?.document].filter(Boolean).join(" · ") || undefined,
+      state: assignmentBlockers.length === 0 ? "completed" : "draft",
+      stage: "vehiculo_conductor",
+      blockers: assignmentBlockers,
+      canEdit: isEditable
+    },
+    {
+      key: "manifest",
+      title: "Manifiesto",
+      description: "Documento del viaje",
+      number: detail.expediente.manifestDraft?.manifestNumber ?? detail.expediente.manifestNumber,
+      state: manifestState,
+      stage: "manifiesto",
+      scope: "manifiesto",
+      blockers: manifestBlockers,
+      canEdit: isEditable && manifestState === "draft",
+      pdfHref: pdfHref(evidence, manifestDocument ? [manifestDocument._id] : [])
+    },
+    {
+      key: "fulfillment",
+      title: "Cumplidos",
+      description: "Cierre documental",
+      number: `${fulfilledRemesas}/${detail.remesas.length} remesas`,
+      state: fulfillmentState,
+      stage: fulfillmentComplete ? "cumplido" : "cumplido_inicial",
+      blockers: isOfficial(manifestState) ? [] : ["Requiere manifiesto autorizado"],
+      canEdit: isOfficial(manifestState) && !fulfillmentComplete
+    }
+  ];
+}
+
+function latestDocument(detail: Detail, kind: string) {
+  return detail.documents.filter((document) => document.kind === kind).sort((left, right) => right.updatedAt - left.updatedAt)[0];
+}
+
+function documentState(document: Detail["documents"][number] | undefined): OfficialDocumentState {
+  const state = document?.officialState ?? document?.status;
+  return state === "authorized" || state === "fulfilled" || state === "annulled" || state === "pending" ? state : "draft";
+}
+
+function aggregateOfficialState(states: OfficialDocumentState[]): OfficialDocumentState {
+  if (states.length === 0) return "draft";
+  if (states.every((state) => state === "fulfilled")) return "fulfilled";
+  if (states.every(isOfficial)) return "authorized";
+  if (states.some((state) => state === "pending")) return "pending";
+  if (states.every((state) => state === "annulled")) return "annulled";
+  return "draft";
+}
+
+function isOfficial(state: OfficialDocumentState): boolean {
+  return state === "authorized" || state === "fulfilled";
+}
+
+function unique(values: string[]): string[] {
+  return [...new Set(values)];
+}
+
+function blockerMessage(blockers: unknown): string | undefined {
+  if (!Array.isArray(blockers)) return undefined;
+  const values = blockers.flatMap((blocker) => {
+    if (typeof blocker === "string") return [blocker];
+    if (!blocker || typeof blocker !== "object") return [];
+    const missingFields = (blocker as { missingFields?: unknown }).missingFields;
+    return Array.isArray(missingFields) ? missingFields.filter((field): field is string => typeof field === "string") : [];
+  });
+  return values.length > 0 ? `Completa: ${values.join(", ")}` : undefined;
+}
+
+function pdfHref(evidence: Array<{ _id: Id<"evidenceArtifacts">; documentId?: Id<"documents">; kind: string; createdAt: number }>, documentIds: Id<"documents">[]): string | undefined {
+  const artifact = evidence.filter((item) => item.kind === "pdf" && item.documentId && documentIds.includes(item.documentId)).sort((left, right) => right.createdAt - left.createdAt)[0];
+  return artifact ? `/api/evidence/${artifact._id}` : undefined;
 }
 
 function Summary({ label, value }: { label: string; value: string }) {

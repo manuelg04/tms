@@ -7,8 +7,8 @@ import { api } from "../../../convex/_generated/api";
 type LoadingOrder = {
   agencyCode?: string;
   customerReference?: string;
-  sender?: { name?: string; identificationType?: string; identificationNumber?: string; phone?: string };
-  recipient?: { name?: string; identificationType?: string; identificationNumber?: string };
+  sender?: { name?: string; identificationType?: string; identificationNumber?: string; siteCode?: string; municipalityCode?: string; phone?: string };
+  recipient?: { name?: string; identificationType?: string; identificationNumber?: string; siteCode?: string; municipalityCode?: string };
   loading?: { siteName?: string; address?: string; cityName?: string; municipalityCode?: string; appointmentAt?: number };
   unloading?: { siteName?: string; address?: string; cityName?: string; municipalityCode?: string; appointmentAt?: number };
   cargoDescription?: string;
@@ -30,6 +30,9 @@ type Remesa = {
   draft?: {
     consignmentClass?: "municipal" | "terrestre_carga";
     declaredValue?: string;
+    policyNumber?: string;
+    policyExpiresOn?: string;
+    insurerNit?: string;
     recipient?: { name?: string; identificationNumber?: string };
     remissions?: Array<{ description?: string; weightTons?: string }>;
     generalObservations?: string;
@@ -63,26 +66,31 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
         <Field label="Agencia" name="agencyCode" value={draft.agencyCode} />
         <Field label="Referencia del cliente" name="customerReference" value={draft.customerReference} />
         <Field label="Remitente" name="senderName" required value={draft.sender?.name} />
+        <Field label="Tipo identificación remitente" name="senderIdType" required value={draft.sender?.identificationType} />
         <Field label="Identificación remitente" name="senderId" required value={draft.sender?.identificationNumber} />
+        <Field label="Sede RNDC remitente" name="senderSiteCode" required value={draft.sender?.siteCode} />
         <Field label="Destinatario" name="recipientName" required value={draft.recipient?.name} />
+        <Field label="Tipo identificación destinatario" name="recipientIdType" required value={draft.recipient?.identificationType} />
         <Field label="Identificación destinatario" name="recipientId" required value={draft.recipient?.identificationNumber} />
+        <Field label="Sede RNDC destinatario" name="recipientSiteCode" required value={draft.recipient?.siteCode} />
         <Field label="Lugar de cargue" name="loadingName" required value={draft.loading?.siteName} />
         <Field label="Ciudad de cargue" name="loadingCity" required value={draft.loading?.cityName} />
         <Field className="span-2" label="Dirección de cargue" name="loadingAddress" required value={draft.loading?.address} />
         <Field label="Cita de cargue" name="loadingAppointment" required type="datetime-local" value={dateTimeValue(draft.loading?.appointmentAt)} />
-        <Field label="Municipio RNDC cargue" name="loadingMunicipality" value={draft.loading?.municipalityCode} />
+        <Field label="Municipio RNDC cargue" name="loadingMunicipality" required value={draft.loading?.municipalityCode} />
         <Field label="Lugar de descargue" name="unloadingName" required value={draft.unloading?.siteName} />
         <Field label="Ciudad de descargue" name="unloadingCity" required value={draft.unloading?.cityName} />
         <Field className="span-2" label="Dirección de descargue" name="unloadingAddress" required value={draft.unloading?.address} />
         <Field label="Cita de descargue" name="unloadingAppointment" required type="datetime-local" value={dateTimeValue(draft.unloading?.appointmentAt)} />
-        <Field label="Municipio RNDC descargue" name="unloadingMunicipality" value={draft.unloading?.municipalityCode} />
+        <Field label="Municipio RNDC descargue" name="unloadingMunicipality" required value={draft.unloading?.municipalityCode} />
         <Field className="span-2" label="Mercancía" name="cargoDescription" required value={draft.cargoDescription} />
         <Field label="Cantidad" name="cargoQuantity" value={draft.cargoQuantity} />
         <Field label="Unidad" name="cargoUnit" value={draft.cargoUnit} />
         <Field label="Peso (TN)" name="weightTons" required type="number" value={draft.weightTons} />
         <Field label="Volumen m³" name="volumeM3" type="number" value={draft.volumeM3} />
         <Field label="Empaque" name="packagingCode" required value={draft.packagingCode} />
-        <Field label="Código de mercancía" name="merchandiseCode" value={draft.merchandiseCode} />
+        <Field label="Código de mercancía" name="merchandiseCode" required value={draft.merchandiseCode} />
+        <Field label="Naturaleza de la carga" name="natureOfCargo" required value={draft.natureOfCargo} />
         <label className="form-field span-2"><span>Observaciones</span><textarea defaultValue={draft.observations} name="observations" rows={3} /></label>
       </fieldset>
     </form>
@@ -106,6 +114,9 @@ export function ConsignmentsForm({ onSubmit, readOnly, remesas }: { onSubmit: (d
             <Field label="Peso diferente (TN)" name={`${remesa._id}_weightTons`} type="number" value={remesa.draft?.remissions?.[0]?.weightTons} />
             <Field label="Destinatario diferente" name={`${remesa._id}_recipientName`} value={remesa.draft?.recipient?.name} />
             <Field label="Identificación diferente" name={`${remesa._id}_recipientId`} value={remesa.draft?.recipient?.identificationNumber} />
+            <Field label="Número de póliza" name={`${remesa._id}_policyNumber`} required value={remesa.draft?.policyNumber} />
+            <Field label="Vencimiento de póliza" name={`${remesa._id}_policyExpiresOn`} required type="date" value={remesa.draft?.policyExpiresOn} />
+            <Field label="NIT de la aseguradora" name={`${remesa._id}_insurerNit`} required value={remesa.draft?.insurerNit} />
             <Field className="span-2" label="Observaciones" name={`${remesa._id}_observations`} value={remesa.draft?.generalObservations} />
             {remesa.officialState !== "draft" ? <span className="official-lock">Documento oficial · Sólo lectura</span> : null}
           </fieldset>

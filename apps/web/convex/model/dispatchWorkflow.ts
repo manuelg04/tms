@@ -325,9 +325,13 @@ export function loadingOrderMissingFields(draft: LoadingOrderDraft | null | unde
   }
   if (!partyComplete(draft.sender)) {
     missing.push("Remitente con identificación");
+  } else if (!present(draft.sender?.identificationType) || !present(draft.sender?.siteCode) || !present(draft.sender?.municipalityCode)) {
+    missing.push("Datos RNDC del remitente");
   }
   if (!partyComplete(draft.recipient)) {
     missing.push("Destinatario con identificación");
+  } else if (!present(draft.recipient?.identificationType) || !present(draft.recipient?.siteCode) || !present(draft.recipient?.municipalityCode)) {
+    missing.push("Datos RNDC del destinatario");
   }
   if (!siteComplete(draft.loading)) {
     missing.push("Sitio y cita de cargue");
@@ -343,6 +347,12 @@ export function loadingOrderMissingFields(draft: LoadingOrderDraft | null | unde
   }
   if (!present(draft.packagingCode)) {
     missing.push("Tipo de empaque");
+  }
+  if (!present(draft.merchandiseCode)) {
+    missing.push("Código de mercancía");
+  }
+  if (!present(draft.natureOfCargo)) {
+    missing.push("Naturaleza de la carga");
   }
 
   return missing;
@@ -375,6 +385,21 @@ export function consignmentMissingFields(
   }
   if (!present(draft.declaredValue)) {
     missing.push("Valor declarado");
+  }
+  if (!present(draft.policyNumber) || !present(draft.policyExpiresOn) || !present(draft.insurerNit)) {
+    missing.push("Póliza de la carga");
+  }
+
+  const sender = draft.sender ?? order?.sender;
+  const recipient = draft.recipient ?? order?.recipient;
+  if (!present(sender?.identificationType) || !present(sender?.siteCode) || !present(sender?.municipalityCode)) {
+    missing.push("Datos RNDC del remitente");
+  }
+  if (!present(recipient?.identificationType) || !present(recipient?.siteCode) || !present(recipient?.municipalityCode)) {
+    missing.push("Datos RNDC del destinatario");
+  }
+  if (!present(draft.merchandiseCode ?? order?.merchandiseCode) || !present(draft.natureOfCargo ?? order?.natureOfCargo) || !present(draft.packagingCode ?? order?.packagingCode)) {
+    missing.push("Clasificación RNDC de la carga");
   }
 
   const remissions = draft.remissions ?? [];
@@ -423,18 +448,24 @@ export function effectiveConsignment(
   order: LoadingOrderDraft | null | undefined
 ): ConsignmentDraft {
   const remissions = draft.remissions ?? [];
-  const inheritedRemissions =
-    remissions.length === 0 && order && present(order.cargoDescription)
-      ? [
-          {
-            quantity: order.cargoQuantity,
-            description: order.cargoDescription,
-            weightTons: order.weightTons,
-            volumeM3: order.volumeM3,
-            packagingClass: order.packagingCode
-          }
-        ]
-      : remissions;
+  const inheritedRemissions = remissions.length === 0
+    ? order && present(order.cargoDescription)
+      ? [{
+          quantity: order.cargoQuantity,
+          description: order.cargoDescription,
+          weightTons: order.weightTons,
+          volumeM3: order.volumeM3,
+          packagingClass: order.packagingCode
+        }]
+      : remissions
+    : remissions.map((line) => ({
+        ...line,
+        quantity: present(line.quantity) ? line.quantity : order?.cargoQuantity,
+        description: present(line.description) ? line.description : order?.cargoDescription,
+        weightTons: present(line.weightTons) ? line.weightTons : order?.weightTons,
+        volumeM3: present(line.volumeM3) ? line.volumeM3 : order?.volumeM3,
+        packagingClass: present(line.packagingClass) ? line.packagingClass : order?.packagingCode
+      }));
 
   return {
     ...draft,

@@ -16,13 +16,15 @@ import {
 
 const completeOrder: LoadingOrderDraft = {
   customerId: "cust1",
-  sender: { name: "ITALCOL S.A", identificationNumber: "890100756" },
-  recipient: { name: "GRANJA GIRON", identificationNumber: "900222333" },
+  sender: { name: "ITALCOL S.A", identificationType: "NIT", identificationNumber: "890100756", siteCode: "1", municipalityCode: "08001000" },
+  recipient: { name: "GRANJA GIRON", identificationType: "NIT", identificationNumber: "900222333", siteCode: "1", municipalityCode: "68001000" },
   loading: { address: "VIA 40 850", cityName: "BARRANQUILLA", appointmentAt: 1720000000000 },
   unloading: { address: "KM 4 VIA GIRON", cityName: "GIRON", appointmentAt: 1720100000000 },
   cargoDescription: "MAIZ",
   weightTons: "34",
-  packagingCode: "GRANEL"
+  packagingCode: "GRANEL",
+  merchandiseCode: "005229",
+  natureOfCargo: "1"
 };
 
 function baseProjection(overrides: Partial<DispatchProjection> = {}): DispatchProjection {
@@ -333,7 +335,7 @@ test("an empty loading order reports it has not started", () => {
 
 test("a consignment inherits known order data and only asks for the differences", () => {
   const missing = consignmentMissingFields(
-    { consignmentClass: "terrestre_carga", declaredValue: "5000000" },
+    { consignmentClass: "terrestre_carga", declaredValue: "5000000", policyNumber: "POL-1", policyExpiresOn: "2027-07-13", insurerNit: "900123456" },
     completeOrder
   );
 
@@ -348,6 +350,7 @@ test("a consignment without inherited order data lists everything it needs", () 
   assert.ok(missing.includes("Destinatario"));
   assert.ok(missing.includes("Sitio y cita de descargue"));
   assert.ok(missing.includes("Remisiones con cantidad, descripción y peso"));
+  assert.ok(missing.includes("Póliza de la carga"));
 });
 
 test("consignment overrides replace inherited order data", () => {
@@ -355,8 +358,11 @@ test("consignment overrides replace inherited order data", () => {
     {
       consignmentClass: "municipal",
       declaredValue: "100",
-      recipient: { name: "OTRO DESTINATARIO", identificationNumber: "111" },
-      remissions: [{ quantity: "10", description: "BULTOS", weightTons: "5" }]
+      recipient: { name: "OTRO DESTINATARIO", identificationType: "NIT", identificationNumber: "111", siteCode: "1", municipalityCode: "68001000" },
+      remissions: [{ quantity: "10", description: "BULTOS", weightTons: "5" }],
+      policyNumber: "POL-2",
+      policyExpiresOn: "2027-07-13",
+      insurerNit: "900123456"
     },
     { ...completeOrder, recipient: undefined }
   );
@@ -403,6 +409,14 @@ test("a consignment inherits the order cargo codes when it does not override the
   assert.equal(effective.packagingCode, "0");
   assert.equal(effective.merchandiseCode, "005229");
   assert.equal(effective.natureOfCargo, "1");
+
+  const partialLine = effectiveConsignment(
+    { remissions: [{ description: undefined, weightTons: undefined }] },
+    completeOrder
+  );
+
+  assert.equal(partialLine.remissions?.[0]?.description, "MAIZ");
+  assert.equal(partialLine.remissions?.[0]?.weightTons, "34");
 
   const overridden = effectiveConsignment(
     { merchandiseCode: "009999", natureOfCargo: "2" },

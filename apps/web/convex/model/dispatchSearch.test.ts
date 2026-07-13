@@ -18,6 +18,9 @@ const baseRow: DispatchSearchRow = {
   driverName: "María Pérez",
   stage: "envio_rndc",
   rndcStatus: "Pendiente",
+  orderState: "authorized",
+  remesaStates: ["authorized"],
+  manifestState: "draft",
   updatedAt: Date.UTC(2026, 6, 10),
   searchText: "exp-0001 alimentos del caribe bogota barranquilla uzn424 maria perez"
 };
@@ -51,6 +54,21 @@ test("keeps the visible newest-first order after filtering", () => {
   ], {});
 
   assert.deepEqual(result.map((row) => row.id), ["new", "middle", "old"]);
+});
+
+test("finds dispatches with an authorized order and a pending manifest", () => {
+  const result = applyDispatchFilters([
+    baseRow,
+    { ...baseRow, id: "completed", manifestState: "authorized" },
+    { ...baseRow, id: "order-pending", orderState: "draft" }
+  ], { stage: "pending_manifest" });
+
+  assert.deepEqual(result.map((row) => row.id), ["dispatch-1"]);
+});
+
+test("keeps draft orders visible when no stage filter is selected", () => {
+  const result = applyDispatchFilters([{ ...baseRow, id: "draft-order", orderState: "draft" }], {});
+  assert.deepEqual(result.map((row) => row.id), ["draft-order"]);
 });
 
 test("serializes and restores filters without empty values", () => {

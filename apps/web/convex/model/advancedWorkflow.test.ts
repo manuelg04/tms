@@ -141,11 +141,17 @@ test("empty manifest is limited to Viaje Vacío and strips tracking fields", () 
 test("remesa without loading order must carry all of its own operational data", () => {
   const result = validateRemesaWithoutOrder({
     consignmentClass: "terrestre_carga",
-    sender: { name: "Remitente", identificationNumber: "9001" },
-    recipient: { name: "Destinatario", identificationNumber: "9002" },
+    sender: { name: "Remitente", identificationType: "NIT", identificationNumber: "9001", siteCode: "1", municipalityCode: "11001000" },
+    recipient: { name: "Destinatario", identificationType: "NIT", identificationNumber: "9002", siteCode: "1", municipalityCode: "05001000" },
     loading: { address: "Origen", cityName: "Bogotá", appointmentAt: 1 },
     unloading: { address: "Destino", cityName: "Medellín", appointmentAt: 2 },
     declaredValue: "1000000",
+    packagingCode: "PAQUETE",
+    merchandiseCode: "005229",
+    natureOfCargo: "1",
+    policyNumber: "POL-1",
+    policyExpiresOn: "2027-07-13",
+    insurerNit: "900123456",
     remissions: [{ quantity: "1", description: "Carga", weightTons: "10" }]
   });
 

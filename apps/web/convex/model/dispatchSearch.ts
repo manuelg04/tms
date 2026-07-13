@@ -25,6 +25,9 @@ export type DispatchSearchRow = {
   driverName?: string;
   stage: string;
   rndcStatus: string;
+  orderState: string;
+  remesaStates: string[];
+  manifestState: string;
   updatedAt: number;
   searchText: string;
 };
@@ -66,12 +69,18 @@ export function applyDispatchFilters<T extends DispatchSearchRow>(rows: readonly
         && matches(row.driverName, normalized.driver)
         && matches(row.originCity, normalized.origin)
         && matches(row.destinationCity, normalized.destination)
-        && (!normalized.stage || row.stage === normalized.stage)
+        && (!normalized.stage || (normalized.stage === "pending_manifest"
+          ? isAuthorized(row.orderState) && !isAuthorized(row.manifestState)
+          : row.stage === normalized.stage))
         && (!normalized.status || row.rndcStatus === normalized.status)
         && (from === undefined || row.updatedAt >= from)
         && (to === undefined || row.updatedAt <= to);
     })
     .sort((left, right) => right.updatedAt - left.updatedAt || right.id.localeCompare(left.id));
+}
+
+function isAuthorized(state: string): boolean {
+  return state === "authorized" || state === "fulfilled";
 }
 
 export function normalizeDispatchFilters(filters: DispatchFilters): DispatchFilters {

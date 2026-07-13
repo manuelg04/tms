@@ -17,6 +17,7 @@ import { StatusBadge } from "./status-badge";
 const stageOptions = [
   { value: "", label: "Todas las etapas" },
   ...guidedDispatchStages.map((stage) => ({ value: stage.key, label: stage.label })),
+  { value: "pending_manifest", label: "Pendiente de manifiesto" },
   { value: "cumplido", label: "Cumplido" },
   { value: "anulado", label: "Anulado" }
 ];
@@ -151,9 +152,9 @@ export default function DespachosPage() {
                   <span>{row.originCity} <RouteArrow /> {row.destinationCity}</span>
                 </div>
                 <div className="dispatch-documents">
-                  <QueueValue label="Orden" value={row.orderNumber ?? "Pendiente"} />
-                  <QueueValue label="Remesas" value={row.remesaNumbers.length > 0 ? row.remesaNumbers.join(", ") : "Pendientes"} />
-                  <QueueValue label="Manifiesto" value={row.manifestNumber ?? "Pendiente"} />
+                  <DocumentProgress code="O" label="Orden" number={row.orderNumber} state={row.orderState ?? "draft"} />
+                  <DocumentProgress code="R" label="Remesas" number={row.remesaNumbers.length > 0 ? row.remesaNumbers.join(", ") : undefined} state={aggregateState(row.remesaStates ?? [])} />
+                  <DocumentProgress code="M" label="Manifiesto" number={row.manifestNumber} state={row.manifestState ?? "draft"} />
                 </div>
                 <div className="dispatch-assignment">
                   <QueueValue label="Vehículo" value={row.vehiclePlate ?? "Sin asignar"} />
@@ -191,6 +192,31 @@ function QueueMetric({ label, tone, value }: { label: string; tone: "bad" | "wai
 
 function QueueValue({ label, value }: { label: string; value: string }) {
   return <div className="queue-value"><span>{label}</span><strong>{value}</strong></div>;
+}
+
+function DocumentProgress({ code, label, number, state }: { code: string; label: string; number?: string; state: string }) {
+  return <div className={`document-progress-chip ${documentStateClass(state)}`} title={`${label}: ${documentStateLabel(state)}`}><span>{code}</span><strong>{number ?? "—"}</strong><small>{documentStateLabel(state)}</small></div>;
+}
+
+function aggregateState(states: string[]): string {
+  if (states.length === 0) return "draft";
+  if (states.every((state) => state === "fulfilled")) return "fulfilled";
+  if (states.every((state) => state === "authorized" || state === "fulfilled")) return "authorized";
+  if (states.some((state) => state === "pending")) return "pending";
+  if (states.some((state) => state === "annulled")) return "annulled";
+  return "draft";
+}
+
+function documentStateClass(state: string): string {
+  if (state === "authorized" || state === "fulfilled") return "ok";
+  if (state === "pending") return "wait";
+  if (state === "annulled") return "bad";
+  return "neutral";
+}
+
+function documentStateLabel(state: string): string {
+  const labels: Record<string, string> = { authorized: "Autorizado", fulfilled: "Cumplido", pending: "Pendiente", annulled: "Anulado", draft: "Borrador" };
+  return labels[state] ?? state;
 }
 
 function stageLabel(stage: string): string {

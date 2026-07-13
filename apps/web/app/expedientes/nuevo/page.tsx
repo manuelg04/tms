@@ -12,6 +12,9 @@ type RemesaDraft = {
   description: string;
   weightTons: string;
   declaredValue: string;
+  policyNumber: string;
+  policyExpiresOn: string;
+  insurerNit: string;
   recipientName: string;
   recipientDocument: string;
 };
@@ -29,6 +32,9 @@ const emptyRemesa = (): RemesaDraft => ({
   description: "",
   weightTons: "",
   declaredValue: "",
+  policyNumber: "",
+  policyExpiresOn: "",
+  insurerNit: "",
   recipientName: "",
   recipientDocument: ""
 });
@@ -311,8 +317,9 @@ export default function NuevoDespachoPage() {
             <Field label="Agencia responsable" name="agencyCode" placeholder="Principal" />
             <Field label="Código del cliente" name="customerCode" placeholder="CLI-001" required />
             <Field className="span-2" label="Cliente o razón social" name="customerName" required />
-            <Field label="Tipo de identificación" name="customerIdType" placeholder="NIT" />
+            <Field label="Tipo de identificación" name="customerIdType" placeholder="NIT" required />
             <Field label="Identificación del cliente" name="customerId" required />
+            <Field label="Código sede RNDC remitente" name="senderSiteCode" required />
             <Field label="Teléfono" name="customerPhone" type="tel" />
           </div>
           <div className="route-guided-grid">
@@ -321,7 +328,7 @@ export default function NuevoDespachoPage() {
               <Field label="Lugar" name="originName" required />
               <Field label="Ciudad" name="originCity" required />
               <Field label="Dirección" name="originAddress" required />
-              <Field label="Código municipio RNDC" name="originMunicipality" />
+              <Field label="Código municipio RNDC" name="originMunicipality" required />
               <Field label="Cita de cargue" name="loadingAppointment" required type="datetime-local" />
             </fieldset>
             <span className="route-connector" aria-hidden>→</span>
@@ -330,22 +337,23 @@ export default function NuevoDespachoPage() {
               <Field label="Lugar" name="destinationName" required />
               <Field label="Ciudad" name="destinationCity" required />
               <Field label="Dirección" name="destinationAddress" required />
-              <Field label="Código municipio RNDC" name="destinationMunicipality" />
+              <Field label="Código municipio RNDC" name="destinationMunicipality" required />
               <Field label="Cita de descargue" name="unloadingAppointment" required type="datetime-local" />
             </fieldset>
           </div>
           <div className="guided-section-grid section-divider">
             <Field label="Destinatario" name="recipientName" required />
-            <Field label="Tipo de identificación" name="recipientIdType" placeholder="NIT o CC" />
+            <Field label="Tipo de identificación" name="recipientIdType" placeholder="NIT o CC" required />
             <Field label="Identificación destinatario" name="recipientId" required />
+            <Field label="Código sede RNDC destinatario" name="recipientSiteCode" required />
             <Field className="span-2" label="Mercancía" name="cargoDescription" required />
             <Field label="Cantidad" name="cargoQuantity" type="number" />
             <Field label="Unidad" name="cargoUnit" placeholder="kg, unidades, galones" />
             <Field label="Peso total (TN)" min="0" name="weightTons" required step="0.001" type="number" />
             <Field label="Volumen m³" min="0" name="volumeM3" step="0.01" type="number" />
             <Field label="Tipo de empaque" name="packagingCode" required />
-            <Field label="Código de mercancía" name="merchandiseCode" />
-            <Field label="Naturaleza de la carga" name="natureOfCargo" />
+            <Field label="Código de mercancía" name="merchandiseCode" required />
+            <Field label="Naturaleza de la carga" name="natureOfCargo" required />
             <label className="form-field span-2"><span>Observaciones</span><textarea name="orderObservations" rows={3} /></label>
           </div>
         </section>
@@ -363,6 +371,9 @@ export default function NuevoDespachoPage() {
                 <label className="form-field"><span>Peso diferente (TN) <small>opcional</small></span><input min="0" onChange={(event) => updateRemesa(index, "weightTons", event.target.value)} step="0.001" type="number" value={remesa.weightTons} /></label>
                 <label className="form-field"><span>Destinatario diferente <small>opcional</small></span><input onChange={(event) => updateRemesa(index, "recipientName", event.target.value)} value={remesa.recipientName} /></label>
                 <label className="form-field"><span>Identificación diferente</span><input onChange={(event) => updateRemesa(index, "recipientDocument", event.target.value)} value={remesa.recipientDocument} /></label>
+                <label className="form-field"><span>Número de póliza</span><input onChange={(event) => updateRemesa(index, "policyNumber", event.target.value)} value={remesa.policyNumber} /></label>
+                <label className="form-field"><span>Vencimiento de póliza</span><input onChange={(event) => updateRemesa(index, "policyExpiresOn", event.target.value)} type="date" value={remesa.policyExpiresOn} /></label>
+                <label className="form-field"><span>NIT de la aseguradora</span><input onChange={(event) => updateRemesa(index, "insurerNit", event.target.value)} value={remesa.insurerNit} /></label>
                 {remesas.length > 1 ? <button className="remove-remesa" onClick={() => removeRemesa(index)} type="button">Quitar remesa</button> : null}
               </fieldset>
             ))}
@@ -467,14 +478,18 @@ function loadingOrderDraft(data: FormData, customerId: Id<"customers">) {
     customerReference: optionalText(data, "customerReference"),
     sender: {
       name: requiredText(data, "customerName"),
-      identificationType: optionalText(data, "customerIdType"),
+      identificationType: requiredText(data, "customerIdType"),
       identificationNumber: requiredText(data, "customerId"),
+      siteCode: requiredText(data, "senderSiteCode"),
+      municipalityCode: requiredText(data, "originMunicipality"),
       phone: optionalText(data, "customerPhone")
     },
     recipient: {
       name: requiredText(data, "recipientName"),
-      identificationType: optionalText(data, "recipientIdType"),
-      identificationNumber: requiredText(data, "recipientId")
+      identificationType: requiredText(data, "recipientIdType"),
+      identificationNumber: requiredText(data, "recipientId"),
+      siteCode: requiredText(data, "recipientSiteCode"),
+      municipalityCode: requiredText(data, "destinationMunicipality")
     },
     loading: {
       siteName: requiredText(data, "originName"),
@@ -504,7 +519,7 @@ function loadingOrderDraft(data: FormData, customerId: Id<"customers">) {
 }
 
 function hasConsignmentInput(remesa: RemesaDraft): boolean {
-  return Boolean(remesa.declaredValue.trim() || remesa.description.trim() || remesa.weightTons.trim() || remesa.recipientName.trim() || remesa.recipientDocument.trim() || remesa.remesaId);
+  return Boolean(remesa.declaredValue.trim() || remesa.description.trim() || remesa.weightTons.trim() || remesa.recipientName.trim() || remesa.recipientDocument.trim() || remesa.policyNumber.trim() || remesa.policyExpiresOn.trim() || remesa.insurerNit.trim() || remesa.remesaId);
 }
 
 function consignmentDraft(data: FormData, remesa: RemesaDraft) {
@@ -515,6 +530,9 @@ function consignmentDraft(data: FormData, remesa: RemesaDraft) {
       identificationNumber: remesa.recipientDocument.trim() || undefined
     } : undefined,
     declaredValue: remesa.declaredValue.trim() || undefined,
+    policyNumber: remesa.policyNumber.trim() || undefined,
+    policyExpiresOn: remesa.policyExpiresOn.trim() || undefined,
+    insurerNit: remesa.insurerNit.trim() || undefined,
     remissions: [{
       quantity: optionalText(data, "cargoQuantity"),
       description: remesa.description.trim() || requiredText(data, "cargoDescription"),

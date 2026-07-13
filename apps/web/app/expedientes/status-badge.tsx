@@ -4,7 +4,7 @@ export function StatusBadge({ status }: { status: string }) {
     : status === "succeeded"
       ? "Completado"
     : status === "in_progress"
-      ? "En viaje"
+      ? "En progreso"
       : status === "completed"
         ? "Completado"
         : status === "cancelled"

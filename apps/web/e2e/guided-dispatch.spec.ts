@@ -45,11 +45,71 @@ test("loading order is saved before optional dispatch stages", async ({ page }) 
   await expect(page.getByRole("heading", { level: 1, name: "Expediente de viaje" })).toBeVisible();
 });
 
-test("dispatch detail keeps stages documents and history in one flow", async ({ page }) => {
+test("dispatch documents can be completed and emitted in separate sessions", async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto("/expedientes/nuevo");
+  await fillLoadingOrder(page, `ASYNC-${Date.now()}`);
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await page.getByRole("button", { name: "Guardar y salir" }).click();
+  await expect(page.getByRole("region", { name: "Documentos del despacho" })).toBeVisible();
+  const detailUrl = page.url();
+
+  const assignmentCard = documentCard(page, "Vehículo y conductor");
+  await assignmentCard.getByRole("button", { name: "Editar" }).click();
+  await page.getByLabel("Documento del conductor").fill("1000000001");
+  await page.getByLabel("Placa del vehículo").fill("DEM001");
+  await expect(page.locator("#stage-primary-form .lookup-card small.ok")).toHaveCount(2);
+  await page.getByRole("button", { name: "Guardar cambios" }).click();
+  await expect(assignmentCard.getByText("Completado")).toBeVisible();
+
+  const orderCard = documentCard(page, "Orden de cargue");
+  await expect(orderCard.getByRole("button", { name: "Emitir a RNDC" })).toBeEnabled();
+  await orderCard.getByRole("button", { name: "Emitir a RNDC" }).click();
+  await expect(orderCard.locator(".status-badge")).toContainText("Autorizado", { timeout: 20_000 });
+
+  const dispatchCode = await page.locator(".dispatch-detail-hero h2").innerText();
+  await page.goto("/expedientes");
+  await page.getByLabel("Filtrar por etapa").selectOption("pending_manifest");
+  await expect(page.getByRole("link", { name: dispatchCode, exact: true })).toBeVisible();
+  await page.goto(detailUrl);
+
+  await page.request.post("/api/auth/logout");
+  await login(page);
+  await page.goto(detailUrl);
+  await expect(page.getByRole("region", { name: "Documentos del despacho" })).toBeVisible();
+
+  const consignmentCard = documentCard(page, "Remesas");
+  await consignmentCard.getByRole("button", { name: "Editar" }).click();
+  await page.getByLabel("Valor declarado").fill("5000000");
+  await page.getByLabel("Número de póliza").fill("POL-ASYNC-1");
+  await page.getByLabel("Vencimiento de póliza").fill("2027-07-13");
+  await page.getByLabel("NIT de la aseguradora").fill("900123456");
+  await page.getByRole("button", { name: "Guardar cambios" }).click();
+
+  const manifestCard = documentCard(page, "Manifiesto");
+  await manifestCard.getByRole("button", { name: "Editar" }).click();
+  await page.getByLabel("Fecha de expedición").fill("2026-07-13");
+  await page.getByLabel("Entrega estimada").fill("2026-07-15");
+  await page.getByLabel("Tipo de manifiesto").fill("General");
+  await page.getByLabel("Flete total").fill("2500000");
+  await page.getByLabel("Neto a pagar").fill("2500000");
+  await page.getByLabel("Responsable de pago").fill("MTM");
+  await page.getByRole("button", { name: "Guardar cambios" }).click();
+
+  await expect(consignmentCard.getByRole("button", { name: "Emitir a RNDC" })).toBeEnabled();
+  await consignmentCard.getByRole("button", { name: "Emitir a RNDC" }).click();
+  await expect(consignmentCard.locator(".status-badge")).toContainText("Autorizado", { timeout: 20_000 });
+  await expect(manifestCard.getByRole("button", { name: "Emitir a RNDC" })).toBeEnabled();
+  await manifestCard.getByRole("button", { name: "Emitir a RNDC" }).click();
+  await expect(manifestCard.locator(".status-badge")).toContainText("Autorizado", { timeout: 20_000 });
+});
+
+test("dispatch detail keeps independent documents and history in one hub", async ({ page }) => {
   await page.locator(".dispatch-row").first().locator(".queue-next-action").click();
   await expect(page.getByRole("heading", { level: 1, name: "Expediente de viaje" })).toBeVisible();
   await expect(page.getByText("Siguiente acción")).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Etapas del despacho" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Documentos del despacho" })).toBeVisible();
+  await expect(page.locator(".document-hub-card")).toHaveCount(5);
   await expect(page.getByRole("heading", { name: "Documentos e historial" })).toBeVisible();
   await expect(page.locator(".next-action-card .primary-action")).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
@@ -114,6 +174,7 @@ async function fillLoadingOrder(page: Page, suffix: string) {
   await page.getByLabel("Cliente o razón social").fill(`Cliente ${suffix}`);
   await page.getByLabel("Tipo de identificación", { exact: true }).first().fill("NIT");
   await page.getByLabel("Identificación del cliente").fill(`900${suffix.replace(/\D/g, "").slice(-6)}`);
+  await page.getByLabel("Código sede RNDC remitente").fill("1");
   const loading = page.getByRole("group", { name: "Cargue", exact: true });
   await loading.getByLabel("Lugar").fill("Bodega Bogotá");
   await loading.getByLabel("Ciudad").fill("Bogotá");
@@ -127,10 +188,18 @@ async function fillLoadingOrder(page: Page, suffix: string) {
   await unloading.getByLabel("Código municipio RNDC").fill("05001000");
   await unloading.getByLabel("Cita de descargue").fill("2026-07-15T14:00");
   await page.getByLabel("Destinatario", { exact: true }).fill(`Destinatario ${suffix}`);
+  await page.getByLabel("Tipo de identificación", { exact: true }).nth(1).fill("NIT");
   await page.getByLabel("Identificación destinatario", { exact: true }).fill("901234567");
+  await page.getByLabel("Código sede RNDC destinatario").fill("1");
   await page.getByLabel("Mercancía", { exact: true }).fill("Carga seca");
   await page.getByLabel("Peso total (TN)").fill("12.5");
   await page.getByLabel("Tipo de empaque").fill("PAQUETE");
+  await page.getByLabel("Código de mercancía").fill("005229");
+  await page.getByLabel("Naturaleza de la carga").fill("1");
+}
+
+function documentCard(page: Page, title: string) {
+  return page.locator(".document-hub-card").filter({ has: page.getByRole("heading", { name: title, exact: true }) });
 }
 
 function readPassword(): string {

@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import test, { afterEach, beforeEach } from "node:test";
 import { createSessionToken, demoUsers } from "../../../../../lib/auth.js";
 import type { Id } from "../../../../../../convex/_generated/dataModel.js";
-import { handleEmitWithRuntime, POST, type EmissionInputs, type EmitRuntime } from "./route.js";
+import { handleEmitWithRuntime, type EmissionInputs, type EmitRuntime } from "./handler.js";
+import { POST } from "./route.js";
 
 const originalEnv = { ...process.env };
 const originalFetch = globalThis.fetch;

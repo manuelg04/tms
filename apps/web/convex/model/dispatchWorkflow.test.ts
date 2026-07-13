@@ -2,9 +2,12 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   assertStageEditable,
+  bogotaDate,
   canFulfillManifest,
   consignmentMissingFields,
   deriveDispatchStage,
+  emissionDependencyBlockers,
+  emissionScopeTargets,
   loadingOrderMissingFields,
   manifestMissingFields,
   type DispatchProjection,
@@ -203,6 +206,112 @@ test("a legacy authorized remesa and manifest chain does not require a missing l
 
 test("an annulled dispatch reports the annulled stage", () => {
   assert.equal(deriveDispatchStage(baseProjection({ annulled: true })).stage, "anulado");
+});
+
+test("order scope has no documentary dependency in the standard workflow", () => {
+  assert.deepEqual(
+    emissionDependencyBlockers("orden", {
+      workflowVariant: "standard",
+      orderOfficialState: "draft",
+      consignmentOfficialStates: []
+    }),
+    []
+  );
+});
+
+test("remesa scope waits for the order unless the workflow has no loading order", () => {
+  assert.match(
+    emissionDependencyBlockers("remesas", {
+      workflowVariant: "standard",
+      orderOfficialState: "draft",
+      consignmentOfficialStates: ["draft"]
+    }).join(" "),
+    /orden de cargue autorizada/i
+  );
+  assert.deepEqual(
+    emissionDependencyBlockers("remesas", {
+      workflowVariant: "remesa_without_order",
+      orderOfficialState: "draft",
+      consignmentOfficialStates: ["draft"]
+    }),
+    []
+  );
+});
+
+test("manifest scope waits for all remesas except in an empty manifest workflow", () => {
+  assert.match(
+    emissionDependencyBlockers("manifiesto", {
+      workflowVariant: "standard",
+      orderOfficialState: "authorized",
+      consignmentOfficialStates: ["authorized", "pending"]
+    }).join(" "),
+    /remesas autorizadas/i
+  );
+  assert.deepEqual(
+    emissionDependencyBlockers("manifiesto", {
+      workflowVariant: "empty_manifest",
+      orderOfficialState: "draft",
+      consignmentOfficialStates: []
+    }),
+    []
+  );
+});
+
+test("complete scope preserves the resumable linear workflow without pre-authorizing earlier steps", () => {
+  assert.deepEqual(
+    emissionDependencyBlockers("todo", {
+      workflowVariant: "standard",
+      orderOfficialState: "draft",
+      consignmentOfficialStates: ["draft"]
+    }),
+    []
+  );
+});
+
+test("each preparation scope targets only its own numbers and photographs", () => {
+  assert.deepEqual(emissionScopeTargets("orden", "standard"), {
+    order: true,
+    consignments: false,
+    manifest: false,
+    trip: false,
+    assignment: true
+  });
+  assert.deepEqual(emissionScopeTargets("remesas", "standard"), {
+    order: false,
+    consignments: true,
+    manifest: false,
+    trip: false,
+    assignment: false
+  });
+  assert.deepEqual(emissionScopeTargets("manifiesto", "standard"), {
+    order: false,
+    consignments: false,
+    manifest: true,
+    trip: true,
+    assignment: true
+  });
+});
+
+test("exception variants preserve their documentary targets", () => {
+  assert.deepEqual(emissionScopeTargets("todo", "remesa_without_order"), {
+    order: false,
+    consignments: true,
+    manifest: true,
+    trip: false,
+    assignment: true
+  });
+  assert.deepEqual(emissionScopeTargets("todo", "empty_manifest"), {
+    order: false,
+    consignments: false,
+    manifest: true,
+    trip: false,
+    assignment: true
+  });
+});
+
+test("preparation defaults expedition dates using the Bogota calendar day", () => {
+  assert.equal(bogotaDate(Date.UTC(2026, 6, 13, 3, 59)), "2026-07-12");
+  assert.equal(bogotaDate(Date.UTC(2026, 6, 13, 5, 1)), "2026-07-13");
 });
 
 test("a complete loading order has no missing fields", () => {

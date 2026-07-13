@@ -4,6 +4,7 @@ import { buildEmissionPlan, type EmissionPlanInput } from "./emissionPlan";
 
 const orderSnapshot = {
   orderNumber: "0000001",
+  expeditionDate: "2026-07-09",
   agencyCode: "BOG",
   customerId: "cust1",
   sender: {
@@ -30,6 +31,7 @@ const orderSnapshot = {
 };
 
 const consignmentSnapshot = {
+  expeditionDate: "2026-07-09",
   consignmentClass: "terrestre_carga" as const,
   declaredValue: "58000000",
   sender: orderSnapshot.sender,
@@ -103,7 +105,7 @@ test("a fresh dispatch plans cargo, consignments, trip and manifest in order", (
   assert.deepEqual(plan.ok ? plan.steps.map((step) => step.state) : [], ["pending", "pending", "pending", "pending"]);
 });
 
-test("document payloads carry the persisted display data required by their PDFs", () => {
+test("independently emitted order and remesa payloads use their own expedition date instead of the manifest date", () => {
   const plan = buildEmissionPlan(baseInput());
   assert.equal(plan.ok, true);
   if (!plan.ok) return;
@@ -111,10 +113,10 @@ test("document payloads carry the persisted display data required by their PDFs"
   const remesa = plan.steps.find((step) => step.action === "emit_remesa")?.payload as Record<string, any>;
   const manifest = plan.steps.find((step) => step.action === "issue_manifest")?.payload as Record<string, any>;
 
-  assert.equal(cargo.expeditionDate, "2026-07-10");
+  assert.equal(cargo.expeditionDate, "2026-07-09");
   assert.equal(cargo.driver.fullName, "ZOILO ANDRES MAZO");
   assert.equal(cargo.vehicle.brand, "KENWORTH");
-  assert.equal(remesa.expeditionDate, "2026-07-10");
+  assert.equal(remesa.expeditionDate, "2026-07-09");
   assert.equal(remesa.vehicle.plate, "STO172");
   assert.equal(remesa.cargo.productName, "MAIZ");
   assert.equal(manifest.sender.cityName, "BARRANQUILLA");
@@ -334,4 +336,104 @@ test("empty manifest emits only a Viaje Vacío manifest with no remesa or tracki
   assert.equal("remesaNumber" in plan.steps[0].payload, false);
   assert.equal("manifestRemesas" in plan.steps[0].payload, false);
   assert.equal("gpsOperator" in plan.steps[0].payload, false);
+});
+
+test("order scope plans only the loading order without remesa or manifest preparation", () => {
+  const plan = buildEmissionPlan(
+    baseInput({
+      consignments: [],
+      manifest: { number: undefined, snapshot: null, officialState: "draft" },
+      tripNumber: undefined
+    }),
+    "orden"
+  );
+
+  assert.equal(plan.ok, true);
+  assert.deepEqual(plan.ok ? plan.steps.map((step) => step.action) : [], ["emit_loading_order"]);
+});
+
+test("remesa scope requires an authorized loading order for the standard workflow", () => {
+  const blocked = buildEmissionPlan(baseInput(), "remesas");
+
+  assert.equal(blocked.ok, false);
+  assert.match(!blocked.ok ? blocked.blockers.join(" ") : "", /orden de cargue autorizada/i);
+
+  const plan = buildEmissionPlan(
+    baseInput({ order: { number: "0000001", snapshot: orderSnapshot, officialState: "authorized" } }),
+    "remesas"
+  );
+
+  assert.equal(plan.ok, true);
+  assert.deepEqual(plan.ok ? plan.steps.map((step) => step.action) : [], ["emit_remesa"]);
+});
+
+test("manifest scope requires every remesa to be authorized and keeps trip registration inside the scope", () => {
+  const blocked = buildEmissionPlan(
+    baseInput({ order: { number: "0000001", snapshot: orderSnapshot, officialState: "authorized" } }),
+    "manifiesto"
+  );
+
+  assert.equal(blocked.ok, false);
+  assert.match(!blocked.ok ? blocked.blockers.join(" ") : "", /remesas autorizadas/i);
+
+  const plan = buildEmissionPlan(
+    baseInput({
+      order: { number: "0000001", snapshot: orderSnapshot, officialState: "authorized" },
+      consignments: [{ remesaId: "rem1", number: "00001", snapshot: consignmentSnapshot, officialState: "authorized" }]
+    }),
+    "manifiesto"
+  );
+
+  assert.equal(plan.ok, true);
+  assert.deepEqual(plan.ok ? plan.steps.map((step) => step.action) : [], ["register_trip", "issue_manifest"]);
+});
+
+test("remesa without order keeps its independent remesa and manifest scopes", () => {
+  const remesaPlan = buildEmissionPlan(
+    {
+      ...baseInput(),
+      workflowVariant: "remesa_without_order",
+      order: { number: undefined, snapshot: null, officialState: "draft" },
+      tripNumber: undefined
+    },
+    "remesas"
+  );
+
+  assert.equal(remesaPlan.ok, true);
+  assert.deepEqual(remesaPlan.ok ? remesaPlan.steps.map((step) => step.action) : [], ["emit_remesa"]);
+
+  const manifestPlan = buildEmissionPlan(
+    {
+      ...baseInput(),
+      workflowVariant: "remesa_without_order",
+      order: { number: undefined, snapshot: null, officialState: "draft" },
+      consignments: [{ remesaId: "rem1", number: "00001", snapshot: consignmentSnapshot, officialState: "authorized" }],
+      tripNumber: undefined
+    },
+    "manifiesto"
+  );
+
+  assert.equal(manifestPlan.ok, true);
+  assert.deepEqual(manifestPlan.ok ? manifestPlan.steps.map((step) => step.action) : [], ["issue_manifest"]);
+});
+
+test("empty manifest keeps a manifest-only scope", () => {
+  const plan = buildEmissionPlan(
+    {
+      ...baseInput(),
+      workflowVariant: "empty_manifest",
+      order: { number: undefined, snapshot: null, officialState: "draft" },
+      consignments: [],
+      tripNumber: undefined,
+      manifest: {
+        number: "0000009",
+        snapshot: { ...manifestSnapshot, manifestType: "W", emptyManifestReason: "Retorno vacío" },
+        officialState: "draft"
+      }
+    },
+    "manifiesto"
+  );
+
+  assert.equal(plan.ok, true);
+  assert.deepEqual(plan.ok ? plan.steps.map((step) => step.action) : [], ["issue_manifest"]);
 });

@@ -1,5 +1,81 @@
 import type { FulfillmentState, OfficialDocumentState } from "./documentLifecycle";
 
+export type EmissionScope = "orden" | "remesas" | "manifiesto" | "todo";
+
+export function bogotaDate(epochMs: number): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Bogota",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(epochMs);
+  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? "";
+  return `${value("year")}-${value("month")}-${value("day")}`;
+}
+
+export type DispatchWorkflowVariant = "standard" | "remesa_without_order" | "empty_manifest" | "transshipment";
+
+export type EmissionScopeTargets = {
+  order: boolean;
+  consignments: boolean;
+  manifest: boolean;
+  trip: boolean;
+  assignment: boolean;
+};
+
+export function emissionScopeTargets(
+  scope: EmissionScope,
+  workflowVariant: DispatchWorkflowVariant = "standard"
+): EmissionScopeTargets {
+  const order = (scope === "orden" || scope === "todo") && (workflowVariant === "standard" || workflowVariant === "transshipment");
+  const consignments = (scope === "remesas" || scope === "todo") && workflowVariant !== "empty_manifest";
+  const manifest = scope === "manifiesto" || scope === "todo";
+  const trip = manifest && (workflowVariant === "standard" || workflowVariant === "transshipment");
+  return { order, consignments, manifest, trip, assignment: order || manifest };
+}
+
+export function emissionDependencyBlockers(
+  scope: EmissionScope,
+  input: {
+    workflowVariant?: DispatchWorkflowVariant;
+    orderOfficialState: OfficialDocumentState;
+    consignmentOfficialStates: OfficialDocumentState[];
+  }
+): string[] {
+  const variant = input.workflowVariant ?? "standard";
+
+  if (scope === "todo") {
+    return [];
+  }
+
+  if (scope === "orden" && (variant === "remesa_without_order" || variant === "empty_manifest")) {
+    return ["Este flujo no usa orden de cargue"];
+  }
+
+  if (scope === "remesas") {
+    if (variant === "empty_manifest") {
+      return ["El manifiesto vacío no usa remesas"];
+    }
+    if ((variant === "standard" || variant === "transshipment") && !officiallyAuthorized(input.orderOfficialState)) {
+      return ["Requiere orden de cargue autorizada"];
+    }
+  }
+
+  if (
+    scope === "manifiesto" &&
+    variant !== "empty_manifest" &&
+    (input.consignmentOfficialStates.length === 0 || input.consignmentOfficialStates.some((state) => !officiallyAuthorized(state)))
+  ) {
+    return ["Requiere todas las remesas autorizadas"];
+  }
+
+  return [];
+}
+
+function officiallyAuthorized(state: OfficialDocumentState): boolean {
+  return state === "authorized" || state === "fulfilled";
+}
+
 export type DispatchStage =
   | "orden_cargue"
   | "remesas"
@@ -20,7 +96,7 @@ export type ConsignmentProjection = {
 
 export type DispatchProjection = {
   annulled: boolean;
-  workflowVariant?: "standard" | "remesa_without_order" | "empty_manifest" | "transshipment";
+  workflowVariant?: DispatchWorkflowVariant;
   loadingOrder: { missingFields: string[]; officialState: OfficialDocumentState } | null;
   consignments: ConsignmentProjection[];
   assignment: { vehicleAssigned: boolean; driverAssigned: boolean };
@@ -136,6 +212,7 @@ export type SiteAppointmentDraft = {
 
 export type LoadingOrderDraft = {
   orderNumber?: string;
+  expeditionDate?: string;
   agencyCode?: string;
   customerId?: string;
   customerReference?: string;
@@ -172,6 +249,7 @@ export type RemissionLineDraft = {
 };
 
 export type ConsignmentDraft = {
+  expeditionDate?: string;
   consignmentClass?: "municipal" | "terrestre_carga";
   agencyCode?: string;
   sender?: PartyDraft;
@@ -360,6 +438,7 @@ export function effectiveConsignment(
 
   return {
     ...draft,
+    expeditionDate: draft.expeditionDate ?? order?.expeditionDate,
     agencyCode: draft.agencyCode ?? order?.agencyCode,
     sender: partyComplete(draft.sender) ? draft.sender : order?.sender ?? draft.sender,
     recipient: partyComplete(draft.recipient) ? draft.recipient : order?.recipient ?? draft.recipient,

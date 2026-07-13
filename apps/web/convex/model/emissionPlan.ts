@@ -1,5 +1,15 @@
 import type { OfficialDocumentState } from "./documentLifecycle";
-import type { ConsignmentDraft, LoadingOrderDraft, ManifestDraft } from "./dispatchWorkflow";
+import {
+  emissionDependencyBlockers,
+  emissionScopeTargets,
+  type ConsignmentDraft,
+  type DispatchWorkflowVariant,
+  type EmissionScope,
+  type LoadingOrderDraft,
+  type ManifestDraft
+} from "./dispatchWorkflow";
+
+export type { EmissionScope } from "./dispatchWorkflow";
 
 export type AssignmentSnapshotData = {
   driver: { document?: string; documentType?: string; name?: string; cellphone?: string; phone1?: string; address?: string; city?: string; cityCode?: string; licenseNumber?: string; licenseCategory?: string; licenseExpiresAt?: string } | null;
@@ -29,7 +39,7 @@ export type AssignmentSnapshotData = {
 };
 
 export type EmissionPlanInput = {
-  workflowVariant?: "standard" | "remesa_without_order" | "empty_manifest" | "transshipment";
+  workflowVariant?: DispatchWorkflowVariant;
   order: { number?: string; snapshot: (LoadingOrderDraft & Record<string, unknown>) | null; officialState: OfficialDocumentState };
   consignments: Array<{
     remesaId: string;
@@ -63,6 +73,13 @@ export type EmissionPlanResult =
 
 const emissionOperationTypes = new Set(["emit_cargo", "emit_trip", "emit_remesa", "emit_manifest"]);
 
+const emptyAssignment: AssignmentSnapshotData = {
+  driver: null,
+  secondDriver: null,
+  vehicle: null,
+  trailer: null
+};
+
 const idTypeCodes: Record<string, string> = {
   C: "C",
   N: "N",
@@ -82,7 +99,7 @@ const idTypeCodes: Record<string, string> = {
   PASAPORTE: "P"
 };
 
-export function buildEmissionPlan(input: EmissionPlanInput): EmissionPlanResult {
+export function buildEmissionPlan(input: EmissionPlanInput, scope: EmissionScope = "todo"): EmissionPlanResult {
   const uncertain = input.operationsInFlight.filter(
     (operation) => emissionOperationTypes.has(operation.operationType) && operation.status === "uncertain"
   );
@@ -111,29 +128,44 @@ export function buildEmissionPlan(input: EmissionPlanInput): EmissionPlanResult 
 
   const notPrepared: string[] = [];
   const variant = input.workflowVariant ?? "standard";
-  const requiresOrder = variant === "standard" || variant === "transshipment";
-  const requiresConsignments = variant !== "empty_manifest";
-  const requiresTrip = variant === "standard" || variant === "transshipment";
+  const targets = emissionScopeTargets(scope, variant);
+  const includesOrder = targets.order;
+  const includesConsignments = targets.consignments;
+  const includesManifest = targets.manifest;
+  const dependencies = emissionDependencyBlockers(scope, {
+    workflowVariant: variant,
+    orderOfficialState: input.order.officialState,
+    consignmentOfficialStates: input.consignments.map((consignment) => consignment.officialState)
+  });
 
-  if (requiresOrder && (!input.order.snapshot || !input.order.number)) {
+  if (dependencies.length > 0) {
+    return { ok: false, reason: "not_prepared", blockers: dependencies };
+  }
+
+  if (includesOrder && (!input.order.number || (!input.order.snapshot && !isAuthorized(input.order.officialState)))) {
     notPrepared.push("Falta la fotografía de la orden de cargue");
   }
-  if (requiresConsignments && input.consignments.length === 0) {
+  if (includesConsignments && input.consignments.length === 0) {
     notPrepared.push("El despacho no tiene remesas");
   }
-  for (const consignment of input.consignments) {
-    if (!consignment.snapshot || !consignment.number) {
-      notPrepared.push(`Falta la fotografía de la remesa ${consignment.number ?? consignment.remesaId}`);
+  if (includesConsignments) {
+    for (const consignment of input.consignments) {
+      if (!consignment.number || (!consignment.snapshot && !isAuthorized(consignment.officialState))) {
+        notPrepared.push(`Falta la fotografía de la remesa ${consignment.number ?? consignment.remesaId}`);
+      }
     }
   }
-  if (!input.manifest.snapshot || !input.manifest.number) {
+  if (includesManifest && (!input.manifest.number || (!input.manifest.snapshot && !isAuthorized(input.manifest.officialState)))) {
     notPrepared.push("Falta la fotografía del manifiesto");
   }
-  if (!input.assignment) {
+  if (targets.assignment && !input.assignment) {
     notPrepared.push("Falta la fotografía de la asignación de vehículo y conductor");
   }
-  if (requiresTrip && !input.tripNumber) {
+  if (targets.trip && !input.tripNumber) {
     notPrepared.push("Falta el consecutivo de información de viaje");
+  }
+  if (targets.trip && !input.order.number) {
+    notPrepared.push("Falta el número de la orden de cargue autorizada");
   }
 
   if (notPrepared.length > 0) {
@@ -142,13 +174,13 @@ export function buildEmissionPlan(input: EmissionPlanInput): EmissionPlanResult 
 
   const order = input.order.snapshot ?? {};
   const orderNumber = input.order.number;
-  const manifest = input.manifest.snapshot!;
-  const manifestNumber = input.manifest.number!;
-  const assignment = input.assignment!;
+  const manifest = input.manifest.snapshot ?? {};
+  const manifestNumber = input.manifest.number;
+  const assignment = input.assignment ?? emptyAssignment;
   const tripNumber = input.tripNumber;
   const steps: EmissionPlanStep[] = [];
 
-  if (requiresOrder && orderNumber) {
+  if (includesOrder && orderNumber) {
     steps.push(
       finishStep(
         {
@@ -157,30 +189,32 @@ export function buildEmissionPlan(input: EmissionPlanInput): EmissionPlanResult 
           documentKind: "orden_cargue",
           documentNumber: orderNumber
         },
-        buildCargoPayload(orderNumber, order, manifest, assignment),
+        buildCargoPayload(orderNumber, order, assignment),
         isAuthorized(input.order.officialState)
       )
     );
   }
 
-  for (const consignment of input.consignments) {
-    const snapshot = consignment.snapshot!;
-    steps.push(
-      finishStep(
-        {
-          key: `remesa:${consignment.number!}`,
-          action: "emit_remesa",
-          documentKind: "remesa",
-          documentNumber: consignment.number!,
-          remesaId: consignment.remesaId
-        },
-        buildConsignmentPayload(consignment.number!, orderNumber, snapshot, manifest, assignment, variant),
-        isAuthorized(consignment.officialState)
-      )
-    );
+  if (includesConsignments) {
+    for (const consignment of input.consignments) {
+      const snapshot = consignment.snapshot ?? {};
+      steps.push(
+        finishStep(
+          {
+            key: `remesa:${consignment.number!}`,
+            action: "emit_remesa",
+            documentKind: "remesa",
+            documentNumber: consignment.number!,
+            remesaId: consignment.remesaId
+          },
+          buildConsignmentPayload(consignment.number!, orderNumber, snapshot, assignment, variant),
+          isAuthorized(consignment.officialState)
+        )
+      );
+    }
   }
 
-  if (requiresTrip && tripNumber && orderNumber) {
+  if (targets.trip && tripNumber && orderNumber && manifestNumber) {
     steps.push(
       finishStep(
         {
@@ -195,18 +229,20 @@ export function buildEmissionPlan(input: EmissionPlanInput): EmissionPlanResult 
     );
   }
 
-  steps.push(
-    finishStep(
-      {
-        key: `manifiesto:${manifestNumber}`,
-        action: "issue_manifest",
-        documentKind: "manifiesto",
-        documentNumber: manifestNumber
-      },
-      buildManifestPayload(manifestNumber, tripNumber, orderNumber, input.consignments, order, manifest, assignment, variant),
-      isAuthorized(input.manifest.officialState)
-    )
-  );
+  if (includesManifest && manifestNumber) {
+    steps.push(
+      finishStep(
+        {
+          key: `manifiesto:${manifestNumber}`,
+          action: "issue_manifest",
+          documentKind: "manifiesto",
+          documentNumber: manifestNumber
+        },
+        buildManifestPayload(manifestNumber, tripNumber, orderNumber, input.consignments, order, manifest, assignment, variant),
+        isAuthorized(input.manifest.officialState)
+      )
+    );
+  }
 
   return { ok: true, steps };
 }
@@ -233,7 +269,7 @@ function isAuthorized(state: OfficialDocumentState): boolean {
   return state === "authorized" || state === "fulfilled";
 }
 
-function buildCargoPayload(orderNumber: string, order: LoadingOrderDraft, manifest: ManifestDraft, assignment: AssignmentSnapshotData): PayloadDraft {
+function buildCargoPayload(orderNumber: string, order: LoadingOrderDraft, assignment: AssignmentSnapshotData): PayloadDraft {
   const missing: string[] = [];
   const sender = partyPayload(order.sender, "sender", missing);
   const recipient = partyPayload(order.recipient, "recipient", missing);
@@ -241,7 +277,7 @@ function buildCargoPayload(orderNumber: string, order: LoadingOrderDraft, manife
   const unloadingDate = appointmentDate(order.unloading?.appointmentAt, "unloadingAppointment", missing);
   const payload: Record<string, unknown> = {
     cargoNumber: orderNumber,
-    expeditionDate: manifest.issueDate,
+    expeditionDate: requireField(order.expeditionDate, "expeditionDate", missing),
     loadingAppointmentDate: loadingDate?.date,
     loadingAppointmentTime: loadingDate?.time,
     unloadingAppointmentDate: unloadingDate?.date,
@@ -270,7 +306,6 @@ function buildConsignmentPayload(
   remesaNumber: string,
   cargoNumber: string | undefined,
   snapshot: ConsignmentDraft,
-  manifest: ManifestDraft,
   assignment: AssignmentSnapshotData,
   workflowVariant: EmissionPlanInput["workflowVariant"]
 ): PayloadDraft {
@@ -284,7 +319,7 @@ function buildConsignmentPayload(
     remesaNumber,
     cargoNumber,
     workflowVariant,
-    expeditionDate: manifest.issueDate,
+    expeditionDate: requireField(snapshot.expeditionDate, "expeditionDate", missing),
     loadingAppointmentDate: loadingDate?.date,
     loadingAppointmentTime: loadingDate?.time,
     unloadingAppointmentDate: unloadingDate?.date,

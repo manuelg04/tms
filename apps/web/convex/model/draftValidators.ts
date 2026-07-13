@@ -29,6 +29,7 @@ export const siteAppointmentDraftValidator = v.object({
 
 export const loadingOrderDraftValidator = v.object({
   orderNumber: v.optional(v.string()),
+  expeditionDate: v.optional(v.string()),
   agencyCode: v.optional(v.string()),
   customerId: v.optional(v.id("customers")),
   customerReference: v.optional(v.string()),
@@ -65,6 +66,7 @@ export const remissionLineDraftValidator = v.object({
 });
 
 export const consignmentDraftValidator = v.object({
+  expeditionDate: v.optional(v.string()),
   consignmentClass: v.optional(consignmentClassValidator),
   agencyCode: v.optional(v.string()),
   sender: v.optional(partyDraftValidator),

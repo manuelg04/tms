@@ -7,13 +7,17 @@ import { claimNextConsecutive } from "./model/consecutiveRange";
 import { buildDispatchSnapshot, type SnapshotKind } from "./model/dispatchSnapshot";
 import {
   assertStageEditable,
+  bogotaDate,
   consignmentMissingFields,
   deriveDispatchStage,
+  emissionDependencyBlockers,
+  emissionScopeTargets,
   effectiveConsignment,
   loadingOrderMissingFields,
   manifestMissingFields,
   type ConsignmentDraft,
   type DispatchProjection,
+  type EmissionScope,
   type LoadingOrderDraft
 } from "./model/dispatchWorkflow";
 import { initialDocumentLifecycle, type OfficialDocumentState } from "./model/documentLifecycle";
@@ -39,6 +43,13 @@ const stageValidator = v.union(
   v.literal("cumplido_final"),
   v.literal("cumplido"),
   v.literal("anulado")
+);
+
+const emissionScopeValidator = v.union(
+  v.literal("orden"),
+  v.literal("remesas"),
+  v.literal("manifiesto"),
+  v.literal("todo")
 );
 
 const consecutiveDefaults: Record<string, { prefix: string; padding: number }> = {
@@ -635,156 +646,314 @@ export const recordManifestFulfillmentDraft = mutation({
   }
 });
 
+const preparationResultValidator = v.object({
+  code: v.string(),
+  scope: emissionScopeValidator,
+  orderNumber: v.optional(v.string()),
+  consignmentNumbers: v.array(v.string()),
+  tripNumber: v.optional(v.string()),
+  manifestNumber: v.optional(v.string()),
+  alreadyPrepared: v.boolean()
+});
+
+export const prepareForEmission = mutation({
+  args: {
+    actorToken: v.optional(v.string()),
+    expedienteId: v.id("expedientes"),
+    scope: emissionScopeValidator
+  },
+  returns: preparationResultValidator,
+  handler: prepareForEmissionHandler
+});
+
 export const prepareEmission = mutation({
   args: { actorToken: v.optional(v.string()), expedienteId: v.id("expedientes") },
-  returns: v.object({
-    code: v.string(),
-    orderNumber: v.optional(v.string()),
-    consignmentNumbers: v.array(v.string()),
-    tripNumber: v.optional(v.string()),
-    manifestNumber: v.string(),
-    alreadyPrepared: v.boolean()
-  }),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
-    const expediente = await requireExpediente(ctx, args.expedienteId);
-    requireSameOrganization(actor, expediente.organizationId);
-    const remesas = await ctx.db
+  returns: preparationResultValidator,
+  handler: (ctx, args) => prepareForEmissionHandler(ctx, { ...args, scope: "todo" })
+});
+
+async function prepareForEmissionHandler(
+  ctx: MutationCtx,
+  args: { actorToken?: string; expedienteId: Id<"expedientes">; scope: EmissionScope }
+) {
+  const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+  const expediente = await requireExpediente(ctx, args.expedienteId);
+  requireSameOrganization(actor, expediente.organizationId);
+
+  if (expediente.status === "completed" || expediente.status === "cancelled") {
+    throw new ConvexError({ code: "INVALID_STATE", message: "El despacho cerrado no puede prepararse para emisión" });
+  }
+
+  const [remesas, snapshots] = await Promise.all([
+    ctx.db
       .query("expedienteRemesas")
       .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
-      .collect();
-    const variant = expediente.workflowVariant ?? "standard";
-    const requiresOrder = variant === "standard" || variant === "transshipment";
-    const requiresTrip = variant === "standard" || variant === "transshipment";
+      .collect(),
+    ctx.db
+      .query("dispatchSnapshots")
+      .withIndex("by_expediente_and_taken_at", (q) => q.eq("expedienteId", expediente._id))
+      .order("desc")
+      .take(200)
+  ]);
+  const variant = expediente.workflowVariant ?? "standard";
+  const targets = emissionScopeTargets(args.scope, variant);
+  const orderDraft = expediente.loadingOrderDraft as (LoadingOrderDraft & { customerId?: Id<"customers"> }) | undefined;
+  const orderNumber = orderDraft?.orderNumber ?? expediente.cargoNumber;
+  const manifestNumber = expediente.manifestDraft?.manifestNumber ?? expediente.manifestNumber;
+  const consignmentNumbers = remesas.flatMap((remesa) => remesa.number ? [remesa.number] : []);
+  const orderState = await officialStateFor(ctx, expediente, "orden_cargue");
+  const latestOrderSnapshot = snapshots.find((snapshot) => snapshot.kind === "orden_cargue");
+  const latestManifestSnapshot = snapshots.find((snapshot) => snapshot.kind === "manifiesto");
+  const latestAssignmentSnapshot = snapshots.find((snapshot) => snapshot.kind === "asignacion");
+  const latestRemesaSnapshots = new Map<string, Doc<"dispatchSnapshots">>();
 
-    if (expediente.status === "ready") {
-      const orderNumber = expediente.loadingOrderDraft?.orderNumber;
-      const manifestNumber = expediente.manifestDraft?.manifestNumber;
-
-      if ((!requiresOrder || orderNumber) && manifestNumber && (!requiresTrip || expediente.tripNumber) && remesas.every((remesa) => remesa.number)) {
-        return {
-          code: expediente.code,
-          orderNumber,
-          consignmentNumbers: remesas.map((remesa) => remesa.number ?? ""),
-          tripNumber: expediente.tripNumber,
-          manifestNumber,
-          alreadyPrepared: true
-        };
-      }
+  for (const snapshot of snapshots) {
+    if (snapshot.kind === "remesa" && snapshot.remesaId && !latestRemesaSnapshots.has(snapshot.remesaId)) {
+      latestRemesaSnapshots.set(snapshot.remesaId, snapshot);
     }
+  }
 
-    if (expediente.status !== "draft") {
-      throw new ConvexError({ code: "INVALID_STATE", message: "Sólo un despacho en borrador puede prepararse para emisión" });
+  const orderPrepared = !targets.order || Boolean(
+    orderNumber && (isAuthorizedState(orderState) || snapshotHasExpeditionDate(latestOrderSnapshot))
+  );
+  const consignmentsPrepared = !targets.consignments || (
+    remesas.length > 0 && remesas.every((remesa) =>
+      Boolean(remesa.number && (isAuthorizedState(remesa.officialState) || snapshotHasExpeditionDate(latestRemesaSnapshots.get(remesa._id))))
+    )
+  );
+  const manifestState = await officialStateFor(ctx, expediente, "manifiesto");
+  const manifestPrepared = !targets.manifest || Boolean(
+    manifestNumber && (isAuthorizedState(manifestState) || latestManifestSnapshot)
+  );
+  const tripPrepared = !targets.trip || Boolean(expediente.tripNumber);
+  const assignmentPrepared = !targets.assignment || Boolean(latestAssignmentSnapshot);
+
+  if (orderPrepared && consignmentsPrepared && manifestPrepared && tripPrepared && assignmentPrepared) {
+    return {
+      code: expediente.code,
+      scope: args.scope,
+      orderNumber,
+      consignmentNumbers,
+      tripNumber: expediente.tripNumber,
+      manifestNumber,
+      alreadyPrepared: true
+    };
+  }
+
+  const dependencyBlockers = emissionDependencyBlockers(args.scope, {
+    workflowVariant: variant,
+    orderOfficialState: orderState,
+    consignmentOfficialStates: remesas.map((remesa) => remesa.officialState)
+  });
+  const blockers: string[] = [...dependencyBlockers];
+
+  if (targets.order) {
+    blockers.push(...loadingOrderMissingFields(orderDraft));
+  }
+  if (targets.consignments) {
+    if (remesas.length === 0) {
+      blockers.push("El despacho no tiene remesas");
     }
-
-    const projection = await buildProjection(ctx, expediente, remesas);
-    const stage = deriveDispatchStage(projection);
-
-    if (["orden_cargue", "remesas", "vehiculo_conductor", "manifiesto"].includes(stage.stage)) {
-      throw new ConvexError({
-        code: "VALIDATION",
-        message: "El despacho tiene datos pendientes y no puede prepararse",
-        data: { stage: stage.stage, blockers: stage.blockers }
-      });
+    for (let index = 0; index < remesas.length; index += 1) {
+      blockers.push(
+        ...consignmentMissingFields((remesas[index].draft ?? null) as ConsignmentDraft | null, orderDraft)
+          .map((blocker) => `Remesa ${index + 1}: ${blocker}`)
+      );
     }
+  }
+  if (targets.manifest) {
+    blockers.push(...manifestMissingFields(expediente.manifestDraft));
+  }
+  if (targets.assignment && (!expediente.driverId || !expediente.vehicleId)) {
+    if (!expediente.driverId) {
+      blockers.push("Falta asignar el conductor");
+    }
+    if (!expediente.vehicleId) {
+      blockers.push("Falta asignar el vehículo");
+    }
+  }
 
-    const now = Date.now();
-    const agencyCode = expediente.agencyCode ?? "";
-    const orderDraft = expediente.loadingOrderDraft as (LoadingOrderDraft & { customerId?: Id<"customers"> }) | undefined;
-    const manifestDraft = expediente.manifestDraft!;
-    const orderNumber = requiresOrder ? orderDraft?.orderNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "orden_cargue", now)) : undefined;
-    const tripNumber = requiresTrip ? expediente.tripNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "viaje", now)) : undefined;
-    const manifestNumber =
-      manifestDraft.manifestNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "manifiesto", now));
-    const consignmentNumbers: string[] = [];
+  if (blockers.length > 0) {
+    throw new ConvexError({
+      code: "VALIDATION",
+      message: "El documento tiene datos pendientes y no puede prepararse",
+      data: { scope: args.scope, blockers }
+    });
+  }
 
+  const now = Date.now();
+  const expeditionDate = orderDraft?.expeditionDate ?? bogotaDate(now);
+  const agencyCode = expediente.agencyCode ?? "";
+  const preparedOrderNumber = targets.order
+    ? orderNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "orden_cargue", now))
+    : orderNumber;
+  const preparedTripNumber = targets.trip
+    ? expediente.tripNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "viaje", now))
+    : expediente.tripNumber;
+  const preparedManifestNumber = targets.manifest
+    ? manifestNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "manifiesto", now))
+    : manifestNumber;
+  const preparedConsignmentNumbers: string[] = [];
+
+  if (targets.consignments) {
     for (const remesa of remesas) {
       const number = remesa.number ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "remesa", now));
-      consignmentNumbers.push(number);
+      preparedConsignmentNumbers.push(number);
+      const latestSnapshot = latestRemesaSnapshots.get(remesa._id);
 
-      if (remesa.number !== number) {
+      if (!remesa.number) {
         await ctx.db.patch("expedienteRemesas", remesa._id, { number, updatedBy: actor._id, updatedAt: now });
       }
+      if (!snapshotHasExpeditionDate(latestSnapshot) && !isAuthorizedState(remesa.officialState)) {
+        const effective = effectiveConsignment((remesa.draft ?? {}) as ConsignmentDraft, orderDraft);
+        await writeSnapshot(
+          ctx,
+          expediente,
+          actor,
+          "remesa",
+          number,
+          { ...effective, expeditionDate: effective.expeditionDate ?? expeditionDate, number, sequence: remesa.sequence },
+          now,
+          remesa._id
+        );
+      }
     }
+  } else {
+    preparedConsignmentNumbers.push(...consignmentNumbers);
+  }
 
+  let assignmentData: Record<string, unknown> | undefined;
+
+  if (targets.assignment && !latestAssignmentSnapshot) {
     const [driver, secondDriver, vehicle, trailer] = await Promise.all([
       expediente.driverId ? ctx.db.get("drivers", expediente.driverId) : null,
       expediente.secondDriverId ? ctx.db.get("drivers", expediente.secondDriverId) : null,
       expediente.vehicleId ? ctx.db.get("vehicles", expediente.vehicleId) : null,
       expediente.trailerId ? ctx.db.get("trailers", expediente.trailerId) : null
     ]);
-    const holderDocument = vehicle?.possessorDocument ?? vehicle?.ownerDocument;
+
+    if (!driver || !vehicle) {
+      throw new ConvexError({ code: "VALIDATION", message: "La asignación de vehículo y conductor ya no está disponible" });
+    }
+
+    const holderDocument = vehicle.possessorDocument ?? vehicle.ownerDocument;
     const vehicleHolder = holderDocument
       ? await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", expediente.organizationId).eq("document", holderDocument)).unique()
       : null;
-    if (requiresOrder && orderDraft && orderNumber) {
-      await writeSnapshot(ctx, expediente, actor, "orden_cargue", orderNumber, { ...orderDraft, orderNumber }, now);
-    }
+    assignmentData = {
+      driver: pickSnapshotFields(driver),
+      secondDriver: pickSnapshotFields(secondDriver),
+      vehicle: pickSnapshotFields(vehicle),
+      vehicleHolder: pickSnapshotFields(vehicleHolder),
+      trailer: pickSnapshotFields(trailer)
+    };
+  }
 
-    for (let index = 0; index < remesas.length; index += 1) {
-      const remesa = remesas[index];
-      const effective = effectiveConsignment((remesa.draft ?? {}) as ConsignmentDraft, orderDraft);
-      await writeSnapshot(
-        ctx,
-        expediente,
-        actor,
-        "remesa",
-        consignmentNumbers[index],
-        { ...effective, number: consignmentNumbers[index], sequence: remesa.sequence },
-        now,
-        remesa._id
-      );
-    }
-
-    await writeSnapshot(ctx, expediente, actor, "manifiesto", manifestNumber, { ...manifestDraft, manifestNumber }, now);
+  if (targets.order && preparedOrderNumber && orderDraft && !snapshotHasExpeditionDate(latestOrderSnapshot) && !isAuthorizedState(orderState)) {
     await writeSnapshot(
       ctx,
       expediente,
       actor,
-      "asignacion",
-      undefined,
-      {
-        driver: pickSnapshotFields(driver),
-        secondDriver: pickSnapshotFields(secondDriver),
-        vehicle: pickSnapshotFields(vehicle),
-        vehicleHolder: pickSnapshotFields(vehicleHolder),
-        trailer: pickSnapshotFields(trailer)
-      },
+      "orden_cargue",
+      preparedOrderNumber,
+      { ...orderDraft, orderNumber: preparedOrderNumber, expeditionDate },
       now
     );
-    await ctx.db.patch("expedientes", expediente._id, {
-      status: "ready",
-      loadingOrderDraft: orderDraft && orderNumber ? { ...orderDraft, orderNumber } : undefined,
-      manifestDraft: { ...manifestDraft, manifestNumber },
-      manifestNumber,
-      cargoNumber: orderNumber,
-      tripNumber,
-      updatedBy: actor._id,
-      updatedAt: now
-    });
-    await ctx.db.insert("expedienteEvents", {
-      organizationId: expediente.organizationId,
-      expedienteId: expediente._id,
-      eventType: "dispatch_prepared",
-      title: "Despacho preparado para emisión",
-      details: `${orderNumber ? `Orden ${orderNumber}, ` : ""}${consignmentNumbers.length ? `remesas ${consignmentNumbers.join(", ")}, ` : ""}manifiesto ${manifestNumber}`,
-      occurredAt: now,
-      actorId: actor._id
-    });
-    await appendAudit(ctx, {
-      organizationId: expediente.organizationId,
-      actorType: "user",
-      actorId: actor._id,
-      action: "dispatch.emission_prepared",
-      entityType: "expediente",
-      entityId: expediente._id,
-      detailsJson: JSON.stringify({ variant, orderNumber, consignmentNumbers, manifestNumber }),
-      createdAt: now
-    });
-    await refreshDispatchSearchText(ctx, expediente._id);
-    return { code: expediente.code, orderNumber, consignmentNumbers, tripNumber, manifestNumber, alreadyPrepared: false };
   }
-});
+  if (targets.manifest && preparedManifestNumber && expediente.manifestDraft && !latestManifestSnapshot && !isAuthorizedState(manifestState)) {
+    await writeSnapshot(
+      ctx,
+      expediente,
+      actor,
+      "manifiesto",
+      preparedManifestNumber,
+      { ...expediente.manifestDraft, manifestNumber: preparedManifestNumber },
+      now
+    );
+  }
+  if (assignmentData) {
+    await writeSnapshot(ctx, expediente, actor, "asignacion", undefined, assignmentData, now);
+  }
+
+  await ctx.db.patch("expedientes", expediente._id, {
+    status: "in_progress",
+    loadingOrderDraft: targets.order && orderDraft && preparedOrderNumber
+      ? { ...orderDraft, orderNumber: preparedOrderNumber, expeditionDate }
+      : orderDraft,
+    manifestDraft: targets.manifest && expediente.manifestDraft && preparedManifestNumber
+      ? { ...expediente.manifestDraft, manifestNumber: preparedManifestNumber }
+      : expediente.manifestDraft,
+    manifestNumber: preparedManifestNumber,
+    cargoNumber: preparedOrderNumber,
+    tripNumber: preparedTripNumber,
+    updatedBy: actor._id,
+    updatedAt: now
+  });
+  await ctx.db.insert("expedienteEvents", {
+    organizationId: expediente.organizationId,
+    expedienteId: expediente._id,
+    eventType: "dispatch_prepared",
+    title: `Documento preparado para emisión: ${args.scope}`,
+    details: preparationDetails(args.scope, preparedOrderNumber, preparedConsignmentNumbers, preparedManifestNumber),
+    occurredAt: now,
+    actorId: actor._id
+  });
+  await appendAudit(ctx, {
+    organizationId: expediente.organizationId,
+    actorType: "user",
+    actorId: actor._id,
+    action: "dispatch.emission_prepared",
+    entityType: "expediente",
+    entityId: expediente._id,
+    detailsJson: JSON.stringify({ scope: args.scope, variant, orderNumber: preparedOrderNumber, consignmentNumbers: preparedConsignmentNumbers, manifestNumber: preparedManifestNumber }),
+    createdAt: now
+  });
+  await refreshDispatchSearchText(ctx, expediente._id);
+  return {
+    code: expediente.code,
+    scope: args.scope,
+    orderNumber: preparedOrderNumber,
+    consignmentNumbers: preparedConsignmentNumbers,
+    tripNumber: preparedTripNumber,
+    manifestNumber: preparedManifestNumber,
+    alreadyPrepared: false
+  };
+}
+
+function isAuthorizedState(state: OfficialDocumentState): boolean {
+  return state === "authorized" || state === "fulfilled";
+}
+
+function snapshotHasExpeditionDate(snapshot: Doc<"dispatchSnapshots"> | undefined): boolean {
+  if (!snapshot) {
+    return false;
+  }
+
+  try {
+    const payload = JSON.parse(snapshot.payloadJson) as { expeditionDate?: unknown };
+    return typeof payload.expeditionDate === "string" && payload.expeditionDate.length > 0;
+  } catch {
+    return false;
+  }
+}
+
+function preparationDetails(
+  scope: EmissionScope,
+  orderNumber: string | undefined,
+  consignmentNumbers: string[],
+  manifestNumber: string | undefined
+): string {
+  if (scope === "orden") {
+    return `Orden ${orderNumber}`;
+  }
+  if (scope === "remesas") {
+    return `Remesas ${consignmentNumbers.join(", ")}`;
+  }
+  if (scope === "manifiesto") {
+    return `Manifiesto ${manifestNumber}`;
+  }
+  return `${orderNumber ? `Orden ${orderNumber}, ` : ""}${consignmentNumbers.length ? `remesas ${consignmentNumbers.join(", ")}, ` : ""}manifiesto ${manifestNumber ?? ""}`;
+}
 
 export const emissionInputs = query({
   args: { actorToken: v.optional(v.string()), expedienteId: v.id("expedientes") },
@@ -1044,8 +1213,8 @@ async function requireEditableExpediente(
   const expediente = await requireExpediente(ctx, expedienteId);
   requireSameOrganization(actor, expediente.organizationId);
 
-  if (expediente.status !== "draft") {
-    throw new ConvexError({ code: "INVALID_STATE", message: "Sólo un despacho en borrador puede editarse" });
+  if (expediente.status === "completed" || expediente.status === "cancelled") {
+    throw new ConvexError({ code: "INVALID_STATE", message: "Un despacho cerrado no puede editarse" });
   }
 
   return expediente;

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { api } from "../../../convex/_generated/api";
@@ -33,13 +33,20 @@ import {
 } from "../components/draft-stage-forms";
 import { LogisticsTimesForm } from "../components/logistics-times-form";
 import { NextActionCard } from "../components/next-action-card";
+import { resolveDispatchEntry } from "../../lib/document-workspace";
 
 type Detail = NonNullable<FunctionReturnType<typeof api.expedientes.detail>>;
 type AdvancedModal = AdvancedAction | null;
 
 export default function DespachoDetailPage() {
   const params = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
   const expedienteId = params.id as Id<"expedientes">;
+  const entryStage = searchParams.get("stage");
+  const entryPanel = searchParams.get("panel");
+  const entryAction = searchParams.get("action");
+  const entry = resolveDispatchEntry({ stage: entryStage, panel: entryPanel, action: entryAction });
+  const entryKey = `${entryStage ?? ""}:${entryPanel ?? ""}:${entryAction ?? ""}`;
   const detailResult = useQuery(api.expedientes.detail, { expedienteId });
   const stageResult = useQuery(api.dispatches.stage, { expedienteId });
   const operations = useQuery(api.rndcOperations.listForExpediente, { expedienteId, limit: 60 });
@@ -47,10 +54,11 @@ export default function DespachoDetailPage() {
   const evidence = useQuery(api.evidence.listForExpediente, { expedienteId, limit: 80 });
   const exceptions = useQuery(api.dispatchExceptions.listForExpediente, { expedienteId });
   const { user } = useDemoUser();
-  const [selectedStage, setSelectedStage] = useState<DispatchStage>("orden_cargue");
+  const [selectedStage, setSelectedStage] = useState<DispatchStage>(entry.stage ?? "orden_cargue");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<{ tone: "ok" | "bad" | "wait"; text: string } | null>(null);
   const [advancedModal, setAdvancedModal] = useState<AdvancedModal>(null);
+  const appliedActionEntry = useRef("");
   const saveLoadingOrder = useMutation(api.dispatches.saveLoadingOrderDraft);
   const saveConsignments = useMutation(api.dispatches.saveConsignmentsDraft);
   const saveAssignment = useMutation(api.dispatches.saveAssignmentDraft);
@@ -58,6 +66,21 @@ export default function DespachoDetailPage() {
   const recordLogistics = useMutation(api.dispatches.recordLogisticsTimes);
   const recordFulfillment = useMutation(api.dispatches.recordFulfillmentDraft);
   const recordManifestFulfillment = useMutation(api.dispatches.recordManifestFulfillmentDraft);
+
+  useEffect(() => {
+    if (entry.stage) setSelectedStage(entry.stage);
+  }, [entry.stage]);
+
+  useEffect(() => {
+    if (!detailResult || (!entry.stage && !entry.showCorrections)) return;
+    requestAnimationFrame(() => document.getElementById(entry.showCorrections ? "correcciones" : "centro-documental")?.scrollIntoView());
+  }, [detailResult, entry.showCorrections, entry.stage]);
+
+  useEffect(() => {
+    if (!entry.action || !entry.showCorrections || appliedActionEntry.current === entryKey || (user?.role !== "operator" && user?.role !== "admin")) return;
+    appliedActionEntry.current = entryKey;
+    setAdvancedModal(entry.action);
+  }, [entry.action, entry.showCorrections, entryKey, user?.role]);
 
   if (detailResult === undefined || stageResult === undefined) {
     return <div className="full-page-state">Preparando el despacho…</div>;
@@ -329,12 +352,18 @@ export default function DespachoDetailPage() {
 
       <NextActionCard action={primaryAction} blockers={stageResult.blockers} busy={busy} formId={formId} onAction={() => void runPrimaryAction()} />
 
-      <DocumentHub
-        busy={busy}
-        items={documentHubItems}
-        onEdit={(stage) => { setSelectedStage(stage); requestAnimationFrame(() => document.getElementById("active-stage-title")?.focus()); }}
-        onEmit={(scope) => void emitScope(scope)}
-      />
+      <div className="document-hub-anchor" id="centro-documental">
+        <DocumentHub
+          busy={busy}
+          items={documentHubItems}
+          onEdit={(stage) => { setSelectedStage(stage); requestAnimationFrame(() => document.getElementById("active-stage-title")?.focus()); }}
+          onEmit={(scope) => void emitScope(scope)}
+        />
+      </div>
+
+      <div id="correcciones">
+        <AdvancedActions canManageOfficial={user?.role === "operator" || user?.role === "admin"} canManageStructural={user?.role === "admin"} exceptions={(exceptions ?? []).map((item) => ({ _id: item._id, type: item.type, status: item.status, reason: item.reason, createdAt: item.createdAt }))} onAction={setAdvancedModal} />
+      </div>
 
       <div className="guided-detail-layout">
         <section className="active-stage-panel" aria-live="polite">
@@ -350,7 +379,6 @@ export default function DespachoDetailPage() {
       </div>
 
       <DocumentHistory deliveryEvidence={detail.deliveryEvidence} documents={detail.documents} events={detail.events} technicalEvidence={(evidence ?? []).map((item) => ({ _id: item._id, documentId: item.documentId, kind: item.kind, fileName: item.fileName, createdAt: item.createdAt }))} />
-      <AdvancedActions canManageOfficial={user?.role === "operator" || user?.role === "admin"} canManageStructural={user?.role === "admin"} exceptions={(exceptions ?? []).map((item) => ({ _id: item._id, type: item.type, status: item.status, reason: item.reason, createdAt: item.createdAt }))} onAction={setAdvancedModal} />
       {advancedModal ? <AdvancedActionModal detail={detail} modal={advancedModal} onClose={() => setAdvancedModal(null)} operations={uncertainOperations ?? []} onDone={(message) => { setAdvancedModal(null); setNotice({ tone: "ok", text: message }); }} /> : null}
     </>
   );

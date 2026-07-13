@@ -29,6 +29,7 @@ const documentKindValidator = v.union(
 const documentRowValidator = v.object({
   _id: v.id("documents"),
   _creationTime: v.number(),
+  expedienteId: v.optional(v.id("expedientes")),
   kind: documentKindValidator,
   status: documentStatusValidator,
   number: v.optional(v.string()),
@@ -168,6 +169,7 @@ async function toDocumentRow(ctx: QueryCtx, document: Doc<"documents">) {
   return {
     _id: document._id,
     _creationTime: document._creationTime,
+    expedienteId: document.expedienteId ?? scopedTrip?.expedienteId,
     kind: document.kind,
     status: dashboardStatus(document),
     number: document.number,

@@ -17,30 +17,21 @@ test("dispatch queue shows stage RNDC status and one next action without horizon
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 
-test("guided creation exposes the five sections and keeps one sticky action", async ({ page }) => {
+test("base creation hands the operator to the document hub", async ({ page }) => {
   await page.goto("/expedientes/nuevo");
   await fillLoadingOrder(page, `GUIDED-${Date.now()}`);
   await expect(page.locator("#loading-order-title")).toBeVisible();
-  await expect(page.getByText("Paso 1 de 5")).toHaveText("Paso 1 de 5");
-  await page.getByRole("button", { name: "Continuar" }).click();
-  await expect(page.locator("#consignments-title")).toBeVisible();
-  await page.getByRole("button", { name: "Continuar" }).click();
-  await expect(page.locator("#assignment-title")).toBeVisible();
-  await page.getByRole("button", { name: "Continuar" }).click();
-  await expect(page.locator("#manifest-title")).toBeVisible();
-  await page.getByRole("button", { name: "Continuar" }).click();
-  await expect(page.locator("#review-title")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Abrir despacho" })).toHaveCount(1);
+  await expect(page.getByText("Paso 1 de 5")).toHaveCount(0);
+  await page.getByRole("button", { name: "Crear despacho y abrir documentos" }).click();
+  await expect(page).toHaveURL(/\/expedientes\/[^/?]+\?stage=orden_cargue/);
+  await expect(page.getByRole("region", { name: "Documentos del despacho" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 
 test("loading order is saved before optional dispatch stages", async ({ page }) => {
   await page.goto("/expedientes/nuevo");
   await fillLoadingOrder(page, `EARLY-${Date.now()}`);
-  await page.getByRole("button", { name: "Continuar" }).click();
-  await expect(page.locator("#consignments-title")).toBeVisible();
-  await expect(page.getByText(/^Despacho DSP-\d+ guardado$/)).toBeVisible();
-  await page.getByRole("button", { name: "Guardar y salir" }).click();
+  await page.getByRole("button", { name: "Guardar borrador" }).click();
   await expect(page).toHaveURL(/\/expedientes\/[^/]+$/);
   await expect(page.getByRole("heading", { level: 1, name: "Expediente de viaje" })).toBeVisible();
 });
@@ -49,8 +40,7 @@ test("dispatch documents can be completed and emitted in separate sessions", asy
   test.setTimeout(90_000);
   await page.goto("/expedientes/nuevo");
   await fillLoadingOrder(page, `ASYNC-${Date.now()}`);
-  await page.getByRole("button", { name: "Continuar" }).click();
-  await page.getByRole("button", { name: "Guardar y salir" }).click();
+  await page.getByRole("button", { name: "Crear despacho y abrir documentos" }).click();
   await expect(page.getByRole("region", { name: "Documentos del despacho" })).toBeVisible();
   const detailUrl = page.url();
 
@@ -121,13 +111,41 @@ test("operators can manage official corrections and annulments without structura
   const rowCount = await rows.count();
   expect(rowCount).toBeGreaterThan(0);
   await rows.first().locator(".queue-next-action").click();
-  await page.locator("details.advanced-actions > summary").click();
+  await expect(page.getByRole("heading", { name: "Correcciones, anulaciones y soporte" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Conciliar", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Corregir remesa", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Anular documento", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Remesa sin orden", exact: true })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Manifiesto vacío", exact: true })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Transbordo", exact: true })).toHaveCount(0);
+});
+
+test("document navigation exposes stable queues and opens the related dispatch stage", async ({ page }) => {
+  await page.goto("/documentos/ordenes");
+  await expect(page.getByRole("heading", { level: 1, name: "Órdenes de cargue" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Tipos de documento" }).getByRole("link", { name: "Remesas", exact: true })).toBeVisible();
+  const openLink = page.getByRole("link", { name: "Abrir orden" }).first();
+  await expect(openLink).toBeVisible({ timeout: 15_000 });
+  await openLink.click();
+  await expect(page).toHaveURL(/\?stage=orden_cargue#centro-documental$/);
+  await expect(page.locator("#centro-documental")).toBeVisible();
+});
+
+test("corrections and annulments are visible from the main navigation", async ({ page }) => {
+  await page.goto("/correcciones");
+  await expect(page.getByRole("heading", { level: 1, name: "Correcciones y anulaciones" })).toBeVisible();
+  await expect(page.getByText("Acciones oficiales protegidas", { exact: true })).toBeVisible();
+  const reviewLink = page.getByRole("link", { name: "Revisar acciones" }).first();
+  await expect(reviewLink).toBeVisible({ timeout: 15_000 });
+  await reviewLink.click();
+  await expect(page).toHaveURL(/\?panel=correcciones#correcciones$/);
+  await expect(page.getByRole("heading", { name: "Correcciones, anulaciones y soporte" })).toBeVisible();
+  await page.goto("/correcciones");
+  const annulmentLink = page.getByRole("link", { name: "Preparar anulación" }).first();
+  await expect(annulmentLink).toBeVisible({ timeout: 15_000 });
+  await annulmentLink.click();
+  await expect(page).toHaveURL(/\?panel=correcciones&action=annul#correcciones$/);
+  await expect(page.getByRole("dialog", { name: "Anular documento" })).toBeVisible();
 });
 
 test("administration receives six complete advanced exception forms", async ({ page }) => {
@@ -140,7 +158,7 @@ test("administration receives six complete advanced exception forms", async ({ p
   const rowCount = await rows.count();
   expect(rowCount).toBeGreaterThan(0);
   await rows.first().locator(".queue-next-action").click();
-  await page.locator("details.advanced-actions > summary").click();
+  await expect(page.getByRole("heading", { name: "Correcciones, anulaciones y soporte" })).toBeVisible();
   await expect(page.locator(".advanced-action-buttons button")).toHaveCount(6);
   await page.getByRole("button", { name: "Manifiesto vacío", exact: true }).click();
   await expect(page.getByRole("dialog", { name: "Crear manifiesto vacío" })).toBeVisible();
@@ -157,6 +175,8 @@ test("mobile navigation opens as a compact menu", async ({ page }, testInfo) => 
   await trigger.click();
   await expect(page.locator(".sidebar.open")).toBeVisible();
   await expect(page.locator(".sidebar.open").getByRole("link", { name: "Despachos" })).toBeVisible();
+  await expect(page.locator(".sidebar.open").getByRole("link", { name: "Órdenes de cargue" })).toBeVisible();
+  await expect(page.locator(".sidebar.open").getByRole("link", { name: "Correcciones y anulaciones" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 

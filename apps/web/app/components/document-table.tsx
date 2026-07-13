@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { documentDetailHref, documentSections, type DocumentSection } from "../lib/document-workspace";
 import { apiBase, formatTimestamp, kindLabels, statusLabels } from "../lib/labels";
 
 export type DocumentRow = {
   _id: string;
+  expedienteId?: string;
   kind: string;
   status: string;
   number?: string;
@@ -23,7 +25,9 @@ export type DocumentRow = {
   } | null;
 };
 
-export function DocumentTable({ rows, emptyMessage }: { rows: DocumentRow[]; emptyMessage?: boolean }) {
+const actionLabelByKind = new Map<string, string>(documentSections.flatMap((section) => section.kind ? [[section.kind, section.actionLabel]] : []));
+
+export function DocumentTable({ rows, emptyMessage, section }: { rows: DocumentRow[]; emptyMessage?: boolean; section: DocumentSection }) {
   if (rows.length === 0) {
     return (
       <div className="empty-state">
@@ -51,11 +55,14 @@ export function DocumentTable({ rows, emptyMessage }: { rows: DocumentRow[]; emp
           <th>Estado</th>
           <th>Actualizado</th>
           <th aria-label="PDF" />
+          <th aria-label="Acción" />
         </tr>
       </thead>
       <tbody>
-        {rows.map((row) => (
-          <tr key={row._id}>
+        {rows.map((row) => {
+          const detailHref = documentDetailHref({ expedienteId: row.expedienteId, kind: row.kind });
+          const actionLabel = section.slug === "todos" ? actionLabelByKind.get(row.kind) ?? "Abrir documento" : section.actionLabel;
+          return <tr key={row._id}>
             <td>
               <div className="doc-kind">
                 {kindLabels[row.kind] ?? row.kind}
@@ -90,8 +97,9 @@ export function DocumentTable({ rows, emptyMessage }: { rows: DocumentRow[]; emp
             <td>
               {row.pdfArtifactId ? <a className="pdf-link" href={`/api/evidence/${row.pdfArtifactId}`}>PDF</a> : row.pdfUrlPath ? <a className="pdf-link" href={`${apiBase}${row.pdfUrlPath}`} rel="noreferrer" target="_blank">PDF</a> : null}
             </td>
-          </tr>
-        ))}
+            <td>{detailHref ? <Link className="document-open-link" href={detailHref}>{actionLabel}</Link> : <span className="document-unlinked">Sin despacho</span>}</td>
+          </tr>;
+        })}
       </tbody>
       </table>
     </div>

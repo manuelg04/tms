@@ -6,10 +6,18 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useDemoUser } from "../providers";
+import { documentSections, resolveDocumentSection } from "../lib/document-workspace";
 
 type PageMeta = {
   title: string;
   subtitle: string;
+};
+
+type NavItem = {
+  href: string;
+  label: string;
+  icon: ReactNode;
+  children?: Array<{ href: string; label: string }>;
 };
 
 const pageMeta: Record<string, PageMeta> = {
@@ -23,7 +31,7 @@ const pageMeta: Record<string, PageMeta> = {
   },
   "/expedientes/nuevo": {
     title: "Nuevo despacho",
-    subtitle: "Orden de cargue, remesas, flota, manifiesto y revisión"
+    subtitle: "Datos base y apertura del centro documental"
   },
   "/operaciones": {
     title: "Operaciones RNDC",
@@ -33,13 +41,17 @@ const pageMeta: Record<string, PageMeta> = {
     title: "Documentos",
     subtitle: "Historial completo emitido desde el TMS"
   },
+  "/correcciones": {
+    title: "Correcciones y anulaciones",
+    subtitle: "Acciones oficiales protegidas y casos que requieren atención"
+  },
   "/maestros": {
     title: "Maestros",
     subtitle: "Conductores y vehiculos del registro de flota"
   }
 };
 
-const navItems = [
+const navItems: NavItem[] = [
   {
     href: "/",
     label: "Panel",
@@ -69,6 +81,20 @@ const navItems = [
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <path d="M4 1.5h5.5L13 5v9.5H4v-13Z" strokeLinejoin="round" />
         <path d="M9.5 1.5V5H13M6 8h4.5M6 10.5h4.5" />
+      </svg>
+    ),
+    children: documentSections.filter((section) => section.slug !== "todos").map((section) => ({
+      href: `/documentos/${section.slug}`,
+      label: section.label
+    }))
+  },
+  {
+    href: "/correcciones",
+    label: "Correcciones y anulaciones",
+    icon: (
+      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+        <path d="M8 1.5 13.5 4v3.8c0 3.2-2.1 5.7-5.5 6.7-3.4-1-5.5-3.5-5.5-6.7V4L8 1.5Z" strokeLinejoin="round" />
+        <path d="M5.5 8h5M8 5.5v5" strokeLinecap="round" />
       </svg>
     )
   },
@@ -146,14 +172,16 @@ export function AppShell({ children }: { children: ReactNode }) {
         <nav className="nav">
           <span className="nav-label">Operacion</span>
           {navItems.map((item) => (
-            <Link
-              className={isActivePath(pathname, item.href) ? "nav-item active" : "nav-item"}
-              href={item.href}
-              key={item.href}
-            >
-              {item.icon}
-              {item.label}
-            </Link>
+            <div className={item.children ? "nav-group" : "nav-group single"} key={item.href}>
+              <Link
+                className={isActivePath(pathname, item.href) ? "nav-item active" : "nav-item"}
+                href={item.href}
+              >
+                {item.icon}
+                {item.label}
+              </Link>
+              {item.children ? <div className="nav-subitems">{item.children.map((child) => <Link aria-current={pathname === child.href ? "page" : undefined} className={pathname === child.href ? "active" : ""} href={child.href} key={child.href}>{child.label}</Link>)}</div> : null}
+            </div>
           ))}
         </nav>
 
@@ -208,6 +236,11 @@ function resolvePageMeta(pathname: string): PageMeta {
       title: "Expediente de viaje",
       subtitle: "Orden, flota y documentos oficiales en un solo lugar"
     };
+  }
+
+  if (pathname.startsWith("/documentos/")) {
+    const section = resolveDocumentSection(pathname.split("/")[2] ?? "");
+    if (section) return { title: section.label, subtitle: section.description };
   }
 
   return pageMeta[pathname] ?? pageMeta["/"];

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { DocumentTable } from "./components/document-table";
+import { resolveDocumentSection } from "./lib/document-workspace";
 import { formatTimestamp } from "./lib/labels";
 
 export default function Home() {
@@ -51,7 +52,7 @@ export default function Home() {
           {recent === undefined ? (
             <div className="skeleton">Cargando documentos…</div>
           ) : (
-            <DocumentTable rows={recent} />
+            <DocumentTable rows={recent} section={resolveDocumentSection("todos")!} />
           )}
         </section>
 

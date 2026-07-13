@@ -5,6 +5,8 @@ import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { requireActor } from "./model/access";
 import { dashboardStatus, type DashboardStatus } from "./model/dashboardStatus";
+import { normalizeSearchText } from "./model/dispatchSearch";
+import { selectDocumentPdfArtifact } from "./model/documentPdf";
 
 const documentStatusValidator = v.union(
   v.literal("draft"),
@@ -33,6 +35,7 @@ const documentRowValidator = v.object({
   rndcRadicado: v.optional(v.string()),
   mode: v.optional(v.union(v.literal("dry-run"), v.literal("live"))),
   pdfUrlPath: v.optional(v.string()),
+  pdfArtifactId: v.optional(v.id("evidenceArtifacts")),
   errorText: v.optional(v.string()),
   updatedAt: v.number(),
   trip: v.union(
@@ -97,7 +100,8 @@ export const documentsPage = query({
   args: {
     paginationOpts: paginationOptsValidator,
     kind: v.optional(documentKindValidator),
-    status: v.optional(documentStatusValidator)
+    status: v.optional(documentStatusValidator),
+    search: v.optional(v.string())
   },
   returns: v.object({
     page: v.array(documentRowValidator),
@@ -110,7 +114,20 @@ export const documentsPage = query({
     const actor = await requireActor(ctx);
     const { paginationOpts, kind, status } = args;
     const results = await buildDocumentsQuery(ctx, actor.organizationId, kind, status).paginate(paginationOpts);
-    const page = await Promise.all(results.page.map((document) => toDocumentRow(ctx, document)));
+    const rows = await Promise.all(results.page.map((document) => toDocumentRow(ctx, document)));
+    const terms = normalizeSearchText(args.search ?? "").split(" ").filter(Boolean);
+    const page = rows.filter((row) => {
+      const text = normalizeSearchText([
+        row.number,
+        row.rndcRadicado,
+        row.trip?.code,
+        row.trip?.originCity,
+        row.trip?.destinationCity,
+        row.trip?.vehiclePlate,
+        row.trip?.driverName
+      ].filter(Boolean).join(" "));
+      return terms.every((term) => text.includes(term));
+    });
     return { ...results, page };
   }
 });
@@ -141,8 +158,12 @@ function buildDocumentsQuery(ctx: QueryCtx, organizationId: Id<"organizations">,
 }
 
 async function toDocumentRow(ctx: QueryCtx, document: Doc<"documents">) {
-  const trip = await ctx.db.get(document.tripId as Id<"trips">);
+  const [trip, evidence] = await Promise.all([
+    ctx.db.get(document.tripId as Id<"trips">),
+    ctx.db.query("evidenceArtifacts").withIndex("by_document", (q) => q.eq("documentId", document._id)).collect()
+  ]);
   const scopedTrip = trip?.organizationId === document.organizationId ? trip : null;
+  const pdf = selectDocumentPdfArtifact(evidence, document._id);
 
   return {
     _id: document._id,
@@ -153,6 +174,7 @@ async function toDocumentRow(ctx: QueryCtx, document: Doc<"documents">) {
     rndcRadicado: document.rndcRadicado,
     mode: document.mode,
     pdfUrlPath: document.pdfUrlPath,
+    pdfArtifactId: pdf?._id,
     errorText: document.errorText,
     updatedAt: document.updatedAt,
     trip: scopedTrip

@@ -1,9 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { useQuery } from "convex/react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { usePaginatedQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import {
+  dispatchFiltersFromSearchParams,
+  dispatchFiltersToSearchParams,
+  normalizeDispatchFilters,
+  type DispatchFilters,
+  type DispatchFilterKey
+} from "../../convex/model/dispatchSearch";
 import { guidedDispatchStages } from "../../convex/model/dispatchPresentation";
 import { StatusBadge } from "./status-badge";
 
@@ -14,40 +21,46 @@ const stageOptions = [
   { value: "anulado", label: "Anulado" }
 ];
 
-export default function DespachosPage() {
-  const [search, setSearch] = useState("");
-  const [stage, setStage] = useState("");
-  const [rndcStatus, setRndcStatus] = useState("");
-  const me = useQuery(api.access.me, {});
-  const rows = useQuery(api.expedientes.list, me ? { organizationId: me.organizationId, limit: 200 } : "skip");
-  const filtered = useMemo(() => {
-    if (!rows) {
-      return rows;
-    }
+const emptyFilters: DispatchFilters = {};
 
-    const needle = search.trim().toLocaleLowerCase("es");
-    return rows.filter((row) => {
-      const matchesSearch = !needle || [
-        row.expediente.code,
-        row.serviceOrderCode,
-        row.orderNumber,
-        row.remesaNumbers.join(" "),
-        row.manifestNumber,
-        row.customerName,
-        row.vehiclePlate,
-        row.driverName,
-        row.originCity,
-        row.destinationCity,
-        row.agencyCode
-      ].some((value) => value?.toLocaleLowerCase("es").includes(needle));
-      return matchesSearch
-        && (!stage || row.stage === stage)
-        && (!rndcStatus || row.rndcStatus === rndcStatus);
-    });
-  }, [rows, search, stage, rndcStatus]);
-  const attention = rows?.filter((row) => row.rndcStatus === "Requiere atención" || row.rndcStatus === "Resultado incierto").length ?? 0;
-  const ready = rows?.filter((row) => row.stage === "envio_rndc").length ?? 0;
-  const inOperation = rows?.filter((row) => ["cargue_descargue", "cumplido_inicial", "cumplido_final"].includes(row.stage)).length ?? 0;
+export default function DespachosPage() {
+  const [filters, setFilters] = useState<DispatchFilters>(emptyFilters);
+  const normalizedFilters = useMemo(() => normalizeDispatchFilters(filters), [filters]);
+  const deferredFilters = useDeferredValue(normalizedFilters);
+  const { results, status: pageStatus, loadMore } = usePaginatedQuery(
+    api.dispatchSearch.page,
+    { filters: deferredFilters },
+    { initialNumItems: 25 }
+  );
+
+  useEffect(() => {
+    setFilters(dispatchFiltersFromSearchParams(new URLSearchParams(window.location.search)));
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const params = dispatchFiltersToSearchParams(filters);
+      const query = params.toString();
+      window.history.replaceState(null, "", query ? `/expedientes?${query}` : "/expedientes");
+    }, 200);
+    return () => window.clearTimeout(timer);
+  }, [filters]);
+
+  const exportQuery = useMemo(() => dispatchFiltersToSearchParams(normalizedFilters), [normalizedFilters]);
+  const attention = results.filter((row) => row.rndcStatus === "Requiere atención" || row.rndcStatus === "Resultado incierto").length;
+  const ready = results.filter((row) => row.stage === "envio_rndc").length;
+  const inOperation = results.filter((row) => ["cargue_descargue", "cumplido_inicial", "cumplido_final"].includes(row.stage)).length;
+  const hasFilters = Object.keys(normalizedFilters).length > 0;
+
+  const updateFilter = (key: DispatchFilterKey, value: string) => {
+    setFilters((current) => ({ ...current, [key]: value }));
+  };
+
+  const exportHref = (kind: string) => {
+    const params = new URLSearchParams(exportQuery);
+    params.set("kind", kind);
+    return `/api/exports/dispatches?${params.toString()}`;
+  };
 
   return (
     <>
@@ -55,16 +68,27 @@ export default function DespachosPage() {
         <div>
           <span className="eyebrow">Cola de trabajo</span>
           <h2>Lo que necesita atención, en orden</h2>
-          <p>Cada despacho muestra su etapa real, el estado RNDC y la única acción que lo hace avanzar.</p>
+          <p>La búsqueda, los filtros y las exportaciones consultan el historial completo sin cargarlo en el navegador.</p>
         </div>
-        <Link className="primary-action action-link" href="/expedientes/nuevo">Nuevo despacho</Link>
+        <div className="queue-header-actions">
+          <details className="export-menu">
+            <summary>Exportar Excel</summary>
+            <div>
+              <a href={exportHref("dispatches")}>Resumen de despachos</a>
+              <a href={exportHref("orders")}>Órdenes de cargue</a>
+              <a href={exportHref("consignments")}>Remesas</a>
+              <a href={exportHref("manifests")}>Manifiestos</a>
+            </div>
+          </details>
+          <Link className="primary-action action-link" href="/expedientes/nuevo">Nuevo despacho</Link>
+        </div>
       </section>
 
-      <section className="queue-metrics" aria-label="Resumen de despachos">
+      <section className="queue-metrics" aria-label="Resumen de la página visible">
         <QueueMetric label="Requieren atención" value={attention} tone={attention > 0 ? "bad" : "neutral"} />
         <QueueMetric label="Listos para enviar" value={ready} tone="wait" />
         <QueueMetric label="En operación" value={inOperation} tone="ok" />
-        <QueueMetric label="Total visible" value={filtered?.length ?? 0} tone="neutral" />
+        <QueueMetric label="Cargados en esta vista" value={results.length} tone="neutral" />
       </section>
 
       <section className="panel dispatch-queue-panel" aria-label="Cola de despachos">
@@ -73,21 +97,26 @@ export default function DespachosPage() {
             <span className="sr-only">Buscar despachos</span>
             <SearchIcon />
             <input
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Expediente, documento, cliente, placa, conductor o ruta"
+              onChange={(event) => updateFilter("search", event.target.value)}
+              placeholder="Expediente, documento o ruta"
               type="search"
-              value={search}
+              value={filters.search ?? ""}
             />
           </label>
+          <FilterInput label="Cliente" onChange={(value) => updateFilter("customer", value)} value={filters.customer} />
+          <FilterInput label="Placa" onChange={(value) => updateFilter("plate", value)} value={filters.plate} />
+          <FilterInput label="Conductor" onChange={(value) => updateFilter("driver", value)} value={filters.driver} />
+          <FilterInput label="Origen" onChange={(value) => updateFilter("origin", value)} value={filters.origin} />
+          <FilterInput label="Destino" onChange={(value) => updateFilter("destination", value)} value={filters.destination} />
           <label>
             <span className="sr-only">Filtrar por etapa</span>
-            <select onChange={(event) => setStage(event.target.value)} value={stage}>
+            <select onChange={(event) => updateFilter("stage", event.target.value)} value={filters.stage ?? ""}>
               {stageOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
           <label>
             <span className="sr-only">Filtrar por estado RNDC</span>
-            <select onChange={(event) => setRndcStatus(event.target.value)} value={rndcStatus}>
+            <select onChange={(event) => updateFilter("status", event.target.value)} value={filters.status ?? ""}>
               <option value="">Todos los estados RNDC</option>
               <option value="Pendiente">Pendiente</option>
               <option value="En proceso">En proceso</option>
@@ -96,22 +125,22 @@ export default function DespachosPage() {
               <option value="Resultado incierto">Resultado incierto</option>
             </select>
           </label>
-          {(search || stage || rndcStatus) ? (
-            <button className="text-button" onClick={() => { setSearch(""); setStage(""); setRndcStatus(""); }} type="button">Limpiar</button>
-          ) : null}
+          <label className="date-filter"><span>Desde</span><input onChange={(event) => updateFilter("from", event.target.value)} type="date" value={filters.from ?? ""} /></label>
+          <label className="date-filter"><span>Hasta</span><input onChange={(event) => updateFilter("to", event.target.value)} type="date" value={filters.to ?? ""} /></label>
+          {hasFilters ? <button className="text-button" onClick={() => setFilters(emptyFilters)} type="button">Limpiar filtros</button> : null}
         </div>
 
-        {filtered === undefined ? (
+        {pageStatus === "LoadingFirstPage" ? (
           <div className="skeleton">Organizando la cola de trabajo…</div>
-        ) : filtered.length === 0 ? (
+        ) : results.length === 0 ? (
           <div className="expediente-empty">
-            <strong>No hay despachos con estos filtros</strong>
-            <p>Cambia los filtros o crea un nuevo despacho para comenzar.</p>
-            <Link className="primary-action action-link" href="/expedientes/nuevo">Crear despacho</Link>
+            <strong>No hay despachos en esta página</strong>
+            <p>{hasFilters ? "Ajusta los filtros o continúa buscando en el historial." : "Crea un nuevo despacho para comenzar."}</p>
+            {pageStatus === "CanLoadMore" ? <button className="load-more" onClick={() => loadMore(25)} type="button">Buscar en la siguiente página</button> : <Link className="primary-action action-link" href="/expedientes/nuevo">Crear despacho</Link>}
           </div>
         ) : (
           <div className="dispatch-queue-list">
-            {filtered.map((row) => (
+            {results.map((row) => (
               <article className={row.rndcStatus === "Requiere atención" || row.rndcStatus === "Resultado incierto" ? "dispatch-row attention" : "dispatch-row"} key={row.expediente._id}>
                 <div className="dispatch-identity">
                   <div className="dispatch-code-line">
@@ -121,36 +150,39 @@ export default function DespachosPage() {
                   <strong>{row.customerName}</strong>
                   <span>{row.originCity} <RouteArrow /> {row.destinationCity}</span>
                 </div>
-
                 <div className="dispatch-documents">
                   <QueueValue label="Orden" value={row.orderNumber ?? "Pendiente"} />
                   <QueueValue label="Remesas" value={row.remesaNumbers.length > 0 ? row.remesaNumbers.join(", ") : "Pendientes"} />
                   <QueueValue label="Manifiesto" value={row.manifestNumber ?? "Pendiente"} />
                 </div>
-
                 <div className="dispatch-assignment">
                   <QueueValue label="Vehículo" value={row.vehiclePlate ?? "Sin asignar"} />
                   <QueueValue label="Conductor" value={row.driverName ?? "Sin asignar"} />
                   <QueueValue label="Agencia" value={row.agencyCode || "Principal"} />
                 </div>
-
                 <div className="dispatch-progress">
                   <span className={`rndc-state ${statusClass(row.rndcStatus)}`}><StateIcon status={row.rndcStatus} />{row.rndcStatus}</span>
                   <strong>{stageLabel(row.stage)}</strong>
                   {row.blockers[0] ? <small>{row.blockers[0]}</small> : <small>Sin bloqueos pendientes</small>}
                 </div>
-
-                <Link className="queue-next-action" href={`/expedientes/${row.expediente._id}`}>
-                  <span>{row.nextAction}</span>
-                  <RouteArrow />
-                </Link>
+                <Link className="queue-next-action" href={`/expedientes/${row.expediente._id}`}><span>{row.nextAction}</span><RouteArrow /></Link>
               </article>
             ))}
           </div>
         )}
       </section>
+
+      {pageStatus === "CanLoadMore" || pageStatus === "LoadingMore" ? (
+        <button className="load-more" disabled={pageStatus === "LoadingMore"} onClick={() => loadMore(25)} type="button">
+          {pageStatus === "LoadingMore" ? "Cargando…" : "Cargar 25 más"}
+        </button>
+      ) : null}
     </>
   );
+}
+
+function FilterInput({ label, onChange, value }: { label: string; onChange: (value: string) => void; value?: string }) {
+  return <label className="compact-filter"><span className="sr-only">{label}</span><input onChange={(event) => onChange(event.target.value)} placeholder={label} value={value ?? ""} /></label>;
 }
 
 function QueueMetric({ label, tone, value }: { label: string; tone: "bad" | "wait" | "ok" | "neutral"; value: number }) {

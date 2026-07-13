@@ -8,7 +8,10 @@
     "apps/*"
   ],
   "overrides": {
-    "postcss": "^8.5.15"
+    "postcss": "^8.5.15",
+    "exceljs": {
+      "uuid": "^11.1.1"
+    }
   },
   "scripts": {
     "dev": "npm run dev -w @tms/rndc-api",

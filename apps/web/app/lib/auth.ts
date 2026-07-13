@@ -6,6 +6,7 @@ export type Permission =
   | "view_expediente"
   | "edit_expediente"
   | "submit_rndc"
+  | "manage_official_documents"
   | "override_rndc"
   | "view_audit"
   | "download_evidence";
@@ -24,8 +25,8 @@ export const demoUsers: DemoUser[] = [
 ];
 
 const rolePermissions: Record<DemoRole, ReadonlySet<Permission>> = {
-  admin: new Set(["view_expediente", "edit_expediente", "submit_rndc", "override_rndc", "view_audit", "download_evidence"]),
-  operator: new Set(["view_expediente", "edit_expediente", "submit_rndc", "download_evidence"]),
+  admin: new Set(["view_expediente", "edit_expediente", "submit_rndc", "manage_official_documents", "override_rndc", "view_audit", "download_evidence"]),
+  operator: new Set(["view_expediente", "edit_expediente", "submit_rndc", "manage_official_documents", "download_evidence"]),
   auditor: new Set(["view_expediente", "view_audit", "download_evidence"])
 };
 

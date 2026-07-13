@@ -59,7 +59,7 @@ export function buildFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
       title: "Registrar informacion de carga",
       request: createMessage(1, {
         NUMNITEMPRESATRANSPORTE: scenario.company.rndcNit,
-        CONSECUTIVOINFORMACIONCARGA: scenario.cargoNumber,
+        CONSECUTIVOINFORMACIONCARGA: scenario.cargoNumber || undefined,
         CODOPERACIONTRANSPORTE: "G",
         CODTIPOEMPAQUE: scenario.cargo.packageCode,
         CODNATURALEZACARGA: scenario.cargo.natureCode,
@@ -114,7 +114,7 @@ export function buildFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
       request: createMessage(3, {
         NUMNITEMPRESATRANSPORTE: scenario.company.rndcNit,
         CONSECUTIVOREMESA: scenario.remesaNumber,
-        CONSECUTIVOINFORMACIONCARGA: scenario.cargoNumber,
+        CONSECUTIVOINFORMACIONCARGA: scenario.cargoNumber || undefined,
         CODOPERACIONTRANSPORTE: "G",
         CODNATURALEZACARGA: scenario.cargo.natureCode,
         CANTIDADCARGADA: scenario.cargo.quantityKg,
@@ -151,8 +151,9 @@ export function buildFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
       request: createMessage(4, {
         NUMNITEMPRESATRANSPORTE: scenario.company.rndcNit,
         NUMMANIFIESTOCARGA: scenario.manifestNumber,
-        CONSECUTIVOINFORMACIONVIAJE: scenario.tripNumber,
-        CODOPERACIONTRANSPORTE: "G",
+        CONSECUTIVOINFORMACIONVIAJE: scenario.tripNumber || undefined,
+        CODOPERACIONTRANSPORTE: scenario.manifestType || "G",
+        MANNROMANIFIESTOTRANSBORDO: scenario.sourceManifestNumber,
         FECHAEXPEDICIONMANIFIESTO: scenario.expeditionDate,
         CODMUNICIPIOORIGENMANIFIESTO: scenario.sender.cityCode,
         CODMUNICIPIODESTINOMANIFIESTO: scenario.recipient.cityCode,
@@ -655,7 +656,13 @@ function renameMessage(message: RndcFlowMessage, name: string, title = message.t
 function manifestRemesasXml(scenario: DemoScenario) {
   const remesas = scenario.manifestRemesas?.length
     ? scenario.manifestRemesas
-    : [{ number: scenario.remesaNumber }];
+    : scenario.remesaNumber
+      ? [{ number: scenario.remesaNumber }]
+      : [];
+
+  if (remesas.length === 0) {
+    return undefined;
+  }
 
   return rawXml([
     '<REMESASMAN procesoid="43">',

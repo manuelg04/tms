@@ -81,6 +81,14 @@ test("a fully fulfilled dispatch has no fulfillment steps", () => {
   }), []);
 });
 
+test("an authorized Viaje Vacío can close its manifest without remesas", () => {
+  assert.deepEqual(buildFulfillmentPlan({
+    consignments: [],
+    manifest: { id: "m-empty", fulfillmentState: "not_requested" },
+    allowEmptyManifest: true
+  }), [{ kind: "manifiesto", id: "m-empty" }]);
+});
+
 test("accepts delivered missing surplus and returned quantities when they are nonnegative", () => {
   assert.deepEqual(validateFulfillmentQuantities({
     deliveredQuantity: "980",

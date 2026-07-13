@@ -36,6 +36,7 @@ test("creates tamper-resistant expiring session tokens", () => {
 test("enforces the provisional role permissions", () => {
   assert.equal(canPerform("admin", "override_rndc"), true);
   assert.equal(canPerform("operator", "submit_rndc"), true);
+  assert.equal(canPerform("operator", "manage_official_documents"), true);
   assert.equal(canPerform("operator", "override_rndc"), false);
   assert.equal(canPerform("auditor", "view_audit"), true);
   assert.equal(canPerform("auditor", "edit_expediente"), false);

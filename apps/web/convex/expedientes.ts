@@ -15,6 +15,7 @@ import {
   type LoadingOrderDraft
 } from "./model/dispatchWorkflow";
 import { dispatchPrimaryAction } from "./model/dispatchPresentation";
+import { normalizeSearchText } from "./model/dispatchSearch";
 import {
   consignmentDraftValidator,
   fulfillmentDraftValidator,
@@ -89,6 +90,14 @@ const expedienteValidator = v.object({
   completedAt: v.optional(v.number()),
   notes: v.optional(v.string()),
   agencyCode: v.optional(v.string()),
+  workflowVariant: v.optional(v.union(
+    v.literal("standard"),
+    v.literal("remesa_without_order"),
+    v.literal("empty_manifest"),
+    v.literal("transshipment")
+  )),
+  sourceManifestDocumentId: v.optional(v.id("documents")),
+  searchText: v.optional(v.string()),
   loadingOrderDraft: v.optional(loadingOrderDraftValidator),
   manifestDraft: v.optional(manifestDraftValidator),
   manifestFulfillmentDraft: v.optional(manifestFulfillmentDraftValidator),
@@ -239,7 +248,7 @@ const dispatchStageValidator = v.union(
   v.literal("anulado")
 );
 
-const listRowValidator = v.object({
+export const listRowValidator = v.object({
   expediente: expedienteValidator,
   serviceOrderCode: v.string(),
   customerName: v.string(),
@@ -293,7 +302,8 @@ export const create = mutation({
     }
 
     const now = Date.now();
-    const [loadingLocation, unloadingLocation] = await Promise.all([
+    const [customer, loadingLocation, unloadingLocation] = await Promise.all([
+      ctx.db.get("customers", order.customerId),
       ctx.db.get("customerLocations", order.loadingLocationId),
       ctx.db.get("customerLocations", order.unloadingLocationId)
     ]);
@@ -313,6 +323,7 @@ export const create = mutation({
       code,
       status: "draft",
       notes: args.notes,
+      searchText: normalizeSearchText([code, order.code, customer?.name, loadingLocation?.city, unloadingLocation?.city].filter(Boolean).join(" ")),
       createdBy: actor._id,
       updatedBy: actor._id,
       createdAt: now,
@@ -1069,14 +1080,14 @@ async function validateAssignments(
   }
 }
 
-async function toListRow(ctx: QueryCtx, expediente: Doc<"expedientes">) {
+export async function toListRow(ctx: Pick<QueryCtx, "db">, expediente: Doc<"expedientes">) {
   const order = await ctx.db.get("serviceOrders", expediente.serviceOrderId);
 
   if (!order) {
     throw new ConvexError({ code: "INTEGRITY_ERROR", message: "Service order is missing" });
   }
 
-  const [customer, loadingLocation, unloadingLocation, remesas, openNovelties, driver, vehicle, documents, operations] = await Promise.all([
+  const [customer, loadingLocation, unloadingLocation, remesas, openNovelties, driver, vehicle, trip, documents, operations] = await Promise.all([
     ctx.db.get("customers", order.customerId),
     ctx.db.get("customerLocations", order.loadingLocationId),
     ctx.db.get("customerLocations", order.unloadingLocationId),
@@ -1090,6 +1101,7 @@ async function toListRow(ctx: QueryCtx, expediente: Doc<"expedientes">) {
       .collect(),
     expediente.driverId ? ctx.db.get("drivers", expediente.driverId) : null,
     expediente.vehicleId ? ctx.db.get("vehicles", expediente.vehicleId) : null,
+    expediente.tripId ? ctx.db.get("trips", expediente.tripId) : null,
     ctx.db.query("documents").withIndex("by_expediente", (q) => q.eq("expedienteId", expediente._id)).collect(),
     ctx.db
       .query("rndcOperations")
@@ -1113,9 +1125,10 @@ async function toListRow(ctx: QueryCtx, expediente: Doc<"expedientes">) {
     Boolean(site?.arrival && site.entry && site.start && site.end && site.exit);
   const projection: DispatchProjection = {
     annulled: expediente.status === "cancelled",
+    workflowVariant: expediente.workflowVariant,
     loadingOrder: orderDraft
       ? { missingFields: loadingOrderMissingFields(orderDraft), officialState: officialState(orderDocument) }
-      : null,
+      : orderDocument ? { missingFields: [], officialState: officialState(orderDocument) } : null,
     consignments: remesas.map((remesa) => ({
       missingFields: consignmentMissingFields((remesa.draft ?? null) as ConsignmentDraft | null, orderDraft),
       officialState: remesa.officialState,
@@ -1128,7 +1141,7 @@ async function toListRow(ctx: QueryCtx, expediente: Doc<"expedientes">) {
           officialState: officialState(manifestDocument),
           fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
         }
-      : null,
+      : manifestDocument ? { missingFields: [], officialState: officialState(manifestDocument), fulfillmentState: manifestDocument.fulfillmentState ?? "not_requested" } : null,
     cargoInfoState: officialState(orderDocument),
     logistics: {
       originComplete: siteComplete(logistics?.origin),
@@ -1169,8 +1182,8 @@ async function toListRow(ctx: QueryCtx, expediente: Doc<"expedientes">) {
     orderNumber: expediente.loadingOrderDraft?.orderNumber ?? expediente.cargoNumber,
     remesaNumbers: remesas.flatMap((remesa) => remesa.number ? [remesa.number] : []),
     manifestNumber: expediente.manifestDraft?.manifestNumber ?? expediente.manifestNumber,
-    vehiclePlate: vehicle?.plate,
-    driverName: driver?.name,
+    vehiclePlate: vehicle?.plate ?? trip?.vehiclePlate,
+    driverName: driver?.name ?? trip?.driverName,
     stage: stageResult.stage,
     blockers: stageResult.blockers,
     rndcStatus,
@@ -1182,7 +1195,8 @@ async function toListRow(ctx: QueryCtx, expediente: Doc<"expedientes">) {
 }
 
 function officialState(document: Doc<"documents"> | undefined): OfficialDocumentState {
-  return document?.officialState ?? "draft";
+  const state = document?.officialState ?? document?.status;
+  return state === "authorized" || state === "fulfilled" || state === "annulled" || state === "pending" ? state : "draft";
 }
 
 function normalizeCode(value: string): string {

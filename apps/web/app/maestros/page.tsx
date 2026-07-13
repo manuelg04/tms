@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { usePaginatedQuery, useQuery } from "convex/react";
+import { useState, type FormEvent, type ReactNode } from "react";
+import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { formatTimestamp } from "../lib/labels";
 
-type Tab = "conductores" | "vehiculos";
+type Tab = "conductores" | "vehiculos" | "terceros";
+type Creator = "conductor" | "vehiculo" | "tercero";
 
 type DriverRow = {
   _id: string;
@@ -24,6 +25,16 @@ type VehicleRow = {
   possessorDocument?: string;
   possessorName?: string;
   driverCount: number;
+  updatedAt: number;
+};
+
+type ThirdPartyRow = {
+  _id: string;
+  document: string;
+  documentType: string;
+  name: string;
+  phone?: string;
+  roles: Array<"owner" | "possessor" | "holder" | "sender" | "recipient" | "other">;
   updatedAt: number;
 };
 
@@ -95,9 +106,17 @@ export default function MaestrosPage() {
   const [selectedPlate, setSelectedPlate] = useState<string | null>(null);
   const [documentFilter, setDocumentFilter] = useState("");
   const [plateFilter, setPlateFilter] = useState("");
+  const [thirdPartyFilter, setThirdPartyFilter] = useState("");
+  const [creator, setCreator] = useState<Creator | null>(null);
+  const [notice, setNotice] = useState<{ tone: "ok" | "bad" | "wait"; text: string } | null>(null);
+  const [saving, setSaving] = useState(false);
+  const upsertDriver = useMutation(api.fleet.upsertDriver);
+  const upsertVehicle = useMutation(api.fleet.upsertVehicle);
+  const upsertThirdParty = useMutation(api.fleet.upsertThirdParty);
   const documentSearchPrefix = documentFilter.trim();
   const plateSearchPrefix = plateFilter.trim();
-  const activeFilter = tab === "conductores" ? documentSearchPrefix : plateSearchPrefix;
+  const thirdPartySearch = thirdPartyFilter.trim().toLocaleLowerCase("es");
+  const activeFilter = tab === "conductores" ? documentSearchPrefix : tab === "vehiculos" ? plateSearchPrefix : thirdPartySearch;
   const isFiltering = activeFilter !== "";
   const {
     results: drivers,
@@ -125,7 +144,9 @@ export default function MaestrosPage() {
     api.fleet.vehiclesSearch,
     tab === "vehiculos" && plateSearchPrefix !== "" ? { prefix: plateSearchPrefix } : "skip"
   );
-  const pageStatus = tab === "conductores" ? driversStatus : vehiclesStatus;
+  const thirdParties = useQuery(api.fleet.listThirdParties, tab === "terceros" ? {} : "skip") as ThirdPartyRow[] | undefined;
+  const visibleThirdParties = (thirdParties ?? []).filter((party) => thirdPartySearch === "" || party.document.toLocaleLowerCase("es").includes(thirdPartySearch) || party.name.toLocaleLowerCase("es").includes(thirdPartySearch));
+  const pageStatus = tab === "conductores" ? driversStatus : tab === "vehiculos" ? vehiclesStatus : "Exhausted";
   const selectedDriver = useQuery(
     api.fleet.driverDetail,
     tab === "conductores" && selectedDocument ? { document: selectedDocument } : "skip"
@@ -141,10 +162,87 @@ export default function MaestrosPage() {
     setSelectedPlate(null);
     setDocumentFilter("");
     setPlateFilter("");
+    setThirdPartyFilter("");
+  }
+
+  async function saveMaster(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!creator) return;
+    const form = event.currentTarget;
+    setSaving(true);
+    setNotice({ tone: "wait", text: "Guardando el maestro…" });
+    const data = new FormData(form);
+    try {
+      if (creator === "conductor") {
+        await upsertDriver({ input: {
+          documentType: required(data, "documentType"),
+          document: required(data, "document"),
+          name: required(data, "name"),
+          address: required(data, "address"),
+          cityCode: required(data, "cityCode"),
+          cellphone: required(data, "phone"),
+          licenseCategory: required(data, "licenseCategory"),
+          licenseNumber: required(data, "licenseNumber"),
+          licenseExpiresAt: required(data, "licenseExpiresAt")
+        } });
+        setTab("conductores");
+        setNotice({ tone: "ok", text: "Conductor guardado. Quedó disponible para asignarlo a un vehículo o despacho." });
+      } else if (creator === "tercero") {
+        await upsertThirdParty({ input: partyInput(data, required(data, "role") as "owner" | "possessor" | "holder" | "sender" | "recipient" | "other") });
+        setTab("terceros");
+        setNotice({ tone: "ok", text: "Tercero guardado y disponible para reutilizarlo como propietario, poseedor u otro rol." });
+      } else {
+        const owner = partyInput(data, "owner", "owner");
+        const possessor = partyInput(data, "possessor", "possessor");
+        await upsertThirdParty({ input: owner });
+        await upsertThirdParty({ input: possessor });
+        const driverDocument = required(data, "driverDocument");
+        const plate = required(data, "plate").toUpperCase();
+        await upsertVehicle({
+          driverDocument,
+          input: {
+            plate,
+            make: value(data, "make"),
+            line: required(data, "line"),
+            modelYear: required(data, "modelYear"),
+            color: required(data, "color"),
+            configuration: required(data, "configuration"),
+            capacityTn: required(data, "capacityTn"),
+            emptyWeightTn: required(data, "emptyWeightTn"),
+            ownerDocument: owner.document,
+            ownerName: owner.name,
+            ownerCellphone: owner.phone,
+            possessorDocument: possessor.document,
+            possessorName: possessor.name,
+            possessorCellphone: possessor.phone,
+            insurerNit: required(data, "insurerNit"),
+            soatExpiresAt: required(data, "soatExpiresAt"),
+            soatNumber: required(data, "soatNumber")
+          }
+        });
+        const response = await fetch("/api/rndc/masters/register", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ driverDocument, vehiclePlate: plate }) });
+        const result = await response.json() as { error?: string; evidenceStored?: boolean };
+        if (!response.ok || result.evidenceStored !== true) throw new Error(result.error ?? "El maestro quedó guardado, pero la simulación RNDC no terminó con evidencia.");
+        setTab("vehiculos");
+        setNotice({ tone: "ok", text: "Vehículo, conductor, propietario y poseedor quedaron guardados y la preparación RNDC terminó en modo de prueba." });
+      }
+      form.reset();
+      setCreator(null);
+    } catch (error) {
+      setNotice({ tone: "bad", text: readable(error) });
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
     <>
+      <section className="master-create-panel">
+        <div><span className="eyebrow">Administración operativa</span><h2>Crear y actualizar maestros</h2><p>Registra cada dato una sola vez. Los despachos lo reutilizan y el envío RNDC permanece protegido.</p></div>
+        <div className="master-create-actions"><button className="ghost-button" onClick={() => setCreator("conductor")} type="button">Nuevo conductor</button><button className="ghost-button" onClick={() => setCreator("vehiculo")} type="button">Nuevo vehículo</button><button className="ghost-button" onClick={() => setCreator("tercero")} type="button">Nuevo tercero</button></div>
+      </section>
+      {notice ? <div className={`operation-notice ${notice.tone}`} role="status"><span />{notice.text}<button aria-label="Cerrar aviso" onClick={() => setNotice(null)} type="button">×</button></div> : null}
+      {creator ? <MasterForm creator={creator} onCancel={() => setCreator(null)} onSubmit={saveMaster} saving={saving} /> : null}
       <div className="filters" role="group" aria-label="Maestros de flota">
         <button
           aria-pressed={tab === "conductores"}
@@ -162,6 +260,14 @@ export default function MaestrosPage() {
         >
           Vehiculos
         </button>
+        <button
+          aria-pressed={tab === "terceros"}
+          className={tab === "terceros" ? "ops-tab active" : "ops-tab"}
+          onClick={() => selectTab("terceros")}
+          type="button"
+        >
+          Terceros
+        </button>
         {tab === "conductores" ? (
           <input
             aria-label="Filtrar conductores por documento"
@@ -171,7 +277,7 @@ export default function MaestrosPage() {
             type="search"
             value={documentFilter}
           />
-        ) : (
+        ) : tab === "vehiculos" ? (
           <input
             aria-label="Filtrar vehiculos por placa"
             className="filter-input"
@@ -179,6 +285,15 @@ export default function MaestrosPage() {
             placeholder="Filtrar por placa"
             type="search"
             value={plateFilter}
+          />
+        ) : (
+          <input
+            aria-label="Filtrar terceros por identificación o nombre"
+            className="filter-input"
+            onChange={(event) => setThirdPartyFilter(event.target.value)}
+            placeholder="Filtrar por identificación o nombre"
+            type="search"
+            value={thirdPartyFilter}
           />
         )}
       </div>
@@ -199,7 +314,7 @@ export default function MaestrosPage() {
         />
       ) : null}
 
-      <section className="panel" aria-label={tab === "conductores" ? "Listado de conductores" : "Listado de vehiculos"}>
+      <section className="panel" aria-label={tab === "conductores" ? "Listado de conductores" : tab === "vehiculos" ? "Listado de vehiculos" : "Listado de terceros"}>
         {tab === "conductores" ? (
           isFiltering && driverSearchResults === undefined ? (
             <div className="skeleton">Cargando…</div>
@@ -212,16 +327,20 @@ export default function MaestrosPage() {
               selectedDocument={selectedDocument}
             />
           )
-        ) : isFiltering && vehicleSearchResults === undefined ? (
+        ) : tab === "vehiculos" && isFiltering && vehicleSearchResults === undefined ? (
           <div className="skeleton">Cargando…</div>
-        ) : !isFiltering && pageStatus === "LoadingFirstPage" ? (
+        ) : tab === "vehiculos" && !isFiltering && pageStatus === "LoadingFirstPage" ? (
           <div className="skeleton">Cargando…</div>
-        ) : (
+        ) : tab === "vehiculos" ? (
           <VehiclesTable
             onSelect={(plate) => setSelectedPlate((current) => (current === plate ? null : plate))}
             rows={isFiltering ? ((vehicleSearchResults ?? []) as VehicleRow[]) : vehicles}
             selectedPlate={selectedPlate}
           />
+        ) : thirdParties === undefined ? (
+          <div className="skeleton">Cargando…</div>
+        ) : (
+          <ThirdPartiesTable rows={visibleThirdParties} />
         )}
       </section>
 
@@ -237,6 +356,51 @@ export default function MaestrosPage() {
       ) : null}
     </>
   );
+}
+
+function MasterForm({ creator, onCancel, onSubmit, saving }: { creator: Creator; onCancel: () => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void; saving: boolean }) {
+  return <section className="panel master-form-panel" aria-labelledby="master-form-title"><div className="panel-head"><div><span className="eyebrow">Nuevo registro</span><h2 id="master-form-title">{creator === "conductor" ? "Conductor" : creator === "vehiculo" ? "Vehículo y responsables" : "Tercero"}</h2></div><button className="text-button" onClick={onCancel} type="button">Cerrar</button></div><form className="modal-form master-form" onSubmit={onSubmit}>
+    {creator === "conductor" ? <DriverFields /> : creator === "vehiculo" ? <VehicleFields /> : <ThirdPartyFields />}
+    <div className="modal-actions wide"><button className="ghost-button" onClick={onCancel} type="button">Cancelar</button><button className="primary-action" disabled={saving} type="submit">{saving ? "Guardando…" : creator === "vehiculo" ? "Guardar y simular RNDC" : "Guardar maestro"}</button></div>
+  </form></section>;
+}
+
+function DriverFields() {
+  return <><label><span>Tipo de identificación</span><select defaultValue="C" name="documentType"><option value="C">Cédula</option><option value="E">Cédula de extranjería</option><option value="P">Pasaporte</option></select></label><label><span>Documento</span><input name="document" required /></label><label className="wide"><span>Nombre completo</span><input name="name" required /></label><label><span>Teléfono</span><input name="phone" required /></label><label><span>Código DANE del municipio</span><input name="cityCode" required /></label><label className="wide"><span>Dirección</span><input name="address" required /></label><label><span>Categoría de licencia</span><input name="licenseCategory" placeholder="C2" required /></label><label><span>Número de licencia</span><input name="licenseNumber" required /></label><label><span>Vencimiento de licencia</span><input name="licenseExpiresAt" required type="date" /></label></>;
+}
+
+function ThirdPartyFields() {
+  return <><label><span>Rol principal</span><select defaultValue="owner" name="role"><option value="owner">Propietario</option><option value="possessor">Poseedor</option><option value="holder">Tenedor</option><option value="sender">Remitente</option><option value="recipient">Destinatario</option><option value="other">Otro tercero</option></select></label><PartyFields /></>;
+}
+
+function VehicleFields() {
+  return <><div className="master-form-section wide"><strong>Vehículo</strong><p>Datos técnicos y de seguro que usará el RNDC.</p></div><label><span>Placa</span><input name="plate" required /></label><label><span>Marca</span><input name="make" /></label><label><span>Código de línea RNDC</span><input name="line" required /></label><label><span>Modelo</span><input inputMode="numeric" name="modelYear" required /></label><label><span>Configuración RNDC</span><input name="configuration" placeholder="2" required /></label><label><span>Código de color RNDC</span><input name="color" placeholder="1" required /></label><label><span>Peso vacío (TN)</span><input inputMode="decimal" name="emptyWeightTn" required /></label><label><span>Capacidad (TN)</span><input inputMode="decimal" name="capacityTn" required /></label><label><span>NIT aseguradora SOAT</span><input name="insurerNit" required /></label><label><span>Número SOAT</span><input name="soatNumber" required /></label><label><span>Vencimiento SOAT</span><input name="soatExpiresAt" required type="date" /></label><label><span>Documento conductor</span><input name="driverDocument" required /></label><div className="master-form-section wide"><strong>Propietario</strong><p>Puede ser la misma persona que el poseedor.</p></div><PartyFields prefix="owner" /><div className="master-form-section wide"><strong>Poseedor o tenedor</strong><p>Titular operativo que aparecerá en el manifiesto.</p></div><PartyFields prefix="possessor" /></>;
+}
+
+function PartyFields({ prefix }: { prefix?: string }) {
+  const key = (name: string) => prefix ? `${prefix}_${name}` : name;
+  return <><label><span>Tipo de identificación</span><select defaultValue="C" name={key("documentType")}><option value="C">Cédula</option><option value="N">NIT</option><option value="E">Cédula de extranjería</option><option value="P">Pasaporte</option></select></label><label><span>Identificación</span><input name={key("document")} required /></label><label className="wide"><span>Nombre o razón social</span><input name={key("name")} required /></label><label><span>Teléfono</span><input name={key("phone")} required /></label><label><span>Código DANE del municipio</span><input name={key("cityCode")} required /></label><label className="wide"><span>Dirección</span><input name={key("address")} required /></label></>;
+}
+
+function partyInput(data: FormData, role: "owner" | "possessor" | "holder" | "sender" | "recipient" | "other", prefix?: string) {
+  const key = (name: string) => prefix ? `${prefix}_${name}` : name;
+  return { documentType: required(data, key("documentType")), document: required(data, key("document")), name: required(data, key("name")), phone: required(data, key("phone")), address: required(data, key("address")), cityCode: required(data, key("cityCode")), roles: [role] };
+}
+
+function required(data: FormData, key: string): string {
+  const result = data.get(key)?.toString().trim();
+  if (!result) throw new Error(`Completa ${key.replaceAll("_", " ")}.`);
+  return result;
+}
+
+function value(data: FormData, key: string): string | undefined {
+  return data.get(key)?.toString().trim() || undefined;
+}
+
+function readable(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error);
+  const match = /message:\s*"([^"]+)"/.exec(message);
+  return match?.[1] ?? message.replace(/^.*?: /, "");
 }
 
 function DriverDetailPanel({
@@ -368,8 +532,9 @@ function DriversTable({
   }
 
   return (
-    <div className="table-wrap">
-      <table className="doc-table">
+    <>
+      <div className="table-wrap master-desktop-table">
+        <table className="doc-table">
         <thead>
           <tr>
             <th>Documento</th>
@@ -397,8 +562,18 @@ function DriversTable({
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+        </table>
+      </div>
+      <div className="master-mobile-list">
+        {rows.map((row) => (
+          <button className={selectedDocument === row.document ? "master-mobile-card selected" : "master-mobile-card"} key={row._id} onClick={() => onSelect(row.document)} type="button">
+            <span className="master-mobile-heading"><span className="radicado">{row.document}</span><small>{formatTimestamp(row.updatedAt)}</small></span>
+            <strong>{valueOrDash(row.name)}</strong>
+            <span>{valueOrDash(row.phone)} · {row.vehicleCount} vehículo{row.vehicleCount === 1 ? "" : "s"}</span>
+          </button>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -416,8 +591,9 @@ function VehiclesTable({
   }
 
   return (
-    <div className="table-wrap">
-      <table className="doc-table">
+    <>
+      <div className="table-wrap master-desktop-table">
+        <table className="doc-table">
         <thead>
           <tr>
             <th>Placa</th>
@@ -445,8 +621,39 @@ function VehiclesTable({
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+        </table>
+      </div>
+      <div className="master-mobile-list">
+        {rows.map((row) => (
+          <button className={selectedPlate === row.plate ? "master-mobile-card selected" : "master-mobile-card"} key={row._id} onClick={() => onSelect(row.plate)} type="button">
+            <span className="master-mobile-heading"><span className="plate-chip">{row.plate}</span><small>{formatTimestamp(row.updatedAt)}</small></span>
+            <strong>{partyLabel(row.ownerName, row.ownerDocument)}</strong>
+            <span>Poseedor: {valuesLabel([row.possessorName, row.possessorDocument])}</span>
+            <span>{row.driverCount} conductor{row.driverCount === 1 ? "" : "es"}</span>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function ThirdPartiesTable({ rows }: { rows: ThirdPartyRow[] }) {
+  if (rows.length === 0) {
+    return <div className="empty-state">Sin registros</div>;
+  }
+
+  return (
+    <>
+      <div className="table-wrap master-desktop-table">
+        <table className="doc-table">
+          <thead><tr><th>Identificación</th><th>Nombre</th><th>Roles</th><th>Teléfono</th><th>Actualizado</th></tr></thead>
+          <tbody>{rows.map((row) => <tr key={row._id}><td><span className="radicado">{row.document}</span><small className="table-subline">{row.documentType}</small></td><td>{row.name}</td><td>{rolesLabel(row.roles)}</td><td>{valueOrDash(row.phone)}</td><td className="cell-date">{formatTimestamp(row.updatedAt)}</td></tr>)}</tbody>
+        </table>
+      </div>
+      <div className="master-mobile-list">
+        {rows.map((row) => <article className="master-mobile-card static" key={row._id}><span className="master-mobile-heading"><span className="radicado">{row.document}</span><small>{formatTimestamp(row.updatedAt)}</small></span><strong>{row.name}</strong><span>{rolesLabel(row.roles)} · {valueOrDash(row.phone)}</span></article>)}
+      </div>
+    </>
   );
 }
 
@@ -466,6 +673,11 @@ function valueOrDash(value: string | undefined) {
 function valuesLabel(values: Array<string | undefined>) {
   const parts = values.map((value) => value?.trim()).filter((value): value is string => Boolean(value));
   return parts.length > 0 ? parts.join(" · ") : "—";
+}
+
+function rolesLabel(roles: ThirdPartyRow["roles"]) {
+  const labels = { owner: "Propietario", possessor: "Poseedor", holder: "Tenedor", sender: "Remitente", recipient: "Destinatario", other: "Otro" };
+  return roles.map((role) => labels[role]).join(" · ");
 }
 
 function documentLabel(document: string, documentType: string | undefined) {

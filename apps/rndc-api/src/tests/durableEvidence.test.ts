@@ -75,6 +75,28 @@ test("stores phase one request and response paths and skips an identical existin
   assert.equal(report.artifacts.find((artifact) => artifact.kind === "response_xml")?.artifactId, "artifact-existing");
 });
 
+test("accepts a durable master operation without an expediente reference", () => {
+  const result = readDurableEvidenceContext((name) => ({
+    "X-TMS-Durable-Operation": "true",
+    "X-TMS-Organization-Id": "org-1",
+    "X-TMS-Operation-Id": "operation-1",
+    "X-TMS-Expected-Mode": "dry-run",
+    "X-TMS-Operation-Type": "upsert_vehicle",
+    "X-TMS-Lease-Owner": "worker-1"
+  }[name]));
+
+  assert.deepEqual(result, {
+    requested: true,
+    context: {
+      organizationId: "org-1",
+      operationId: "operation-1",
+      expectedMode: "dry-run",
+      operationType: "upsert_vehicle",
+      leaseOwner: "worker-1"
+    }
+  });
+});
+
 test("requires complete server-provided references for durable operations", () => {
   const headers = new Headers({
     "X-TMS-Durable-Operation": "true",

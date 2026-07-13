@@ -77,9 +77,7 @@ const dryRunOnlyOperations = new Set([
   "annul_remesa",
   "annul_manifest",
   "annul_remesa_fulfillment",
-  "annul_manifest_fulfillment",
-  "upsert_third_party",
-  "upsert_vehicle"
+  "annul_manifest_fulfillment"
 ]);
 
 export function bindPayloadToPersistedDocument(input: {
@@ -118,7 +116,7 @@ export function bindPayloadToPersistedDocument(input: {
     };
   }
 
-  if (input.operationType === "emit_trip") {
+  if (input.operationType === "emit_trip" || input.operationType === "annul_trip") {
     const tripNumber = isRecord(input.payload) && typeof input.payload.tripNumber === "string"
       ? input.payload.tripNumber.trim()
       : "";
@@ -161,6 +159,10 @@ export function lifecyclePlanForOperation(operationType: string): {
 
 export function requiresDryRunOperation(operationType: string): boolean {
   return dryRunOnlyOperations.has(operationType);
+}
+
+export function liveOperationBlocked(operationType: string, liveWritesEnabled: boolean): boolean {
+  return requiresDryRunOperation(operationType) && !liveWritesEnabled;
 }
 
 export function manifestIssuanceOperationMatches(input: {

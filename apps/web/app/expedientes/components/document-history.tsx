@@ -2,20 +2,22 @@ type DocumentRow = { _id: string; kind: string; number?: string; rndcRadicado?: 
 type EventRow = { _id: string; title: string; details?: string; occurredAt: number };
 type DeliveryRow = { _id: string; kind: string; capturedAt: number; artifact: { fileName: string; size: number } };
 
-export function DocumentHistory({ deliveryEvidence, documents, events, technicalEvidence }: { deliveryEvidence: DeliveryRow[]; documents: DocumentRow[]; events: EventRow[]; technicalEvidence: Array<{ _id: string; fileName: string; createdAt: number }> }) {
+export function DocumentHistory({ deliveryEvidence, documents, events, technicalEvidence }: { deliveryEvidence: DeliveryRow[]; documents: DocumentRow[]; events: EventRow[]; technicalEvidence: Array<{ _id: string; documentId?: string; kind: string; fileName: string; createdAt: number }> }) {
   return (
     <section className="document-history" id="documentos-historial">
       <div className="section-heading"><div><span className="eyebrow">Siempre disponible</span><h3>Documentos e historial</h3></div><span>{documents.length} documentos</span></div>
       <div className="document-history-grid">
         <div>
           <h4>Documentos</h4>
-          {documents.length === 0 ? <p className="inline-empty">Los documentos aparecerán a medida que avance el despacho.</p> : documents.map((document) => (
-            <article className="history-document" key={document._id}>
+          {documents.length === 0 ? <p className="inline-empty">Los documentos aparecerán a medida que avance el despacho.</p> : documents.map((document) => {
+            const pdf = technicalEvidence.filter((artifact) => artifact.kind === "pdf" && artifact.documentId === document._id).sort((left, right) => right.createdAt - left.createdAt)[0];
+            return <article className="history-document" key={document._id}>
               <span className="history-file-icon">DOC</span>
               <div><small>{document.kind.replaceAll("_", " ")}</small><strong>{document.number ?? "Número pendiente"}</strong><span>{document.rndcRadicado ? `Radicado ${document.rndcRadicado}` : "Sin radicado"}</span></div>
+              {pdf ? <a className="pdf-link" href={`/api/evidence/${pdf._id}`}>PDF</a> : null}
               <span className="document-state-text">{documentState(document)}</span>
             </article>
-          ))}
+          })}
           {deliveryEvidence.map((item) => <article className="history-document" key={item._id}><span className="history-file-icon">SOP</span><div><small>Soporte operativo</small><strong>{item.artifact.fileName}</strong><span>{formatDate(item.capturedAt)}</span></div></article>)}
         </div>
         <div>

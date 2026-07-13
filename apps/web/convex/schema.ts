@@ -226,6 +226,7 @@ export default defineSchema({
     bloodType: v.optional(v.string()),
     address: v.optional(v.string()),
     city: v.optional(v.string()),
+    cityCode: v.optional(v.string()),
     phone1: v.optional(v.string()),
     phone2: v.optional(v.string()),
     cellphone: v.optional(v.string()),
@@ -243,6 +244,30 @@ export default defineSchema({
   })
     .index("by_document", ["document"])
     .index("by_organization_and_document", ["organizationId", "document"]),
+
+  thirdParties: defineTable({
+    organizationId: v.id("organizations"),
+    documentType: v.string(),
+    document: v.string(),
+    name: v.string(),
+    phone: v.optional(v.string()),
+    address: v.optional(v.string()),
+    cityCode: v.optional(v.string()),
+    roles: v.array(v.union(
+      v.literal("owner"),
+      v.literal("possessor"),
+      v.literal("holder"),
+      v.literal("sender"),
+      v.literal("recipient"),
+      v.literal("other")
+    )),
+    createdBy: v.id("users"),
+    updatedBy: v.id("users"),
+    createdAt: v.number(),
+    updatedAt: v.number()
+  })
+    .index("by_organization_and_document", ["organizationId", "document"])
+    .index("by_organization_and_name", ["organizationId", "name"]),
 
   vehicles: defineTable({
     organizationId: v.optional(v.id("organizations")),
@@ -265,6 +290,9 @@ export default defineSchema({
     possessorName: v.optional(v.string()),
     possessorCellphone: v.optional(v.string()),
     possessorPhone: v.optional(v.string()),
+    insurerNit: v.optional(v.string()),
+    soatExpiresAt: v.optional(v.string()),
+    soatNumber: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number()
   })
@@ -294,10 +322,19 @@ export default defineSchema({
     status: v.union(v.literal("unread"), v.literal("read")),
     relatedTripId: v.optional(v.id("trips")),
     relatedDocumentId: v.optional(v.id("documents")),
+    category: v.optional(v.union(
+      v.literal("rejection"),
+      v.literal("reconciliation"),
+      v.literal("fulfillment"),
+      v.literal("evidence")
+    )),
+    actionLabel: v.optional(v.string()),
+    actionHref: v.optional(v.string()),
     createdAt: v.number()
   })
     .index("by_status", ["status"])
     .index("by_created_at", ["createdAt"])
+    .index("by_organization_and_created_at", ["organizationId", "createdAt"])
     .index("by_organization_and_status", ["organizationId", "status"])
     .index("by_user_and_status", ["userId", "status"]),
 
@@ -433,6 +470,14 @@ export default defineSchema({
     completedAt: v.optional(v.number()),
     notes: v.optional(v.string()),
     agencyCode: v.optional(v.string()),
+    workflowVariant: v.optional(v.union(
+      v.literal("standard"),
+      v.literal("remesa_without_order"),
+      v.literal("empty_manifest"),
+      v.literal("transshipment")
+    )),
+    sourceManifestDocumentId: v.optional(v.id("documents")),
+    searchText: v.optional(v.string()),
     loadingOrderDraft: v.optional(loadingOrderDraftValidator),
     manifestDraft: v.optional(manifestDraftValidator),
     manifestFulfillmentDraft: v.optional(manifestFulfillmentDraftValidator),
@@ -444,7 +489,9 @@ export default defineSchema({
   })
     .index("by_organization_and_code", ["organizationId", "code"])
     .index("by_organization_and_status", ["organizationId", "status"])
-    .index("by_service_order", ["serviceOrderId"]),
+    .index("by_organization_and_updated_at", ["organizationId", "updatedAt"])
+    .index("by_service_order", ["serviceOrderId"])
+    .searchIndex("search_dispatches", { searchField: "searchText", filterFields: ["organizationId"] }),
 
   expedienteRemesas: defineTable({
     organizationId: v.id("organizations"),
@@ -567,6 +614,51 @@ export default defineSchema({
     .index("by_organization_and_created_at", ["organizationId", "createdAt"])
     .index("by_organization_entity_and_created_at", ["organizationId", "entityType", "entityId", "createdAt"])
     .index("by_entity_and_created_at", ["entityType", "entityId", "createdAt"]),
+
+  dispatchExceptions: defineTable({
+    organizationId: v.id("organizations"),
+    expedienteId: v.id("expedientes"),
+    requestKey: v.string(),
+    type: v.union(
+      v.literal("remesa_without_order"),
+      v.literal("empty_manifest"),
+      v.literal("transshipment"),
+      v.literal("correction"),
+      v.literal("annulment"),
+      v.literal("reconciliation")
+    ),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("in_progress"),
+      v.literal("completed"),
+      v.literal("rejected"),
+      v.literal("uncertain"),
+      v.literal("cancelled")
+    ),
+    documentId: v.optional(v.id("documents")),
+    sourceManifestDocumentId: v.optional(v.id("documents")),
+    originalOperationId: v.optional(v.id("rndcOperations")),
+    reasonCode: v.optional(v.string()),
+    reason: v.string(),
+    observation: v.string(),
+    confirmed: v.boolean(),
+    beforeJson: v.optional(v.string()),
+    afterJson: v.optional(v.string()),
+    comparisonJson: v.optional(v.string()),
+    dependencyPlanJson: v.optional(v.string()),
+    operationIds: v.optional(v.array(v.id("rndcOperations"))),
+    evidenceCount: v.optional(v.number()),
+    resultJson: v.optional(v.string()),
+    createdBy: v.id("users"),
+    completedBy: v.optional(v.id("users")),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    completedAt: v.optional(v.number())
+  })
+    .index("by_expediente_and_created_at", ["expedienteId", "createdAt"])
+    .index("by_organization_and_request_key", ["organizationId", "requestKey"])
+    .index("by_document_and_created_at", ["documentId", "createdAt"])
+    .index("by_organization_and_status", ["organizationId", "status"]),
 
   rndcOperations: defineTable({
     organizationId: v.id("organizations"),

@@ -14,6 +14,8 @@ export type AuthorizationData = {
   acceptances: RndcManifestAcceptance[];
 };
 
+export const loadingOrderBranding = { systemName: "MTM TMS", agencyName: "MTM" } as const;
+
 export function resolveManifestRemesas(scenario: DemoScenario): ManifestRemesaSummary[] {
   const remesas = scenario.manifestRemesas?.length
     ? scenario.manifestRemesas
@@ -134,7 +136,7 @@ function drawLoadingOrderCopy(doc: PDFKit.PDFDocument, scenario: DemoScenario, a
   const rightX = x + width - 166;
   const centerX = x + 94;
 
-  doc.font("Helvetica").fontSize(8).fillColor("#111111").text("S.@.T. BASICO", centerX, top, { width: 280, align: "center" });
+  doc.font("Helvetica").fontSize(8).fillColor("#111111").text(loadingOrderBranding.systemName, centerX, top, { width: 280, align: "center" });
   doc.font("Helvetica-Bold").fontSize(12).text("ORDEN DE CARGUE", centerX, top + 15, { width: 280, align: "center" });
   doc.fontSize(9).text(scenario.company.name, centerX, top + 30, { width: 280, align: "center" });
   doc.fontSize(7).text(`NIT. ${formatNit(scenario.company.nit, scenario.company.dv)}`, centerX, top + 43, { width: 280, align: "center" });
@@ -143,7 +145,7 @@ function drawLoadingOrderCopy(doc: PDFKit.PDFDocument, scenario: DemoScenario, a
   doc.font("Helvetica-Bold").fontSize(8).text(copyLabel, centerX, top + 75, { width: 280, align: "center" });
 
   drawBrandMark(doc, x, top + 6, 90, 58);
-  drawHeaderNumberBox(doc, rightX, top + 2, 166, scenario.cargoNumber, displayDateFromRndc(scenario.expeditionDate), "TMS DEMO", authorization);
+  drawHeaderNumberBox(doc, rightX, top + 2, 166, scenario.cargoNumber, displayDateFromRndc(scenario.expeditionDate), loadingOrderBranding.agencyName, authorization);
 
   let y = top + 88;
   y = drawLoadingOrderSection(doc, x, y, width, "DATOS DEL CLIENTE");

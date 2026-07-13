@@ -271,6 +271,7 @@ async function executeStep(
 
 type EmissionInputs = {
   organizationId: Id<"organizations">;
+  workflowVariant?: "standard" | "remesa_without_order" | "empty_manifest" | "transshipment";
   code: string;
   status: string;
   tripNumber?: string;
@@ -351,6 +352,7 @@ function documentIdForStep(step: EmissionPlanStep, ids: DocumentIds): string | u
 
 function toPlanInput(inputs: EmissionInputs): EmissionPlanInput {
   return {
+    workflowVariant: inputs.workflowVariant,
     order: {
       number: inputs.order.number,
       snapshot: parseSnapshotData(inputs.order.payloadJson),

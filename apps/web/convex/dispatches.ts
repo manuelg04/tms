@@ -25,6 +25,8 @@ import {
   manifestFulfillmentDraftValidator
 } from "./model/draftValidators";
 import { validateFulfillmentQuantities, validateLogisticsTimeline } from "./model/fulfillmentWorkflow";
+import { normalizeSearchText } from "./model/dispatchSearch";
+import { refreshDispatchSearchText } from "./model/dispatchSearchProjection";
 
 const stageValidator = v.union(
   v.literal("orden_cargue"),
@@ -132,6 +134,14 @@ export const createDraft = mutation({
       status: "draft",
       notes: args.notes,
       agencyCode: agencyCode || undefined,
+      searchText: normalizeSearchText([
+        code,
+        order.code,
+        customer?.name,
+        loadingLocation?.city,
+        unloadingLocation?.city,
+        agencyCode
+      ].filter(Boolean).join(" ")),
       loadingOrderDraft,
       createdBy: actor._id,
       updatedBy: actor._id,
@@ -156,6 +166,7 @@ export const createDraft = mutation({
       entityId: expedienteId,
       createdAt: now
     });
+    await refreshDispatchSearchText(ctx, expedienteId);
     return { expedienteId, code };
   }
 });
@@ -196,6 +207,7 @@ export const saveLoadingOrderDraft = mutation({
       entityId: expediente._id,
       createdAt: now
     });
+    await refreshDispatchSearchText(ctx, expediente._id);
     return null;
   }
 });
@@ -332,6 +344,7 @@ export const saveConsignmentsDraft = mutation({
       detailsJson: JSON.stringify({ upserts: args.upserts.length, removals: removals.length }),
       createdAt: now
     });
+    await refreshDispatchSearchText(ctx, expediente._id);
     return savedIds;
   }
 });
@@ -404,6 +417,7 @@ export const saveAssignmentDraft = mutation({
       entityId: expediente._id,
       createdAt: Date.now()
     });
+    await refreshDispatchSearchText(ctx, expediente._id);
     return null;
   }
 });
@@ -435,6 +449,7 @@ export const saveManifestDraft = mutation({
       entityId: expediente._id,
       createdAt: now
     });
+    await refreshDispatchSearchText(ctx, expediente._id);
     return null;
   }
 });
@@ -525,6 +540,7 @@ export const recordLogisticsTimes = mutation({
       entityId: expediente._id,
       createdAt: now
     });
+    await refreshDispatchSearchText(ctx, expediente._id);
     return null;
   }
 });
@@ -574,6 +590,7 @@ export const recordFulfillmentDraft = mutation({
       entityId: remesa._id,
       createdAt: now
     });
+    await refreshDispatchSearchText(ctx, expediente._id);
     return null;
   }
 });
@@ -613,6 +630,7 @@ export const recordManifestFulfillmentDraft = mutation({
       entityId: expediente._id,
       createdAt: now
     });
+    await refreshDispatchSearchText(ctx, expediente._id);
     return null;
   }
 });
@@ -621,9 +639,9 @@ export const prepareEmission = mutation({
   args: { actorToken: v.optional(v.string()), expedienteId: v.id("expedientes") },
   returns: v.object({
     code: v.string(),
-    orderNumber: v.string(),
+    orderNumber: v.optional(v.string()),
     consignmentNumbers: v.array(v.string()),
-    tripNumber: v.string(),
+    tripNumber: v.optional(v.string()),
     manifestNumber: v.string(),
     alreadyPrepared: v.boolean()
   }),
@@ -635,12 +653,15 @@ export const prepareEmission = mutation({
       .query("expedienteRemesas")
       .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
       .collect();
+    const variant = expediente.workflowVariant ?? "standard";
+    const requiresOrder = variant === "standard" || variant === "transshipment";
+    const requiresTrip = variant === "standard" || variant === "transshipment";
 
     if (expediente.status === "ready") {
       const orderNumber = expediente.loadingOrderDraft?.orderNumber;
       const manifestNumber = expediente.manifestDraft?.manifestNumber;
 
-      if (orderNumber && manifestNumber && expediente.tripNumber && remesas.every((remesa) => remesa.number)) {
+      if ((!requiresOrder || orderNumber) && manifestNumber && (!requiresTrip || expediente.tripNumber) && remesas.every((remesa) => remesa.number)) {
         return {
           code: expediente.code,
           orderNumber,
@@ -669,10 +690,10 @@ export const prepareEmission = mutation({
 
     const now = Date.now();
     const agencyCode = expediente.agencyCode ?? "";
-    const orderDraft = expediente.loadingOrderDraft as LoadingOrderDraft & { customerId?: Id<"customers"> };
+    const orderDraft = expediente.loadingOrderDraft as (LoadingOrderDraft & { customerId?: Id<"customers"> }) | undefined;
     const manifestDraft = expediente.manifestDraft!;
-    const orderNumber = orderDraft.orderNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "orden_cargue", now));
-    const tripNumber = expediente.tripNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "viaje", now));
+    const orderNumber = requiresOrder ? orderDraft?.orderNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "orden_cargue", now)) : undefined;
+    const tripNumber = requiresTrip ? expediente.tripNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "viaje", now)) : undefined;
     const manifestNumber =
       manifestDraft.manifestNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "manifiesto", now));
     const consignmentNumbers: string[] = [];
@@ -692,7 +713,13 @@ export const prepareEmission = mutation({
       expediente.vehicleId ? ctx.db.get("vehicles", expediente.vehicleId) : null,
       expediente.trailerId ? ctx.db.get("trailers", expediente.trailerId) : null
     ]);
-    await writeSnapshot(ctx, expediente, actor, "orden_cargue", orderNumber, { ...orderDraft, orderNumber }, now);
+    const holderDocument = vehicle?.possessorDocument ?? vehicle?.ownerDocument;
+    const vehicleHolder = holderDocument
+      ? await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", expediente.organizationId).eq("document", holderDocument)).unique()
+      : null;
+    if (requiresOrder && orderDraft && orderNumber) {
+      await writeSnapshot(ctx, expediente, actor, "orden_cargue", orderNumber, { ...orderDraft, orderNumber }, now);
+    }
 
     for (let index = 0; index < remesas.length; index += 1) {
       const remesa = remesas[index];
@@ -720,13 +747,14 @@ export const prepareEmission = mutation({
         driver: pickSnapshotFields(driver),
         secondDriver: pickSnapshotFields(secondDriver),
         vehicle: pickSnapshotFields(vehicle),
+        vehicleHolder: pickSnapshotFields(vehicleHolder),
         trailer: pickSnapshotFields(trailer)
       },
       now
     );
     await ctx.db.patch("expedientes", expediente._id, {
       status: "ready",
-      loadingOrderDraft: { ...orderDraft, orderNumber },
+      loadingOrderDraft: orderDraft && orderNumber ? { ...orderDraft, orderNumber } : undefined,
       manifestDraft: { ...manifestDraft, manifestNumber },
       manifestNumber,
       cargoNumber: orderNumber,
@@ -739,7 +767,7 @@ export const prepareEmission = mutation({
       expedienteId: expediente._id,
       eventType: "dispatch_prepared",
       title: "Despacho preparado para emisión",
-      details: `Orden ${orderNumber}, remesas ${consignmentNumbers.join(", ")}, manifiesto ${manifestNumber}`,
+      details: `${orderNumber ? `Orden ${orderNumber}, ` : ""}${consignmentNumbers.length ? `remesas ${consignmentNumbers.join(", ")}, ` : ""}manifiesto ${manifestNumber}`,
       occurredAt: now,
       actorId: actor._id
     });
@@ -750,9 +778,10 @@ export const prepareEmission = mutation({
       action: "dispatch.emission_prepared",
       entityType: "expediente",
       entityId: expediente._id,
-      detailsJson: JSON.stringify({ orderNumber, consignmentNumbers, manifestNumber }),
+      detailsJson: JSON.stringify({ variant, orderNumber, consignmentNumbers, manifestNumber }),
       createdAt: now
     });
+    await refreshDispatchSearchText(ctx, expediente._id);
     return { code: expediente.code, orderNumber, consignmentNumbers, tripNumber, manifestNumber, alreadyPrepared: false };
   }
 });
@@ -763,6 +792,7 @@ export const emissionInputs = query({
     v.null(),
     v.object({
       organizationId: v.id("organizations"),
+      workflowVariant: v.optional(v.union(v.literal("standard"), v.literal("remesa_without_order"), v.literal("empty_manifest"), v.literal("transshipment"))),
       code: v.string(),
       status: v.string(),
       tripNumber: v.optional(v.string()),
@@ -849,6 +879,7 @@ export const emissionInputs = query({
 
     return {
       organizationId: expediente.organizationId,
+      workflowVariant: expediente.workflowVariant,
       code: expediente.code,
       status: expediente.status,
       tripNumber: expediente.tripNumber,
@@ -1040,7 +1071,8 @@ async function officialStateFor(
   const match = documents
     .filter((document) => document.kind === kind)
     .sort((a, b) => b.updatedAt - a.updatedAt)[0];
-  return match?.officialState ?? "draft";
+  const state = match?.officialState ?? match?.status;
+  return state === "authorized" || state === "fulfilled" || state === "annulled" || state === "pending" ? state : "draft";
 }
 
 async function buildProjection(
@@ -1066,9 +1098,10 @@ async function buildProjection(
 
   return {
     annulled: expediente.status === "cancelled",
+    workflowVariant: expediente.workflowVariant,
     loadingOrder: orderDraft
       ? { missingFields: loadingOrderMissingFields(orderDraft), officialState: cargoInfoState }
-      : null,
+      : cargoInfoState !== "draft" ? { missingFields: [], officialState: cargoInfoState } : null,
     consignments: remesas.map((remesa) => ({
       missingFields: consignmentMissingFields((remesa.draft ?? null) as ConsignmentDraft | null, orderDraft),
       officialState: remesa.officialState,
@@ -1081,7 +1114,7 @@ async function buildProjection(
           officialState: manifestState,
           fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
         }
-      : null,
+      : manifestDocument ? { missingFields: [], officialState: manifestState, fulfillmentState: manifestDocument.fulfillmentState ?? "not_requested" } : null,
     cargoInfoState,
     logistics: {
       originComplete: siteComplete(logistics?.origin),

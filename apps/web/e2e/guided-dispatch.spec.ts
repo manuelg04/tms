@@ -18,7 +18,7 @@ test("dispatch queue shows stage RNDC status and one next action without horizon
 });
 
 test("guided creation exposes the five sections and keeps one sticky action", async ({ page }) => {
-  await page.getByRole("link", { name: "Nuevo despacho" }).click();
+  await page.goto("/expedientes/nuevo");
   await expect(page.locator("#loading-order-title")).toBeVisible();
   await expect(page.getByText("Paso 1 de 5")).toHaveText("Paso 1 de 5");
   await page.getByRole("button", { name: "Continuar" }).click();
@@ -40,6 +40,41 @@ test("dispatch detail keeps stages documents and history in one flow", async ({ 
   await expect(page.getByRole("navigation", { name: "Etapas del despacho" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Documentos e historial" })).toBeVisible();
   await expect(page.locator(".next-action-card .primary-action")).toHaveCount(1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
+test("operators can manage official corrections and annulments without structural exceptions", async ({ page }) => {
+  const rows = page.locator(".dispatch-row");
+  await expect(rows.first()).toBeVisible({ timeout: 15_000 });
+  const rowCount = await rows.count();
+  expect(rowCount).toBeGreaterThan(0);
+  await rows.first().locator(".queue-next-action").click();
+  await page.locator("details.advanced-actions > summary").click();
+  await expect(page.getByRole("button", { name: "Conciliar", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Corregir remesa", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Anular documento", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Remesa sin orden", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Manifiesto vacío", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Transbordo", exact: true })).toHaveCount(0);
+});
+
+test("administration receives six complete advanced exception forms", async ({ page }) => {
+  await page.request.post("/api/auth/logout");
+  const response = await page.request.post("/api/auth/login", { data: { email: "admin@mtm.local", password } });
+  expect(response.ok()).toBe(true);
+  await page.goto("/expedientes");
+  const rows = page.locator(".dispatch-row");
+  await expect(rows.first()).toBeVisible({ timeout: 15_000 });
+  const rowCount = await rows.count();
+  expect(rowCount).toBeGreaterThan(0);
+  await rows.first().locator(".queue-next-action").click();
+  await page.locator("details.advanced-actions > summary").click();
+  await expect(page.locator(".advanced-action-buttons button")).toHaveCount(6);
+  await page.getByRole("button", { name: "Manifiesto vacío", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Crear manifiesto vacío" })).toBeVisible();
+  await expect(page.getByLabel("Razón del viaje vacío")).toBeVisible();
+  await expect(page.locator('input[name*="gps" i], input[name*="tracking" i], input[name*="control" i]')).toHaveCount(0);
+  await expect(page.locator(".advanced-modal-card")).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 

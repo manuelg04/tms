@@ -20,6 +20,7 @@ export type ConsignmentProjection = {
 
 export type DispatchProjection = {
   annulled: boolean;
+  workflowVariant?: "standard" | "remesa_without_order" | "empty_manifest" | "transshipment";
   loadingOrder: { missingFields: string[]; officialState: OfficialDocumentState } | null;
   consignments: ConsignmentProjection[];
   assignment: { vehicleAssigned: boolean; driverAssigned: boolean };
@@ -38,16 +39,20 @@ export function deriveDispatchStage(projection: DispatchProjection): DispatchSta
     return { stage: "anulado", blockers: [] };
   }
 
-  if (!projection.loadingOrder || projection.loadingOrder.missingFields.length > 0) {
+  const legacyAuthorizedChain = projection.consignments.length > 0
+    && projection.consignments.every((consignment) => !editableOfficialState(consignment.officialState))
+    && Boolean(projection.manifest && !editableOfficialState(projection.manifest.officialState));
+
+  if (projection.workflowVariant !== "remesa_without_order" && projection.workflowVariant !== "empty_manifest" && (!projection.loadingOrder || projection.loadingOrder.missingFields.length > 0) && editableOfficialState(projection.cargoInfoState) && !legacyAuthorizedChain) {
     return { stage: "orden_cargue", blockers: projection.loadingOrder?.missingFields ?? ["Orden de cargue sin iniciar"] };
   }
 
-  if (projection.consignments.length === 0) {
+  if (projection.workflowVariant !== "empty_manifest" && projection.consignments.length === 0) {
     return { stage: "remesas", blockers: ["El despacho no tiene remesas"] };
   }
 
   const consignmentBlockers = projection.consignments.flatMap((consignment, index) =>
-    consignment.missingFields.map((field) => `Remesa ${index + 1}: ${field}`)
+    editableOfficialState(consignment.officialState) ? consignment.missingFields.map((field) => `Remesa ${index + 1}: ${field}`) : []
   );
 
   if (consignmentBlockers.length > 0) {
@@ -65,12 +70,12 @@ export function deriveDispatchStage(projection: DispatchProjection): DispatchSta
     return { stage: "vehiculo_conductor", blockers };
   }
 
-  if (!projection.manifest || projection.manifest.missingFields.length > 0) {
+  if (!projection.manifest || (projection.manifest.missingFields.length > 0 && editableOfficialState(projection.manifest.officialState))) {
     return { stage: "manifiesto", blockers: projection.manifest?.missingFields ?? ["Manifiesto sin preparar"] };
   }
 
   const officialStates = [
-    projection.cargoInfoState,
+    ...(legacyAuthorizedChain ? [] : [projection.cargoInfoState]),
     ...projection.consignments.map((consignment) => consignment.officialState),
     projection.manifest.officialState
   ];
@@ -87,7 +92,7 @@ export function deriveDispatchStage(projection: DispatchProjection): DispatchSta
     return { stage: "cargue_descargue", blockers: [] };
   }
 
-  if (!canFulfillManifest(projection.consignments)) {
+  if (projection.workflowVariant !== "empty_manifest" && !canFulfillManifest(projection.consignments)) {
     return { stage: "cumplido_inicial", blockers: [] };
   }
 
@@ -96,6 +101,10 @@ export function deriveDispatchStage(projection: DispatchProjection): DispatchSta
   }
 
   return { stage: "cumplido", blockers: [] };
+}
+
+function editableOfficialState(state: OfficialDocumentState): boolean {
+  return state === "draft" || state === "pending";
 }
 
 export function canFulfillManifest(consignments: ConsignmentProjection[]): boolean {
@@ -209,6 +218,8 @@ export type ManifestDraft = {
   unloadingResponsible?: string;
   paymentDate?: string;
   observations?: string;
+  sourceManifestNumber?: string;
+  emptyManifestReason?: string;
   printedAt?: number;
 };
 

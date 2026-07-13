@@ -6,7 +6,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { buildMtmReferenceScenario } from "../data/demoScenario.js";
 import { loadConfig } from "../rndc/config.js";
-import { buildAnnulmentMessages, buildComplianceMessages, buildDriverVehicleMessages, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildLoadingOrderMessages, buildManifestMessages, buildRemesaMessages, prepareOperationRequests } from "../rndc/messages.js";
+import { buildAnnulmentMessages, buildComplianceMessages, buildDriverVehicleMessages, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildLoadingOrderMessages, buildManifestIssueMessages, buildManifestMessages, buildRemesaMessages, prepareOperationRequests } from "../rndc/messages.js";
 import type { RndcXmlRecord } from "../rndc/types.js";
 
 test("builds loading order as RNDC cargo information", () => {
@@ -27,6 +27,41 @@ test("builds loading order as RNDC cargo information", () => {
   assert.equal(variables.CODSEDEDESTINATARIO, "1");
   assert.equal(variables.FECHACITAPACTADACARGUE, "22/06/2026");
   assert.equal(variables.HORACITAPACTADADESCARGUEREMESA, "12:06");
+});
+
+test("builds a remesa without inventing loading-order ancestry", () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  scenario.workflowVariant = "remesa_without_order";
+  scenario.cargoNumber = "";
+  const variables = buildRemesaMessages(scenario)[0].request.variables as RndcXmlRecord;
+
+  assert.equal(variables.CONSECUTIVOINFORMACIONCARGA, undefined);
+  assert.equal(variables.CONSECUTIVOREMESA, scenario.remesaNumber);
+});
+
+test("builds a Viaje Vacío manifest without remesas trip or tracking fields", () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  scenario.workflowVariant = "empty_manifest";
+  scenario.manifestType = "W";
+  scenario.tripNumber = "";
+  scenario.cargoNumber = "";
+  scenario.remesaNumber = "";
+  scenario.manifestRemesas = [];
+  const variables = buildManifestIssueMessages(scenario)[0].request.variables as RndcXmlRecord;
+
+  assert.equal(variables.CODOPERACIONTRANSPORTE, "W");
+  assert.equal(variables.CONSECUTIVOINFORMACIONVIAJE, undefined);
+  assert.equal(variables.REMESASMAN, undefined);
+  assert.equal(variables.NITMONITOREOFLOTA, undefined);
+});
+
+test("links a transshipment manifest to the prior RNDC manifest", () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  scenario.workflowVariant = "transshipment";
+  scenario.sourceManifestNumber = "0041463";
+  const variables = buildManifestIssueMessages(scenario)[0].request.variables as RndcXmlRecord;
+
+  assert.equal(variables.MANNROMANIFIESTOTRANSBORDO, "0041463");
 });
 
 test("builds driver vehicle registration with separate owner holder and driver roles", () => {

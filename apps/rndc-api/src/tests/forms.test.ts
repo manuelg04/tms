@@ -573,6 +573,63 @@ test("durable remesas use the persisted cargo policy instead of deriving one fro
   }
 });
 
+test("durable advanced variants omit nonexistent ancestry and tracking XML", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-advanced-"));
+  process.env.CONVEX_URL = "https://convex.example";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  const app = createRndcApp({ outputDir: join(base, "runs"), pdfDir: join(base, "pdfs"), mode: "dry-run" }, {
+    durableContextValidator: async () => true,
+    evidenceStore: async () => ({ stored: true, artifacts: [] })
+  });
+
+  try {
+    const remesa = await requestJson(app, "/rndc/forms/remesa", {
+      method: "POST",
+      headers: durableHeaders("dry-run", "op-remesa-without-order", "emit_remesa"),
+      body: {
+        workflowVariant: "remesa_without_order",
+        remesaNumber: "REM-SIN-ORDEN-1",
+        loadingAppointmentDate: "10/07/2026",
+        loadingAppointmentTime: "08:00",
+        unloadingAppointmentDate: "11/07/2026",
+        unloadingAppointmentTime: "16:00",
+        sender: { idType: "N", id: "900123456", siteCode: "001" },
+        recipient: { idType: "N", id: "900654321", siteCode: "001" },
+        cargo: { shortDescription: "CARGA", merchandiseCode: "009988", packageCode: "1", natureCode: "1", quantityKg: 1000 },
+        cargoPolicy: { number: "POL-1", expirationDate: "31/12/2026", insurerNit: "860002400" }
+      }
+    });
+    const emptyManifest = await requestJson(app, "/rndc/forms/manifest-issue", {
+      method: "POST",
+      headers: durableHeaders("dry-run", "op-empty-manifest", "emit_manifest"),
+      body: {
+        workflowVariant: "empty_manifest",
+        manifestType: "W",
+        manifestNumber: "MAN-VACIO-1",
+        expeditionDate: "10/07/2026",
+        balancePaymentDate: "11/07/2026",
+        driver: { idType: "C", id: "1001" },
+        vehicle: { plate: "ABC123" },
+        vehicleHolder: { idType: "C", id: "1002" },
+        sender: { cityCode: "11001000" },
+        recipient: { cityCode: "68001000" },
+        money: { freightValue: 1000, advanceValue: 0, icaRetentionPerMille: 0 }
+      }
+    });
+    const remesaXml = await readFile(((remesa.body.steps as { requestPath: string }[])[0]).requestPath, "utf8");
+    const manifestXml = await readFile(((emptyManifest.body.steps as { requestPath: string }[])[0]).requestPath, "utf8");
+
+    assert.equal(remesa.status, 200);
+    assert.doesNotMatch(remesaXml, /CONSECUTIVOINFORMACIONCARGA/);
+    assert.equal(emptyManifest.status, 200);
+    assert.match(manifestXml, /<CODOPERACIONTRANSPORTE>W<\/CODOPERACIONTRANSPORTE>/);
+    assert.doesNotMatch(manifestXml, /REMESASMAN|CONSECUTIVOINFORMACIONVIAJE|NITMONITOREOFLOTA/);
+  } finally {
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
+});
+
 test("rejects an untrusted durable operation context before building or sending RNDC data", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-durable-context-"));
   process.env.CONVEX_URL = "https://convex.example";

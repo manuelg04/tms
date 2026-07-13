@@ -10,9 +10,9 @@ import { applyLifecycle, recordAcceptance } from "./officialDocuments";
 import {
   bindPayloadToPersistedDocument,
   lifecyclePlanForOperation,
+  liveOperationBlocked,
   manifestIssuanceOperationMatches,
   readManifestIssuanceRadicado,
-  requiresDryRunOperation,
   readOperationDocumentNumber
 } from "./model/officialDocumentIdentity";
 import {
@@ -190,7 +190,7 @@ export const claimById = mutation({
       return null;
     }
 
-    if (operation.mode === "live" && requiresDryRunOperation(operation.operationType)) {
+    if (operation.mode === "live" && officialLiveWriteBlocked(operation.operationType)) {
       await failUnclaimableOperation(ctx, operation, "Official write actions remain disabled in live mode");
       return null;
     }
@@ -325,7 +325,7 @@ export const recoverStaleDocumentOperationsFromService = mutation({
         : undefined;
       const invalid = !bound?.ok
         || (document.mode ?? "dry-run") !== operation.mode
-        || (operation.mode === "live" && requiresDryRunOperation(operation.operationType))
+        || (operation.mode === "live" && officialLiveWriteBlocked(operation.operationType))
         || !canStartLifecycle(document, plan.started);
 
       if (invalid) {
@@ -483,7 +483,7 @@ export const claimNext = mutation({
       return await claimPersistedDocumentOperation(ctx, operation, args.workerId, args.leaseMs);
     }
 
-    if (operation.mode === "live" && requiresDryRunOperation(operation.operationType)) {
+    if (operation.mode === "live" && officialLiveWriteBlocked(operation.operationType)) {
       await failUnclaimableOperation(ctx, operation, "Official write actions remain disabled in live mode");
       return null;
     }
@@ -1017,7 +1017,7 @@ export const retryFailed = mutation({
       throw new ConvexError({ code: "INVALID_STATE", message: "Operation cannot be retried" });
     }
 
-    if (operation.mode === "live" && requiresDryRunOperation(operation.operationType)) {
+    if (operation.mode === "live" && officialLiveWriteBlocked(operation.operationType)) {
       throw new ConvexError({ code: "UNSUPPORTED_LIVE_OPERATION", message: "This operation cannot be retried in live mode" });
     }
 
@@ -1138,7 +1138,7 @@ export const validateDurableContextForService = query({
   args: {
     serviceKey: v.string(),
     organizationId: v.id("organizations"),
-    expedienteId: v.id("expedientes"),
+    expedienteId: v.optional(v.id("expedientes")),
     documentId: v.optional(v.id("documents")),
     operationId: v.id("rndcOperations"),
     mode: modeValidator,
@@ -1418,7 +1418,7 @@ async function validateReferences(ctx: MutationCtx, input: EnqueueInput): Promis
 
   const [expediente, document, remesa] = references;
 
-  if (input.mode === "live" && requiresDryRunOperation(input.operationType)) {
+  if (input.mode === "live" && officialLiveWriteBlocked(input.operationType)) {
     throw new ConvexError({ code: "UNSUPPORTED_LIVE_OPERATION", message: "This official action remains disabled in live mode until exact recovery is available" });
   }
 
@@ -1496,7 +1496,7 @@ async function claimPersistedDocumentOperation(
     || !document.organizationId
     || !payload
     || (document.mode ?? "dry-run") !== operation.mode
-    || (operation.mode === "live" && requiresDryRunOperation(operation.operationType))
+    || (operation.mode === "live" && officialLiveWriteBlocked(operation.operationType))
   ) {
     await failUnclaimableOperation(ctx, operation, "Persisted operation document or mode is invalid");
     return null;
@@ -1693,6 +1693,10 @@ function documentLifecycle(document: Doc<"documents">): DocumentLifecycle {
     annulmentState: document.annulmentState ?? initial.annulmentState,
     reconciliationState: document.reconciliationState ?? initial.reconciliationState
   };
+}
+
+function officialLiveWriteBlocked(operationType: string): boolean {
+  return liveOperationBlocked(operationType, process.env.RNDC_LIVE_WRITES_ENABLED === "true");
 }
 
 function parseObjectJson(value: string | undefined): Record<string, unknown> | undefined {

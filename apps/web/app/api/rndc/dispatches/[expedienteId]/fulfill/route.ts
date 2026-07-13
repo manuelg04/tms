@@ -79,7 +79,8 @@ export async function POST(
       id: document!._id,
       fulfillmentState: document!.fulfillmentState ?? "not_requested"
     })),
-    manifest: { id: manifest._id, fulfillmentState: manifest.fulfillmentState ?? "not_requested" }
+    manifest: { id: manifest._id, fulfillmentState: manifest.fulfillmentState ?? "not_requested" },
+    allowEmptyManifest: detail.expediente.workflowVariant === "empty_manifest"
   });
 
   if (scope === "remesas") {

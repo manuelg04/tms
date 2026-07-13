@@ -123,7 +123,19 @@ export function validateDurableActionPayload(
     return { ok: true, missingFields: [], invalidFields: [] };
   }
 
-  const missingFields = contract.strings.filter((field) => !hasRequiredString(payload, field));
+  const workflowVariant = readPath(payload, "workflowVariant");
+  const optional = new Set<string>();
+  if (operationType === "emit_remesa" && workflowVariant === "remesa_without_order") optional.add("cargoNumber");
+  if (operationType === "emit_manifest" && workflowVariant === "remesa_without_order") {
+    optional.add("tripNumber");
+    optional.add("cargoNumber");
+  }
+  if (operationType === "emit_manifest" && workflowVariant === "empty_manifest") {
+    optional.add("tripNumber");
+    optional.add("remesaNumber");
+    optional.add("cargoNumber");
+  }
+  const missingFields = contract.strings.filter((field) => !optional.has(field) && !hasRequiredString(payload, field));
   const invalidFields: string[] = [];
 
   for (const field of contract.numbers) {

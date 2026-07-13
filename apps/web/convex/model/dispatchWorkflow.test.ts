@@ -172,6 +172,35 @@ test("a fulfilled manifest closes the dispatch", () => {
   assert.equal(stage.stage, "cumplido");
 });
 
+test("authorized legacy documents do not send the operator back to missing draft forms", () => {
+  const stage = deriveDispatchStage({
+    annulled: false,
+    loadingOrder: { missingFields: ["Orden de cargue sin iniciar"], officialState: "authorized" },
+    consignments: [{ missingFields: ["Remesa sin borrador"], officialState: "authorized", fulfillmentState: "not_requested" }],
+    assignment: { vehicleAssigned: true, driverAssigned: true },
+    manifest: { missingFields: ["Manifiesto sin preparar"], officialState: "authorized", fulfillmentState: "not_requested" },
+    cargoInfoState: "authorized",
+    logistics: { originComplete: false, destinationComplete: false, finalDeliveryRecorded: false }
+  });
+
+  assert.equal(stage.stage, "cargue_descargue");
+  assert.deepEqual(stage.blockers, []);
+});
+
+test("a legacy authorized remesa and manifest chain does not require a missing local loading-order record", () => {
+  const stage = deriveDispatchStage({
+    annulled: false,
+    loadingOrder: null,
+    consignments: [{ missingFields: ["Remesa sin borrador"], officialState: "authorized", fulfillmentState: "not_requested" }],
+    assignment: { vehicleAssigned: true, driverAssigned: true },
+    manifest: { missingFields: [], officialState: "authorized", fulfillmentState: "not_requested" },
+    cargoInfoState: "draft",
+    logistics: { originComplete: false, destinationComplete: false, finalDeliveryRecorded: false }
+  });
+
+  assert.equal(stage.stage, "cargue_descargue");
+});
+
 test("an annulled dispatch reports the annulled stage", () => {
   assert.equal(deriveDispatchStage(baseProjection({ annulled: true })).stage, "anulado");
 });

@@ -3,7 +3,7 @@ import { getAuthSettings, jsonResponse, readRequestSession } from "./auth-server
 
 export type DurableEvidenceHeaderInput = {
   organizationId: string;
-  expedienteId: string;
+  expedienteId?: string;
   documentId?: string;
   operationId: string;
   operationType: string;
@@ -84,7 +84,7 @@ export function buildDurableEvidenceHeaders(input: DurableEvidenceHeaderInput): 
   return {
     "X-TMS-Durable-Operation": "true",
     "X-TMS-Organization-Id": input.organizationId,
-    "X-TMS-Expediente-Id": input.expedienteId,
+    ...(input.expedienteId ? { "X-TMS-Expediente-Id": input.expedienteId } : {}),
     ...(input.documentId ? { "X-TMS-Document-Id": input.documentId } : {}),
     "X-TMS-Operation-Id": input.operationId,
     "X-TMS-Operation-Type": input.operationType,

@@ -139,6 +139,22 @@ CONVEX_AUTH_JWKS=<jwks-configurado>
 
 La autenticacion de demostracion esta pensada para validar roles y pantallas. No debe desbloquear trafico RNDC continuo. Antes de produccion debe existir un modo de autenticacion soportado para usuarios reales, con revocacion y trazabilidad.
 
+### Interruptor de escrituras oficiales en Convex
+
+Las emisiones, cumplidos, correcciones y anulaciones permanecen bloqueadas en modo `live` aunque el backend cambie accidentalmente. Solamente durante una ventana real aprobada se habilita el segundo interruptor en el despliegue Convex de produccion:
+
+```bash
+npx convex env set RNDC_LIVE_WRITES_ENABLED true --prod
+```
+
+El gateway y el backend tambien deben usar `RNDC_MODE=live`. Al cerrar la ventana o ante cualquier condicion de parada, volver a bloquear primero Convex y luego devolver gateway y backend a `dry-run`:
+
+```bash
+npx convex env set RNDC_LIVE_WRITES_ENABLED false --prod
+```
+
+No definir este valor en desarrollo. Su ausencia equivale a `false`.
+
 ## Manejo de secretos
 
 Generar valores independientes:

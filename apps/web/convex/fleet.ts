@@ -1,9 +1,29 @@
 import { paginationOptsValidator } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import type { Doc } from "./_generated/dataModel";
-import type { QueryCtx } from "./_generated/server";
-import { requireActor } from "./model/access";
+import type { Doc, Id } from "./_generated/dataModel";
+import type { MutationCtx, QueryCtx } from "./_generated/server";
+import { appendAudit, requireActor } from "./model/access";
+import { normalizeDriverInput, normalizeThirdPartyInput, normalizeVehicleInput, type ThirdPartyInput } from "./model/masterData";
+
+const thirdPartyRoleValidator = v.union(
+  v.literal("owner"),
+  v.literal("possessor"),
+  v.literal("holder"),
+  v.literal("sender"),
+  v.literal("recipient"),
+  v.literal("other")
+);
+
+const thirdPartyInputValidator = v.object({
+  documentType: v.string(),
+  document: v.string(),
+  name: v.string(),
+  phone: v.optional(v.string()),
+  address: v.optional(v.string()),
+  cityCode: v.optional(v.string()),
+  roles: v.array(thirdPartyRoleValidator)
+});
 
 const driverInputValidator = v.object({
   document: v.string(),
@@ -15,6 +35,7 @@ const driverInputValidator = v.object({
   bloodType: v.optional(v.string()),
   address: v.optional(v.string()),
   city: v.optional(v.string()),
+  cityCode: v.optional(v.string()),
   phone1: v.optional(v.string()),
   phone2: v.optional(v.string()),
   cellphone: v.optional(v.string()),
@@ -48,7 +69,10 @@ const vehicleInputValidator = v.object({
   possessorDocument: v.optional(v.string()),
   possessorName: v.optional(v.string()),
   possessorCellphone: v.optional(v.string()),
-  possessorPhone: v.optional(v.string())
+  possessorPhone: v.optional(v.string()),
+  insurerNit: v.optional(v.string()),
+  soatExpiresAt: v.optional(v.string()),
+  soatNumber: v.optional(v.string())
 });
 
 const relationInputValidator = v.object({
@@ -147,6 +171,9 @@ const vehicleDetailValidator = v.object({
   possessorName: v.optional(v.string()),
   possessorCellphone: v.optional(v.string()),
   possessorPhone: v.optional(v.string()),
+  insurerNit: v.optional(v.string()),
+  soatExpiresAt: v.optional(v.string()),
+  soatNumber: v.optional(v.string()),
   createdAt: v.number(),
   updatedAt: v.number(),
   drivers: v.array(
@@ -157,6 +184,114 @@ const vehicleDetailValidator = v.object({
     })
   )
 });
+
+export const upsertThirdParty = mutation({
+  args: { input: thirdPartyInputValidator },
+  returns: v.id("thirdParties"),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin", "operator"]);
+    const input = normalizeThirdPartyInput(args.input);
+    const now = Date.now();
+    const existing = await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", input.document)).unique();
+    const fields = { ...input, roles: input.roles ?? ["other" as const], organizationId: actor.organizationId, updatedBy: actor._id, updatedAt: now };
+    const id = existing
+      ? (await ctx.db.patch(existing._id, fields), existing._id)
+      : await ctx.db.insert("thirdParties", { ...fields, createdBy: actor._id, createdAt: now });
+    await appendAudit(ctx, { organizationId: actor.organizationId, actorType: "user", actorId: actor._id, action: existing ? "third_party.updated" : "third_party.created", entityType: "third_party", entityId: id, createdAt: now });
+    return id;
+  }
+});
+
+export const upsertDriver = mutation({
+  args: { input: driverInputValidator },
+  returns: v.id("drivers"),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin", "operator"]);
+    const normalized = normalizeDriverInput({
+      documentType: args.input.documentType,
+      document: args.input.document,
+      name: args.input.name,
+      phone: args.input.cellphone ?? args.input.phone1,
+      address: args.input.address,
+      cityCode: args.input.cityCode,
+      licenseCategory: args.input.licenseCategory,
+      licenseNumber: args.input.licenseNumber,
+      licenseExpiresAt: args.input.licenseExpiresAt
+    });
+    const now = Date.now();
+    const existing = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", normalized.document)).unique();
+    const { phone, ...driverFields } = normalized;
+    const fields = { ...args.input, ...driverFields, organizationId: actor.organizationId, cellphone: phone, status: args.input.status ?? "active", updatedAt: now };
+    const id = existing
+      ? (await ctx.db.patch(existing._id, fields), existing._id)
+      : await ctx.db.insert("drivers", { ...fields, createdAt: now });
+    await upsertPartyRecord(ctx, actor.organizationId, actor._id, { documentType: normalized.documentType, document: normalized.document, name: normalized.name, phone: normalized.phone, address: normalized.address, cityCode: normalized.cityCode, roles: ["other"] }, now);
+    await appendAudit(ctx, { organizationId: actor.organizationId, actorType: "user", actorId: actor._id, action: existing ? "driver.updated" : "driver.created", entityType: "driver", entityId: id, createdAt: now });
+    return id;
+  }
+});
+
+export const upsertVehicle = mutation({
+  args: { input: vehicleInputValidator, driverDocument: v.optional(v.string()) },
+  returns: v.id("vehicles"),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin", "operator"]);
+    const input = normalizeVehicleInput(args.input);
+    const now = Date.now();
+    const existing = await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).eq("plate", input.plate)).unique();
+    const fields = { ...args.input, ...input, organizationId: actor.organizationId, updatedAt: now };
+    const vehicleId = existing
+      ? (await ctx.db.patch(existing._id, fields), existing._id)
+      : await ctx.db.insert("vehicles", { ...fields, createdAt: now });
+    const driverDocument = args.driverDocument?.trim();
+    if (driverDocument) {
+      const driver = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", driverDocument)).unique();
+      if (!driver) throw new ConvexError({ code: "NOT_FOUND", message: "El conductor seleccionado no existe en maestros" });
+      const relation = await ctx.db.query("driverVehicles").withIndex("by_document_and_plate", (q) => q.eq("driverDocument", driverDocument).eq("vehiclePlate", input.plate)).unique();
+      if (relation) await ctx.db.patch(relation._id, { driverId: driver._id, vehicleId, roles: ["primary"], updatedAt: now });
+      else await ctx.db.insert("driverVehicles", { driverId: driver._id, vehicleId, driverDocument, vehiclePlate: input.plate, roles: ["primary"], createdAt: now, updatedAt: now });
+    }
+    await appendAudit(ctx, { organizationId: actor.organizationId, actorType: "user", actorId: actor._id, action: existing ? "vehicle.updated" : "vehicle.created", entityType: "vehicle", entityId: vehicleId, createdAt: now });
+    return vehicleId;
+  }
+});
+
+export const listThirdParties = query({
+  args: {},
+  returns: v.array(v.any()),
+  handler: async (ctx) => {
+    const actor = await requireActor(ctx);
+    return await ctx.db.query("thirdParties").withIndex("by_organization_and_name", (q) => q.eq("organizationId", actor.organizationId)).order("asc").take(250);
+  }
+});
+
+export const registrationBundle = query({
+  args: { driverDocument: v.string(), vehiclePlate: v.string() },
+  returns: v.any(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin", "operator"]);
+    const driver = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", args.driverDocument.trim())).unique();
+    const vehicle = await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).eq("plate", args.vehiclePlate.trim().toUpperCase())).unique();
+    if (!driver || !vehicle?.ownerDocument || !vehicle.possessorDocument) return null;
+    const [owner, possessor] = await Promise.all([
+      ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", vehicle.ownerDocument!)).unique(),
+      ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", vehicle.possessorDocument!)).unique()
+    ]);
+    if (!owner || !possessor) return null;
+    return { organizationId: actor.organizationId, driver, vehicle, owner, possessor, version: Math.max(driver.updatedAt, vehicle.updatedAt, owner.updatedAt, possessor.updatedAt) };
+  }
+});
+
+async function upsertPartyRecord(ctx: MutationCtx, organizationId: Id<"organizations">, actorId: Id<"users">, raw: ThirdPartyInput, now: number): Promise<Id<"thirdParties">> {
+  const input = normalizeThirdPartyInput(raw);
+  const existing = await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", organizationId).eq("document", input.document)).unique();
+  const roles = [...new Set([...(existing?.roles ?? []), ...(input.roles ?? [])])];
+  if (existing) {
+    await ctx.db.patch(existing._id, { ...input, roles, updatedBy: actorId, updatedAt: now });
+    return existing._id;
+  }
+  return await ctx.db.insert("thirdParties", { ...input, roles, organizationId, createdBy: actorId, updatedBy: actorId, createdAt: now, updatedAt: now });
+}
 
 export const upsertFleetBatch = mutation({
   args: {

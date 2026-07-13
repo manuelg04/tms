@@ -3,6 +3,8 @@ import { mutation, query } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
 import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
+import { actionableNotification } from "./model/actionableNotification";
+import { refreshDispatchSearchText } from "./model/dispatchSearchProjection";
 import {
   applyDocumentEvent,
   initialDocumentLifecycle,
@@ -149,6 +151,7 @@ export const createDraft = mutation({
       entityId: documentId,
       createdAt: now
     });
+    await refreshDispatchSearchText(ctx, expediente._id);
     return documentId;
   }
 });
@@ -222,6 +225,9 @@ export async function recordAcceptance(
     detailsJson: input.detailsJson,
     createdAt: recordedAt
   });
+  if (document.expedienteId) {
+    await refreshDispatchSearchText(ctx, document.expedienteId);
+  }
   const updated = await ctx.db.get("documents", document._id);
 
   if (!updated) {
@@ -301,6 +307,22 @@ export async function applyLifecycle(
       occurredAt: now,
       actorId: input.actorId
     });
+    const notificationEvent = input.errorText?.toLocaleLowerCase("es").includes("evidencia") ? "evidence_failed" : input.event;
+    const notification = actionableNotification(notificationEvent, document.expedienteId);
+    if (notification) {
+      await ctx.db.insert("notifications", {
+        organizationId: document.organizationId,
+        title: notification.title,
+        body: input.errorText ?? lifecycleEventTitle(input.event),
+        status: "unread",
+        relatedTripId: document.tripId,
+        relatedDocumentId: document._id,
+        category: notification.category,
+        actionLabel: notification.actionLabel,
+        actionHref: notification.actionHref,
+        createdAt: now
+      });
+    }
   }
 
   await appendAudit(ctx, {
@@ -314,6 +336,9 @@ export async function applyLifecycle(
     detailsJson: input.detailsJson,
     createdAt: now
   });
+  if (document.expedienteId) {
+    await refreshDispatchSearchText(ctx, document.expedienteId);
+  }
   const updated = await ctx.db.get("documents", document._id);
 
   if (!updated) {

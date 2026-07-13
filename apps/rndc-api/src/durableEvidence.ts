@@ -7,7 +7,7 @@ import { anyApi } from "convex/server";
 
 export type DurableEvidenceContext = {
   organizationId: string;
-  expedienteId: string;
+  expedienteId?: string;
   documentId?: string;
   operationId: string;
   expectedMode: "dry-run" | "live";
@@ -85,7 +85,7 @@ export function readDurableEvidenceContext(getHeader: (name: string) => string |
   const operationType = cleanHeader(getHeader("X-TMS-Operation-Type"));
   const leaseOwner = cleanHeader(getHeader("X-TMS-Lease-Owner"));
 
-  if (!organizationId || !expedienteId || !operationId || !operationType || !leaseOwner || (expectedMode !== "dry-run" && expectedMode !== "live")) {
+  if (!organizationId || !operationId || !operationType || !leaseOwner || (expectedMode !== "dry-run" && expectedMode !== "live") || (documentId && !expedienteId)) {
     return { requested: true, error: "Durable evidence references are incomplete" };
   }
 
@@ -93,7 +93,7 @@ export function readDurableEvidenceContext(getHeader: (name: string) => string |
     requested: true,
     context: {
       organizationId,
-      expedienteId,
+      ...(expedienteId ? { expedienteId } : {}),
       ...(documentId ? { documentId } : {}),
       operationId,
       expectedMode,
@@ -228,7 +228,7 @@ export async function storeDurableEvidenceToConvex(
           const artifactId = await client.mutation(anyApi.evidence.finalizeServiceUpload, {
             serviceKey,
             organizationId: evidenceContext.organizationId,
-            expedienteId: evidenceContext.expedienteId,
+            ...(evidenceContext.expedienteId ? { expedienteId: evidenceContext.expedienteId } : {}),
             ...(evidenceContext.documentId ? { documentId: evidenceContext.documentId } : {}),
             rndcOperationId: evidenceContext.operationId,
             storageId: uploaded.storageId,
@@ -267,7 +267,7 @@ export async function validateDurableContextWithConvex(
     return await client.query(anyApi.rndcOperations.validateDurableContextForService, {
       serviceKey,
       organizationId: context.organizationId,
-      expedienteId: context.expedienteId,
+      ...(context.expedienteId ? { expedienteId: context.expedienteId } : {}),
       ...(context.documentId ? { documentId: context.documentId } : {}),
       operationId: context.operationId,
       mode: context.expectedMode,

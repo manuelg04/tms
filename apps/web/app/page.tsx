@@ -68,8 +68,8 @@ export default function Home() {
             <div className="skeleton">Cargando…</div>
           ) : notifications.length === 0 ? (
             <div className="empty-state">
-              Aqui veras cada respuesta del RNDC. Emite un documento desde{" "}
-              <Link href="/operaciones">Operaciones</Link>.
+              Aquí verás cada respuesta del RNDC. Inicia o continúa el recorrido desde{" "}
+              <Link href="/expedientes">Despachos</Link>.
             </div>
           ) : (
             <div className="notif-list">
@@ -83,6 +83,7 @@ export default function Home() {
                     <strong>{notification.title}</strong>
                     <p>{notification.body}</p>
                     <time>{formatTimestamp(notification.createdAt)}</time>
+                    {notification.actionHref && notification.actionLabel ? <Link className="notification-action" href={notification.actionHref}>{notification.actionLabel}</Link> : null}
                   </div>
                 </div>
               ))}

@@ -61,14 +61,19 @@ const manifestSnapshot = {
 };
 
 const assignmentSnapshot = {
-  driver: { document: "71851149", documentType: "C.C", name: "ZOILO ANDRES MAZO" },
+  driver: { document: "71851149", documentType: "C.C", name: "ZOILO ANDRES MAZO", cellphone: "3001234567", licenseNumber: "71851149", licenseCategory: "C2", cityCode: "11001000" },
   secondDriver: null,
   vehicle: {
     plate: "STO172",
     trailer: "R80508",
+    make: "KENWORTH",
+    modelYear: "2022",
+    configuration: "3S3",
+    emptyWeightTn: "8",
     possessorDocument: "1002329298",
     possessorName: "AVILA CHAVEZ MARIA FERNANDA"
   },
+  vehicleHolder: { documentType: "C", document: "1002329298", name: "AVILA CHAVEZ MARIA FERNANDA", phone: "3007654321", address: "CALLE 10", cityCode: "11001000" },
   trailer: null
 };
 
@@ -96,6 +101,25 @@ test("a fresh dispatch plans cargo, consignments, trip and manifest in order", (
     ["emit_loading_order", "emit_remesa", "register_trip", "issue_manifest"]
   );
   assert.deepEqual(plan.ok ? plan.steps.map((step) => step.state) : [], ["pending", "pending", "pending", "pending"]);
+});
+
+test("document payloads carry the persisted display data required by their PDFs", () => {
+  const plan = buildEmissionPlan(baseInput());
+  assert.equal(plan.ok, true);
+  if (!plan.ok) return;
+  const cargo = plan.steps.find((step) => step.action === "emit_loading_order")?.payload as Record<string, any>;
+  const remesa = plan.steps.find((step) => step.action === "emit_remesa")?.payload as Record<string, any>;
+  const manifest = plan.steps.find((step) => step.action === "issue_manifest")?.payload as Record<string, any>;
+
+  assert.equal(cargo.expeditionDate, "2026-07-10");
+  assert.equal(cargo.driver.fullName, "ZOILO ANDRES MAZO");
+  assert.equal(cargo.vehicle.brand, "KENWORTH");
+  assert.equal(remesa.expeditionDate, "2026-07-10");
+  assert.equal(remesa.vehicle.plate, "STO172");
+  assert.equal(remesa.cargo.productName, "MAIZ");
+  assert.equal(manifest.sender.cityName, "BARRANQUILLA");
+  assert.equal(manifest.recipient.cityName, "GIRON");
+  assert.equal(manifest.vehicleHolder.fullName, "AVILA CHAVEZ MARIA FERNANDA");
 });
 
 test("authorized documents are skipped and never resent", () => {
@@ -196,8 +220,10 @@ test("payloads are built only from snapshot data", () => {
 
   const trip = plan.steps[2].payload;
   assert.equal(trip.tripNumber, "0000001");
-  assert.deepEqual(trip.driver, { idType: "C", id: "71851149" });
-  assert.deepEqual(trip.vehicle, { plate: "STO172", trailerPlate: "R80508" });
+  assert.equal((trip.driver as Record<string, unknown>).id, "71851149");
+  assert.equal((trip.driver as Record<string, unknown>).fullName, "ZOILO ANDRES MAZO");
+  assert.equal((trip.vehicle as Record<string, unknown>).plate, "STO172");
+  assert.equal((trip.vehicle as Record<string, unknown>).trailerPlate, "R80508");
   assert.equal((trip.money as Record<string, unknown>).freightValue, 3500000);
 
   const manifest = plan.steps[3].payload;
@@ -206,7 +232,8 @@ test("payloads are built only from snapshot data", () => {
   assert.equal(manifest.remesaNumber, "00001");
   assert.equal(manifest.expeditionDate, "2026-07-10");
   assert.equal(manifest.balancePaymentDate, "2026-07-20");
-  assert.deepEqual(manifest.vehicleHolder, { idType: "C", id: "1002329298" });
+  assert.equal((manifest.vehicleHolder as Record<string, unknown>).id, "1002329298");
+  assert.equal((manifest.vehicleHolder as Record<string, unknown>).fullName, "AVILA CHAVEZ MARIA FERNANDA");
   assert.equal((manifest.money as Record<string, unknown>).advanceValue, 1500000);
   assert.equal((manifest.money as Record<string, unknown>).icaRetentionPerMille, 0);
 });
@@ -273,4 +300,38 @@ test("a fully authorized and emitted dispatch has no pending steps", () => {
 
   assert.equal(plan.ok, true);
   assert.equal(plan.ok ? plan.steps.every((step) => step.state === "authorized") : false, true);
+});
+
+test("remesa without loading order emits the remesa and manifest without invented cargo or trip numbers", () => {
+  const plan = buildEmissionPlan({
+    ...baseInput(),
+    workflowVariant: "remesa_without_order",
+    order: { number: undefined, snapshot: null, officialState: "draft" },
+    tripNumber: undefined
+  } as EmissionPlanInput);
+
+  assert.equal(plan.ok, true);
+  if (!plan.ok) return;
+  assert.deepEqual(plan.steps.map((step) => step.action), ["emit_remesa", "issue_manifest"]);
+  assert.equal("cargoNumber" in plan.steps[0].payload, false);
+  assert.equal("tripNumber" in plan.steps[1].payload, false);
+});
+
+test("empty manifest emits only a Viaje Vacío manifest with no remesa or tracking fields", () => {
+  const plan = buildEmissionPlan({
+    ...baseInput(),
+    workflowVariant: "empty_manifest",
+    order: { number: undefined, snapshot: null, officialState: "draft" },
+    consignments: [],
+    tripNumber: undefined,
+    manifest: { number: "0000009", snapshot: { ...manifestSnapshot, manifestType: "W", emptyManifestReason: "Retorno vacío" }, officialState: "draft" }
+  } as EmissionPlanInput);
+
+  assert.equal(plan.ok, true);
+  if (!plan.ok) return;
+  assert.deepEqual(plan.steps.map((step) => step.action), ["issue_manifest"]);
+  assert.equal(plan.steps[0].payload.manifestType, "W");
+  assert.equal("remesaNumber" in plan.steps[0].payload, false);
+  assert.equal("manifestRemesas" in plan.steps[0].payload, false);
+  assert.equal("gpsOperator" in plan.steps[0].payload, false);
 });

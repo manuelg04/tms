@@ -15,6 +15,7 @@ export type LogisticsSiteTimeline = {
 export type FulfillmentPlanInput = {
   consignments: Array<{ id: string; fulfillmentState: string }>;
   manifest: { id: string; fulfillmentState: string } | null;
+  allowEmptyManifest?: boolean;
 };
 
 export type FulfillmentPlanStep = { kind: "remesa" | "manifiesto"; id: string };
@@ -56,8 +57,12 @@ export function validateLogisticsTimeline(input: LogisticsTimelineInput): string
 }
 
 export function buildFulfillmentPlan(input: FulfillmentPlanInput): FulfillmentPlanStep[] {
-  if (!input.manifest || input.consignments.length === 0) {
+  if (!input.manifest || (input.consignments.length === 0 && !input.allowEmptyManifest)) {
     return [];
+  }
+
+  if (input.consignments.length === 0) {
+    return input.manifest.fulfillmentState === "fulfilled" ? [] : [{ kind: "manifiesto", id: input.manifest.id }];
   }
 
   if (input.consignments.some((item) => ["pending", "rejected", "annulment_pending"].includes(item.fulfillmentState))) {

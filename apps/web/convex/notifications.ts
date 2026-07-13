@@ -11,13 +11,20 @@ export const list = query({
       title: v.string(),
       body: v.string(),
       status: v.union(v.literal("unread"), v.literal("read")),
+      category: v.optional(v.union(v.literal("rejection"), v.literal("reconciliation"), v.literal("fulfillment"), v.literal("evidence"))),
+      actionLabel: v.optional(v.string()),
+      actionHref: v.optional(v.string()),
       createdAt: v.number()
     })
   ),
   handler: async (ctx) => {
     const actor = await requireActor(ctx);
-    const notifications = (await ctx.db.query("notifications").order("desc").take(200))
-      .filter((notification) => notification.organizationId === actor.organizationId && (!notification.userId || notification.userId === actor._id))
+    const notifications = (await ctx.db
+      .query("notifications")
+      .withIndex("by_organization_and_created_at", (q) => q.eq("organizationId", actor.organizationId))
+      .order("desc")
+      .take(200))
+      .filter((notification) => !notification.userId || notification.userId === actor._id)
       .slice(0, 30);
     return notifications.map((notification) => ({
       _id: notification._id,
@@ -25,6 +32,9 @@ export const list = query({
       title: notification.title,
       body: notification.body,
       status: notification.status,
+      category: notification.category,
+      actionLabel: notification.actionLabel,
+      actionHref: notification.actionHref,
       createdAt: notification.createdAt
     }));
   }

@@ -187,6 +187,39 @@ test("accepts complete emission contracts and rejects non-finite required number
   assert.deepEqual(invalid.invalidFields, ["money.freightValue"]);
 });
 
+test("accepts advanced remesa and Viaje Vacío contracts without invented document links", () => {
+  const party = { idType: "N", id: "9001", siteCode: "1", cityCode: "11001000" };
+  const cargo = { shortDescription: "Carga", merchandiseCode: "001", packageCode: "10", natureCode: "1", quantityKg: 1_000 };
+  const remesa = validateDurableActionPayload("emit_remesa", {
+    workflowVariant: "remesa_without_order",
+    remesaNumber: "R-1",
+    loadingAppointmentDate: "10/07/2026",
+    loadingAppointmentTime: "08:00",
+    unloadingAppointmentDate: "11/07/2026",
+    unloadingAppointmentTime: "09:00",
+    sender: party,
+    recipient: party,
+    cargo,
+    cargoPolicy: { number: "P-1", expirationDate: "10/07/2027", insurerNit: "9003" }
+  });
+  const emptyManifest = validateDurableActionPayload("emit_manifest", {
+    workflowVariant: "empty_manifest",
+    manifestType: "W",
+    manifestNumber: "M-1",
+    expeditionDate: "10/07/2026",
+    balancePaymentDate: "11/07/2026",
+    driver: { idType: "C", id: "1001" },
+    vehicle: { plate: "ABC123" },
+    vehicleHolder: { idType: "C", id: "1002" },
+    sender: { cityCode: "11001000" },
+    recipient: { cityCode: "68001000" },
+    money: { freightValue: 1_000, advanceValue: 0, icaRetentionPerMille: 0 }
+  });
+
+  assert.equal(remesa.ok, true);
+  assert.equal(emptyManifest.ok, true);
+});
+
 function authenticatedActionRequest(body: Record<string, unknown>): Request {
   const user = demoUsers.find((candidate) => candidate.role === "operator");
 

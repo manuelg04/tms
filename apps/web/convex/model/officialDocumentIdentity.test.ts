@@ -22,6 +22,7 @@ type IdentityModule = {
     rejected: string;
   } | undefined;
   requiresDryRunOperation?: (operationType: string) => boolean;
+  liveOperationBlocked?: (operationType: string, liveWritesEnabled: boolean) => boolean;
   manifestIssuanceOperationMatches?: (input: {
     document: { id: string; organizationId?: string; expedienteId?: string; kind: string; number?: string; mode?: string };
     operation: { organizationId: string; expedienteId?: string; documentId?: string; operationType: string; status: string; mode: string; payload: unknown };
@@ -42,6 +43,7 @@ const bindPayloadToPersistedDocument = identityModule.bindPayloadToPersistedDocu
 const readOperationDocumentNumber = identityModule.readOperationDocumentNumber ?? (() => undefined);
 const lifecyclePlanForOperation = identityModule.lifecyclePlanForOperation ?? (() => undefined);
 const requiresDryRunOperation = identityModule.requiresDryRunOperation ?? (() => false);
+const liveOperationBlocked = identityModule.liveOperationBlocked ?? (() => true);
 const manifestIssuanceOperationMatches = identityModule.manifestIssuanceOperationMatches ?? (() => false);
 const readManifestIssuanceRadicado = identityModule.readManifestIssuanceRadicado ?? (() => undefined);
 
@@ -124,8 +126,22 @@ test("maps persisted document operations to server-owned lifecycle events", () =
     succeeded: "fulfillment_annulment_succeeded",
     rejected: "fulfillment_annulment_rejected"
   });
+  assert.equal(lifecyclePlanForOperation("annul_trip"), undefined);
   assert.equal(lifecyclePlanForOperation("reconcile"), undefined);
   assert.equal(lifecyclePlanForOperation("query_acceptance"), undefined);
+});
+
+test("binds trip annulment to the persisted manifest while keeping the trip identity", () => {
+  assert.deepEqual(bindPayloadToPersistedDocument({
+    operationType: "annul_trip",
+    payload: { target: "trip-information", tripNumber: "V-0001", reasonCode: "A" },
+    documentKind: "manifiesto",
+    documentNumber: "M-0001"
+  }), {
+    ok: true,
+    payload: { target: "trip-information", tripNumber: "V-0001", reasonCode: "A" },
+    documentNumber: "M-0001"
+  });
 });
 
 test("keeps official write actions in dry-run until canonical persistence is complete", () => {
@@ -134,9 +150,15 @@ test("keeps official write actions in dry-run until canonical persistence is com
   assert.equal(requiresDryRunOperation("annul_manifest_fulfillment"), true);
   assert.equal(requiresDryRunOperation("emit_remesa"), true);
   assert.equal(requiresDryRunOperation("fulfill_manifest"), true);
-  assert.equal(requiresDryRunOperation("upsert_vehicle"), true);
+  assert.equal(requiresDryRunOperation("upsert_vehicle"), false);
   assert.equal(requiresDryRunOperation("reconcile"), false);
   assert.equal(requiresDryRunOperation("query_acceptance"), false);
+});
+
+test("requires an explicit production switch before official writes can run live", () => {
+  assert.equal(liveOperationBlocked("emit_manifest", false), true);
+  assert.equal(liveOperationBlocked("emit_manifest", true), false);
+  assert.equal(liveOperationBlocked("upsert_vehicle", false), false);
 });
 
 test("requires a dedicated manifest issuance radicado", () => {

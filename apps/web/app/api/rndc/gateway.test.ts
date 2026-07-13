@@ -100,6 +100,21 @@ test("builds server-only durable evidence references and reads the backend stora
   assert.equal(durableEvidenceWasStored({ ok: true }), false);
 });
 
+test("builds durable master-operation headers without inventing an expediente", () => {
+  assert.deepEqual(buildDurableEvidenceHeaders({
+    organizationId: "org-1",
+    operationId: "operation-1",
+    operationType: "upsert_vehicle",
+    leaseOwner: "worker-1"
+  }), {
+    "X-TMS-Durable-Operation": "true",
+    "X-TMS-Organization-Id": "org-1",
+    "X-TMS-Operation-Id": "operation-1",
+    "X-TMS-Operation-Type": "upsert_vehicle",
+    "X-TMS-Lease-Owner": "worker-1"
+  });
+});
+
 test("builds a private attachment response without allowing a hostile file name", () => {
   const headers = buildEvidenceDownloadHeaders("../request\r\n.xml", "application/xml", 404);
 

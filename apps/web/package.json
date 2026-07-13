@@ -7,17 +7,21 @@
     "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "test": "node --import tsx --test app/lib/auth.test.ts app/lib/auth-client.test.ts app/lib/rndc-action-config.test.ts app/lib/rndc-action-outcome.test.ts app/api/auth/auth-routes.test.ts app/api/rndc/gateway.test.ts 'app/api/rndc/forms/[[]operation]/route.test.ts' 'app/api/rndc/actions/[[]action]/route.test.ts' 'app/api/rndc/dispatches/[[]expedienteId]/emit/route.test.ts' 'app/api/rndc/dispatches/[[]expedienteId]/fulfill/route.test.ts' app/operaciones/form-state.test.ts app/operaciones/operations-config.test.ts app/operaciones/form-autofill.test.ts app/operaciones/consecutivos.test.ts app/operaciones/counter-reservation.test.ts convex/model/consecutiveRange.test.ts convex/model/emissionPlan.test.ts convex/model/dispatchSnapshot.test.ts convex/model/dispatchWorkflow.test.ts convex/model/dispatchPresentation.test.ts convex/model/fulfillmentWorkflow.test.ts convex/model/dashboardStatus.test.ts convex/model/documentLifecycle.test.ts convex/model/officialDocumentIdentity.test.ts convex/model/operationIntent.test.ts convex/model/operationState.test.ts convex/model/reconciliationOutcome.test.ts",
+    "test": "node --import tsx --test app/lib/auth.test.ts app/lib/auth-client.test.ts app/lib/rndc-action-config.test.ts app/lib/rndc-action-outcome.test.ts app/lib/exportSchemas.test.ts app/api/auth/auth-routes.test.ts app/api/exports/dispatches/route.test.ts app/api/rndc/gateway.test.ts app/api/rndc/masters/register/route.test.ts 'app/api/rndc/forms/[[]operation]/route.test.ts' 'app/api/rndc/actions/[[]action]/route.test.ts' 'app/api/rndc/dispatches/[[]expedienteId]/emit/route.test.ts' 'app/api/rndc/dispatches/[[]expedienteId]/fulfill/route.test.ts' app/api/rndc/dispatches/advanced-routes.test.ts app/operaciones/form-state.test.ts app/operaciones/operations-config.test.ts app/operaciones/form-autofill.test.ts app/operaciones/consecutivos.test.ts app/operaciones/counter-reservation.test.ts convex/model/consecutiveRange.test.ts convex/model/emissionPlan.test.ts convex/model/dispatchSnapshot.test.ts convex/model/dispatchWorkflow.test.ts convex/model/dispatchPresentation.test.ts convex/model/fulfillmentWorkflow.test.ts convex/model/advancedWorkflow.test.ts convex/model/dispatchSearch.test.ts convex/model/volumeFixtures.test.ts convex/model/actionableNotification.test.ts convex/model/dashboardStatus.test.ts convex/model/documentLifecycle.test.ts convex/model/officialDocumentIdentity.test.ts convex/model/operationIntent.test.ts convex/model/operationState.test.ts convex/model/reconciliationOutcome.test.ts convex/model/masterData.test.ts convex/model/documentPdf.test.ts",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "convex:dev": "convex dev",
     "convex:once": "convex dev --once",
     "ingest:fleet": "tsx scripts/ingest-fleet.ts",
     "auth:setup-demo": "tsx scripts/setup-demo-auth.ts",
-    "demo:bootstrap": "tsx scripts/bootstrap-demo-workspace.ts"
+    "demo:bootstrap": "tsx scripts/bootstrap-demo-workspace.ts",
+    "dispatch-search:rebuild": "tsx scripts/backfill-dispatch-search.ts",
+    "volume:seed": "tsx scripts/seed-dispatch-volume.ts",
+    "volume:cleanup": "tsx scripts/cleanup-dispatch-volume.ts"
   },
   "dependencies": {
     "convex": "^1.42.0",
+    "exceljs": "^4.4.0",
     "next": "^16.2.9",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"

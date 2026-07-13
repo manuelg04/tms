@@ -347,6 +347,7 @@ test("prepares multiple remesa rows and acceptance text for the manifest PDF", (
   const resolveManifestRemesas = requireApi<(scenario: unknown) => unknown[]>("resolveManifestRemesas");
   const formatManifestAcceptances = requireApi<(acceptances: unknown[]) => string>("formatManifestAcceptances");
   const documentFooterText = requireApi<(mode: "dry-run" | "live") => string>("documentFooterText");
+  const loadingOrderBranding = (core as unknown as { loadingOrderBranding?: { systemName: string; agencyName: string } }).loadingOrderBranding;
   const scenario = buildMtmReferenceScenario(loadConfig());
   Object.assign(scenario, {
     manifestRemesas: [
@@ -386,6 +387,7 @@ test("prepares multiple remesa rows and acceptance text for the manifest PDF", (
   }]), "Conductor C 80387330 - 09/07/2026 14:30 - Celular 3103040052");
   assert.match(documentFooterText("dry-run"), /MODO PRUEBA/);
   assert.doesNotMatch(documentFooterText("live"), /demo|prueba/i);
+  assert.deepEqual(loadingOrderBranding, { systemName: "MTM TMS", agencyName: "MTM" });
 });
 
 test("sanitizes official document numbers before using them in PDF file names", () => {

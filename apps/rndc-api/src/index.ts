@@ -501,7 +501,19 @@ const requiredNumericFormFields: Record<FormOperation, string[]> = {
 
 function collectMissingFormFields(operation: FormOperation, payload: unknown): string[] {
   const record = isRecord(payload) ? payload : {};
-  const missing = requiredFormFields[operation].filter((path) => !hasFormValue(record, path));
+  const workflowVariant = readString(record, "workflowVariant", "");
+  const optional = new Set<string>();
+  if (operation === "remesa" && workflowVariant === "remesa_without_order") optional.add("cargoNumber");
+  if ((operation === "manifest" || operation === "manifest-issue") && workflowVariant === "remesa_without_order") {
+    optional.add("tripNumber");
+    optional.add("cargoNumber");
+  }
+  if ((operation === "manifest" || operation === "manifest-issue") && workflowVariant === "empty_manifest") {
+    optional.add("tripNumber");
+    optional.add("remesaNumber");
+    optional.add("cargoNumber");
+  }
+  const missing = requiredFormFields[operation].filter((path) => !optional.has(path) && !hasFormValue(record, path));
   const compliance = child(record, "compliance");
 
   if (operation === "fulfill-remesa") {
@@ -728,6 +740,12 @@ function buildScenarioFromForm(config: RndcConfig, payload: unknown, allowRefere
   const record = isRecord(payload) ? payload : {};
 
   scenario.seed = readString(record, "seed", scenario.seed);
+  const workflowVariant = readString(record, "workflowVariant", "");
+  if (workflowVariant === "standard" || workflowVariant === "remesa_without_order" || workflowVariant === "empty_manifest" || workflowVariant === "transshipment") {
+    scenario.workflowVariant = workflowVariant;
+  }
+  scenario.manifestType = readOptionalString(record, "manifestType", scenario.manifestType);
+  scenario.sourceManifestNumber = readOptionalString(record, "sourceManifestNumber", scenario.sourceManifestNumber);
   scenario.cargoNumber = readString(record, "cargoNumber", scenario.cargoNumber);
   scenario.tripNumber = readString(record, "tripNumber", scenario.tripNumber);
   scenario.remesaNumber = readString(record, "remesaNumber", scenario.remesaNumber);
@@ -1223,6 +1241,7 @@ function durableOperationTypeForRequest(req: express.Request): string | undefine
     "/rndc/forms/manifest-issue": "emit_manifest",
     "/rndc/forms/fulfill-remesa": "fulfill_remesa",
     "/rndc/forms/fulfill-manifest": "fulfill_manifest",
+    "/rndc/forms/driver-vehicle": "upsert_vehicle",
     "/rndc/corrections/remesa": "correct_remesa",
     "/rndc/reconciliation": "reconcile",
     "/rndc/acceptances/query": "query_acceptance"

@@ -2,19 +2,34 @@ import type { OfficialDocumentState } from "./documentLifecycle";
 import type { ConsignmentDraft, LoadingOrderDraft, ManifestDraft } from "./dispatchWorkflow";
 
 export type AssignmentSnapshotData = {
-  driver: { document?: string; documentType?: string; name?: string } | null;
+  driver: { document?: string; documentType?: string; name?: string; cellphone?: string; phone1?: string; address?: string; city?: string; cityCode?: string; licenseNumber?: string; licenseCategory?: string; licenseExpiresAt?: string } | null;
   secondDriver: { document?: string; documentType?: string; name?: string } | null;
   vehicle: {
     plate?: string;
     trailer?: string;
+    make?: string;
+    line?: string;
+    modelYear?: string;
+    color?: string;
+    configuration?: string;
+    emptyWeightTn?: string;
+    capacityTn?: string;
+    insurerNit?: string;
+    soatExpiresAt?: string;
+    soatNumber?: string;
     possessorDocument?: string;
     possessorName?: string;
+    possessorCellphone?: string;
+    possessorPhone?: string;
     ownerDocument?: string;
+    ownerName?: string;
   } | null;
+  vehicleHolder?: { documentType?: string; document?: string; name?: string; phone?: string; address?: string; cityCode?: string; cityName?: string } | null;
   trailer: { plate?: string } | null;
 };
 
 export type EmissionPlanInput = {
+  workflowVariant?: "standard" | "remesa_without_order" | "empty_manifest" | "transshipment";
   order: { number?: string; snapshot: (LoadingOrderDraft & Record<string, unknown>) | null; officialState: OfficialDocumentState };
   consignments: Array<{
     remesaId: string;
@@ -95,11 +110,15 @@ export function buildEmissionPlan(input: EmissionPlanInput): EmissionPlanResult 
   }
 
   const notPrepared: string[] = [];
+  const variant = input.workflowVariant ?? "standard";
+  const requiresOrder = variant === "standard" || variant === "transshipment";
+  const requiresConsignments = variant !== "empty_manifest";
+  const requiresTrip = variant === "standard" || variant === "transshipment";
 
-  if (!input.order.snapshot || !input.order.number) {
+  if (requiresOrder && (!input.order.snapshot || !input.order.number)) {
     notPrepared.push("Falta la fotografía de la orden de cargue");
   }
-  if (input.consignments.length === 0) {
+  if (requiresConsignments && input.consignments.length === 0) {
     notPrepared.push("El despacho no tiene remesas");
   }
   for (const consignment of input.consignments) {
@@ -113,7 +132,7 @@ export function buildEmissionPlan(input: EmissionPlanInput): EmissionPlanResult 
   if (!input.assignment) {
     notPrepared.push("Falta la fotografía de la asignación de vehículo y conductor");
   }
-  if (!input.tripNumber) {
+  if (requiresTrip && !input.tripNumber) {
     notPrepared.push("Falta el consecutivo de información de viaje");
   }
 
@@ -121,26 +140,28 @@ export function buildEmissionPlan(input: EmissionPlanInput): EmissionPlanResult 
     return { ok: false, reason: "not_prepared", blockers: notPrepared };
   }
 
-  const order = input.order.snapshot!;
-  const orderNumber = input.order.number!;
+  const order = input.order.snapshot ?? {};
+  const orderNumber = input.order.number;
   const manifest = input.manifest.snapshot!;
   const manifestNumber = input.manifest.number!;
   const assignment = input.assignment!;
-  const tripNumber = input.tripNumber!;
+  const tripNumber = input.tripNumber;
   const steps: EmissionPlanStep[] = [];
 
-  steps.push(
-    finishStep(
-      {
-        key: `cargo:${orderNumber}`,
-        action: "emit_loading_order",
-        documentKind: "orden_cargue",
-        documentNumber: orderNumber
-      },
-      buildCargoPayload(orderNumber, order),
-      isAuthorized(input.order.officialState)
-    )
-  );
+  if (requiresOrder && orderNumber) {
+    steps.push(
+      finishStep(
+        {
+          key: `cargo:${orderNumber}`,
+          action: "emit_loading_order",
+          documentKind: "orden_cargue",
+          documentNumber: orderNumber
+        },
+        buildCargoPayload(orderNumber, order, manifest, assignment),
+        isAuthorized(input.order.officialState)
+      )
+    );
+  }
 
   for (const consignment of input.consignments) {
     const snapshot = consignment.snapshot!;
@@ -153,24 +174,26 @@ export function buildEmissionPlan(input: EmissionPlanInput): EmissionPlanResult 
           documentNumber: consignment.number!,
           remesaId: consignment.remesaId
         },
-        buildConsignmentPayload(consignment.number!, orderNumber, snapshot),
+        buildConsignmentPayload(consignment.number!, orderNumber, snapshot, manifest, assignment, variant),
         isAuthorized(consignment.officialState)
       )
     );
   }
 
-  steps.push(
-    finishStep(
-      {
-        key: `viaje:${tripNumber}`,
-        action: "register_trip",
-        documentKind: "manifiesto",
-        documentNumber: manifestNumber
-      },
-      buildTripPayload(tripNumber, orderNumber, order, manifest, assignment),
-      input.tripEmitted
-    )
-  );
+  if (requiresTrip && tripNumber && orderNumber) {
+    steps.push(
+      finishStep(
+        {
+          key: `viaje:${tripNumber}`,
+          action: "register_trip",
+          documentKind: "manifiesto",
+          documentNumber: manifestNumber
+        },
+        buildTripPayload(tripNumber, orderNumber, order, manifest, assignment),
+        input.tripEmitted
+      )
+    );
+  }
 
   steps.push(
     finishStep(
@@ -180,7 +203,7 @@ export function buildEmissionPlan(input: EmissionPlanInput): EmissionPlanResult 
         documentKind: "manifiesto",
         documentNumber: manifestNumber
       },
-      buildManifestPayload(manifestNumber, tripNumber, orderNumber, input.consignments.map((item) => item.number!), order, manifest, assignment),
+      buildManifestPayload(manifestNumber, tripNumber, orderNumber, input.consignments, order, manifest, assignment, variant),
       isAuthorized(input.manifest.officialState)
     )
   );
@@ -210,7 +233,7 @@ function isAuthorized(state: OfficialDocumentState): boolean {
   return state === "authorized" || state === "fulfilled";
 }
 
-function buildCargoPayload(orderNumber: string, order: LoadingOrderDraft): PayloadDraft {
+function buildCargoPayload(orderNumber: string, order: LoadingOrderDraft, manifest: ManifestDraft, assignment: AssignmentSnapshotData): PayloadDraft {
   const missing: string[] = [];
   const sender = partyPayload(order.sender, "sender", missing);
   const recipient = partyPayload(order.recipient, "recipient", missing);
@@ -218,12 +241,15 @@ function buildCargoPayload(orderNumber: string, order: LoadingOrderDraft): Paylo
   const unloadingDate = appointmentDate(order.unloading?.appointmentAt, "unloadingAppointment", missing);
   const payload: Record<string, unknown> = {
     cargoNumber: orderNumber,
+    expeditionDate: manifest.issueDate,
     loadingAppointmentDate: loadingDate?.date,
     loadingAppointmentTime: loadingDate?.time,
     unloadingAppointmentDate: unloadingDate?.date,
     unloadingAppointmentTime: unloadingDate?.time,
     sender,
     recipient,
+    driver: driverPayload(assignment, []),
+    vehicle: vehiclePayload(assignment, []),
     cargo: cargoPayload(
       {
         shortDescription: order.cargoDescription,
@@ -242,8 +268,11 @@ function buildCargoPayload(orderNumber: string, order: LoadingOrderDraft): Paylo
 
 function buildConsignmentPayload(
   remesaNumber: string,
-  cargoNumber: string,
-  snapshot: ConsignmentDraft
+  cargoNumber: string | undefined,
+  snapshot: ConsignmentDraft,
+  manifest: ManifestDraft,
+  assignment: AssignmentSnapshotData,
+  workflowVariant: EmissionPlanInput["workflowVariant"]
 ): PayloadDraft {
   const missing: string[] = [];
   const sender = partyPayload(snapshot.sender, "sender", missing);
@@ -254,12 +283,16 @@ function buildConsignmentPayload(
   const payload: Record<string, unknown> = {
     remesaNumber,
     cargoNumber,
+    workflowVariant,
+    expeditionDate: manifest.issueDate,
     loadingAppointmentDate: loadingDate?.date,
     loadingAppointmentTime: loadingDate?.time,
     unloadingAppointmentDate: unloadingDate?.date,
     unloadingAppointmentTime: unloadingDate?.time,
     sender,
     recipient,
+    driver: driverPayload(assignment, []),
+    vehicle: vehiclePayload(assignment, []),
     cargo: cargoPayload(
       {
         shortDescription: firstRemission?.description,
@@ -299,31 +332,33 @@ function buildTripPayload(
 
 function buildManifestPayload(
   manifestNumber: string,
-  tripNumber: string,
-  cargoNumber: string,
-  remesaNumbers: string[],
+  tripNumber: string | undefined,
+  cargoNumber: string | undefined,
+  consignments: EmissionPlanInput["consignments"],
   order: LoadingOrderDraft,
   manifest: ManifestDraft,
-  assignment: AssignmentSnapshotData
+  assignment: AssignmentSnapshotData,
+  workflowVariant: EmissionPlanInput["workflowVariant"]
 ): PayloadDraft {
   const missing: string[] = [];
-  const holderId = assignment.vehicle?.possessorDocument ?? assignment.vehicle?.ownerDocument;
+  const remesaNumbers = consignments.map((item) => item.number!).filter(Boolean);
+  const holderId = assignment.vehicleHolder?.document ?? assignment.vehicle?.possessorDocument ?? assignment.vehicle?.ownerDocument;
   const payload: Record<string, unknown> = {
     manifestNumber,
     tripNumber,
     cargoNumber,
-    remesaNumber: requireField(remesaNumbers[0], "remesaNumber", missing),
-    manifestRemesas: remesaNumbers.map((number) => ({ number })),
+    workflowVariant,
+    remesaNumber: remesaNumbers[0],
+    manifestRemesas: remesaNumbers.length > 0 ? consignments.map((item) => consignmentSummary(item)) : undefined,
+    manifestType: manifest.manifestType,
+    sourceManifestNumber: manifest.sourceManifestNumber,
     expeditionDate: requireField(manifest.issueDate, "expeditionDate", missing),
     balancePaymentDate: requireField(manifest.paymentDate ?? manifest.estimatedDeliveryDate, "balancePaymentDate", missing),
     driver: driverPayload(assignment, missing),
     vehicle: vehiclePayload(assignment, missing),
-    vehicleHolder: {
-      idType: holderId ? "C" : requireField(undefined, "vehicleHolder.idType", missing),
-      id: requireField(holderId, "vehicleHolder.id", missing)
-    },
-    sender: { cityCode: requireField(originCityCode(order, manifest), "sender.cityCode", missing) },
-    recipient: { cityCode: requireField(destinationCityCode(order, manifest), "recipient.cityCode", missing) },
+    vehicleHolder: holderPayload(assignment, holderId, missing),
+    sender: { ...displayParty(order.sender, order.loading), cityCode: requireField(originCityCode(order, manifest), "sender.cityCode", missing) },
+    recipient: { ...displayParty(order.recipient, order.unloading), cityCode: requireField(destinationCityCode(order, manifest), "recipient.cityCode", missing) },
     money: {
       freightValue: requireMoney(manifest.freightTotal, "money.freightValue", missing),
       advanceValue: requireMoney(manifest.advance ?? "0", "money.advanceValue", missing),
@@ -353,14 +388,33 @@ function partyPayload(
 function driverPayload(assignment: AssignmentSnapshotData, missing: string[]): Record<string, unknown> {
   return {
     idType: mapIdType(assignment.driver?.documentType, "driver.idType", missing),
-    id: requireField(assignment.driver?.document, "driver.id", missing)
+    id: requireField(assignment.driver?.document, "driver.id", missing),
+    fullName: assignment.driver?.name,
+    phone: assignment.driver?.cellphone ?? assignment.driver?.phone1,
+    address: assignment.driver?.address,
+    cityName: assignment.driver?.city,
+    cityCode: assignment.driver?.cityCode,
+    licenseNumber: assignment.driver?.licenseNumber,
+    licenseCategory: assignment.driver?.licenseCategory,
+    licenseExpirationDate: assignment.driver?.licenseExpiresAt
   };
 }
 
 function vehiclePayload(assignment: AssignmentSnapshotData, missing: string[]): Record<string, unknown> {
   return {
     plate: requireField(assignment.vehicle?.plate, "vehicle.plate", missing),
-    trailerPlate: assignment.trailer?.plate ?? assignment.vehicle?.trailer
+    trailerPlate: assignment.trailer?.plate ?? assignment.vehicle?.trailer,
+    brand: assignment.vehicle?.make,
+    lineCode: assignment.vehicle?.line,
+    modelYear: assignment.vehicle?.modelYear,
+    colorCode: assignment.vehicle?.color,
+    configuration: assignment.vehicle?.configuration,
+    rndcConfigurationCode: assignment.vehicle?.configuration,
+    emptyWeightKg: positiveTons(assignment.vehicle?.emptyWeightTn),
+    capacityKg: positiveTons(assignment.vehicle?.capacityTn),
+    insurerNit: assignment.vehicle?.insurerNit,
+    soatExpirationDate: assignment.vehicle?.soatExpiresAt,
+    soatNumber: assignment.vehicle?.soatNumber
   };
 }
 
@@ -377,12 +431,52 @@ function cargoPayload(
 ): Record<string, unknown> {
   return {
     shortDescription: requireField(cargo.shortDescription, "cargo.shortDescription", missing),
+    productName: cargo.shortDescription,
     merchandiseCode: requireField(cargo.merchandiseCode, "cargo.merchandiseCode", missing),
     packageCode: requireField(cargo.packageCode, "cargo.packageCode", missing),
+    packageName: cargo.packageCode,
     natureCode: requireField(cargo.natureCode, "cargo.natureCode", missing),
+    nature: cargo.natureCode,
     quantityKg: tonsToKg(cargo.weightTons, missing),
     declaredValue: cargo.declaredValue !== undefined ? parseMoney(cargo.declaredValue) : undefined
   };
+}
+
+function holderPayload(assignment: AssignmentSnapshotData, holderId: string | undefined, missing: string[]) {
+  const holder = assignment.vehicleHolder;
+  return {
+    idType: holder?.documentType ? mapIdType(holder.documentType, "vehicleHolder.idType", missing) : holderId ? "C" : requireField(undefined, "vehicleHolder.idType", missing),
+    id: requireField(holderId, "vehicleHolder.id", missing),
+    fullName: holder?.name ?? assignment.vehicle?.possessorName ?? assignment.vehicle?.ownerName,
+    phone: holder?.phone ?? assignment.vehicle?.possessorCellphone ?? assignment.vehicle?.possessorPhone,
+    address: holder?.address,
+    cityCode: holder?.cityCode,
+    cityName: holder?.cityName
+  };
+}
+
+function displayParty(party: LoadingOrderDraft["sender"], site: LoadingOrderDraft["loading"]) {
+  return { name: party?.name, address: site?.address ?? party?.address, cityName: site?.cityName ?? party?.cityName };
+}
+
+function consignmentSummary(item: EmissionPlanInput["consignments"][number]) {
+  const snapshot = item.snapshot ?? {};
+  const remission = snapshot.remissions?.[0];
+  return {
+    number: item.number,
+    quantityKg: positiveTons(remission?.weightTons),
+    nature: snapshot.natureOfCargo,
+    productName: remission?.description,
+    packageName: snapshot.packagingCode ?? remission?.packagingClass,
+    senderName: snapshot.sender?.name,
+    recipientName: snapshot.recipient?.name
+  };
+}
+
+function positiveTons(value: string | undefined): number | undefined {
+  if (!value) return undefined;
+  const parsed = Number(value.replace(",", "."));
+  return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed * 1000) : undefined;
 }
 
 function policyPayload(snapshot: ConsignmentDraft, missing: string[]): Record<string, unknown> {

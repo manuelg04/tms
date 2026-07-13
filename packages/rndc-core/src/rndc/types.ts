@@ -222,6 +222,9 @@ export type ComplianceData = {
 
 export type DemoScenario = {
   seed: string;
+  workflowVariant?: "standard" | "remesa_without_order" | "empty_manifest" | "transshipment";
+  manifestType?: string;
+  sourceManifestNumber?: string;
   company: {
     nit: string;
     dv: string;

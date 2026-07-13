@@ -11,6 +11,7 @@ export type DocumentRow = {
   rndcRadicado?: string;
   mode?: "dry-run" | "live";
   pdfUrlPath?: string;
+  pdfArtifactId?: string;
   errorText?: string;
   updatedAt: number;
   trip: {
@@ -30,8 +31,8 @@ export function DocumentTable({ rows, emptyMessage }: { rows: DocumentRow[]; emp
           "No hay documentos con este filtro."
         ) : (
           <>
-            Sin documentos todavia. Emite tu primera orden de cargue desde{" "}
-            <Link href="/operaciones">Operaciones</Link>.
+            Sin documentos todavía. Inicia tu primer recorrido desde{" "}
+            <Link href="/expedientes/nuevo">Nuevo despacho</Link>.
           </>
         )}
       </div>
@@ -87,11 +88,7 @@ export function DocumentTable({ rows, emptyMessage }: { rows: DocumentRow[]; emp
             </td>
             <td className="cell-date">{formatTimestamp(row.updatedAt)}</td>
             <td>
-              {row.pdfUrlPath ? (
-                <a className="pdf-link" href={`${apiBase}${row.pdfUrlPath}`} rel="noreferrer" target="_blank">
-                  PDF
-                </a>
-              ) : null}
+              {row.pdfArtifactId ? <a className="pdf-link" href={`/api/evidence/${row.pdfArtifactId}`}>PDF</a> : row.pdfUrlPath ? <a className="pdf-link" href={`${apiBase}${row.pdfUrlPath}`} rel="noreferrer" target="_blank">PDF</a> : null}
             </td>
           </tr>
         ))}

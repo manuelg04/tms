@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildDispatchSnapshot, canonicalJson } from "./dispatchSnapshot";
+import { buildDispatchSnapshot, canonicalJson, snapshotDataMatches, snapshotDataOf } from "./dispatchSnapshot";
 
 test("canonical json is deterministic regardless of key order", () => {
   const a = canonicalJson({ b: 2, a: { d: [1, 2], c: "x" } });
@@ -52,4 +52,37 @@ test("snapshot preserves leading zeros because identifiers stay text", () => {
 
   assert.equal(persisted.data.numero, "0000123");
   assert.equal(persisted.data.codigoDane, "05001000");
+});
+
+test("snapshot data can be read back from the persisted payload", () => {
+  const snapshot = buildDispatchSnapshot("orden_cargue", { orderNumber: "0000001", weightTons: "32.5" }, { takenAt: 1720000000000 });
+
+  assert.deepEqual(snapshotDataOf(snapshot.payloadJson), { orderNumber: "0000001", weightTons: "32.5" });
+  assert.equal(snapshotDataOf(undefined), null);
+  assert.equal(snapshotDataOf("no es json"), null);
+  assert.equal(snapshotDataOf('{"kind":"remesa","takenAt":1}'), null);
+});
+
+test("an unedited draft matches its snapshot even when capture times differ", () => {
+  const draft = { orderNumber: "0000001", sender: { name: "ITALCOL S.A", identificationNumber: "890900" }, expeditionDate: "2026-07-13" };
+  const snapshot = buildDispatchSnapshot("orden_cargue", draft, { takenAt: 1720000000000 });
+
+  assert.equal(snapshotDataMatches(snapshot.payloadJson, { ...draft }), true);
+  assert.equal(snapshotDataMatches(snapshot.payloadJson, { expeditionDate: "2026-07-13", sender: { identificationNumber: "890900", name: "ITALCOL S.A" }, orderNumber: "0000001" }), true);
+});
+
+test("a draft edited after the snapshot no longer matches, so a rejected emission must re-capture before retrying", () => {
+  const draft = { manifestNumber: "0000009", freightTotal: "3500000", paymentResponsible: "Destinatario" };
+  const snapshot = buildDispatchSnapshot("manifiesto", draft, { takenAt: 1720000000000 });
+  const corrected = { ...draft, freightTotal: "3800000" };
+
+  assert.equal(snapshotDataMatches(snapshot.payloadJson, corrected), false);
+});
+
+test("undefined fields in the candidate do not break the comparison", () => {
+  const snapshot = buildDispatchSnapshot("remesa", { number: "00001", weightTons: "34" }, { takenAt: 1 });
+
+  assert.equal(snapshotDataMatches(snapshot.payloadJson, { number: "00001", weightTons: "34", volumeM3: undefined }), true);
+  assert.equal(snapshotDataMatches(undefined, { number: "00001" }), false);
+  assert.equal(snapshotDataMatches(snapshot.payloadJson, { number: "00001" }), false);
 });

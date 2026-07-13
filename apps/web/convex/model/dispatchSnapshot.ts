@@ -20,6 +20,36 @@ export function buildDispatchSnapshot(kind: SnapshotKind, data: unknown, meta: {
   return { payloadJson, fingerprint: fingerprintOf(payloadJson) };
 }
 
+export function snapshotDataOf(payloadJson: string | undefined): Record<string, unknown> | null {
+  if (!payloadJson) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(payloadJson) as { data?: unknown };
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) &&
+      parsed.data && typeof parsed.data === "object" && !Array.isArray(parsed.data)
+      ? (parsed.data as Record<string, unknown>)
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+export function snapshotDataMatches(payloadJson: string | undefined, candidate: unknown): boolean {
+  const data = snapshotDataOf(payloadJson);
+
+  if (data === null) {
+    return false;
+  }
+
+  try {
+    return canonicalJson(data) === canonicalJson(candidate);
+  } catch {
+    return false;
+  }
+}
+
 function serialize(value: unknown): string | undefined {
   if (value === undefined) {
     return undefined;

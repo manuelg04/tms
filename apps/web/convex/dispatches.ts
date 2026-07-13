@@ -4,7 +4,7 @@ import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
 import { claimNextConsecutive } from "./model/consecutiveRange";
-import { buildDispatchSnapshot, type SnapshotKind } from "./model/dispatchSnapshot";
+import { buildDispatchSnapshot, snapshotDataMatches, snapshotDataOf, type SnapshotKind } from "./model/dispatchSnapshot";
 import {
   assertStageEditable,
   bogotaDate,
@@ -713,20 +713,75 @@ async function prepareForEmissionHandler(
     }
   }
 
+  const manifestState = await officialStateFor(ctx, expediente, "manifiesto");
+  const now = Date.now();
+  const orderExpeditionDate = orderDraft?.expeditionDate ?? snapshotExpeditionDateOf(latestOrderSnapshot) ?? bogotaDate(now);
+  const consignmentCandidate = (remesa: Doc<"expedienteRemesas">, number: string): Record<string, unknown> => {
+    const effective = effectiveConsignment((remesa.draft ?? {}) as ConsignmentDraft, orderDraft);
+    return {
+      ...effective,
+      expeditionDate: effective.expeditionDate ?? snapshotExpeditionDateOf(latestRemesaSnapshots.get(remesa._id)) ?? orderExpeditionDate,
+      number,
+      sequence: remesa.sequence
+    };
+  };
+
+  // Un documento cuenta como preparado sólo si su fotografía coincide con el
+  // borrador actual: una fotografía vieja tras editar (p. ej. al corregir un
+  // rechazo RNDC) debe re-tomarse, nunca reemitirse.
   const orderPrepared = !targets.order || Boolean(
-    orderNumber && (isAuthorizedState(orderState) || snapshotHasExpeditionDate(latestOrderSnapshot))
+    orderNumber && (
+      isAuthorizedState(orderState) ||
+      (orderDraft && snapshotDataMatches(latestOrderSnapshot?.payloadJson, { ...orderDraft, orderNumber, expeditionDate: orderExpeditionDate }))
+    )
   );
   const consignmentsPrepared = !targets.consignments || (
     remesas.length > 0 && remesas.every((remesa) =>
-      Boolean(remesa.number && (isAuthorizedState(remesa.officialState) || snapshotHasExpeditionDate(latestRemesaSnapshots.get(remesa._id))))
+      Boolean(remesa.number && (
+        isAuthorizedState(remesa.officialState) ||
+        snapshotDataMatches(latestRemesaSnapshots.get(remesa._id)?.payloadJson, consignmentCandidate(remesa, remesa.number))
+      ))
     )
   );
-  const manifestState = await officialStateFor(ctx, expediente, "manifiesto");
   const manifestPrepared = !targets.manifest || Boolean(
-    manifestNumber && (isAuthorizedState(manifestState) || latestManifestSnapshot)
+    manifestNumber && (
+      isAuthorizedState(manifestState) ||
+      (expediente.manifestDraft && snapshotDataMatches(latestManifestSnapshot?.payloadJson, { ...expediente.manifestDraft, manifestNumber }))
+    )
   );
   const tripPrepared = !targets.trip || Boolean(expediente.tripNumber);
-  const assignmentPrepared = !targets.assignment || Boolean(latestAssignmentSnapshot);
+  const scopeDocumentsAuthorized =
+    (!targets.order || isAuthorizedState(orderState)) &&
+    (!targets.consignments || (remesas.length > 0 && remesas.every((remesa) => isAuthorizedState(remesa.officialState)))) &&
+    (!targets.manifest || isAuthorizedState(manifestState));
+  let assignmentData: Record<string, unknown> | undefined;
+
+  if (targets.assignment && !scopeDocumentsAuthorized && expediente.driverId && expediente.vehicleId) {
+    const [driver, secondDriver, vehicle, trailer] = await Promise.all([
+      ctx.db.get("drivers", expediente.driverId),
+      expediente.secondDriverId ? ctx.db.get("drivers", expediente.secondDriverId) : null,
+      ctx.db.get("vehicles", expediente.vehicleId),
+      expediente.trailerId ? ctx.db.get("trailers", expediente.trailerId) : null
+    ]);
+
+    if (driver && vehicle) {
+      const holderDocument = vehicle.possessorDocument ?? vehicle.ownerDocument;
+      const vehicleHolder = holderDocument
+        ? await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", expediente.organizationId).eq("document", holderDocument)).unique()
+        : null;
+      assignmentData = {
+        driver: pickSnapshotFields(driver),
+        secondDriver: pickSnapshotFields(secondDriver),
+        vehicle: pickSnapshotFields(vehicle),
+        vehicleHolder: pickSnapshotFields(vehicleHolder),
+        trailer: pickSnapshotFields(trailer)
+      };
+    }
+  }
+
+  const assignmentPrepared = !targets.assignment || scopeDocumentsAuthorized || (
+    assignmentData !== undefined && snapshotDataMatches(latestAssignmentSnapshot?.payloadJson, assignmentData)
+  );
 
   if (orderPrepared && consignmentsPrepared && manifestPrepared && tripPrepared && assignmentPrepared) {
     return {
@@ -764,12 +819,15 @@ async function prepareForEmissionHandler(
   if (targets.manifest) {
     blockers.push(...manifestMissingFields(expediente.manifestDraft));
   }
-  if (targets.assignment && (!expediente.driverId || !expediente.vehicleId)) {
+  if (targets.assignment && !scopeDocumentsAuthorized && assignmentData === undefined) {
     if (!expediente.driverId) {
       blockers.push("Falta asignar el conductor");
     }
     if (!expediente.vehicleId) {
       blockers.push("Falta asignar el vehículo");
+    }
+    if (expediente.driverId && expediente.vehicleId) {
+      blockers.push("La asignación de vehículo y conductor ya no está disponible");
     }
   }
 
@@ -781,8 +839,6 @@ async function prepareForEmissionHandler(
     });
   }
 
-  const now = Date.now();
-  const expeditionDate = orderDraft?.expeditionDate ?? bogotaDate(now);
   const agencyCode = expediente.agencyCode ?? "";
   const preparedOrderNumber = targets.order
     ? orderNumber ?? (await claimConsecutive(ctx, expediente.organizationId, agencyCode, "orden_cargue", now))
@@ -804,81 +860,40 @@ async function prepareForEmissionHandler(
       if (!remesa.number) {
         await ctx.db.patch("expedienteRemesas", remesa._id, { number, updatedBy: actor._id, updatedAt: now });
       }
-      if (!snapshotHasExpeditionDate(latestSnapshot) && !isAuthorizedState(remesa.officialState)) {
-        const effective = effectiveConsignment((remesa.draft ?? {}) as ConsignmentDraft, orderDraft);
-        await writeSnapshot(
-          ctx,
-          expediente,
-          actor,
-          "remesa",
-          number,
-          { ...effective, expeditionDate: effective.expeditionDate ?? expeditionDate, number, sequence: remesa.sequence },
-          now,
-          remesa._id
-        );
+      if (!isAuthorizedState(remesa.officialState)) {
+        const candidate = consignmentCandidate(remesa, number);
+
+        if (!snapshotDataMatches(latestSnapshot?.payloadJson, candidate)) {
+          await writeSnapshot(ctx, expediente, actor, "remesa", number, candidate, now, remesa._id);
+        }
       }
     }
   } else {
     preparedConsignmentNumbers.push(...consignmentNumbers);
   }
 
-  let assignmentData: Record<string, unknown> | undefined;
+  if (targets.order && preparedOrderNumber && orderDraft && !isAuthorizedState(orderState)) {
+    const candidate = { ...orderDraft, orderNumber: preparedOrderNumber, expeditionDate: orderExpeditionDate };
 
-  if (targets.assignment && !latestAssignmentSnapshot) {
-    const [driver, secondDriver, vehicle, trailer] = await Promise.all([
-      expediente.driverId ? ctx.db.get("drivers", expediente.driverId) : null,
-      expediente.secondDriverId ? ctx.db.get("drivers", expediente.secondDriverId) : null,
-      expediente.vehicleId ? ctx.db.get("vehicles", expediente.vehicleId) : null,
-      expediente.trailerId ? ctx.db.get("trailers", expediente.trailerId) : null
-    ]);
-
-    if (!driver || !vehicle) {
-      throw new ConvexError({ code: "VALIDATION", message: "La asignación de vehículo y conductor ya no está disponible" });
+    if (!snapshotDataMatches(latestOrderSnapshot?.payloadJson, candidate)) {
+      await writeSnapshot(ctx, expediente, actor, "orden_cargue", preparedOrderNumber, candidate, now);
     }
+  }
+  if (targets.manifest && preparedManifestNumber && expediente.manifestDraft && !isAuthorizedState(manifestState)) {
+    const candidate = { ...expediente.manifestDraft, manifestNumber: preparedManifestNumber };
 
-    const holderDocument = vehicle.possessorDocument ?? vehicle.ownerDocument;
-    const vehicleHolder = holderDocument
-      ? await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", expediente.organizationId).eq("document", holderDocument)).unique()
-      : null;
-    assignmentData = {
-      driver: pickSnapshotFields(driver),
-      secondDriver: pickSnapshotFields(secondDriver),
-      vehicle: pickSnapshotFields(vehicle),
-      vehicleHolder: pickSnapshotFields(vehicleHolder),
-      trailer: pickSnapshotFields(trailer)
-    };
+    if (!snapshotDataMatches(latestManifestSnapshot?.payloadJson, candidate)) {
+      await writeSnapshot(ctx, expediente, actor, "manifiesto", preparedManifestNumber, candidate, now);
+    }
   }
-
-  if (targets.order && preparedOrderNumber && orderDraft && !snapshotHasExpeditionDate(latestOrderSnapshot) && !isAuthorizedState(orderState)) {
-    await writeSnapshot(
-      ctx,
-      expediente,
-      actor,
-      "orden_cargue",
-      preparedOrderNumber,
-      { ...orderDraft, orderNumber: preparedOrderNumber, expeditionDate },
-      now
-    );
-  }
-  if (targets.manifest && preparedManifestNumber && expediente.manifestDraft && !latestManifestSnapshot && !isAuthorizedState(manifestState)) {
-    await writeSnapshot(
-      ctx,
-      expediente,
-      actor,
-      "manifiesto",
-      preparedManifestNumber,
-      { ...expediente.manifestDraft, manifestNumber: preparedManifestNumber },
-      now
-    );
-  }
-  if (assignmentData) {
+  if (assignmentData && !snapshotDataMatches(latestAssignmentSnapshot?.payloadJson, assignmentData)) {
     await writeSnapshot(ctx, expediente, actor, "asignacion", undefined, assignmentData, now);
   }
 
   await ctx.db.patch("expedientes", expediente._id, {
     status: "in_progress",
     loadingOrderDraft: targets.order && orderDraft && preparedOrderNumber
-      ? { ...orderDraft, orderNumber: preparedOrderNumber, expeditionDate }
+      ? { ...orderDraft, orderNumber: preparedOrderNumber, expeditionDate: orderExpeditionDate }
       : orderDraft,
     manifestDraft: targets.manifest && expediente.manifestDraft && preparedManifestNumber
       ? { ...expediente.manifestDraft, manifestNumber: preparedManifestNumber }
@@ -924,17 +939,10 @@ function isAuthorizedState(state: OfficialDocumentState): boolean {
   return state === "authorized" || state === "fulfilled";
 }
 
-function snapshotHasExpeditionDate(snapshot: Doc<"dispatchSnapshots"> | undefined): boolean {
-  if (!snapshot) {
-    return false;
-  }
-
-  try {
-    const payload = JSON.parse(snapshot.payloadJson) as { expeditionDate?: unknown };
-    return typeof payload.expeditionDate === "string" && payload.expeditionDate.length > 0;
-  } catch {
-    return false;
-  }
+function snapshotExpeditionDateOf(snapshot: Doc<"dispatchSnapshots"> | undefined): string | undefined {
+  const data = snapshotDataOf(snapshot?.payloadJson);
+  const value = data?.expeditionDate;
+  return typeof value === "string" && value.length > 0 ? value : undefined;
 }
 
 function preparationDetails(

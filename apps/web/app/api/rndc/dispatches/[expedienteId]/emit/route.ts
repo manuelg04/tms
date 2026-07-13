@@ -5,7 +5,8 @@ import {
   buildEmissionPlan,
   type AssignmentSnapshotData,
   type EmissionPlanInput,
-  type EmissionPlanStep
+  type EmissionPlanStep,
+  type EmissionScope
 } from "../../../../../../convex/model/emissionPlan";
 import type { OfficialDocumentState } from "../../../../../../convex/model/documentLifecycle";
 import { getAuthSettings, createConvexToken, jsonResponse } from "../../../../../lib/auth-server";
@@ -13,10 +14,11 @@ import { authorizeGatewayRequest, safeRndcMode } from "../../../../../lib/rndc-g
 import { POST as runRndcAction } from "../../../actions/[action]/route";
 
 type EmitBody = {
+  scope?: unknown;
   simulateTimeoutAt?: unknown;
 };
 
-type ExecutedStep = {
+export type ExecutedStep = {
   key: string;
   action: string;
   documentNumber: string;
@@ -26,12 +28,38 @@ type ExecutedStep = {
   error?: string;
 };
 
+export type EmitRuntime = {
+  loadInputs: (expedienteId: Id<"expedientes">) => Promise<EmissionInputs | null>;
+  prepareForEmission: (expedienteId: Id<"expedientes">, scope: EmissionScope) => Promise<void>;
+  ensureOfficialDocuments: (
+    expedienteId: Id<"expedientes">,
+    inputs: EmissionInputs,
+    steps: EmissionPlanStep[]
+  ) => Promise<DocumentIds>;
+  executeStep: (
+    request: Request,
+    expedienteId: string,
+    organizationId: string,
+    step: EmissionPlanStep,
+    documentId: string,
+    body: EmitBody
+  ) => Promise<ExecutedStep>;
+};
+
 export async function POST(
   request: Request,
   context: { params: Promise<{ expedienteId: string }> }
 ): Promise<Response> {
+  return handleEmitWithRuntime(request, context);
+}
+
+export async function handleEmitWithRuntime(
+  request: Request,
+  context: { params: Promise<{ expedienteId: string }> },
+  runtime?: EmitRuntime
+): Promise<Response> {
   try {
-    return await handleEmit(request, context);
+    return await handleEmit(request, context, runtime);
   } catch (error) {
     return jsonResponse(
       {
@@ -45,7 +73,8 @@ export async function POST(
 
 async function handleEmit(
   request: Request,
-  context: { params: Promise<{ expedienteId: string }> }
+  context: { params: Promise<{ expedienteId: string }> },
+  injectedRuntime?: EmitRuntime
 ): Promise<Response> {
   const authorization = authorizeGatewayRequest(request, "submit_rndc");
 
@@ -64,7 +93,7 @@ async function handleEmit(
       return jsonResponse({ error: "Cuerpo de solicitud inválido" }, 400);
     }
 
-    const allowedKeys = new Set(["simulateTimeoutAt"]);
+    const allowedKeys = new Set(["scope", "simulateTimeoutAt"]);
     const unexpected = Object.keys(parsed).filter((key) => !allowedKeys.has(key));
 
     if (unexpected.length > 0) {
@@ -77,48 +106,59 @@ async function handleEmit(
     body = parsed as EmitBody;
   }
 
-  const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL ?? process.env.CONVEX_URL;
+  const scope = body.scope === undefined ? "todo" : isEmissionScope(body.scope) ? body.scope : null;
 
-  if (!convexUrl || !process.env.RNDC_INGEST_KEY) {
-    return jsonResponse({ error: "Durable RNDC operations are not configured" }, 503);
+  if (!scope) {
+    return jsonResponse({ error: "Alcance de emisión inválido" }, 400);
   }
 
-  const client = new ConvexHttpClient(convexUrl);
-  client.setAuth(createConvexToken(authorization, getAuthSettings()));
-  let inputs = await client.query(api.dispatches.emissionInputs, {
-    expedienteId: expedienteId as Id<"expedientes">
-  });
+  let runtime = injectedRuntime;
+
+  if (!runtime) {
+    const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL ?? process.env.CONVEX_URL;
+
+    if (!convexUrl || !process.env.RNDC_INGEST_KEY) {
+      return jsonResponse({ error: "Durable RNDC operations are not configured" }, 503);
+    }
+
+    const client = new ConvexHttpClient(convexUrl);
+    client.setAuth(createConvexToken(authorization, getAuthSettings()));
+    runtime = {
+      loadInputs: (id) => client.query(api.dispatches.emissionInputs, { expedienteId: id }),
+      prepareForEmission: async (id, requestedScope) => {
+        await client.mutation(api.dispatches.prepareForEmission, { expedienteId: id, scope: requestedScope });
+      },
+      ensureOfficialDocuments: (id, currentInputs, steps) => ensureOfficialDocuments(client, id, currentInputs, steps),
+      executeStep
+    };
+  }
+
+  const typedExpedienteId = expedienteId as Id<"expedientes">;
+  let inputs = await runtime.loadInputs(typedExpedienteId);
 
   if (!inputs) {
     return jsonResponse({ error: "Despacho no encontrado" }, 404);
   }
 
-  if (inputs.status === "draft") {
-    try {
-      await client.mutation(api.dispatches.prepareEmission, {
-        expedienteId: expedienteId as Id<"expedientes">
-      });
-    } catch (error) {
-      return jsonResponse(
-        {
-          error: "El despacho tiene datos pendientes y no puede emitirse",
-          detail: extractConvexError(error)
-        },
-        409
-      );
-    }
-
-    inputs = await client.query(api.dispatches.emissionInputs, {
-      expedienteId: expedienteId as Id<"expedientes">
-    });
-
-    if (!inputs) {
-      return jsonResponse({ error: "Despacho no encontrado" }, 404);
-    }
+  try {
+    await runtime.prepareForEmission(typedExpedienteId, scope);
+  } catch (error) {
+    return jsonResponse(
+      {
+        error: "El documento tiene datos pendientes y no puede emitirse",
+        detail: extractConvexError(error)
+      },
+      409
+    );
   }
 
-  const documentIds = await ensureOfficialDocuments(client, expedienteId as Id<"expedientes">, inputs);
-  const plan = buildEmissionPlan(toPlanInput(inputs));
+  inputs = await runtime.loadInputs(typedExpedienteId);
+
+  if (!inputs) {
+    return jsonResponse({ error: "Despacho no encontrado" }, 404);
+  }
+
+  const plan = buildEmissionPlan(toPlanInput(inputs), scope);
 
   if (!plan.ok) {
     return jsonResponse(
@@ -151,6 +191,8 @@ async function handleEmit(
     );
   }
 
+  const documentIds = await runtime.ensureOfficialDocuments(typedExpedienteId, inputs, plan.steps);
+
   const executed: ExecutedStep[] = [];
   let stoppedAt: string | undefined;
   let nextAction: string | undefined;
@@ -172,7 +214,7 @@ async function handleEmit(
       return jsonResponse({ error: `No existe documento persistido para el paso ${step.key}` }, 409);
     }
 
-    const stepResult = await executeStep(request, expedienteId, inputs.organizationId, step, documentId, body);
+    const stepResult = await runtime.executeStep(request, expedienteId, inputs.organizationId, step, documentId, body);
     executed.push(stepResult);
 
     if (stepResult.outcome !== "authorized") {
@@ -194,6 +236,7 @@ async function handleEmit(
     {
       ok: completed,
       code: inputs.code,
+      scope,
       mode: safeRndcMode(),
       completed,
       steps: executed,
@@ -269,7 +312,7 @@ async function executeStep(
   return { ...base, outcome: "rejected", error: errorText };
 }
 
-type EmissionInputs = {
+export type EmissionInputs = {
   organizationId: Id<"organizations">;
   workflowVariant?: "standard" | "remesa_without_order" | "empty_manifest" | "transshipment";
   code: string;
@@ -289,7 +332,7 @@ type EmissionInputs = {
   operations: Array<{ operationType: string; status: string }>;
 };
 
-type DocumentIds = {
+export type DocumentIds = {
   order?: string;
   manifest?: string;
   byRemesa: Map<string, string>;
@@ -298,11 +341,14 @@ type DocumentIds = {
 async function ensureOfficialDocuments(
   client: ConvexHttpClient,
   expedienteId: Id<"expedientes">,
-  inputs: EmissionInputs
+  inputs: EmissionInputs,
+  steps: EmissionPlanStep[]
 ): Promise<DocumentIds> {
   const ids: DocumentIds = { order: inputs.order.documentId, manifest: inputs.manifest.documentId, byRemesa: new Map() };
+  const actions = new Set(steps.map((step) => step.action));
+  const remesaIds = new Set(steps.flatMap((step) => step.action === "emit_remesa" && step.remesaId ? [step.remesaId] : []));
 
-  if (!ids.order && inputs.order.number) {
+  if (actions.has("emit_loading_order") && !ids.order && inputs.order.number) {
     ids.order = await client.mutation(api.officialDocuments.createDraft, {
       expedienteId,
       kind: "orden_cargue",
@@ -312,6 +358,9 @@ async function ensureOfficialDocuments(
   }
 
   for (const consignment of inputs.consignments) {
+    if (!remesaIds.has(consignment.remesaId)) {
+      continue;
+    }
     if (consignment.documentId) {
       ids.byRemesa.set(consignment.remesaId, consignment.documentId);
     } else if (consignment.number) {
@@ -326,7 +375,7 @@ async function ensureOfficialDocuments(
     }
   }
 
-  if (!ids.manifest && inputs.manifest.number) {
+  if ((actions.has("register_trip") || actions.has("issue_manifest")) && !ids.manifest && inputs.manifest.number) {
     ids.manifest = await client.mutation(api.officialDocuments.createDraft, {
       expedienteId,
       kind: "manifiesto",
@@ -448,4 +497,8 @@ function safeParse(value: string): unknown {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isEmissionScope(value: unknown): value is EmissionScope {
+  return value === "orden" || value === "remesas" || value === "manifiesto" || value === "todo";
 }

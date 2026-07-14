@@ -148,6 +148,26 @@ test("corrections and annulments are visible from the main navigation", async ({
   await expect(page.getByRole("dialog", { name: "Anular documento" })).toBeVisible();
 });
 
+test("correction actions stay aligned across document types", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop");
+  await page.goto("/correcciones");
+  await expect(page.locator(".correction-document-row").first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(".correction-document-header")).toBeVisible();
+  const remesaRow = page.locator(".correction-document-row").filter({ has: page.locator(".correction-document-identity > span", { hasText: "Remesa" }) }).first();
+  const manifestRow = page.locator(".correction-document-row").filter({ has: page.locator(".correction-document-identity > span", { hasText: "Manifiesto" }) }).first();
+  const remesaReview = await remesaRow.getByRole("link", { name: "Revisar acciones" }).boundingBox();
+  const manifestReview = await manifestRow.getByRole("link", { name: "Revisar acciones" }).boundingBox();
+  const remesaAnnulment = await remesaRow.getByRole("link", { name: "Preparar anulación" }).boundingBox();
+  const manifestAnnulment = await manifestRow.getByRole("link", { name: "Preparar anulación" }).boundingBox();
+  expect(remesaReview).not.toBeNull();
+  expect(manifestReview).not.toBeNull();
+  expect(remesaAnnulment).not.toBeNull();
+  expect(manifestAnnulment).not.toBeNull();
+  expect(Math.abs(remesaReview!.x - manifestReview!.x)).toBeLessThanOrEqual(1);
+  expect(Math.abs(remesaAnnulment!.x - manifestAnnulment!.x)).toBeLessThanOrEqual(1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
 test("administration receives six complete advanced exception forms", async ({ page }) => {
   await page.request.post("/api/auth/logout");
   const response = await page.request.post("/api/auth/login", { data: { email: "admin@mtm.local", password } });

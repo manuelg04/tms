@@ -36,6 +36,12 @@ export default function CorrectionsPage() {
         <div className="section-heading"><div><span className="eyebrow">Documentos</span><h3 id="corrections-list-title">Disponibles para revisión</h3></div><span className="result-count">{results.length} visibles</span></div>
         {status === "LoadingFirstPage" ? <div className="skeleton">Buscando documentos…</div> : results.length === 0 ? <div className="empty-state">No hay documentos con esta búsqueda.</div> : (
           <div className="correction-document-list">
+            <div aria-hidden="true" className="correction-document-header">
+              <span>Documento</span>
+              <span>Despacho y ruta</span>
+              <span>Estado</span>
+              <div className="correction-document-header-actions"><span>Revisión</span><span>Corrección</span><span>Anulación</span></div>
+            </div>
             {results.map((document) => {
               const canPrepareOfficialAction = document.status === "authorized" || document.status === "fulfilled";
               return <article className="correction-document-row" key={document._id}>
@@ -44,9 +50,9 @@ export default function CorrectionsPage() {
                 <span className={`badge ${document.status}`}>{statusLabels[document.status] ?? document.status}</span>
                 {document.expedienteId ? (
                   <div className="correction-document-actions">
-                    <Link className="ghost-button action-link" href={correctionDetailHref(document.expedienteId)}>Revisar acciones</Link>
-                    {canPrepareOfficialAction && document.kind === "remesa" ? <Link className="text-button" href={correctionDetailHref(document.expedienteId, "correct")}>Preparar corrección</Link> : null}
-                    {canPrepareOfficialAction ? <Link className="text-button danger-text" href={correctionDetailHref(document.expedienteId, "annul")}>Preparar anulación</Link> : null}
+                    <Link className="ghost-button action-link correction-action correction-action-review" href={correctionDetailHref(document.expedienteId)}>Revisar acciones</Link>
+                    {canPrepareOfficialAction && document.kind === "remesa" ? <Link className="text-button correction-action correction-action-correct" href={correctionDetailHref(document.expedienteId, "correct")}>Preparar corrección</Link> : null}
+                    {canPrepareOfficialAction ? <Link className="text-button danger-text correction-action correction-action-annul" href={correctionDetailHref(document.expedienteId, "annul")}>Preparar anulación</Link> : null}
                   </div>
                 ) : <span className="document-unlinked">Sin despacho relacionado</span>}
               </article>;

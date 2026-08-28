@@ -3690,3 +3690,19 @@ button {
 .driver-choice small { font-family: var(--font-mono); color: var(--ink-soft); }
 .driver-choice b { color: var(--ok); }
 @media (max-width: 900px) { .vehicle-pick-card { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.checkbox-field .checkbox-control { display: flex; align-items: center; gap: 9px; min-height: 38px; }
+.checkbox-field .checkbox-control input { width: 17px; height: 17px; margin: 0; }
+.checkbox-field .checkbox-control em { font-style: normal; color: var(--ink-soft); font-size: 12px; }
+
+.stage-remesa-card .field-hint { grid-column: 1 / -1; margin-top: -6px; font-size: 11.5px; color: var(--ink-soft); }
+.remission-table { grid-column: 1 / -1; display: grid; gap: 8px; }
+.remission-row { display: grid; grid-template-columns: 1fr 0.7fr 1fr 1.6fr 0.8fr 0.8fr 34px; gap: 8px; align-items: center; }
+.remission-head span { font-size: 11px; font-weight: 700; color: var(--ink-soft); }
+.remission-row input { min-width: 0; width: 100%; }
+.remission-row .ghost-button { padding: 0; width: 34px; height: 34px; line-height: 1; }
+.add-remission { justify-self: start; }
+@media (max-width: 900px) {
+  .remission-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .remission-head { display: none; }
+}

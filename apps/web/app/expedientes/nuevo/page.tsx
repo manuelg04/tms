@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { DateField } from "../../components/fields/date-field";
+import { MoneyField } from "../../components/fields/money-field";
 import { CargoNatureField, IdTypeField, MunicipalityField, PackagingField, PartyField, SiteField, type PartyPick, type SitePick } from "../../components/fields/lookup-fields";
 
 type BaseState = {
@@ -15,6 +16,7 @@ type BaseState = {
   customerIdType: string;
   customerId: string;
   customerPhone: string;
+  customerCellphone: string;
   senderSite: SitePick | null;
   senderSiteCode: string;
   originName: string;
@@ -29,6 +31,8 @@ type BaseState = {
   recipientName: string;
   recipientIdType: string;
   recipientId: string;
+  recipientPhone: string;
+  recipientCellphone: string;
   recipientSite: SitePick | null;
   recipientSiteCode: string;
   packagingCode: string;
@@ -36,10 +40,10 @@ type BaseState = {
 };
 
 const EMPTY_STATE: BaseState = {
-  customer: null, customerCode: "", customerName: "", customerIdType: "N", customerId: "", customerPhone: "",
+  customer: null, customerCode: "", customerName: "", customerIdType: "N", customerId: "", customerPhone: "", customerCellphone: "",
   senderSite: null, senderSiteCode: "", originName: "", originAddress: "", originCity: "", originMunicipality: "",
   destinationName: "", destinationAddress: "", destinationCity: "", destinationMunicipality: "",
-  recipient: null, recipientName: "", recipientIdType: "N", recipientId: "", recipientSite: null, recipientSiteCode: "",
+  recipient: null, recipientName: "", recipientIdType: "N", recipientId: "", recipientPhone: "", recipientCellphone: "", recipientSite: null, recipientSiteCode: "",
   packagingCode: "", packagingDescription: ""
 };
 
@@ -51,6 +55,7 @@ export default function NuevoDespachoPage() {
   const [savingAction, setSavingAction] = useState<"draft" | "open" | null>(null);
   const [state, setState] = useState<BaseState>(EMPTY_STATE);
   const update = (patch: Partial<BaseState>) => setState((current) => ({ ...current, ...patch }));
+  const today = new Date().toISOString().slice(0, 10);
   const upsertCustomer = useMutation(api.masterData.upsertCustomer);
   const upsertLocation = useMutation(api.masterData.upsertCustomerLocation);
   const upsertOrder = useMutation(api.masterData.upsertServiceOrder);
@@ -150,16 +155,20 @@ export default function NuevoDespachoPage() {
 
       <div className="guided-form-stage">
         <section aria-labelledby="loading-order-title">
-          <StageHeading id="loading-order-title" title="Orden de cargue" text="Registra la orden de servicio, el cliente que remite y la sede desde donde sale la carga." />
+          <StageHeading id="loading-order-title" title="Orden de cargue" text="Registra los datos básicos, el cliente que remite y la sede desde donde sale la carga." />
           <div className="stage-form-fields">
+            <div className="field-group-note"><strong>Datos básicos</strong></div>
+            <DateField label="Fecha" name="expeditionDate" required value={today} />
+            <Field label="Nro. de orden de cargue" name="orderNumberPreview" placeholder="Se asigna automáticamente al enviar" readOnly />
+            <Field label="Agencia responsable" name="agencyCode" placeholder="Principal" />
             <Field label="Orden de servicio" name="serviceOrderCode" placeholder="OS-2026-001" required />
             <Field label="Referencia del cliente" name="customerReference" placeholder="Pedido o contrato" />
-            <Field label="Agencia responsable" name="agencyCode" placeholder="Principal" />
-            <div className="field-group-note"><strong>Cliente remitente</strong></div>
+            <label className="form-field checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked name="generatesConsignment" type="checkbox" /><em>Crear la remesa a partir de esta orden</em></span></label>
+            <div className="field-group-note"><strong>Datos del remitente</strong></div>
             <PartyField
               className="span-2"
               label="Cliente o razón social"
-              onClear={() => update({ customer: null, customerName: "", customerIdType: "N", customerId: "", customerPhone: "", senderSite: null, senderSiteCode: "", originName: "", originAddress: "", originCity: "", originMunicipality: "" })}
+              onClear={() => update({ customer: null, customerName: "", customerIdType: "N", customerId: "", customerPhone: "", customerCellphone: "", senderSite: null, senderSiteCode: "", originName: "", originAddress: "", originCity: "", originMunicipality: "" })}
               onSelect={(party) => update({ customer: party, customerName: party.name, customerIdType: party.documentType, customerId: party.document, customerPhone: party.phone ?? "", customerCode: state.customerCode || party.document, senderSite: null, senderSiteCode: "", originName: "", originAddress: "", originCity: "", originMunicipality: "" })}
               onType={(name) => update({ customer: null, customerName: name })}
               required
@@ -170,7 +179,8 @@ export default function NuevoDespachoPage() {
             <Field label="Código del cliente" name="customerCode" onChange={(event) => update({ customerCode: event.target.value })} placeholder="Se toma del documento" required value={state.customerCode} />
             <IdTypeField label="Tipo de identificación" name="customerIdType" onChange={(value) => update({ customerIdType: value })} required value={state.customerIdType} />
             <Field label="Identificación del cliente" name="customerId" onChange={(event) => update({ customerId: event.target.value })} required value={state.customerId} />
-            <Field label="Teléfono" name="customerPhone" onChange={(event) => update({ customerPhone: event.target.value })} type="tel" value={state.customerPhone} />
+            <Field label="Teléfono remitente" name="customerPhone" onChange={(event) => update({ customerPhone: event.target.value })} required type="tel" value={state.customerPhone} />
+            <Field label="Celular remitente" name="customerCellphone" onChange={(event) => update({ customerCellphone: event.target.value })} type="tel" value={state.customerCellphone} />
             <input name="customerName" type="hidden" value={state.customerName} />
             <SiteField
               className="span-2"
@@ -209,11 +219,12 @@ export default function NuevoDespachoPage() {
         <section aria-labelledby="cargo-title">
           <StageHeading id="cargo-title" title="Destinatario y mercancía" text="Quién recibe la carga, en qué sede, y qué se transporta." />
           <div className="stage-form-fields">
+            <div className="field-group-note"><strong>Datos del destinatario</strong></div>
             <PartyField
               className="span-2"
               label="Destinatario"
-              onClear={() => update({ recipient: null, recipientName: "", recipientIdType: "N", recipientId: "", recipientSite: null, recipientSiteCode: "" })}
-              onSelect={(party) => update({ recipient: party, recipientName: party.name, recipientIdType: party.documentType, recipientId: party.document, recipientSite: null, recipientSiteCode: "" })}
+              onClear={() => update({ recipient: null, recipientName: "", recipientIdType: "N", recipientId: "", recipientPhone: "", recipientCellphone: "", recipientSite: null, recipientSiteCode: "" })}
+              onSelect={(party) => update({ recipient: party, recipientName: party.name, recipientIdType: party.documentType, recipientId: party.document, recipientPhone: party.phone ?? "", recipientSite: null, recipientSiteCode: "" })}
               onType={(name) => update({ recipient: null, recipientName: name })}
               required
               role="recipient"
@@ -223,6 +234,8 @@ export default function NuevoDespachoPage() {
             <IdTypeField label="Tipo de identificación" name="recipientIdType" onChange={(value) => update({ recipientIdType: value })} required value={state.recipientIdType} />
             <Field label="Identificación destinatario" name="recipientId" onChange={(event) => update({ recipientId: event.target.value })} required value={state.recipientId} />
             <input name="recipientName" type="hidden" value={state.recipientName} />
+            <Field label="Teléfono destinatario" name="recipientPhone" onChange={(event) => update({ recipientPhone: event.target.value })} required type="tel" value={state.recipientPhone} />
+            <Field label="Celular destinatario" name="recipientCellphone" onChange={(event) => update({ recipientCellphone: event.target.value })} type="tel" value={state.recipientCellphone} />
             <SiteField
               className="span-2"
               label="Sede RNDC destinatario"
@@ -235,7 +248,10 @@ export default function NuevoDespachoPage() {
               thirdPartyId={state.recipient?._id}
             />
             <input name="recipientSiteCode" type="hidden" value={state.recipientSiteCode} />
-            <div className="field-group-note"><strong>Mercancía</strong></div>
+            <div className="field-group-note"><strong>Datos del vehículo</strong></div>
+            <Field label="Placa" name="platePreview" placeholder="Se asigna en Vehículo y conductor" readOnly />
+            <MoneyField label="Flete conductor" name="driverFreight" />
+            <div className="field-group-note"><strong>Datos de la mercancía</strong></div>
             <Field className="span-2" label="Mercancía" name="cargoDescription" required />
             <Field label="Código de mercancía" name="merchandiseCode" required />
             <Field label="Cantidad" name="cargoQuantity" type="number" />
@@ -244,7 +260,14 @@ export default function NuevoDespachoPage() {
             <Field label="Volumen m³" min="0" name="volumeM3" step="0.01" type="number" />
             <PackagingField code={state.packagingCode || undefined} description={state.packagingDescription} label="Tipo de empaque" name="packagingCode" onClear={() => update({ packagingCode: "", packagingDescription: "" })} onSelect={(option) => update({ packagingCode: option.code, packagingDescription: option.description })} required />
             <CargoNatureField name="natureOfCargo" required />
+            <div className="field-group-note"><strong>Observaciones especiales</strong></div>
+            <label className="form-field"><span>Sellos y/o precintos</span><textarea name="sealNumbers" rows={3} /></label>
+            <label className="form-field"><span>Condiciones de cargue</span><textarea name="loadingConditions" rows={3} /></label>
+            <label className="form-field"><span>Embalaje especial</span><textarea name="specialPackaging" rows={3} /></label>
             <label className="form-field span-2"><span>Observaciones</span><textarea name="orderObservations" rows={3} /></label>
+            <div className="field-group-note"><strong>Fechas de cargue</strong></div>
+            <DateField label="Fecha mínima" name="minLoadingDate" required value={today} />
+            <DateField label="Fecha máxima" name="maxLoadingDate" required value={today} />
           </div>
         </section>
       </div>
@@ -271,6 +294,7 @@ function Field({ className = "", label, name, ...props }: { className?: string; 
 
 function loadingOrderDraft(data: FormData, customerId: Id<"customers">) {
   return {
+    expeditionDate: requiredText(data, "expeditionDate"),
     agencyCode: optionalText(data, "agencyCode"),
     customerId,
     customerReference: optionalText(data, "customerReference"),
@@ -280,14 +304,21 @@ function loadingOrderDraft(data: FormData, customerId: Id<"customers">) {
       identificationNumber: requiredText(data, "customerId"),
       siteCode: requiredText(data, "senderSiteCode"),
       municipalityCode: requiredText(data, "originMunicipality"),
-      phone: optionalText(data, "customerPhone")
+      address: requiredText(data, "originAddress"),
+      cityName: requiredText(data, "originCity"),
+      phone: requiredText(data, "customerPhone"),
+      cellphone: optionalText(data, "customerCellphone")
     },
     recipient: {
       name: requiredText(data, "recipientName"),
       identificationType: requiredText(data, "recipientIdType"),
       identificationNumber: requiredText(data, "recipientId"),
       siteCode: requiredText(data, "recipientSiteCode"),
-      municipalityCode: requiredText(data, "destinationMunicipality")
+      municipalityCode: requiredText(data, "destinationMunicipality"),
+      address: requiredText(data, "destinationAddress"),
+      cityName: requiredText(data, "destinationCity"),
+      phone: requiredText(data, "recipientPhone"),
+      cellphone: optionalText(data, "recipientCellphone")
     },
     loading: {
       siteName: requiredText(data, "originName"),
@@ -311,9 +342,22 @@ function loadingOrderDraft(data: FormData, customerId: Id<"customers">) {
     packagingCode: requiredText(data, "packagingCode"),
     merchandiseCode: optionalText(data, "merchandiseCode"),
     natureOfCargo: optionalText(data, "natureOfCargo"),
+    driverFreight: optionalText(data, "driverFreight"),
+    sealNumbers: optionalText(data, "sealNumbers"),
+    loadingConditions: optionalText(data, "loadingConditions"),
+    specialPackaging: optionalText(data, "specialPackaging"),
     observations: optionalText(data, "orderObservations"),
-    generatesConsignment: true
+    minLoadingDate: requiredText(data, "minLoadingDate"),
+    maxLoadingDate: loadingWindowEnd(data),
+    generatesConsignment: data.get("generatesConsignment") === "on"
   };
+}
+
+function loadingWindowEnd(data: FormData): string {
+  const min = requiredText(data, "minLoadingDate");
+  const max = requiredText(data, "maxLoadingDate");
+  if (max < min) throw new Error("La fecha máxima de cargue no puede ser anterior a la fecha mínima.");
+  return max;
 }
 
 function requiredText(data: FormData, key: string): string {

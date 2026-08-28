@@ -157,7 +157,21 @@ const partyValidator = v.union(
 );
 
 const vehicleValidator = v.union(
-  v.object({ _id: v.id("vehicles"), plate: v.string(), make: v.optional(v.string()), line: v.optional(v.string()) }),
+  v.object({
+    _id: v.id("vehicles"),
+    plate: v.string(),
+    make: v.optional(v.string()),
+    line: v.optional(v.string()),
+    lineName: v.optional(v.string()),
+    modelYear: v.optional(v.string()),
+    configuration: v.optional(v.string()),
+    configurationLabel: v.optional(v.string()),
+    capacityTn: v.optional(v.string()),
+    ownerName: v.optional(v.string()),
+    ownerDocument: v.optional(v.string()),
+    possessorName: v.optional(v.string()),
+    possessorDocument: v.optional(v.string())
+  }),
   v.null()
 );
 
@@ -987,7 +1001,23 @@ export const detail = query({
       },
       driver: driver ? { _id: driver._id, document: driver.document, name: driver.name } : null,
       secondDriver: secondDriver ? { _id: secondDriver._id, document: secondDriver.document, name: secondDriver.name } : null,
-      vehicle: vehicle ? { _id: vehicle._id, plate: vehicle.plate, make: vehicle.make, line: vehicle.line } : null,
+      vehicle: vehicle
+        ? {
+            _id: vehicle._id,
+            plate: vehicle.plate,
+            make: vehicle.make,
+            line: vehicle.line,
+            lineName: vehicle.lineName,
+            modelYear: vehicle.modelYear,
+            configuration: vehicle.configuration,
+            configurationLabel: vehicle.configurationLabel,
+            capacityTn: vehicle.capacityTn,
+            ownerName: vehicle.ownerName,
+            ownerDocument: vehicle.ownerDocument,
+            possessorName: vehicle.possessorName,
+            possessorDocument: vehicle.possessorDocument
+          }
+        : null,
       trailer: trailer ? { _id: trailer._id, plate: trailer.plate, trailerType: trailer.trailerType, status: trailer.status } : null,
       remesas,
       documents: documents.map((document) => ({

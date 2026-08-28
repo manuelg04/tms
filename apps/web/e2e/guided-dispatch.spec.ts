@@ -78,9 +78,9 @@ test("dispatch documents can be completed and emitted in separate sessions", asy
 
   const manifestCard = documentCard(page, "Manifiesto");
   await manifestCard.getByRole("button", { name: "Editar" }).click();
-  await pickDate(page, "Entrega estimada", "Mañana");
+  await pickDate(page, "Fecha estimada de entrega", "Mañana");
   await page.getByLabel("Tipo de manifiesto").fill("General");
-  await page.getByLabel("Flete total").fill("2500000");
+  await page.getByLabel("Valor flete").fill("2500000");
   await expect(page.getByLabel("Neto a pagar")).toHaveValue("2.500.000");
   await page.getByLabel("Responsable de pago").fill("MTM");
   await page.getByRole("button", { name: "Guardar cambios" }).click();
@@ -226,6 +226,7 @@ async function fillLoadingOrder(page: Page, suffix: string) {
   await page.getByRole("combobox", { name: "Cliente o razón social", exact: true }).fill(`Cliente ${suffix}`);
   await page.getByLabel("Código del cliente").fill(`CLI-${suffix}`);
   await page.getByLabel("Identificación del cliente").fill(`900${suffix.replace(/\D/g, "").slice(-6)}`);
+  await page.getByLabel("Teléfono remitente").fill("6015551234");
   await page.getByLabel("Sede RNDC remitente").fill("1");
   const loading = page.getByRole("group", { name: "Cargue", exact: true });
   await loading.getByLabel("Lugar").fill("Bodega Bogotá");
@@ -239,6 +240,7 @@ async function fillLoadingOrder(page: Page, suffix: string) {
   await pickDate(page, "Cita de descargue", "Mañana", true);
   await page.getByRole("combobox", { name: "Destinatario", exact: true }).fill(`Destinatario ${suffix}`);
   await page.getByLabel("Identificación destinatario", { exact: true }).fill("901234567");
+  await page.getByLabel("Teléfono destinatario").fill("6045559876");
   await page.getByLabel("Sede RNDC destinatario").fill("1");
   await page.getByLabel("Mercancía", { exact: true }).fill("Carga seca");
   await page.getByLabel("Peso total (TN)").fill("12.5");

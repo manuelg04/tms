@@ -125,10 +125,11 @@ export default function DespachoDetailPage() {
         expedienteId,
         draft: {
           ...previous,
+          expeditionDate: required(data, "expeditionDate"),
           agencyCode: value(data, "agencyCode"),
           customerReference: value(data, "customerReference"),
-          sender: { ...previous?.sender, name: required(data, "senderName"), identificationType: required(data, "senderIdType"), identificationNumber: required(data, "senderId"), siteCode: required(data, "senderSiteCode"), municipalityCode: required(data, "loadingMunicipality") },
-          recipient: { ...previous?.recipient, name: required(data, "recipientName"), identificationType: required(data, "recipientIdType"), identificationNumber: required(data, "recipientId"), siteCode: required(data, "recipientSiteCode"), municipalityCode: required(data, "unloadingMunicipality") },
+          sender: { ...previous?.sender, name: required(data, "senderName"), identificationType: required(data, "senderIdType"), identificationNumber: required(data, "senderId"), siteCode: required(data, "senderSiteCode"), municipalityCode: required(data, "loadingMunicipality"), address: required(data, "loadingAddress"), cityName: required(data, "loadingCity"), phone: required(data, "senderPhone"), cellphone: value(data, "senderCellphone") },
+          recipient: { ...previous?.recipient, name: required(data, "recipientName"), identificationType: required(data, "recipientIdType"), identificationNumber: required(data, "recipientId"), siteCode: required(data, "recipientSiteCode"), municipalityCode: required(data, "unloadingMunicipality"), address: required(data, "unloadingAddress"), cityName: required(data, "unloadingCity"), phone: required(data, "recipientPhone"), cellphone: value(data, "recipientCellphone") },
           loading: { ...previous?.loading, siteName: required(data, "loadingName"), cityName: required(data, "loadingCity"), address: required(data, "loadingAddress"), municipalityCode: value(data, "loadingMunicipality"), appointmentAt: timestamp(data, "loadingAppointment") },
           unloading: { ...previous?.unloading, siteName: required(data, "unloadingName"), cityName: required(data, "unloadingCity"), address: required(data, "unloadingAddress"), municipalityCode: value(data, "unloadingMunicipality"), appointmentAt: timestamp(data, "unloadingAppointment") },
           cargoDescription: required(data, "cargoDescription"),
@@ -139,8 +140,14 @@ export default function DespachoDetailPage() {
           packagingCode: required(data, "packagingCode"),
           merchandiseCode: value(data, "merchandiseCode"),
           natureOfCargo: value(data, "natureOfCargo") ?? previous?.natureOfCargo,
+          driverFreight: value(data, "driverFreight"),
+          sealNumbers: value(data, "sealNumbers"),
+          loadingConditions: value(data, "loadingConditions"),
+          specialPackaging: value(data, "specialPackaging"),
           observations: value(data, "observations"),
-          generatesConsignment: true
+          minLoadingDate: required(data, "minLoadingDate"),
+          maxLoadingDate: loadingWindowEnd(data),
+          generatesConsignment: data.get("generatesConsignment") === "on"
         }
       });
       moveTo("remesas", "La orden de cargue quedó guardada. Los datos conocidos ya están disponibles para las remesas.");
@@ -160,13 +167,25 @@ export default function DespachoDetailPage() {
             sequence: remesa?.sequence ?? index + 1,
             draft: {
               ...remesa?.draft,
+              expeditionDate: value(data, `${key}_expeditionDate`),
               consignmentClass: (value(data, `${key}_class`) ?? "terrestre_carga") as "municipal" | "terrestre_carga",
+              agencyCode: value(data, `${key}_agencyCode`),
+              sender: partyOverride(data, `${key}_sender`, `${key}_loadingAddress`),
+              recipient: partyOverride(data, `${key}_recipient`, `${key}_unloadingAddress`),
+              loading: siteOverride(data, `${key}_loading`),
+              unloading: siteOverride(data, `${key}_unloading`),
               declaredValue: required(data, `${key}_declaredValue`),
+              consignmentValue: value(data, `${key}_consignmentValue`),
+              insurancePercent: value(data, `${key}_insurancePercent`),
               policyNumber: required(data, `${key}_policyNumber`),
               policyExpiresOn: required(data, `${key}_policyExpiresOn`),
               insurerNit: required(data, `${key}_insurerNit`),
-              recipient: value(data, `${key}_recipientName`) ? { name: value(data, `${key}_recipientName`), identificationNumber: value(data, `${key}_recipientId`) } : undefined,
-              remissions: [{ description: value(data, `${key}_description`), weightTons: value(data, `${key}_weightTons`) }],
+              remissions: remissionRows(data, key),
+              unitOfMeasure: value(data, `${key}_unitOfMeasure`),
+              merchandiseCode: value(data, `${key}_merchandiseCode`),
+              packagingCode: value(data, `${key}_packagingCode`),
+              natureOfCargo: value(data, `${key}_natureOfCargo`),
+              transporterObservations: value(data, `${key}_transporterObservations`),
               generalObservations: value(data, `${key}_observations`)
             }
           };
@@ -212,6 +231,9 @@ export default function DespachoDetailPage() {
           loadingResponsible: value(data, "loadingResponsible"),
           unloadingResponsible: value(data, "unloadingResponsible"),
           paymentDate: value(data, "paymentDate"),
+          paymentAgencyCode: value(data, "paymentAgencyCode"),
+          contractNumber: value(data, "contractNumber"),
+          requiresTracking: data.get("requiresTracking") === "on",
           observations: value(data, "observations")
         }
       });
@@ -401,9 +423,9 @@ function renderStage(input: {
 }) {
   const detail = input.detail;
   if (input.selectedStage === "orden_cargue") return <LoadingOrderForm draft={detail.expediente.loadingOrderDraft ?? {}} onSubmit={input.saveOrder} readOnly={input.orderReadOnly} />;
-  if (input.selectedStage === "remesas") return <ConsignmentsForm onSubmit={input.saveRemesas} readOnly={!input.isEditable} remesas={detail.remesas} />;
+  if (input.selectedStage === "remesas") return <ConsignmentsForm onSubmit={input.saveRemesas} order={detail.expediente.loadingOrderDraft ?? {}} readOnly={!input.isEditable} remesas={detail.remesas} />;
   if (input.selectedStage === "vehiculo_conductor") return <AssignmentForm currentDriverDocument={detail.driver?.document} currentVehiclePlate={detail.vehicle?.plate} onSubmit={input.saveFleet} readOnly={!input.isEditable} />;
-  if (input.selectedStage === "manifiesto") return <ManifestForm draft={detail.expediente.manifestDraft ?? {}} onSubmit={input.saveManifestStage} readOnly={input.manifestReadOnly} />;
+  if (input.selectedStage === "manifiesto") return <ManifestForm context={{ agencyCode: detail.expediente.agencyCode, originCity: detail.remesas[0]?.draft?.loading?.cityName ?? detail.loadingLocation.city, destinationCity: detail.remesas[0]?.draft?.unloading?.cityName ?? detail.unloadingLocation.city, vehicle: detail.vehicle, trailer: detail.trailer, driver: detail.driver, secondDriver: detail.secondDriver }} draft={detail.expediente.manifestDraft ?? {}} onSubmit={input.saveManifestStage} readOnly={input.manifestReadOnly} />;
   if (input.selectedStage === "envio_rndc") return <ReviewStage mode="PRUEBA" summary={[
     { label: "Orden de cargue", value: detail.expediente.loadingOrderDraft?.orderNumber ?? "Se asignará al enviar" },
     { label: "Remesas", value: `${detail.remesas.length} preparadas`, warning: detail.remesas.length === 0 },
@@ -683,4 +705,51 @@ function modalTitle(modal: AdvancedAction): string {
 function successMessage(modal: AdvancedAction): string {
   const messages: Record<AdvancedAction, string> = { remesa_without_order: "La remesa independiente quedó creada y auditada.", empty_manifest: "El viaje vacío quedó preparado sin campos de seguimiento.", transshipment: "El transbordo conservó la flota anterior y creó la nueva fotografía.", correct: "La corrección quedó registrada con comparación y evidencia.", annul: "La anulación quedó registrada con dependencias y evidencia.", reconcile: "La conciliación quedó registrada sin reenviar el documento." };
   return messages[modal];
+}
+
+function loadingWindowEnd(data: FormData): string {
+  const min = required(data, "minLoadingDate");
+  const max = required(data, "maxLoadingDate");
+  if (max < min) throw new Error("La fecha máxima de cargue no puede ser anterior a la fecha mínima.");
+  return max;
+}
+
+function definedEntries<T extends Record<string, unknown>>(source: T): Partial<T> {
+  return Object.fromEntries(Object.entries(source).filter(([, entry]) => entry !== undefined)) as Partial<T>;
+}
+
+function partyOverride(data: FormData, prefix: string, addressKey: string) {
+  const override = definedEntries({
+    name: value(data, `${prefix}Name`),
+    identificationNumber: value(data, `${prefix}Id`),
+    address: value(data, addressKey),
+    phone: value(data, `${prefix}Phone`),
+    cellphone: value(data, `${prefix}Cellphone`)
+  });
+  return Object.keys(override).length > 0 ? override : undefined;
+}
+
+function siteOverride(data: FormData, prefix: string) {
+  const appointment = value(data, `${prefix}Appointment`);
+  const override = definedEntries({
+    address: value(data, `${prefix}Address`),
+    latitude: value(data, `${prefix}Latitude`),
+    longitude: value(data, `${prefix}Longitude`),
+    agreedHours: value(data, `${prefix}Hours`),
+    appointmentAt: appointment ? timestamp(data, `${prefix}Appointment`) : undefined
+  });
+  return Object.keys(override).length > 0 ? override : undefined;
+}
+
+function remissionRows(data: FormData, key: string) {
+  const count = Number(value(data, `${key}_remCount`) ?? "1");
+  const rows = Array.from({ length: count }, (_, index) => ({
+    remissionNumber: value(data, `${key}_rem${index}_number`),
+    quantity: value(data, `${key}_rem${index}_quantity`),
+    packagingClass: value(data, `${key}_rem${index}_packagingClass`),
+    description: value(data, `${key}_rem${index}_description`),
+    weightTons: value(data, `${key}_rem${index}_weightTons`),
+    volumeM3: value(data, `${key}_rem${index}_volumeM3`)
+  })).filter((row) => Object.values(row).some(Boolean));
+  return rows.length > 0 ? rows : undefined;
 }

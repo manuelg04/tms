@@ -295,6 +295,9 @@ export type ManifestDraft = {
   loadingResponsible?: string;
   unloadingResponsible?: string;
   paymentDate?: string;
+  paymentAgencyCode?: string;
+  contractNumber?: string;
+  requiresTracking?: boolean;
   observations?: string;
   sourceManifestNumber?: string;
   emptyManifestReason?: string;
@@ -303,6 +306,13 @@ export type ManifestDraft = {
 
 function present(value: string | undefined): boolean {
   return value !== undefined && value.trim() !== "";
+}
+
+function mergeInherited<T extends object>(override: T | undefined, base: T | undefined): T | undefined {
+  if (!override) return base;
+  if (!base) return override;
+  const defined = Object.fromEntries(Object.entries(override).filter(([, entry]) => entry !== undefined && entry !== ""));
+  return { ...base, ...defined } as T;
 }
 
 function partyComplete(party: PartyDraft | undefined): boolean {
@@ -390,8 +400,8 @@ export function consignmentMissingFields(
     missing.push("Póliza de la carga");
   }
 
-  const sender = draft.sender ?? order?.sender;
-  const recipient = draft.recipient ?? order?.recipient;
+  const sender = mergeInherited(draft.sender, order?.sender);
+  const recipient = mergeInherited(draft.recipient, order?.recipient);
   if (!present(sender?.identificationType) || !present(sender?.siteCode) || !present(sender?.municipalityCode)) {
     missing.push("Datos RNDC del remitente");
   }
@@ -471,10 +481,10 @@ export function effectiveConsignment(
     ...draft,
     expeditionDate: draft.expeditionDate ?? order?.expeditionDate,
     agencyCode: draft.agencyCode ?? order?.agencyCode,
-    sender: partyComplete(draft.sender) ? draft.sender : order?.sender ?? draft.sender,
-    recipient: partyComplete(draft.recipient) ? draft.recipient : order?.recipient ?? draft.recipient,
-    loading: siteComplete(draft.loading) ? draft.loading : order?.loading ?? draft.loading,
-    unloading: siteComplete(draft.unloading) ? draft.unloading : order?.unloading ?? draft.unloading,
+    sender: mergeInherited(draft.sender, order?.sender),
+    recipient: mergeInherited(draft.recipient, order?.recipient),
+    loading: mergeInherited(draft.loading, order?.loading),
+    unloading: mergeInherited(draft.unloading, order?.unloading),
     packagingCode: draft.packagingCode ?? order?.packagingCode,
     merchandiseCode: draft.merchandiseCode ?? order?.merchandiseCode,
     natureOfCargo: draft.natureOfCargo ?? order?.natureOfCargo,

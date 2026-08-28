@@ -276,6 +276,37 @@ export default defineSchema({
     .index("by_organization_and_document", ["organizationId", "document"])
     .index("by_organization_and_name", ["organizationId", "name"]),
 
+  controlPoints: defineTable({
+    organizationId: v.id("organizations"),
+    code: v.string(),
+    name: v.string(),
+    controlType: v.string(),
+    rndcControlType: v.string(),
+    status: v.string(),
+    controllerDocument: v.optional(v.string()),
+    controllerName: v.optional(v.string()),
+    controllerCode: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    address: v.optional(v.string()),
+    originCityCode: v.optional(v.string()),
+    originCity: v.optional(v.string()),
+    destinationCityCode: v.optional(v.string()),
+    destinationCity: v.optional(v.string()),
+    latitude: v.optional(v.string()),
+    longitude: v.optional(v.string()),
+    calibrationCompany: v.optional(v.string()),
+    calibrationReport: v.optional(v.string()),
+    calibratedAt: v.optional(v.string()),
+    calibrationExpiresAt: v.optional(v.string()),
+    calibrationValid: v.optional(v.boolean()),
+    rndcRegisteredAt: v.optional(v.string()),
+    source: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number()
+  })
+    .index("by_organization_and_code", ["organizationId", "code"])
+    .index("by_organization_and_origin_city", ["organizationId", "originCityCode"]),
+
   thirdPartySites: defineTable({
     organizationId: v.id("organizations"),
     thirdPartyId: v.id("thirdParties"),

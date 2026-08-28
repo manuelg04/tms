@@ -869,3 +869,80 @@ export const ingestSnapshot = query({
     return { total: sites.length, withCoordinates: sites.filter((item) => item.latitude).length, sample: matching };
   }
 });
+
+const controlPointInputValidator = v.object({
+  code: v.string(),
+  name: v.string(),
+  controlType: v.string(),
+  rndcControlType: v.string(),
+  status: v.string(),
+  controllerDocument: v.optional(v.string()),
+  controllerName: v.optional(v.string()),
+  controllerCode: v.optional(v.string()),
+  phone: v.optional(v.string()),
+  address: v.optional(v.string()),
+  originCityCode: v.optional(v.string()),
+  originCity: v.optional(v.string()),
+  destinationCityCode: v.optional(v.string()),
+  destinationCity: v.optional(v.string()),
+  latitude: v.optional(v.string()),
+  longitude: v.optional(v.string()),
+  calibrationCompany: v.optional(v.string()),
+  calibrationReport: v.optional(v.string()),
+  calibratedAt: v.optional(v.string()),
+  calibrationExpiresAt: v.optional(v.string()),
+  calibrationValid: v.optional(v.boolean()),
+  rndcRegisteredAt: v.optional(v.string()),
+  source: v.string()
+});
+
+export const upsertControlPointBatch = mutation({
+  args: { ingestKey: v.string(), organizationId: v.id("organizations"), controlPoints: v.array(controlPointInputValidator) },
+  returns: v.object({ inserted: v.number(), updated: v.number() }),
+  handler: async (ctx, args) => {
+    if (args.ingestKey !== process.env.RNDC_INGEST_KEY) {
+      throw new ConvexError({ code: "UNAUTHORIZED", message: "Invalid ingest key" });
+    }
+    const now = Date.now();
+    const result = { inserted: 0, updated: 0 };
+    for (const point of args.controlPoints) {
+      const existing = await ctx.db
+        .query("controlPoints")
+        .withIndex("by_organization_and_code", (q) => q.eq("organizationId", args.organizationId).eq("code", point.code))
+        .unique();
+      if (existing) {
+        const patch: Record<string, unknown> = { updatedAt: now };
+        for (const [key, value] of Object.entries(point)) {
+          if (value !== undefined) {
+            patch[key] = value;
+          }
+        }
+        await ctx.db.patch(existing._id, patch);
+        result.updated += 1;
+      } else {
+        await ctx.db.insert("controlPoints", { ...point, organizationId: args.organizationId, createdAt: now, updatedAt: now });
+        result.inserted += 1;
+      }
+    }
+    return result;
+  }
+});
+
+export const controlPointsSnapshot = query({
+  args: { ingestKey: v.string(), organizationId: v.id("organizations"), code: v.optional(v.string()) },
+  returns: v.any(),
+  handler: async (ctx, args) => {
+    if (args.ingestKey !== process.env.RNDC_INGEST_KEY) {
+      throw new ConvexError({ code: "UNAUTHORIZED", message: "Invalid ingest key" });
+    }
+    const points = await ctx.db.query("controlPoints").withIndex("by_organization_and_code", (q) => q.eq("organizationId", args.organizationId)).collect();
+    const byType: Record<string, number> = {};
+    const byStatus: Record<string, number> = {};
+    for (const point of points) {
+      byType[point.controlType] = (byType[point.controlType] ?? 0) + 1;
+      byStatus[point.status] = (byStatus[point.status] ?? 0) + 1;
+    }
+    const sample = args.code ? points.find((point) => point.code === args.code) : undefined;
+    return { total: points.length, byType, byStatus, calibrationValid: points.filter((point) => point.calibrationValid).length, sample: sample ?? null };
+  }
+});

@@ -23,8 +23,16 @@ export function DocumentHistory({ deliveryEvidence, documents, events, technical
         <div>
           <h4>Historial de cambios</h4>
           <ol className="dispatch-timeline">
-            {events.map((event) => <li key={event._id}><span /><div><strong>{event.title}</strong>{event.details ? <p>{event.details}</p> : null}<small>{formatDate(event.occurredAt)}</small></div></li>)}
+            {events.slice(0, 3).map((event) => <li key={event._id}><span /><div><strong>{event.title}</strong>{event.details ? <p>{event.details}</p> : null}<small>{formatDate(event.occurredAt)}</small></div></li>)}
           </ol>
+          {events.length > 3 ? (
+            <details className="timeline-more">
+              <summary>Ver historial completo <span>{events.length}</span></summary>
+              <ol className="dispatch-timeline">
+                {events.slice(3).map((event) => <li key={event._id}><span /><div><strong>{event.title}</strong>{event.details ? <p>{event.details}</p> : null}<small>{formatDate(event.occurredAt)}</small></div></li>)}
+              </ol>
+            </details>
+          ) : null}
         </div>
       </div>
       <details className="technical-evidence">

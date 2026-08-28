@@ -54,7 +54,7 @@ export default function DespachoDetailPage() {
   const evidence = useQuery(api.evidence.listForExpediente, { expedienteId, limit: 80 });
   const exceptions = useQuery(api.dispatchExceptions.listForExpediente, { expedienteId });
   const { user } = useDemoUser();
-  const [selectedStage, setSelectedStage] = useState<DispatchStage>(entry.stage ?? "orden_cargue");
+  const [selectedStage, setSelectedStage] = useState<DispatchStage | null>(entry.stage ?? null);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<{ tone: "ok" | "bad" | "wait"; text: string } | null>(null);
   const [advancedModal, setAdvancedModal] = useState<AdvancedModal>(null);
@@ -106,7 +106,7 @@ export default function DespachoDetailPage() {
   });
   const canEdit = user?.role === "operator" || user?.role === "admin";
   const isEditable = ["draft", "in_progress", "ready"].includes(detail.expediente.status);
-  const formId = canEdit && selectedStage === stageResult.stage && ["orden_cargue", "remesas", "vehiculo_conductor", "manifiesto", "cargue_descargue", "cumplido_inicial", "cumplido_final"].includes(stageResult.stage)
+  const formId = canEdit && selectedStage !== null && selectedStage === stageResult.stage && ["orden_cargue", "remesas", "vehiculo_conductor", "manifiesto", "cargue_descargue", "cumplido_inicial", "cumplido_final"].includes(stageResult.stage)
     && !["reconcile", "review_rejection", "wait"].includes(primaryAction.kind)
     ? "stage-primary-form"
     : undefined;
@@ -333,7 +333,7 @@ export default function DespachoDetailPage() {
     return result;
   }
 
-  const currentForm = renderStage({
+  const currentForm = selectedStage ? renderStage({
     detail,
     selectedStage,
     isEditable,
@@ -346,17 +346,16 @@ export default function DespachoDetailPage() {
     saveLogistics,
     fulfillRemesas,
     fulfillManifest
-  });
+  }) : null;
   const documentHubItems = buildDocumentHubItems({ detail, evidence: evidence ?? [], isEditable });
   const selectedDocument = documentHubItems.find((item) => item.stage === selectedStage);
 
   return (
     <>
       <div className="detail-breadcrumb"><Link href="/expedientes">Despachos</Link><span>›</span><span>{detail.expediente.code}</span></div>
-      <section className="dispatch-detail-hero">
+      <section className="dispatch-detail-hero compact">
         <div>
-          <div className="hero-title-line"><span className="dispatch-file-label">Expediente de viaje</span><StatusBadge status={detail.expediente.status} /></div>
-          <h2>{detail.expediente.code}</h2>
+          <div className="hero-title-line"><h2>{detail.expediente.code}</h2><StatusBadge status={detail.expediente.status} /></div>
           <p>{detail.customer.name} · Orden de servicio {detail.serviceOrder.code}</p>
         </div>
         <div className="dispatch-hero-route"><span>{detail.loadingLocation.city}</span><strong>→</strong><span>{detail.unloadingLocation.city}</span></div>
@@ -379,7 +378,7 @@ export default function DespachoDetailPage() {
         <DocumentHub
           busy={busy}
           items={documentHubItems}
-          onEdit={(stage) => { setSelectedStage(stage); requestAnimationFrame(() => document.getElementById("active-stage-title")?.focus()); }}
+          onEdit={(stage) => { setSelectedStage(stage); requestAnimationFrame(() => { const title = document.getElementById("active-stage-title"); title?.focus(); title?.scrollIntoView({ behavior: "smooth", block: "start" }); }); }}
           onEmit={(scope) => void emitScope(scope)}
         />
       </div>
@@ -388,18 +387,18 @@ export default function DespachoDetailPage() {
         <AdvancedActions canManageOfficial={user?.role === "operator" || user?.role === "admin"} canManageStructural={user?.role === "admin"} exceptions={(exceptions ?? []).map((item) => ({ _id: item._id, type: item.type, status: item.status, reason: item.reason, createdAt: item.createdAt }))} onAction={setAdvancedModal} />
       </div>
 
-      <div className="guided-detail-layout">
-        <section className="active-stage-panel" aria-live="polite">
-          {currentForm}
-          {canEdit && selectedDocument?.canEdit ? <div className="active-stage-actions"><button className="primary-action" disabled={busy} form="stage-primary-form" type="submit">{busy ? "Guardando…" : "Guardar cambios"}</button></div> : null}
-          {selectedStage !== stageResult.stage && stageResult.blockers.length > 0 ? <BlockerList blockers={stageResult.blockers} /> : null}
-        </section>
-        <aside className="dispatch-side-context">
-          <div><span className="eyebrow">Documentos vinculados</span><strong>{detail.documents.length}</strong><p>{detail.remesas.length} remesas · {detail.deliveryEvidence.length} soportes</p></div>
-          <div><span className="eyebrow">Último cambio</span><strong>{detail.events[0]?.title ?? "Despacho creado"}</strong><p>{formatDate(detail.events[0]?.occurredAt ?? detail.expediente.updatedAt)}</p></div>
-          <a href="#documentos-historial">Ver documentos e historial</a>
-        </aside>
-      </div>
+      {selectedStage && currentForm ? (
+        <div className="guided-detail-layout single">
+          <section className="active-stage-panel" aria-live="polite">
+            {currentForm}
+            <div className="active-stage-actions">
+              <button className="ghost-button" onClick={() => setSelectedStage(null)} type="button">Cerrar</button>
+              {canEdit && selectedDocument?.canEdit ? <button className="primary-action" disabled={busy} form="stage-primary-form" type="submit">{busy ? "Guardando…" : "Guardar cambios"}</button> : null}
+            </div>
+            {selectedStage !== stageResult.stage && stageResult.blockers.length > 0 ? <BlockerList blockers={stageResult.blockers} /> : null}
+          </section>
+        </div>
+      ) : null}
 
       <DocumentHistory deliveryEvidence={detail.deliveryEvidence} documents={detail.documents} events={detail.events} technicalEvidence={(evidence ?? []).map((item) => ({ _id: item._id, documentId: item.documentId, kind: item.kind, fileName: item.fileName, createdAt: item.createdAt }))} />
       {advancedModal ? <AdvancedActionModal detail={detail} modal={advancedModal} onClose={() => setAdvancedModal(null)} operations={uncertainOperations ?? []} onDone={(message) => { setAdvancedModal(null); setNotice({ tone: "ok", text: message }); }} /> : null}

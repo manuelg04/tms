@@ -24,6 +24,10 @@ type VehicleRow = {
   ownerName?: string;
   possessorDocument?: string;
   possessorName?: string;
+  vehicleKind?: string;
+  status?: string;
+  configuration?: string;
+  soatExpiresAt?: string;
   driverCount: number;
   updatedAt: number;
 };
@@ -92,6 +96,19 @@ type VehicleDetail = {
   possessorName?: string;
   possessorCellphone?: string;
   possessorPhone?: string;
+  insurerNit?: string;
+  insurerName?: string;
+  soatExpiresAt?: string;
+  soatNumber?: string;
+  vehicleKind?: string;
+  status?: string;
+  configurationLabel?: string;
+  lineName?: string;
+  fuelType?: string;
+  axles?: string;
+  ownerDocumentType?: string;
+  possessorDocumentType?: string;
+  rndcRegisteredAt?: string;
   updatedAt: number;
   drivers: {
     driverDocument: string;
@@ -489,11 +506,15 @@ function VehicleDetailPanel({
         <div className="detail-body">
           <div className="field-grid">
             <ReadOnlyField label="Placa">{detail.plate}</ReadOnlyField>
-            <ReadOnlyField label="Marca/Línea">{valuesLabel([detail.make, detail.line])}</ReadOnlyField>
+            <ReadOnlyField label="Tipo">{vehicleKindLabel(detail.vehicleKind, detail.configuration)}</ReadOnlyField>
+            <ReadOnlyField label="Estado">{vehicleStatusLabel(detail.status, detail.soatExpiresAt)}</ReadOnlyField>
+            <ReadOnlyField label="Marca/Línea">{valuesLabel([detail.make, detail.lineName ?? detail.line])}</ReadOnlyField>
             <ReadOnlyField label="Modelo">{valueOrDash(detail.modelYear)}</ReadOnlyField>
             <ReadOnlyField label="Color">{valueOrDash(detail.color)}</ReadOnlyField>
             <ReadOnlyField label="Carrocería">{valueOrDash(detail.bodyType)}</ReadOnlyField>
-            <ReadOnlyField label="Configuración">{valueOrDash(detail.configuration)}</ReadOnlyField>
+            <ReadOnlyField label="Configuración">{valueOrDash(detail.configurationLabel ?? detail.configuration)}</ReadOnlyField>
+            <ReadOnlyField label="Ejes / Combustible">{valuesLabel([detail.axles, detail.fuelType])}</ReadOnlyField>
+            <ReadOnlyField label="SOAT">{soatDetail(detail)}</ReadOnlyField>
             <ReadOnlyField label="Remolque">{valueOrDash(detail.trailer)}</ReadOnlyField>
             <ReadOnlyField label="Tipo vínculo">{valueOrDash(detail.linkType)}</ReadOnlyField>
             <ReadOnlyField label="Capacidad (tn)">{valueOrDash(detail.capacityTn)}</ReadOnlyField>
@@ -507,6 +528,7 @@ function VehicleDetailPanel({
                 detail.possessorPhone
               ])}
             </ReadOnlyField>
+            <ReadOnlyField label="Registrado en RNDC">{valueOrDash(detail.rndcRegisteredAt)}</ReadOnlyField>
             <ReadOnlyField label="Actualizado">{formatTimestamp(detail.updatedAt)}</ReadOnlyField>
             <ReadOnlyField label="Conductores asociados" wide>
               <RelatedDrivers drivers={detail.drivers} />
@@ -597,6 +619,8 @@ function VehiclesTable({
         <thead>
           <tr>
             <th>Placa</th>
+            <th>Tipo</th>
+            <th>Estado</th>
             <th>Propietario</th>
             <th>Poseedor</th>
             <th>Conductores</th>
@@ -614,6 +638,8 @@ function VehiclesTable({
               <td>
                 <span className="plate-chip">{row.plate}</span>
               </td>
+              <td>{vehicleKindLabel(row.vehicleKind, row.configuration)}</td>
+              <td>{vehicleStatusLabel(row.status, row.soatExpiresAt)}</td>
               <td>{partyLabel(row.ownerName, row.ownerDocument)}</td>
               <td>{partyLabel(row.possessorName, row.possessorDocument)}</td>
               <td>{row.driverCount}</td>
@@ -628,6 +654,7 @@ function VehiclesTable({
           <button className={selectedPlate === row.plate ? "master-mobile-card selected" : "master-mobile-card"} key={row._id} onClick={() => onSelect(row.plate)} type="button">
             <span className="master-mobile-heading"><span className="plate-chip">{row.plate}</span><small>{formatTimestamp(row.updatedAt)}</small></span>
             <strong>{partyLabel(row.ownerName, row.ownerDocument)}</strong>
+            <span>{vehicleKindLabel(row.vehicleKind, row.configuration)} · {vehicleStatusLabel(row.status, row.soatExpiresAt)}</span>
             <span>Poseedor: {valuesLabel([row.possessorName, row.possessorDocument])}</span>
             <span>{row.driverCount} conductor{row.driverCount === 1 ? "" : "es"}</span>
           </button>
@@ -664,6 +691,35 @@ function ReadOnlyField({ children, label, wide }: { children: ReactNode; label: 
       <div className="field-value">{children}</div>
     </div>
   );
+}
+
+const VEHICLE_KIND_LABELS: Record<string, string> = {
+  cabezote: "Cabezote",
+  rigido: "Rígido",
+  remolque: "Remolque",
+  otro: "Otro"
+};
+
+function vehicleKindLabel(kind: string | undefined, configuration: string | undefined) {
+  const label = kind ? VEHICLE_KIND_LABELS[kind] ?? kind : undefined;
+  return valuesLabel([label, configuration]);
+}
+
+function vehicleStatusLabel(status: string | undefined, soatExpiresAt: string | undefined) {
+  if (status === "activo") {
+    return soatExpiresAt ? `Activo · SOAT ${soatExpiresAt}` : "Activo";
+  }
+  if (status === "archivado") {
+    return soatExpiresAt ? `Archivado · SOAT venció ${soatExpiresAt}` : "Archivado";
+  }
+  return "—";
+}
+
+function soatDetail(detail: VehicleDetail) {
+  if (!detail.soatNumber && !detail.soatExpiresAt && !detail.insurerName && !detail.insurerNit) {
+    return "—";
+  }
+  return valuesLabel([detail.soatNumber, detail.soatExpiresAt ? `vence ${detail.soatExpiresAt}` : undefined, detail.insurerName ?? detail.insurerNit]);
 }
 
 function valueOrDash(value: string | undefined) {

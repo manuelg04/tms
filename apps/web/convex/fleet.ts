@@ -71,8 +71,24 @@ const vehicleInputValidator = v.object({
   possessorCellphone: v.optional(v.string()),
   possessorPhone: v.optional(v.string()),
   insurerNit: v.optional(v.string()),
+  insurerName: v.optional(v.string()),
   soatExpiresAt: v.optional(v.string()),
-  soatNumber: v.optional(v.string())
+  soatNumber: v.optional(v.string()),
+  vehicleKind: v.optional(v.string()),
+  status: v.optional(v.string()),
+  configurationLabel: v.optional(v.string()),
+  rndcConfigurationCode: v.optional(v.string()),
+  lineName: v.optional(v.string()),
+  rndcMakeCode: v.optional(v.string()),
+  rndcBodyTypeCode: v.optional(v.string()),
+  fuelType: v.optional(v.string()),
+  rndcFuelCode: v.optional(v.string()),
+  axles: v.optional(v.string()),
+  ownerDocumentType: v.optional(v.string()),
+  possessorDocumentType: v.optional(v.string()),
+  rndcRegisteredAt: v.optional(v.string()),
+  source: v.optional(v.string()),
+  sourceCompanyNit: v.optional(v.string())
 });
 
 const relationInputValidator = v.object({
@@ -108,6 +124,10 @@ const vehicleRowValidator = v.object({
   ownerName: v.optional(v.string()),
   possessorDocument: v.optional(v.string()),
   possessorName: v.optional(v.string()),
+  vehicleKind: v.optional(v.string()),
+  status: v.optional(v.string()),
+  configuration: v.optional(v.string()),
+  soatExpiresAt: v.optional(v.string()),
   driverCount: v.number(),
   updatedAt: v.number()
 });
@@ -172,8 +192,24 @@ const vehicleDetailValidator = v.object({
   possessorCellphone: v.optional(v.string()),
   possessorPhone: v.optional(v.string()),
   insurerNit: v.optional(v.string()),
+  insurerName: v.optional(v.string()),
   soatExpiresAt: v.optional(v.string()),
   soatNumber: v.optional(v.string()),
+  vehicleKind: v.optional(v.string()),
+  status: v.optional(v.string()),
+  configurationLabel: v.optional(v.string()),
+  rndcConfigurationCode: v.optional(v.string()),
+  lineName: v.optional(v.string()),
+  rndcMakeCode: v.optional(v.string()),
+  rndcBodyTypeCode: v.optional(v.string()),
+  fuelType: v.optional(v.string()),
+  rndcFuelCode: v.optional(v.string()),
+  axles: v.optional(v.string()),
+  ownerDocumentType: v.optional(v.string()),
+  possessorDocumentType: v.optional(v.string()),
+  rndcRegisteredAt: v.optional(v.string()),
+  source: v.optional(v.string()),
+  sourceCompanyNit: v.optional(v.string()),
   createdAt: v.number(),
   updatedAt: v.number(),
   drivers: v.array(
@@ -373,28 +409,14 @@ export const upsertFleetBatch = mutation({
         .first();
 
       if (existing) {
-        await ctx.db.patch(existing._id, {
-          organizationId: args.organizationId ?? existing.organizationId,
-          make: vehicle.make ?? existing.make,
-          line: vehicle.line ?? existing.line,
-          modelYear: vehicle.modelYear ?? existing.modelYear,
-          color: vehicle.color ?? existing.color,
-          bodyType: vehicle.bodyType ?? existing.bodyType,
-          configuration: vehicle.configuration ?? existing.configuration,
-          trailer: vehicle.trailer ?? existing.trailer,
-          linkType: vehicle.linkType ?? existing.linkType,
-          capacityTn: vehicle.capacityTn ?? existing.capacityTn,
-          emptyWeightTn: vehicle.emptyWeightTn ?? existing.emptyWeightTn,
-          ownerDocument: vehicle.ownerDocument ?? existing.ownerDocument,
-          ownerName: vehicle.ownerName ?? existing.ownerName,
-          ownerCellphone: vehicle.ownerCellphone ?? existing.ownerCellphone,
-          ownerPhone: vehicle.ownerPhone ?? existing.ownerPhone,
-          possessorDocument: vehicle.possessorDocument ?? existing.possessorDocument,
-          possessorName: vehicle.possessorName ?? existing.possessorName,
-          possessorCellphone: vehicle.possessorCellphone ?? existing.possessorCellphone,
-          possessorPhone: vehicle.possessorPhone ?? existing.possessorPhone,
-          updatedAt: now
-        });
+        const { plate: _plate, ...fields } = vehicle;
+        const patch: Record<string, unknown> = { organizationId: args.organizationId ?? existing.organizationId, updatedAt: now };
+        for (const [key, value] of Object.entries(fields)) {
+          if (value !== undefined) {
+            patch[key] = value;
+          }
+        }
+        await ctx.db.patch(existing._id, patch);
         result.vehiclesUpdated += 1;
       } else {
         await ctx.db.insert("vehicles", { ...vehicle, organizationId: args.organizationId, createdAt: now, updatedAt: now });
@@ -680,7 +702,26 @@ async function toVehicleRow(ctx: QueryCtx, vehicle: Doc<"vehicles">) {
     ownerName: vehicle.ownerName,
     possessorDocument: vehicle.possessorDocument,
     possessorName: vehicle.possessorName,
+    vehicleKind: vehicle.vehicleKind,
+    status: vehicle.status,
+    configuration: vehicle.configuration,
+    soatExpiresAt: vehicle.soatExpiresAt,
     driverCount: drivers.length,
     updatedAt: vehicle.updatedAt
   };
 }
+
+export const organizationBySlug = query({
+  args: { ingestKey: v.string(), slug: v.string() },
+  returns: v.union(v.id("organizations"), v.null()),
+  handler: async (ctx, args) => {
+    if (args.ingestKey !== process.env.RNDC_INGEST_KEY) {
+      throw new ConvexError({ code: "UNAUTHORIZED", message: "Invalid ingest key" });
+    }
+    const organization = await ctx.db
+      .query("organizations")
+      .withIndex("by_slug", (q) => q.eq("slug", args.slug.trim().toLowerCase()))
+      .unique();
+    return organization?._id ?? null;
+  }
+});

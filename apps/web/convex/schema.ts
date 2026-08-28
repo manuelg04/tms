@@ -291,13 +291,30 @@ export default defineSchema({
     possessorCellphone: v.optional(v.string()),
     possessorPhone: v.optional(v.string()),
     insurerNit: v.optional(v.string()),
+    insurerName: v.optional(v.string()),
     soatExpiresAt: v.optional(v.string()),
     soatNumber: v.optional(v.string()),
+    vehicleKind: v.optional(v.string()),
+    status: v.optional(v.string()),
+    configurationLabel: v.optional(v.string()),
+    rndcConfigurationCode: v.optional(v.string()),
+    lineName: v.optional(v.string()),
+    rndcMakeCode: v.optional(v.string()),
+    rndcBodyTypeCode: v.optional(v.string()),
+    fuelType: v.optional(v.string()),
+    rndcFuelCode: v.optional(v.string()),
+    axles: v.optional(v.string()),
+    ownerDocumentType: v.optional(v.string()),
+    possessorDocumentType: v.optional(v.string()),
+    rndcRegisteredAt: v.optional(v.string()),
+    source: v.optional(v.string()),
+    sourceCompanyNit: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number()
   })
     .index("by_plate", ["plate"])
-    .index("by_organization_and_plate", ["organizationId", "plate"]),
+    .index("by_organization_and_plate", ["organizationId", "plate"])
+    .index("by_organization_and_status", ["organizationId", "status"]),
 
   driverVehicles: defineTable({
     driverId: v.id("drivers"),

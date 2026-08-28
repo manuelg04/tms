@@ -29,3 +29,6 @@ tmp/
 apps/web/test-results/
 apps/web/playwright-report/
 apps/web/blob-report/
+
+# Exportes de Avansat/RNDC con datos personales reales
+docs/avansat-exports/

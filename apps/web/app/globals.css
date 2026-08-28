@@ -3778,3 +3778,7 @@ button {
 .form-compact .date-field-trigger { min-height: 30px; border-color: var(--line); border-radius: 4px; padding: 4px 8px; }
 .form-compact .search-select-icon,
 .form-compact .search-select-clear { width: 20px; height: 20px; font-size: 13px; }
+
+.load-more-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
+.load-more-count { font-size: 12px; color: var(--ink-soft); }
+.load-more-bar .load-more { margin: 0; }

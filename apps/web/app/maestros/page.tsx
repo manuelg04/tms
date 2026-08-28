@@ -1,11 +1,26 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { formatTimestamp } from "../lib/labels";
 
 type Tab = "conductores" | "vehiculos" | "terceros";
+
+const PAGE_SIZE = 50;
+
+function useDebounced(value: string, delayMs: number): string {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    if (value === "") {
+      setDebounced("");
+      return;
+    }
+    const handle = window.setTimeout(() => setDebounced(value), delayMs);
+    return () => window.clearTimeout(handle);
+  }, [value, delayMs]);
+  return debounced;
+}
 type Creator = "conductor" | "vehiculo" | "tercero";
 
 type DriverRow = {
@@ -132,40 +147,20 @@ export default function MaestrosPage() {
   const upsertDriver = useMutation(api.fleet.upsertDriver);
   const upsertVehicle = useMutation(api.fleet.upsertVehicle);
   const upsertThirdParty = useMutation(api.fleet.upsertThirdParty);
-  const documentSearchPrefix = documentFilter.trim();
-  const plateSearchPrefix = plateFilter.trim();
-  const thirdPartySearch = thirdPartyFilter.trim().toLocaleLowerCase("es");
-  const activeFilter = tab === "conductores" ? documentSearchPrefix : tab === "vehiculos" ? plateSearchPrefix : thirdPartySearch;
+  const documentSearchPrefix = useDebounced(documentFilter.trim(), 250);
+  const plateSearchPrefix = useDebounced(plateFilter.trim().toUpperCase(), 250);
+  const thirdPartySearchPrefix = useDebounced(thirdPartyFilter.trim(), 250);
+  const activeFilter = tab === "conductores" ? documentSearchPrefix : tab === "vehiculos" ? plateSearchPrefix : thirdPartySearchPrefix;
   const isFiltering = activeFilter !== "";
-  const {
-    results: drivers,
-    status: driversStatus,
-    loadMore: loadMoreDrivers
-  } = usePaginatedQuery(
-    api.fleet.driversPage,
-    tab === "conductores" && documentSearchPrefix === "" ? {} : "skip",
-    { initialNumItems: 25 }
-  );
-  const {
-    results: vehicles,
-    status: vehiclesStatus,
-    loadMore: loadMoreVehicles
-  } = usePaginatedQuery(
-    api.fleet.vehiclesPage,
-    tab === "vehiculos" && plateSearchPrefix === "" ? {} : "skip",
-    { initialNumItems: 25 }
-  );
-  const driverSearchResults = useQuery(
-    api.fleet.driversSearch,
-    tab === "conductores" && documentSearchPrefix !== "" ? { prefix: documentSearchPrefix } : "skip"
-  );
-  const vehicleSearchResults = useQuery(
-    api.fleet.vehiclesSearch,
-    tab === "vehiculos" && plateSearchPrefix !== "" ? { prefix: plateSearchPrefix } : "skip"
-  );
-  const thirdParties = useQuery(api.fleet.listThirdParties, tab === "terceros" ? {} : "skip") as ThirdPartyRow[] | undefined;
-  const visibleThirdParties = (thirdParties ?? []).filter((party) => thirdPartySearch === "" || party.document.toLocaleLowerCase("es").includes(thirdPartySearch) || party.name.toLocaleLowerCase("es").includes(thirdPartySearch));
-  const pageStatus = tab === "conductores" ? driversStatus : tab === "vehiculos" ? vehiclesStatus : "Exhausted";
+  const driversPage = usePaginatedQuery(api.fleet.driversPage, tab === "conductores" ? { prefix: documentSearchPrefix || undefined } : "skip", { initialNumItems: PAGE_SIZE });
+  const vehiclesPage = usePaginatedQuery(api.fleet.vehiclesPage, tab === "vehiculos" ? { prefix: plateSearchPrefix || undefined } : "skip", { initialNumItems: PAGE_SIZE });
+  const thirdPartiesPage = usePaginatedQuery(api.fleet.thirdPartiesPage, tab === "terceros" ? { prefix: thirdPartySearchPrefix || undefined } : "skip", { initialNumItems: PAGE_SIZE });
+  const drivers = driversPage.results as DriverRow[];
+  const vehicles = vehiclesPage.results as VehicleRow[];
+  const thirdParties = thirdPartiesPage.results as ThirdPartyRow[];
+  const activePage = tab === "conductores" ? driversPage : tab === "vehiculos" ? vehiclesPage : thirdPartiesPage;
+  const pageStatus = activePage.status;
+  const loadedCount = activePage.results.length;
   const selectedDriver = useQuery(
     api.fleet.driverDetail,
     tab === "conductores" && selectedDocument ? { document: selectedDocument } : "skip"
@@ -307,10 +302,10 @@ export default function MaestrosPage() {
           />
         ) : (
           <input
-            aria-label="Filtrar terceros por identificación o nombre"
+            aria-label="Filtrar terceros por identificación"
             className="filter-input"
             onChange={(event) => setThirdPartyFilter(event.target.value)}
-            placeholder="Filtrar por identificación o nombre"
+            placeholder="Filtrar por identificación"
             type="search"
             value={thirdPartyFilter}
           />
@@ -334,44 +329,41 @@ export default function MaestrosPage() {
       ) : null}
 
       <section className="panel" aria-label={tab === "conductores" ? "Listado de conductores" : tab === "vehiculos" ? "Listado de vehiculos" : "Listado de terceros"}>
-        {tab === "conductores" ? (
-          isFiltering && driverSearchResults === undefined ? (
-            <div className="skeleton">Cargando…</div>
-          ) : !isFiltering && pageStatus === "LoadingFirstPage" ? (
-            <div className="skeleton">Cargando…</div>
-          ) : (
-            <DriversTable
-              onSelect={(document) => setSelectedDocument((current) => (current === document ? null : document))}
-              rows={isFiltering ? ((driverSearchResults ?? []) as DriverRow[]) : drivers}
-              selectedDocument={selectedDocument}
-            />
-          )
-        ) : tab === "vehiculos" && isFiltering && vehicleSearchResults === undefined ? (
+        {pageStatus === "LoadingFirstPage" ? (
           <div className="skeleton">Cargando…</div>
-        ) : tab === "vehiculos" && !isFiltering && pageStatus === "LoadingFirstPage" ? (
-          <div className="skeleton">Cargando…</div>
+        ) : tab === "conductores" ? (
+          <DriversTable
+            onSelect={(document) => setSelectedDocument((current) => (current === document ? null : document))}
+            rows={drivers}
+            selectedDocument={selectedDocument}
+          />
         ) : tab === "vehiculos" ? (
           <VehiclesTable
             onSelect={(plate) => setSelectedPlate((current) => (current === plate ? null : plate))}
-            rows={isFiltering ? ((vehicleSearchResults ?? []) as VehicleRow[]) : vehicles}
+            rows={vehicles}
             selectedPlate={selectedPlate}
           />
-        ) : thirdParties === undefined ? (
-          <div className="skeleton">Cargando…</div>
         ) : (
-          <ThirdPartiesTable rows={visibleThirdParties} />
+          <ThirdPartiesTable rows={thirdParties} />
         )}
       </section>
 
-      {!isFiltering && (pageStatus === "CanLoadMore" || pageStatus === "LoadingMore") ? (
-        <button
-          className="load-more"
-          disabled={pageStatus === "LoadingMore"}
-          onClick={() => (tab === "conductores" ? loadMoreDrivers(25) : loadMoreVehicles(25))}
-          type="button"
-        >
-          {pageStatus === "LoadingMore" ? "Cargando…" : "Cargar mas"}
-        </button>
+      {pageStatus !== "LoadingFirstPage" ? (
+        <div className="load-more-bar">
+          <span className="load-more-count">
+            {loadedCount === 0 ? (isFiltering ? `Sin resultados para “${activeFilter}”` : "Sin registros") : `${loadedCount} ${loadedCount === 1 ? "registro" : "registros"}${pageStatus === "Exhausted" ? "" : " cargados"}${isFiltering ? ` · filtro “${activeFilter}”` : ""}`}
+          </span>
+          {pageStatus === "CanLoadMore" || pageStatus === "LoadingMore" ? (
+            <button
+              className="load-more"
+              disabled={pageStatus === "LoadingMore"}
+              onClick={() => activePage.loadMore(PAGE_SIZE)}
+              type="button"
+            >
+              {pageStatus === "LoadingMore" ? "Cargando…" : `Cargar ${PAGE_SIZE} más`}
+            </button>
+          ) : null}
+        </div>
       ) : null}
     </>
   );

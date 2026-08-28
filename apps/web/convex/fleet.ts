@@ -480,8 +480,31 @@ export const upsertFleetBatch = mutation({
   }
 });
 
+const pageResultFields = {
+  isDone: v.boolean(),
+  continueCursor: v.string(),
+  splitCursor: v.optional(v.union(v.string(), v.null())),
+  pageStatus: v.optional(v.union(v.literal("SplitRecommended"), v.literal("SplitRequired"), v.null()))
+};
+
+const thirdPartyRowValidator = v.object({
+  _id: v.id("thirdParties"),
+  document: v.string(),
+  documentType: v.string(),
+  name: v.string(),
+  phone: v.optional(v.string()),
+  roles: v.array(thirdPartyRoleValidator),
+  city: v.optional(v.string()),
+  siteCount: v.optional(v.number()),
+  updatedAt: v.number()
+});
+
+function prefixRange(prefix: string): { from: string; to: string } | null {
+  return prefix === "" ? null : { from: prefix, to: prefix + "\uffff" };
+}
+
 export const driversPage = query({
-  args: { paginationOpts: paginationOptsValidator },
+  args: { paginationOpts: paginationOptsValidator, prefix: v.optional(v.string()) },
   returns: v.object({
     page: v.array(driverRowValidator),
     isDone: v.boolean(),
@@ -491,14 +514,19 @@ export const driversPage = query({
   }),
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx);
-    const results = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId)).order("desc").paginate(args.paginationOpts);
+    const range = prefixRange((args.prefix ?? "").trim());
+    const results = await ctx.db
+      .query("drivers")
+      .withIndex("by_organization_and_document", (q) => range ? q.eq("organizationId", actor.organizationId).gte("document", range.from).lt("document", range.to) : q.eq("organizationId", actor.organizationId))
+      .order(range ? "asc" : "desc")
+      .paginate(args.paginationOpts);
     const page = await Promise.all(results.page.map((driver) => toDriverRow(ctx, driver)));
     return { ...results, page };
   }
 });
 
 export const vehiclesPage = query({
-  args: { paginationOpts: paginationOptsValidator },
+  args: { paginationOpts: paginationOptsValidator, prefix: v.optional(v.string()) },
   returns: v.object({
     page: v.array(vehicleRowValidator),
     isDone: v.boolean(),
@@ -508,9 +536,42 @@ export const vehiclesPage = query({
   }),
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx);
-    const results = await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId)).order("desc").paginate(args.paginationOpts);
+    const range = prefixRange((args.prefix ?? "").trim().toUpperCase());
+    const results = await ctx.db
+      .query("vehicles")
+      .withIndex("by_organization_and_plate", (q) => range ? q.eq("organizationId", actor.organizationId).gte("plate", range.from).lt("plate", range.to) : q.eq("organizationId", actor.organizationId))
+      .order(range ? "asc" : "desc")
+      .paginate(args.paginationOpts);
     const page = await Promise.all(results.page.map((vehicle) => toVehicleRow(ctx, vehicle)));
     return { ...results, page };
+  }
+});
+
+export const thirdPartiesPage = query({
+  args: { paginationOpts: paginationOptsValidator, prefix: v.optional(v.string()) },
+  returns: v.object({ page: v.array(thirdPartyRowValidator), ...pageResultFields }),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
+    const range = prefixRange((args.prefix ?? "").trim());
+    const results = await ctx.db
+      .query("thirdParties")
+      .withIndex("by_organization_and_document", (q) => range ? q.eq("organizationId", actor.organizationId).gte("document", range.from).lt("document", range.to) : q.eq("organizationId", actor.organizationId))
+      .order(range ? "asc" : "desc")
+      .paginate(args.paginationOpts);
+    return {
+      ...results,
+      page: results.page.map((party) => ({
+        _id: party._id,
+        document: party.document,
+        documentType: party.documentType,
+        name: party.name,
+        phone: party.cellphone ?? party.phone,
+        roles: party.roles,
+        city: party.city,
+        siteCount: party.siteCount,
+        updatedAt: party.updatedAt
+      }))
+    };
   }
 });
 

@@ -178,12 +178,12 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
   const today = new Date().toISOString().slice(0, 10);
 
   return (
-    <form id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
+    <form className="form-compact" id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
       <StageHeading number="01" title="Orden de cargue" text="Cliente, partes, sitios, citas y mercancía alimentan las siguientes etapas." readOnly={readOnly} />
       <fieldset className="stage-form-fields" disabled={readOnly}>
         <div className="field-group-note"><strong>Datos básicos</strong></div>
         <DateField label="Fecha" name="expeditionDate" required value={draft.expeditionDate ?? today} />
-        <Field label="Nro. de orden de cargue" name="orderNumberPreview" placeholder="Se asigna automáticamente al enviar" readOnly value={draft.orderNumber} />
+        <Field label="Nro. de orden de cargue" name="orderNumberPreview" placeholder="Automático" readOnly value={draft.orderNumber} />
         <Field label="Agencia" name="agencyCode" value={draft.agencyCode} />
         <Field className="span-2" label="Referencia del cliente" name="customerReference" value={draft.customerReference} />
         <label className="form-field checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked={draft.generatesConsignment ?? true} name="generatesConsignment" type="checkbox" /><em>Crear la remesa a partir de esta orden</em></span></label>
@@ -209,7 +209,6 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
         <Field label="Ciudad de descargue" name="unloadingCity" onChange={(event) => setUnloading({ ...unloading, cityName: event.target.value })} required value={unloading.cityName} />
 
         <div className="field-group-note"><strong>Datos del vehículo</strong></div>
-        <Field label="Placa" name="platePreview" placeholder="Se asigna en Vehículo y conductor" readOnly />
         <MoneyField label="Flete conductor" name="driverFreight" value={draft.driverFreight} />
 
         <div className="field-group-note"><strong>Mercancía</strong></div>
@@ -237,7 +236,7 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
 }
 
 function inherited(value: string | undefined): string {
-  return value ? `Hereda: ${value}` : "Se hereda de la orden";
+  return value ?? "—";
 }
 
 function RemesaCard({ order, readOnly, remesa }: { order: LoadingOrder; readOnly: boolean; remesa: Remesa }) {
@@ -259,9 +258,8 @@ function RemesaCard({ order, readOnly, remesa }: { order: LoadingOrder; readOnly
       <div className="field-group-note"><strong>Datos básicos</strong></div>
       <label className="form-field"><span>Tipo de remesa</span><select defaultValue={draft.consignmentClass ?? "terrestre_carga"} name={`${key}_class`}><option value="terrestre_carga">Terrestre de carga</option><option value="municipal">Municipal</option></select></label>
       <DateField label="Fecha" name={`${key}_expeditionDate`} value={draft.expeditionDate ?? order.expeditionDate ?? today} />
-      <Field label="Nro. de remesa" name={`${key}_numberPreview`} placeholder="Se asigna automáticamente al enviar" readOnly value={remesa.number} />
+      <Field label="Nro. de remesa" name={`${key}_numberPreview`} placeholder="Automático" readOnly value={remesa.number} />
       <Field label="Agencia" name={`${key}_agencyCode`} placeholder={inherited(order.agencyCode)} value={draft.agencyCode} />
-      <Field className="span-2" label="Orden de cargue" name={`${key}_orderPreview`} placeholder="Esta remesa hereda los datos de la orden de cargue del despacho" readOnly value={order.orderNumber} />
 
       <div className="field-group-note"><strong>Sitio de cargue</strong></div>
       <Field className="span-2" label="Remitente" name={`${key}_senderName`} placeholder={inherited(order.sender?.name)} value={draft.sender?.name} />
@@ -273,7 +271,7 @@ function RemesaCard({ order, readOnly, remesa }: { order: LoadingOrder; readOnly
       <Field label="Longitud (georreferencia)" name={`${key}_loadingLongitude`} placeholder="Opcional" value={draft.loading?.longitude} />
       <Field label="Horas pactadas de cargue" min="0" name={`${key}_loadingHours`} placeholder="Opcional" step="0.5" type="number" value={draft.loading?.agreedHours} />
       <DateField label="Cita de cargue" name={`${key}_loadingAppointment`} value={dateTimeValue(draft.loading?.appointmentAt)} withTime />
-      <span className="field-hint span-2">Cita vacía: se usa la de la orden ({formatAppointment(order.loading?.appointmentAt)})</span>
+      <span className="field-hint span-2">Vacía: usa la cita de la orden · {formatAppointment(order.loading?.appointmentAt)}</span>
 
       <div className="field-group-note"><strong>Sitio de descargue</strong></div>
       <Field className="span-2" label="Destinatario" name={`${key}_recipientName`} placeholder={inherited(order.recipient?.name)} value={draft.recipient?.name} />
@@ -285,7 +283,7 @@ function RemesaCard({ order, readOnly, remesa }: { order: LoadingOrder; readOnly
       <Field label="Longitud (georreferencia)" name={`${key}_unloadingLongitude`} placeholder="Opcional" value={draft.unloading?.longitude} />
       <Field label="Horas pactadas de descargue" min="0" name={`${key}_unloadingHours`} placeholder="Opcional" step="0.5" type="number" value={draft.unloading?.agreedHours} />
       <DateField label="Cita de descargue" name={`${key}_unloadingAppointment`} value={dateTimeValue(draft.unloading?.appointmentAt)} withTime />
-      <span className="field-hint span-2">Cita vacía: se usa la de la orden ({formatAppointment(order.unloading?.appointmentAt)})</span>
+      <span className="field-hint span-2">Vacía: usa la cita de la orden · {formatAppointment(order.unloading?.appointmentAt)}</span>
 
       <div className="field-group-note"><strong>Datos del despacho</strong></div>
       <MoneyField label="Valor declarado" name={`${key}_declaredValue`} required value={draft.declaredValue} />
@@ -321,7 +319,7 @@ function RemesaCard({ order, readOnly, remesa }: { order: LoadingOrder; readOnly
       <Field label="Código de mercancía" name={`${key}_merchandiseCode`} placeholder={inherited(order.merchandiseCode)} value={draft.merchandiseCode} />
       <PackagingField code={packaging.code || undefined} description={packaging.description || undefined} label="Código de empaque" name={`${key}_packagingCode`} onClear={() => setPackaging({ code: "", description: "" })} onSelect={(option) => setPackaging({ code: option.code, description: option.description })} />
       <CargoNatureField name={`${key}_natureOfCargo`} value={draft.natureOfCargo ?? order.natureOfCargo} />
-      <Field className="span-2" label="Orden de servicio transportador" name={`${key}_serviceOrderPreview`} placeholder="Se toma del despacho" readOnly value={order.customerReference} />
+      <Field className="span-2" label="Orden de servicio transportador" name={`${key}_serviceOrderPreview`} placeholder="—" readOnly value={order.customerReference} />
       <label className="form-field"><span>Observaciones del transportador</span><textarea defaultValue={draft.transporterObservations} name={`${key}_transporterObservations`} rows={3} /></label>
       <label className="form-field span-2"><span>Observaciones generales</span><textarea defaultValue={draft.generalObservations} name={`${key}_observations`} rows={3} /></label>
       {remesa.officialState !== "draft" ? <span className="official-lock">Documento oficial · Sólo lectura</span> : null}
@@ -337,9 +335,9 @@ function formatAppointment(value: number | undefined): string {
 export function ConsignmentsForm({ onSubmit, order, readOnly, remesas }: { onSubmit: (data: FormData) => void; order: LoadingOrder; readOnly: boolean; remesas: Remesa[] }) {
   const rows = remesas.length > 0 ? remesas : [{ _id: "new", sequence: 1, officialState: "draft" }];
   return (
-    <form id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
+    <form className="form-compact" id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
       <StageHeading number="02" title="Remesas" text="La orden ya aporta remitente, ruta, citas y carga. Completa únicamente las diferencias." readOnly={readOnly} />
-      <div className="inheritance-note"><span>✓</span><div><strong>Información heredada</strong><p>Los campos vacíos usan los datos confirmados en la orden de cargue; el texto gris muestra el valor que se heredará.</p></div></div>
+      <div className="inheritance-note"><span>✓</span><div><strong>Hereda de la orden de cargue</strong><p>Deja vacío lo que no cambie; el gris muestra lo que se tomará.</p></div></div>
       <div className="stage-remesa-list">
         {rows.map((remesa) => <RemesaCard key={remesa._id} order={order} readOnly={readOnly} remesa={remesa} />)}
       </div>
@@ -388,7 +386,7 @@ export function AssignmentForm({ currentDriverDocument, currentVehiclePlate, onS
   const driverIsLinked = driver ? linkedDrivers.some((row) => row._id === driver._id) : false;
 
   return (
-    <form id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit({ driverId: driver?._id, vehicleId: vehicle?._id }); }}>
+    <form className="form-compact" id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit({ driverId: driver?._id, vehicleId: vehicle?._id }); }}>
       <StageHeading number="03" title="Vehículo y conductor" text="Empieza por la placa: el sistema propone los conductores vinculados a ese vehículo en el RNDC." readOnly={readOnly} />
       <fieldset className="stage-form-fields" disabled={readOnly}>
         <SearchSelect
@@ -462,18 +460,18 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
   const [net, setNet] = useState<{ value: string; manual: boolean }>({ value: draft.netPayable ?? "", manual: Boolean(draft.netPayable) });
   const netValue = net.manual ? net.value : suggested;
   return (
-    <form id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
+    <form className="form-compact" id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
       <StageHeading number="04" title="Manifiesto" text="La ruta, flota y remesas ya están vinculadas. Revisa la operación y la liquidación." readOnly={readOnly} />
       <fieldset className="stage-form-fields" disabled={readOnly}>
         <div className="field-group-note"><strong>Datos básicos</strong></div>
         <DateField label="Fecha de expedición" name="issueDate" required value={draft.issueDate ?? new Date().toISOString().slice(0, 10)} />
         <DateField label="Fecha estimada de entrega" name="estimatedDeliveryDate" required value={draft.estimatedDeliveryDate} />
-        <Field label="Nro. de manifiesto" name="manifestNumberPreview" placeholder="Se asigna automáticamente al enviar" readOnly value={draft.manifestNumber} />
-        <Field label="Agencia" name="agencyPreview" placeholder="Se toma del despacho" readOnly value={context.agencyCode} />
+        <Field label="Nro. de manifiesto" name="manifestNumberPreview" placeholder="Automático" readOnly value={draft.manifestNumber} />
+        <Field label="Agencia" name="agencyPreview" placeholder="—" readOnly value={context.agencyCode} />
         <Field label="Tipo de manifiesto" name="manifestType" required value={draft.manifestType} />
         <Field label="Nro. de contrato" name="contractNumber" placeholder="Opcional" value={draft.contractNumber} />
-        <Field label="Origen" name="originPreview" placeholder="Se toma de la orden de cargue" readOnly value={context.originCity} />
-        <Field label="Destino" name="destinationPreview" placeholder="Se toma de la orden de cargue" readOnly value={context.destinationCity} />
+        <Field label="Origen" name="originPreview" placeholder="—" readOnly value={context.originCity} />
+        <Field label="Destino" name="destinationPreview" placeholder="—" readOnly value={context.destinationCity} />
         <label className="form-field"><span>Alcance</span><select defaultValue={draft.operationScope ?? "intermunicipal"} name="operationScope"><option value="intermunicipal">Intermunicipal</option><option value="municipal">Municipal</option></select></label>
         <label className="form-field checkbox-field"><span>Requiere seguimiento</span><span className="checkbox-control"><input defaultChecked={draft.requiresTracking ?? false} name="requiresTracking" type="checkbox" /><em>Marcar el viaje para control de tráfico</em></span></label>
 
@@ -487,10 +485,10 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
             <Field label="Configuración" name="vehicleConfigurationPreview" readOnly value={context.vehicle.configurationLabel ?? context.vehicle.configuration} />
             <Field label="Peso máximo (TN)" name="vehicleCapacityPreview" readOnly value={context.vehicle.capacityTn} />
             <Field label="Remolque" name="trailerPreview" placeholder="Sin remolque" readOnly value={context.trailer ? [context.trailer.plate, context.trailer.trailerType].filter(Boolean).join(" · ") : ""} />
-            <Field label="Propietario" name="ownerPreview" readOnly value={namedParty(context.vehicle.ownerName, context.vehicle.ownerDocument)} />
-            <Field label="Poseedor" name="possessorPreview" readOnly value={namedParty(context.vehicle.possessorName, context.vehicle.possessorDocument)} />
-            <Field label="Conductor" name="driverPreview" placeholder="Sin asignar" readOnly value={personLabel(context.driver)} />
-            <Field label="Segundo conductor" name="secondDriverPreview" placeholder="Sin segundo conductor" readOnly value={personLabel(context.secondDriver)} />
+            <Field className="span-2" label="Propietario" name="ownerPreview" readOnly value={namedParty(context.vehicle.ownerName, context.vehicle.ownerDocument)} />
+            <Field className="span-2" label="Poseedor" name="possessorPreview" readOnly value={namedParty(context.vehicle.possessorName, context.vehicle.possessorDocument)} />
+            <Field className="span-2" label="Conductor" name="driverPreview" placeholder="Sin asignar" readOnly value={personLabel(context.driver)} />
+            <Field className="span-2" label="Segundo conductor" name="secondDriverPreview" placeholder="Sin segundo conductor" readOnly value={personLabel(context.secondDriver)} />
           </>
         ) : (
           <div className="field-hint span-2">El vehículo y el conductor se asignan en la etapa «Vehículo y conductor»; aquí se muestran para revisión.</div>
@@ -504,7 +502,7 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <MoneyField label="FOPAT" name="fopatContribution" onChange={(value) => setMoney({ ...money, fopatContribution: value })} value={money.fopatContribution} />
         <MoneyField label="Ajustes" name="adjustments" onChange={(value) => setMoney({ ...money, adjustments: value })} value={money.adjustments} />
         <MoneyField hint={net.manual && net.value !== suggested ? `Calculado: $${formatThousands(suggested)}` : "Flete − anticipo − retenciones + ajustes"} label="Neto a pagar" name="netPayable" onChange={(value) => setNet({ value, manual: true })} required value={netValue} />
-        <Field label="Agencia de pago" name="paymentAgencyCode" placeholder={context.agencyCode ? `Por defecto: ${context.agencyCode}` : "Opcional"} value={draft.paymentAgencyCode} />
+        <Field label="Agencia de pago" name="paymentAgencyCode" placeholder={context.agencyCode ?? "—"} value={draft.paymentAgencyCode} />
         <Field label="Responsable de pago" name="paymentResponsible" required value={draft.paymentResponsible} />
         <label className="form-field"><span>Cargue pagado por</span><select defaultValue={draft.loadingResponsible ?? ""} name="loadingResponsible">{paidByOptions(draft.loadingResponsible).map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
         <label className="form-field"><span>Descargue pagado por</span><select defaultValue={draft.unloadingResponsible ?? ""} name="unloadingResponsible">{paidByOptions(draft.unloadingResponsible).map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>

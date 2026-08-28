@@ -3706,3 +3706,75 @@ button {
   .remission-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .remission-head { display: none; }
 }
+
+
+/* Formularios de despacho: densidad tipo planilla */
+.form-compact .stage-form-fields,
+.form-compact .guided-section-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 12px; }
+.form-compact .stage-remesa-card { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 12px; padding: 12px 14px 14px; }
+.form-compact .route-guided-grid { margin-top: 14px; }
+.form-compact .route-guided-grid fieldset { gap: 10px 12px; padding: 12px 14px 14px; }
+.form-compact .form-field { gap: 3px; }
+.form-compact .form-field > span { font-size: 11px; font-weight: 600; color: var(--ink-soft); letter-spacing: .01em; }
+.form-compact .form-field input,
+.form-compact .form-field textarea,
+.form-compact .form-field select,
+.form-compact .money-input,
+.form-compact .remission-row input { min-height: 30px; border-color: var(--line); border-radius: 4px; font-size: 12.5px; padding: 4px 8px; }
+.form-compact .money-field .money-input input { min-height: 28px; font-size: 12.5px; }
+.form-compact .money-input > span { padding: 0 8px; font-size: 12px; }
+.form-compact .form-field textarea { min-height: 56px; }
+.form-compact .form-field input::placeholder,
+.form-compact .form-field textarea::placeholder,
+.form-compact .remission-row input::placeholder { color: var(--ink-faint); font-weight: 400; }
+.form-compact .form-field input[readonly] { border-color: transparent; border-bottom-color: var(--line); border-radius: 0; background: transparent; padding-left: 0; color: var(--ink); box-shadow: none; }
+.form-compact .form-field input[readonly]::placeholder { color: var(--ink-faint); }
+.form-compact .form-field input[readonly]:focus { outline: 0; border-bottom-color: var(--line-strong); }
+.form-compact .field-group-note { margin: 12px 0 0; padding-bottom: 4px; border-bottom: 1px solid var(--line); font-size: 11px; }
+.form-compact .field-group-note::after { display: none; }
+.form-compact .field-group-note strong { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
+.form-compact .field-group-note:first-child { margin-top: 0; }
+.form-compact .field-hint,
+.form-compact .stage-remesa-card .field-hint { grid-column: 1 / -1; margin-top: -4px; font-size: 11px; color: var(--ink-faint); }
+.form-compact .checkbox-field .checkbox-control { min-height: 30px; }
+.form-compact .checkbox-field .checkbox-control em { font-size: 11.5px; }
+.form-compact .remission-row { gap: 6px; }
+.form-compact .remission-head span { font-size: 10.5px; }
+.form-compact .inheritance-note { padding: 9px 12px; margin-bottom: 12px; }
+.form-compact .inheritance-note p { margin: 0; font-size: 11.5px; }
+.form-compact .stage-remesa-card legend { font-size: 12px; }
+.guided-form-stage:has(.form-compact),
+.guided-form-stage.form-compact { padding: 16px 18px; }
+.form-compact .guided-stage-heading,
+.form-compact .stage-form-heading { margin-bottom: 12px; gap: 10px; }
+.form-compact .guided-stage-heading > span,
+.form-compact .stage-form-heading > span { width: 28px; height: 28px; font-size: 11px; }
+.form-compact .guided-stage-heading h3,
+.form-compact .stage-form-heading h3 { font-size: 16px; }
+.form-compact .guided-stage-heading p,
+.form-compact .stage-form-heading p { font-size: 12px; margin-top: 1px; }
+.base-dispatch-form .base-dispatch-intro { padding: 14px 18px; margin-bottom: 10px; border-top-width: 3px; }
+.base-dispatch-form .base-dispatch-intro h2 { font-size: 20px; margin: 2px 0 3px; }
+.base-dispatch-form .base-dispatch-intro p { font-size: 12.5px; }
+.base-dispatch-form .base-dispatch-outcome { font-size: 11.5px; }
+.base-dispatch-form .guided-form-stage { padding: 16px 18px; min-height: 0; }
+.base-dispatch-form .guided-form-stage > section + section { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+@media (max-width: 1180px) {
+  .form-compact .stage-form-fields,
+  .form-compact .guided-section-grid,
+  .form-compact .stage-remesa-card { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .form-compact .stage-form-fields,
+  .form-compact .guided-section-grid,
+  .form-compact .stage-remesa-card { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .form-compact .stage-form-fields,
+  .form-compact .guided-section-grid,
+  .form-compact .stage-remesa-card { grid-template-columns: 1fr; }
+  .form-compact .span-2 { grid-column: auto; }
+}
+.form-compact .date-field-trigger { min-height: 30px; border-color: var(--line); border-radius: 4px; padding: 4px 8px; }
+.form-compact .search-select-icon,
+.form-compact .search-select-clear { width: 20px; height: 20px; font-size: 13px; }

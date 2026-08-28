@@ -141,12 +141,12 @@ export default function NuevoDespachoPage() {
   const saving = savingAction !== null;
 
   return (
-    <form className="guided-dispatch-form base-dispatch-form" onSubmit={(event) => event.preventDefault()} ref={formRef}>
+    <form className="guided-dispatch-form base-dispatch-form form-compact" onSubmit={(event) => event.preventDefault()} ref={formRef}>
       <section className="base-dispatch-intro">
         <div>
           <span className="eyebrow">Nuevo despacho</span>
           <h2>Datos base del despacho</h2>
-          <p>Busca el cliente, el destinatario y sus sedes del RNDC: los datos de identificación, direcciones y municipios se completan solos.</p>
+          <p>Busca cliente, destinatario y sedes en el RNDC; identificación, direcciones y municipios se completan solos.</p>
         </div>
         <div className="base-dispatch-outcome"><strong>Al guardar</strong><span>Se abre el centro documental del despacho</span></div>
       </section>
@@ -159,11 +159,11 @@ export default function NuevoDespachoPage() {
           <div className="stage-form-fields">
             <div className="field-group-note"><strong>Datos básicos</strong></div>
             <DateField label="Fecha" name="expeditionDate" required value={today} />
-            <Field label="Nro. de orden de cargue" name="orderNumberPreview" placeholder="Se asigna automáticamente al enviar" readOnly />
+            <Field label="Nro. de orden de cargue" name="orderNumberPreview" placeholder="Automático" readOnly />
             <Field label="Agencia responsable" name="agencyCode" placeholder="Principal" />
-            <Field label="Orden de servicio" name="serviceOrderCode" placeholder="OS-2026-001" required />
-            <Field label="Referencia del cliente" name="customerReference" placeholder="Pedido o contrato" />
-            <label className="form-field checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked name="generatesConsignment" type="checkbox" /><em>Crear la remesa a partir de esta orden</em></span></label>
+            <label className="form-field checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked name="generatesConsignment" type="checkbox" /><em>Crear la remesa desde esta orden</em></span></label>
+            <Field className="span-2" label="Orden de servicio" name="serviceOrderCode" placeholder="OS-2026-001" required />
+            <Field className="span-2" label="Referencia del cliente" name="customerReference" placeholder="Pedido o contrato" />
             <div className="field-group-note"><strong>Datos del remitente</strong></div>
             <PartyField
               className="span-2"
@@ -176,9 +176,9 @@ export default function NuevoDespachoPage() {
               selected={state.customer}
               typedName={state.customer ? undefined : state.customerName}
             />
-            <Field label="Código del cliente" name="customerCode" onChange={(event) => update({ customerCode: event.target.value })} placeholder="Se toma del documento" required value={state.customerCode} />
             <IdTypeField label="Tipo de identificación" name="customerIdType" onChange={(value) => update({ customerIdType: value })} required value={state.customerIdType} />
             <Field label="Identificación del cliente" name="customerId" onChange={(event) => update({ customerId: event.target.value })} required value={state.customerId} />
+            <Field label="Código del cliente" name="customerCode" onChange={(event) => update({ customerCode: event.target.value })} placeholder="Se toma del documento" required value={state.customerCode} />
             <Field label="Teléfono remitente" name="customerPhone" onChange={(event) => update({ customerPhone: event.target.value })} required type="tel" value={state.customerPhone} />
             <Field label="Celular remitente" name="customerCellphone" onChange={(event) => update({ customerCellphone: event.target.value })} type="tel" value={state.customerCellphone} />
             <input name="customerName" type="hidden" value={state.customerName} />
@@ -217,7 +217,7 @@ export default function NuevoDespachoPage() {
         </section>
 
         <section aria-labelledby="cargo-title">
-          <StageHeading id="cargo-title" title="Destinatario y mercancía" text="Quién recibe la carga, en qué sede, y qué se transporta." />
+          <StageHeading id="cargo-title" number="02" title="Destinatario y mercancía" text="Quién recibe la carga, en qué sede, y qué se transporta." />
           <div className="stage-form-fields">
             <div className="field-group-note"><strong>Datos del destinatario</strong></div>
             <PartyField
@@ -249,8 +249,8 @@ export default function NuevoDespachoPage() {
             />
             <input name="recipientSiteCode" type="hidden" value={state.recipientSiteCode} />
             <div className="field-group-note"><strong>Datos del vehículo</strong></div>
-            <Field label="Placa" name="platePreview" placeholder="Se asigna en Vehículo y conductor" readOnly />
             <MoneyField label="Flete conductor" name="driverFreight" />
+            <span className="field-hint span-2">La placa y el conductor se asignan después, en la etapa «Vehículo y conductor».</span>
             <div className="field-group-note"><strong>Datos de la mercancía</strong></div>
             <Field className="span-2" label="Mercancía" name="cargoDescription" required />
             <Field label="Código de mercancía" name="merchandiseCode" required />
@@ -284,8 +284,8 @@ export default function NuevoDespachoPage() {
   );
 }
 
-function StageHeading({ id, text, title }: { id: string; text: string; title: string }) {
-  return <div className="guided-stage-heading"><span>01</span><div><h3 id={id}>{title}</h3><p>{text}</p></div></div>;
+function StageHeading({ id, number = "01", text, title }: { id: string; number?: string; text: string; title: string }) {
+  return <div className="guided-stage-heading"><span>{number}</span><div><h3 id={id}>{title}</h3><p>{text}</p></div></div>;
 }
 
 function Field({ className = "", label, name, ...props }: { className?: string; label: string; name: string } & React.InputHTMLAttributes<HTMLInputElement>) {

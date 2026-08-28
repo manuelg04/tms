@@ -38,7 +38,9 @@ type ThirdPartyRow = {
   documentType: string;
   name: string;
   phone?: string;
-  roles: Array<"owner" | "possessor" | "holder" | "sender" | "recipient" | "other">;
+  roles: Array<"driver" | "owner" | "possessor" | "holder" | "sender" | "recipient" | "other">;
+  city?: string;
+  siteCount?: number;
   updatedAt: number;
 };
 
@@ -673,8 +675,8 @@ function ThirdPartiesTable({ rows }: { rows: ThirdPartyRow[] }) {
     <>
       <div className="table-wrap master-desktop-table">
         <table className="doc-table">
-          <thead><tr><th>Identificación</th><th>Nombre</th><th>Roles</th><th>Teléfono</th><th>Actualizado</th></tr></thead>
-          <tbody>{rows.map((row) => <tr key={row._id}><td><span className="radicado">{row.document}</span><small className="table-subline">{row.documentType}</small></td><td>{row.name}</td><td>{rolesLabel(row.roles)}</td><td>{valueOrDash(row.phone)}</td><td className="cell-date">{formatTimestamp(row.updatedAt)}</td></tr>)}</tbody>
+          <thead><tr><th>Identificación</th><th>Nombre</th><th>Roles</th><th>Ciudad</th><th>Sedes</th><th>Teléfono</th><th>Actualizado</th></tr></thead>
+          <tbody>{rows.map((row) => <tr key={row._id}><td><span className="radicado">{row.document}</span><small className="table-subline">{row.documentType}</small></td><td>{row.name}</td><td>{rolesLabel(row.roles)}</td><td>{valueOrDash(row.city)}</td><td>{row.siteCount ?? 1}</td><td>{valueOrDash(row.phone)}</td><td className="cell-date">{formatTimestamp(row.updatedAt)}</td></tr>)}</tbody>
         </table>
       </div>
       <div className="master-mobile-list">
@@ -732,7 +734,7 @@ function valuesLabel(values: Array<string | undefined>) {
 }
 
 function rolesLabel(roles: ThirdPartyRow["roles"]) {
-  const labels = { owner: "Propietario", possessor: "Poseedor", holder: "Tenedor", sender: "Remitente", recipient: "Destinatario", other: "Otro" };
+  const labels = { driver: "Conductor", owner: "Propietario", possessor: "Poseedor", holder: "Tenedor", sender: "Remitente", recipient: "Destinatario", other: "Otro" };
   return roles.map((role) => labels[role]).join(" · ");
 }
 

@@ -7,6 +7,7 @@ import { appendAudit, requireActor } from "./model/access";
 import { normalizeDriverInput, normalizeThirdPartyInput, normalizeVehicleInput, type ThirdPartyInput } from "./model/masterData";
 
 const thirdPartyRoleValidator = v.union(
+  v.literal("driver"),
   v.literal("owner"),
   v.literal("possessor"),
   v.literal("holder"),
@@ -144,6 +145,7 @@ const driverDetailValidator = v.object({
   bloodType: v.optional(v.string()),
   address: v.optional(v.string()),
   city: v.optional(v.string()),
+  cityCode: v.optional(v.string()),
   phone1: v.optional(v.string()),
   phone2: v.optional(v.string()),
   cellphone: v.optional(v.string()),
@@ -723,5 +725,147 @@ export const organizationBySlug = query({
       .withIndex("by_slug", (q) => q.eq("slug", args.slug.trim().toLowerCase()))
       .unique();
     return organization?._id ?? null;
+  }
+});
+
+const thirdPartyBatchInputValidator = v.object({
+  documentType: v.string(),
+  document: v.string(),
+  name: v.string(),
+  phone: v.optional(v.string()),
+  cellphone: v.optional(v.string()),
+  address: v.optional(v.string()),
+  city: v.optional(v.string()),
+  cityCode: v.optional(v.string()),
+  email: v.optional(v.string()),
+  roles: v.array(thirdPartyRoleValidator),
+  siteCount: v.number(),
+  rndcRegisteredAt: v.optional(v.string()),
+  source: v.string()
+});
+
+const thirdPartySiteInputValidator = v.object({
+  document: v.string(),
+  siteCode: v.string(),
+  siteName: v.string(),
+  address: v.optional(v.string()),
+  city: v.optional(v.string()),
+  cityCode: v.optional(v.string()),
+  latitude: v.optional(v.string()),
+  longitude: v.optional(v.string()),
+  rndcRegisteredAt: v.optional(v.string())
+});
+
+export const upsertThirdPartyBatch = mutation({
+  args: {
+    ingestKey: v.string(),
+    organizationId: v.id("organizations"),
+    parties: v.array(thirdPartyBatchInputValidator),
+    sites: v.array(thirdPartySiteInputValidator)
+  },
+  returns: v.object({
+    partiesInserted: v.number(),
+    partiesUpdated: v.number(),
+    sitesInserted: v.number(),
+    sitesUpdated: v.number(),
+    sitesSkipped: v.array(v.object({ document: v.string(), siteCode: v.string(), reason: v.string() }))
+  }),
+  handler: async (ctx, args) => {
+    if (args.ingestKey !== process.env.RNDC_INGEST_KEY) {
+      throw new ConvexError({ code: "UNAUTHORIZED", message: "Invalid ingest key" });
+    }
+    const now = Date.now();
+    const result = { partiesInserted: 0, partiesUpdated: 0, sitesInserted: 0, sitesUpdated: 0, sitesSkipped: [] as { document: string; siteCode: string; reason: string }[] };
+
+    for (const party of args.parties) {
+      const existing = await ctx.db
+        .query("thirdParties")
+        .withIndex("by_organization_and_document", (q) => q.eq("organizationId", args.organizationId).eq("document", party.document))
+        .unique();
+      if (existing) {
+        const roles = [...new Set([...existing.roles, ...party.roles])];
+        const patch: Record<string, unknown> = { roles, updatedAt: now };
+        for (const [key, value] of Object.entries(party)) {
+          if (key !== "roles" && value !== undefined) {
+            patch[key] = value;
+          }
+        }
+        await ctx.db.patch(existing._id, patch);
+        result.partiesUpdated += 1;
+      } else {
+        await ctx.db.insert("thirdParties", { ...party, organizationId: args.organizationId, createdAt: now, updatedAt: now });
+        result.partiesInserted += 1;
+      }
+    }
+
+    for (const site of args.sites) {
+      const party = await ctx.db
+        .query("thirdParties")
+        .withIndex("by_organization_and_document", (q) => q.eq("organizationId", args.organizationId).eq("document", site.document))
+        .unique();
+      if (!party) {
+        result.sitesSkipped.push({ document: site.document, siteCode: site.siteCode, reason: "third_party_not_found" });
+        continue;
+      }
+      const existing = await ctx.db
+        .query("thirdPartySites")
+        .withIndex("by_organization_and_document_and_site", (q) => q.eq("organizationId", args.organizationId).eq("document", site.document).eq("siteCode", site.siteCode))
+        .unique();
+      if (existing) {
+        const patch: Record<string, unknown> = { thirdPartyId: party._id, updatedAt: now };
+        for (const [key, value] of Object.entries(site)) {
+          if (value !== undefined) {
+            patch[key] = value;
+          }
+        }
+        await ctx.db.patch(existing._id, patch);
+        result.sitesUpdated += 1;
+      } else {
+        await ctx.db.insert("thirdPartySites", { ...site, organizationId: args.organizationId, thirdPartyId: party._id, createdAt: now, updatedAt: now });
+        result.sitesInserted += 1;
+      }
+    }
+
+    return result;
+  }
+});
+
+export const ingestSnapshot = query({
+  args: {
+    ingestKey: v.string(),
+    organizationId: v.id("organizations"),
+    table: v.union(v.literal("drivers"), v.literal("thirdParties"), v.literal("thirdPartySites")),
+    document: v.optional(v.string())
+  },
+  returns: v.any(),
+  handler: async (ctx, args) => {
+    if (args.ingestKey !== process.env.RNDC_INGEST_KEY) {
+      throw new ConvexError({ code: "UNAUTHORIZED", message: "Invalid ingest key" });
+    }
+    const today = new Date().toISOString().slice(0, 10);
+    if (args.table === "drivers") {
+      const drivers = await ctx.db.query("drivers").collect();
+      const driver = args.document ? drivers.find((item) => item.document === args.document) : undefined;
+      return {
+        total: drivers.length,
+        inOrganization: drivers.filter((item) => item.organizationId === args.organizationId).length,
+        withValidLicense: drivers.filter((item) => (item.licenseExpiresAt ?? "") >= today).length,
+        sample: driver ? { name: driver.name, licenseCategory: driver.licenseCategory, licenseExpiresAt: driver.licenseExpiresAt, city: driver.city, phone1: driver.phone1 } : null
+      };
+    }
+    if (args.table === "thirdParties") {
+      const parties = await ctx.db.query("thirdParties").withIndex("by_organization_and_name", (q) => q.eq("organizationId", args.organizationId)).collect();
+      const roles: Record<string, number> = {};
+      for (const party of parties) {
+        for (const role of party.roles) {
+          roles[role] = (roles[role] ?? 0) + 1;
+        }
+      }
+      const party = args.document ? parties.find((item) => item.document === args.document) : undefined;
+      return { total: parties.length, roles, sample: party ? { name: party.name, roles: party.roles, siteCount: party.siteCount, city: party.city } : null };
+    }
+    const sites = await ctx.db.query("thirdPartySites").collect();
+    const matching = args.document ? sites.filter((item) => item.document === args.document).map((item) => `${item.siteCode}:${item.siteName}`) : [];
+    return { total: sites.length, withCoordinates: sites.filter((item) => item.latitude).length, sample: matching };
   }
 });

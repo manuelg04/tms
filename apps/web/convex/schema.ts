@@ -253,7 +253,14 @@ export default defineSchema({
     phone: v.optional(v.string()),
     address: v.optional(v.string()),
     cityCode: v.optional(v.string()),
+    cellphone: v.optional(v.string()),
+    city: v.optional(v.string()),
+    email: v.optional(v.string()),
+    siteCount: v.optional(v.number()),
+    rndcRegisteredAt: v.optional(v.string()),
+    source: v.optional(v.string()),
     roles: v.array(v.union(
+      v.literal("driver"),
       v.literal("owner"),
       v.literal("possessor"),
       v.literal("holder"),
@@ -261,13 +268,31 @@ export default defineSchema({
       v.literal("recipient"),
       v.literal("other")
     )),
-    createdBy: v.id("users"),
-    updatedBy: v.id("users"),
+    createdBy: v.optional(v.id("users")),
+    updatedBy: v.optional(v.id("users")),
     createdAt: v.number(),
     updatedAt: v.number()
   })
     .index("by_organization_and_document", ["organizationId", "document"])
     .index("by_organization_and_name", ["organizationId", "name"]),
+
+  thirdPartySites: defineTable({
+    organizationId: v.id("organizations"),
+    thirdPartyId: v.id("thirdParties"),
+    document: v.string(),
+    siteCode: v.string(),
+    siteName: v.string(),
+    address: v.optional(v.string()),
+    city: v.optional(v.string()),
+    cityCode: v.optional(v.string()),
+    latitude: v.optional(v.string()),
+    longitude: v.optional(v.string()),
+    rndcRegisteredAt: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number()
+  })
+    .index("by_organization_and_document_and_site", ["organizationId", "document", "siteCode"])
+    .index("by_third_party", ["thirdPartyId"]),
 
   vehicles: defineTable({
     organizationId: v.optional(v.id("organizations")),

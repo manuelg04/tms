@@ -1,4 +1,4 @@
-export type ThirdPartyRole = "owner" | "possessor" | "holder" | "sender" | "recipient" | "other";
+export type ThirdPartyRole = "driver" | "owner" | "possessor" | "holder" | "sender" | "recipient" | "other";
 
 export type ThirdPartyInput = {
   documentType?: string;

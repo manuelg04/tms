@@ -38,3 +38,23 @@ function readPassword(): string {
   if (!match) throw new Error("DEMO_AUTH_PASSWORD is not configured");
   return match[1].trim().replace(/^['\"]|['\"]$/g, "");
 }
+
+test("driver master shows license data from the RNDC maestro", async ({ page }) => {
+  await page.goto("/maestros");
+  await page.getByPlaceholder("Filtrar por documento").fill("93349215");
+  const row = page.locator(".master-desktop-table tr, .master-mobile-card").filter({ hasText: "93349215" }).filter({ visible: true }).first();
+  await expect(row).toBeVisible({ timeout: 15_000 });
+  await expect(row).toContainText("JOSE EDILBERTO CEBALLOS AGUDELO");
+  await row.click();
+  const detail = page.locator("section.panel", { hasText: "Vehículos asociados" });
+  await expect(detail.getByText(/93349215 · C3/)).toBeVisible();
+  await expect(detail.getByText("2029-01-07")).toBeVisible();
+});
+
+test("third party master lists roles and sites", async ({ page }) => {
+  await page.goto("/maestros");
+  await page.getByRole("button", { name: "Terceros" }).click();
+  const anyRow = page.locator(".master-desktop-table tr, .master-mobile-card").filter({ hasText: /Conductor|Propietario|Remitente/ }).filter({ visible: true }).first();
+  await expect(anyRow).toBeVisible({ timeout: 15_000 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});

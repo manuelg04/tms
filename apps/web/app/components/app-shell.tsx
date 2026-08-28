@@ -27,7 +27,7 @@ const pageMeta: Record<string, PageMeta> = {
   },
   "/expedientes": {
     title: "Despachos",
-    subtitle: "Cola de trabajo, etapa actual y siguiente acción"
+    subtitle: "Listado, búsqueda y exportación de despachos"
   },
   "/expedientes/nuevo": {
     title: "Nuevo despacho",

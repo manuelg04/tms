@@ -8,8 +8,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("dispatch queue shows stage RNDC status and one next action without horizontal overflow", async ({ page }) => {
-  await expect(page.getByRole("heading", { name: "Despachos" })).toBeVisible();
-  await expect(page.getByText("Cola de trabajo", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Despachos", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Listado de despachos" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Nuevo despacho" })).toBeVisible();
   await expect(page.locator(".dispatch-row").first()).toBeVisible({ timeout: 15_000 });
   await expect(page.locator(".dispatch-row").first().locator(".rndc-state")).toBeVisible();
@@ -58,6 +58,7 @@ test("dispatch documents can be completed and emitted in separate sessions", asy
 
   const dispatchCode = await page.locator(".dispatch-detail-hero h2").innerText();
   await page.goto("/expedientes");
+  await page.getByRole("button", { name: "Más filtros" }).click();
   await page.getByLabel("Filtrar por etapa").selectOption("pending_manifest");
   await expect(page.getByRole("link", { name: dispatchCode, exact: true })).toBeVisible();
   await page.goto(detailUrl);

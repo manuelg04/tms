@@ -22,6 +22,7 @@ const filtersValidator = v.object({
   destination: v.optional(v.string()),
   stage: v.optional(v.string()),
   status: v.optional(v.string()),
+  state: v.optional(v.string()),
   from: v.optional(v.string()),
   to: v.optional(v.string())
 });
@@ -42,6 +43,31 @@ export const page = query({
     return await searchPage(ctx, actor.organizationId, args.paginationOpts, args.filters);
   }
 });
+
+const expedienteStates = ["draft", "ready", "in_progress", "completed", "cancelled"] as const;
+type ExpedienteState = (typeof expedienteStates)[number];
+const COUNT_CAP = 1000;
+
+export const counts = query({
+  args: { actorToken: v.optional(v.string()) },
+  returns: v.object({ draft: v.number(), ready: v.number(), in_progress: v.number(), completed: v.number(), cancelled: v.number(), capped: v.boolean() }),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken);
+    const entries = await Promise.all(expedienteStates.map(async (state) => {
+      const rows = await ctx.db
+        .query("expedientes")
+        .withIndex("by_organization_and_status", (q) => q.eq("organizationId", actor.organizationId).eq("status", state))
+        .take(COUNT_CAP + 1);
+      return [state, rows.length] as const;
+    }));
+    const result = Object.fromEntries(entries.map(([state, count]) => [state, Math.min(count, COUNT_CAP)])) as Record<ExpedienteState, number>;
+    return { ...result, capped: entries.some(([, count]) => count > COUNT_CAP) };
+  }
+});
+
+function isExpedienteState(value: string | undefined): value is ExpedienteState {
+  return expedienteStates.includes(value as ExpedienteState);
+}
 
 export const exportPage = query({
   args: { actorToken: v.optional(v.string()), paginationOpts: paginationOptsValidator, filters: filtersValidator },
@@ -226,26 +252,34 @@ async function searchPage(
     filters.origin,
     filters.destination
   ].filter(Boolean).join(" "));
+  const state = isExpedienteState(filters.state) ? filters.state : undefined;
   const result = searchQuery
     ? await ctx.db
         .query("expedientes")
         .withSearchIndex("search_dispatches", (q) => q.search("searchText", searchQuery).eq("organizationId", organizationId))
         .paginate(paginationOpts)
-    : await ctx.db
-        .query("expedientes")
-        .withIndex("by_organization_and_updated_at", (q) => q.eq("organizationId", organizationId))
-        .order("desc")
-        .paginate(paginationOpts);
+    : state
+      ? await ctx.db
+          .query("expedientes")
+          .withIndex("by_organization_status_and_updated_at", (q) => q.eq("organizationId", organizationId).eq("status", state))
+          .order("desc")
+          .paginate(paginationOpts)
+      : await ctx.db
+          .query("expedientes")
+          .withIndex("by_organization_and_updated_at", (q) => q.eq("organizationId", organizationId))
+          .order("desc")
+          .paginate(paginationOpts);
   const rows = await Promise.all(result.page.map((expediente) => toListRow(ctx, expediente)));
   const filtered = applyDispatchFilters(rows.map((row) => ({
     ...row,
     id: row.expediente._id,
     code: row.expediente.code,
+    state: row.expediente.status,
     updatedAt: row.expediente.updatedAt,
     searchText: searchTextForRow(row)
   })), filters);
 
-  return { ...result, page: filtered.map(({ id, code, updatedAt, searchText, ...row }) => row) };
+  return { ...result, page: filtered.map(({ id, code, state: _state, updatedAt, searchText, ...row }) => row) };
 }
 
 export function searchTextForRow(row: Awaited<ReturnType<typeof toListRow>>): string {

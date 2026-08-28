@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
-import { usePaginatedQuery } from "convex/react";
+import { usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import {
   dispatchFiltersFromSearchParams,
@@ -12,7 +12,8 @@ import {
   type DispatchFilterKey
 } from "../../convex/model/dispatchSearch";
 import { guidedDispatchStages } from "../../convex/model/dispatchPresentation";
-import { StatusBadge } from "./status-badge";
+
+const PAGE_SIZE = 40;
 
 const stageOptions = [
   { value: "", label: "Todas las etapas" },
@@ -22,54 +23,84 @@ const stageOptions = [
   { value: "anulado", label: "Anulado" }
 ];
 
+const stateTabs: Array<{ value: string; label: string; always?: boolean }> = [
+  { value: "", label: "Todos", always: true },
+  { value: "draft", label: "Borradores", always: true },
+  { value: "ready", label: "Por enviar" },
+  { value: "in_progress", label: "En proceso", always: true },
+  { value: "completed", label: "Cerrados", always: true },
+  { value: "cancelled", label: "Anulados" }
+];
+
+type Row = {
+  expediente: { _id: string; code: string; status: string; updatedAt: number };
+  serviceOrderCode: string;
+  customerName: string;
+  originCity: string;
+  destinationCity: string;
+  orderNumber?: string;
+  remesaNumbers: string[];
+  manifestNumber?: string;
+  vehiclePlate?: string;
+  driverName?: string;
+  stage: string;
+  blockers: string[];
+  rndcStatus: string;
+  nextAction: string;
+  openNoveltyCount: number;
+};
+
+type RowState = { label: string; tone: "bad" | "wait" | "ok" | "done" | "muted"; detail?: string };
+
 const emptyFilters: DispatchFilters = {};
+const shortDate = new Intl.DateTimeFormat("es-CO", { day: "2-digit", month: "short" });
+const shortTime = new Intl.DateTimeFormat("es-CO", { hour: "2-digit", minute: "2-digit", hour12: false });
 
 export default function DespachosPage() {
   const [filters, setFilters] = useState<DispatchFilters>(emptyFilters);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
   const normalizedFilters = useMemo(() => normalizeDispatchFilters(filters), [filters]);
   const deferredFilters = useDeferredValue(normalizedFilters);
+  const counts = useQuery(api.dispatchSearch.counts, {});
   const { results, status: pageStatus, loadMore } = usePaginatedQuery(
     api.dispatchSearch.page,
     { filters: deferredFilters },
-    { initialNumItems: 25 }
+    { initialNumItems: PAGE_SIZE }
   );
+  const rows = results as unknown as Row[];
 
   useEffect(() => {
-    setFilters(dispatchFiltersFromSearchParams(new URLSearchParams(window.location.search)));
+    const initial = dispatchFiltersFromSearchParams(new URLSearchParams(window.location.search));
+    setFilters(initial);
+    if (hasAdvancedFilters(initial)) setAdvancedOpen(true);
   }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      const params = dispatchFiltersToSearchParams(filters);
-      const query = params.toString();
+      const query = dispatchFiltersToSearchParams(filters).toString();
       window.history.replaceState(null, "", query ? `/expedientes?${query}` : "/expedientes");
     }, 200);
     return () => window.clearTimeout(timer);
   }, [filters]);
 
   const exportQuery = useMemo(() => dispatchFiltersToSearchParams(normalizedFilters), [normalizedFilters]);
-  const attention = results.filter((row) => row.rndcStatus === "Requiere atención" || row.rndcStatus === "Resultado incierto").length;
-  const ready = results.filter((row) => row.stage === "envio_rndc").length;
-  const inOperation = results.filter((row) => ["cargue_descargue", "cumplido_inicial", "cumplido_final"].includes(row.stage)).length;
+  const advancedActive = hasAdvancedFilters(normalizedFilters);
   const hasFilters = Object.keys(normalizedFilters).length > 0;
-
-  const updateFilter = (key: DispatchFilterKey, value: string) => {
-    setFilters((current) => ({ ...current, [key]: value }));
-  };
-
+  const updateFilter = (key: DispatchFilterKey, value: string) => setFilters((current) => ({ ...current, [key]: value }));
   const exportHref = (kind: string) => {
     const params = new URLSearchParams(exportQuery);
     params.set("kind", kind);
     return `/api/exports/dispatches?${params.toString()}`;
   };
+  const totalAll = counts ? counts.draft + counts.ready + counts.in_progress + counts.completed + counts.cancelled : undefined;
+  const countFor = (value: string) => (value === "" ? totalAll : counts?.[value as keyof typeof counts]) as number | undefined;
 
   return (
     <>
-      <section className="dispatch-queue-intro">
+      <section className="dispatch-list-head">
         <div>
-          <span className="eyebrow">Cola de trabajo</span>
-          <h2>Lo que necesita atención, en orden</h2>
-          <p>La búsqueda, los filtros y las exportaciones consultan el historial completo sin cargarlo en el navegador.</p>
+          <span className="eyebrow">Despachos</span>
+          <h2>Listado de despachos</h2>
         </div>
         <div className="queue-header-actions">
           <details className="export-menu">
@@ -85,162 +116,166 @@ export default function DespachosPage() {
         </div>
       </section>
 
-      <section className="queue-metrics" aria-label="Resumen de la página visible">
-        <QueueMetric label="Requieren atención" value={attention} tone={attention > 0 ? "bad" : "neutral"} />
-        <QueueMetric label="Listos para enviar" value={ready} tone="wait" />
-        <QueueMetric label="En operación" value={inOperation} tone="ok" />
-        <QueueMetric label="Cargados en esta vista" value={results.length} tone="neutral" />
-      </section>
-
-      <section className="panel dispatch-queue-panel" aria-label="Cola de despachos">
-        <div className="dispatch-filter-bar" role="search">
-          <label className="filter-search">
-            <span className="sr-only">Buscar despachos</span>
-            <SearchIcon />
-            <input
-              onChange={(event) => updateFilter("search", event.target.value)}
-              placeholder="Expediente, documento o ruta"
-              type="search"
-              value={filters.search ?? ""}
-            />
-          </label>
-          <FilterInput label="Cliente" onChange={(value) => updateFilter("customer", value)} value={filters.customer} />
-          <FilterInput label="Placa" onChange={(value) => updateFilter("plate", value)} value={filters.plate} />
-          <FilterInput label="Conductor" onChange={(value) => updateFilter("driver", value)} value={filters.driver} />
-          <FilterInput label="Origen" onChange={(value) => updateFilter("origin", value)} value={filters.origin} />
-          <FilterInput label="Destino" onChange={(value) => updateFilter("destination", value)} value={filters.destination} />
-          <label>
-            <span className="sr-only">Filtrar por etapa</span>
-            <select onChange={(event) => updateFilter("stage", event.target.value)} value={filters.stage ?? ""}>
-              {stageOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
-          </label>
-          <label>
-            <span className="sr-only">Filtrar por estado RNDC</span>
-            <select onChange={(event) => updateFilter("status", event.target.value)} value={filters.status ?? ""}>
-              <option value="">Todos los estados RNDC</option>
-              <option value="Pendiente">Pendiente</option>
-              <option value="En proceso">En proceso</option>
-              <option value="Autorizado">Autorizado</option>
-              <option value="Requiere atención">Requiere atención</option>
-              <option value="Resultado incierto">Resultado incierto</option>
-            </select>
-          </label>
-          <label className="date-filter"><span>Desde</span><input onChange={(event) => updateFilter("from", event.target.value)} type="date" value={filters.from ?? ""} /></label>
-          <label className="date-filter"><span>Hasta</span><input onChange={(event) => updateFilter("to", event.target.value)} type="date" value={filters.to ?? ""} /></label>
-          {hasFilters ? <button className="text-button" onClick={() => setFilters(emptyFilters)} type="button">Limpiar filtros</button> : null}
-        </div>
-
-        {pageStatus === "LoadingFirstPage" ? (
-          <div className="skeleton">Organizando la cola de trabajo…</div>
-        ) : results.length === 0 ? (
-          <div className="expediente-empty">
-            <strong>No hay despachos en esta página</strong>
-            <p>{hasFilters ? "Ajusta los filtros o continúa buscando en el historial." : "Crea un nuevo despacho para comenzar."}</p>
-            {pageStatus === "CanLoadMore" ? <button className="load-more" onClick={() => loadMore(25)} type="button">Buscar en la siguiente página</button> : <Link className="primary-action action-link" href="/expedientes/nuevo">Crear despacho</Link>}
-          </div>
-        ) : (
-          <div className="dispatch-queue-list">
-            {results.map((row) => (
-              <article className={row.rndcStatus === "Requiere atención" || row.rndcStatus === "Resultado incierto" ? "dispatch-row attention" : "dispatch-row"} key={row.expediente._id}>
-                <div className="dispatch-identity">
-                  <div className="dispatch-code-line">
-                    <Link href={`/expedientes/${row.expediente._id}`}>{row.expediente.code}</Link>
-                    <StatusBadge status={row.expediente.status} />
-                  </div>
-                  <strong>{row.customerName}</strong>
-                  <span>{row.originCity} <RouteArrow /> {row.destinationCity}</span>
-                </div>
-                <div className="dispatch-documents">
-                  <DocumentProgress code="O" label="Orden" number={row.orderNumber} state={row.orderState ?? "draft"} />
-                  <DocumentProgress code="R" label="Remesas" number={row.remesaNumbers.length > 0 ? row.remesaNumbers.join(", ") : undefined} state={aggregateState(row.remesaStates ?? [])} />
-                  <DocumentProgress code="M" label="Manifiesto" number={row.manifestNumber} state={row.manifestState ?? "draft"} />
-                </div>
-                <div className="dispatch-assignment">
-                  <QueueValue label="Vehículo" value={row.vehiclePlate ?? "Sin asignar"} />
-                  <QueueValue label="Conductor" value={row.driverName ?? "Sin asignar"} />
-                  <QueueValue label="Agencia" value={row.agencyCode || "Principal"} />
-                </div>
-                <div className="dispatch-progress">
-                  <span className={`rndc-state ${statusClass(row.rndcStatus)}`}><StateIcon status={row.rndcStatus} />{row.rndcStatus}</span>
-                  <strong>{stageLabel(row.stage)}</strong>
-                  {row.blockers[0] ? <small>{row.blockers[0]}</small> : <small>Sin bloqueos pendientes</small>}
-                </div>
-                <Link className="queue-next-action" href={`/expedientes/${row.expediente._id}`}><span>{row.nextAction}</span><RouteArrow /></Link>
-              </article>
+      <section className="panel dispatch-list-panel" aria-label="Listado de despachos">
+        <div className="dispatch-toolbar">
+          <div className="state-tabs" role="tablist" aria-label="Filtrar por estado del despacho">
+            {stateTabs.filter((tab) => tab.always || (countFor(tab.value) ?? 0) > 0).map((tab) => (
+              <button
+                aria-selected={(filters.state ?? "") === tab.value}
+                className={(filters.state ?? "") === tab.value ? "state-tab active" : "state-tab"}
+                key={tab.value || "all"}
+                onClick={() => updateFilter("state", tab.value)}
+                role="tab"
+                type="button"
+              >
+                {tab.label}
+                {countFor(tab.value) !== undefined ? <span className="state-count">{formatCount(countFor(tab.value)!, counts?.capped)}</span> : null}
+              </button>
             ))}
           </div>
-        )}
-      </section>
+          <div className="dispatch-toolbar-right">
+            <label className="filter-search">
+              <span className="sr-only">Buscar despachos</span>
+              <SearchIcon />
+              <input
+                onChange={(event) => updateFilter("search", event.target.value)}
+                placeholder="Buscar por despacho, placa, cliente o manifiesto"
+                type="search"
+                value={filters.search ?? ""}
+              />
+            </label>
+            <button aria-expanded={advancedOpen} className={advancedActive ? "ghost-button filters-toggle active" : "ghost-button filters-toggle"} onClick={() => setAdvancedOpen((open) => !open)} type="button">
+              {advancedOpen ? "Menos filtros" : advancedActive ? "Más filtros ●" : "Más filtros"}
+            </button>
+          </div>
+        </div>
 
-      {pageStatus === "CanLoadMore" || pageStatus === "LoadingMore" ? (
-        <button className="load-more" disabled={pageStatus === "LoadingMore"} onClick={() => loadMore(25)} type="button">
-          {pageStatus === "LoadingMore" ? "Cargando…" : "Cargar 25 más"}
-        </button>
-      ) : null}
+        {advancedOpen ? (
+          <div className="dispatch-advanced-filters" role="search">
+            <FilterInput label="Cliente" onChange={(value) => updateFilter("customer", value)} value={filters.customer} />
+            <FilterInput label="Placa" onChange={(value) => updateFilter("plate", value)} value={filters.plate} />
+            <FilterInput label="Conductor" onChange={(value) => updateFilter("driver", value)} value={filters.driver} />
+            <FilterInput label="Origen" onChange={(value) => updateFilter("origin", value)} value={filters.origin} />
+            <FilterInput label="Destino" onChange={(value) => updateFilter("destination", value)} value={filters.destination} />
+            <label>
+              <span>Etapa</span>
+              <select aria-label="Filtrar por etapa" onChange={(event) => updateFilter("stage", event.target.value)} value={filters.stage ?? ""}>
+                {stageOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>
+            </label>
+            <label>
+              <span>Estado RNDC</span>
+              <select aria-label="Filtrar por estado RNDC" onChange={(event) => updateFilter("status", event.target.value)} value={filters.status ?? ""}>
+                <option value="">Todos</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="En proceso">En proceso</option>
+                <option value="Autorizado">Autorizado</option>
+                <option value="Requiere atención">Requiere atención</option>
+                <option value="Resultado incierto">Resultado incierto</option>
+              </select>
+            </label>
+            <label><span>Desde</span><input onChange={(event) => updateFilter("from", event.target.value)} type="date" value={filters.from ?? ""} /></label>
+            <label><span>Hasta</span><input onChange={(event) => updateFilter("to", event.target.value)} type="date" value={filters.to ?? ""} /></label>
+            {hasFilters ? <button className="text-button" onClick={() => setFilters(emptyFilters)} type="button">Limpiar filtros</button> : null}
+          </div>
+        ) : null}
+
+        {pageStatus === "LoadingFirstPage" ? (
+          <div className="skeleton">Cargando despachos…</div>
+        ) : rows.length === 0 ? (
+          <div className="expediente-empty">
+            <strong>No hay despachos {hasFilters ? "con estos filtros" : "todavía"}</strong>
+            <p>{hasFilters ? "Ajusta la búsqueda o revisa la siguiente página del historial." : "Crea un nuevo despacho para comenzar."}</p>
+            {pageStatus === "CanLoadMore" ? <button className="load-more" onClick={() => loadMore(PAGE_SIZE)} type="button">Buscar en la siguiente página</button> : <Link className="primary-action action-link" href="/expedientes/nuevo">Crear despacho</Link>}
+          </div>
+        ) : (
+          <div className="table-wrap dispatch-table-wrap">
+            <table className="dispatch-table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Despacho</th>
+                  <th>Cliente</th>
+                  <th>Ruta</th>
+                  <th>Placa · Conductor</th>
+                  <th>Estado</th>
+                  <th>Documentos</th>
+                  <th><span className="sr-only">Siguiente paso</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row) => {
+                  const state = rowState(row);
+                  return (
+                    <tr className={`dispatch-row tone-${state.tone}`} key={row.expediente._id}>
+                      <td className="cell-date"><span>{shortDate.format(new Date(row.expediente.updatedAt))}</span><small>{shortTime.format(new Date(row.expediente.updatedAt))}</small></td>
+                      <td className="cell-code"><Link href={`/expedientes/${row.expediente._id}`}>{row.expediente.code}</Link><small>{row.serviceOrderCode}</small></td>
+                      <td className="cell-customer">{row.customerName}</td>
+                      <td className="cell-route">{row.originCity} <span aria-hidden>→</span> {row.destinationCity}</td>
+                      <td className="cell-fleet">{row.vehiclePlate ? <><span className="plate-chip">{row.vehiclePlate}</span><small>{row.driverName ?? "Sin conductor"}</small></> : <small className="muted">Sin asignar</small>}</td>
+                      <td className="cell-state"><span className={`rndc-state state-${state.tone}`}><i aria-hidden />{state.label}</span>{state.detail ? <small>{state.detail}</small> : null}</td>
+                      <td className="cell-docs">{documentNumbers(row)}</td>
+                      <td className="cell-action"><Link aria-label={row.nextAction} className="queue-next-action" href={`/expedientes/${row.expediente._id}`} title={row.nextAction}>→</Link></td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {pageStatus !== "LoadingFirstPage" && rows.length > 0 ? (
+          <div className="load-more-bar dispatch-load-more">
+            <span className="load-more-count">{rows.length} {rows.length === 1 ? "despacho" : "despachos"}{pageStatus === "Exhausted" ? "" : " cargados"}</span>
+            {pageStatus === "CanLoadMore" || pageStatus === "LoadingMore" ? (
+              <button className="load-more" disabled={pageStatus === "LoadingMore"} onClick={() => loadMore(PAGE_SIZE)} type="button">{pageStatus === "LoadingMore" ? "Cargando…" : `Cargar ${PAGE_SIZE} más`}</button>
+            ) : null}
+          </div>
+        ) : null}
+      </section>
     </>
   );
 }
 
+function hasAdvancedFilters(filters: DispatchFilters): boolean {
+  return (["customer", "plate", "driver", "origin", "destination", "stage", "status", "from", "to"] as DispatchFilterKey[]).some((key) => Boolean(filters[key]));
+}
+
+function formatCount(value: number, capped?: boolean): string {
+  return capped && value >= 1000 ? "1000+" : String(value);
+}
+
+function stageShortLabel(stage: string): string {
+  return guidedDispatchStages.find((entry) => entry.key === stage)?.label ?? stage;
+}
+
+function rowState(row: Row): RowState {
+  if (row.expediente.status === "cancelled") return { label: "Anulado", tone: "muted" };
+  if (row.rndcStatus === "Requiere atención" || row.rndcStatus === "Resultado incierto") return { label: "Requiere atención", tone: "bad", detail: row.blockers[0] ?? row.rndcStatus };
+  if (row.openNoveltyCount > 0) return { label: "Con novedad", tone: "bad", detail: `${row.openNoveltyCount} ${row.openNoveltyCount === 1 ? "novedad abierta" : "novedades abiertas"}` };
+  if (row.expediente.status === "completed" || row.stage === "cumplido_final" && row.blockers.length === 0) return { label: "Cerrado", tone: "done" };
+  if (row.rndcStatus === "En proceso") return { label: "Enviando a RNDC", tone: "wait" };
+  if (row.stage === "envio_rndc") return { label: "Por enviar", tone: "wait", detail: row.blockers[0] };
+  if (["cargue_descargue", "cumplido_inicial", "cumplido_final"].includes(row.stage)) return { label: "En ruta", tone: "ok", detail: stageShortLabel(row.stage) };
+  if (row.expediente.status === "in_progress") return { label: "Documentos en curso", tone: "wait", detail: `Falta: ${stageShortLabel(row.stage).toLocaleLowerCase("es")}` };
+  return { label: "Borrador", tone: "muted", detail: `Falta: ${stageShortLabel(row.stage).toLocaleLowerCase("es")}` };
+}
+
+function documentNumbers(row: Row) {
+  const remesa = row.remesaNumbers.length > 1 ? `${row.remesaNumbers[0]} +${row.remesaNumbers.length - 1}` : row.remesaNumbers[0];
+  if (row.manifestNumber) {
+    return <><span className="doc-main" title="Manifiesto">M {row.manifestNumber}</span><small>{[row.orderNumber ? `O ${row.orderNumber}` : null, remesa ? `R ${remesa}` : null].filter(Boolean).join(" · ")}</small></>;
+  }
+  if (row.orderNumber || remesa) {
+    return <><span className="doc-main" title="Orden de cargue / remesa">{row.orderNumber ? `O ${row.orderNumber}` : `R ${remesa}`}</span>{row.orderNumber && remesa ? <small>R {remesa}</small> : <small className="muted">Sin manifiesto</small>}</>;
+  }
+  return <small className="muted">Sin números aún</small>;
+}
+
 function FilterInput({ label, onChange, value }: { label: string; onChange: (value: string) => void; value?: string }) {
-  return <label className="compact-filter"><span className="sr-only">{label}</span><input onChange={(event) => onChange(event.target.value)} placeholder={label} value={value ?? ""} /></label>;
-}
-
-function QueueMetric({ label, tone, value }: { label: string; tone: "bad" | "wait" | "ok" | "neutral"; value: number }) {
-  return <div className={`queue-metric ${tone}`}><span>{label}</span><strong>{value}</strong></div>;
-}
-
-function QueueValue({ label, value }: { label: string; value: string }) {
-  return <div className="queue-value"><span>{label}</span><strong>{value}</strong></div>;
-}
-
-function DocumentProgress({ code, label, number, state }: { code: string; label: string; number?: string; state: string }) {
-  return <div className={`document-progress-chip ${documentStateClass(state)}`} title={`${label}: ${documentStateLabel(state)}`}><span>{code}</span><strong>{number ?? "—"}</strong><small>{documentStateLabel(state)}</small></div>;
-}
-
-function aggregateState(states: string[]): string {
-  if (states.length === 0) return "draft";
-  if (states.every((state) => state === "fulfilled")) return "fulfilled";
-  if (states.every((state) => state === "authorized" || state === "fulfilled")) return "authorized";
-  if (states.some((state) => state === "pending")) return "pending";
-  if (states.some((state) => state === "annulled")) return "annulled";
-  return "draft";
-}
-
-function documentStateClass(state: string): string {
-  if (state === "authorized" || state === "fulfilled") return "ok";
-  if (state === "pending") return "wait";
-  if (state === "annulled") return "bad";
-  return "neutral";
-}
-
-function documentStateLabel(state: string): string {
-  const labels: Record<string, string> = { authorized: "Autorizado", fulfilled: "Cumplido", pending: "Pendiente", annulled: "Anulado", draft: "Borrador" };
-  return labels[state] ?? state;
-}
-
-function stageLabel(stage: string): string {
-  return stageOptions.find((option) => option.value === stage)?.label ?? stage;
-}
-
-function statusClass(status: string): string {
-  if (status === "Autorizado") return "ok";
-  if (status === "Requiere atención") return "bad";
-  if (status === "Resultado incierto" || status === "En proceso") return "wait";
-  return "neutral";
+  return <label><span>{label}</span><input onChange={(event) => onChange(event.target.value)} type="search" value={value ?? ""} /></label>;
 }
 
 function SearchIcon() {
-  return <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden><circle cx="8.5" cy="8.5" r="5" /><path d="m12.2 12.2 4 4" strokeLinecap="round" /></svg>;
-}
-
-function RouteArrow() {
-  return <svg className="route-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden><path d="M2.5 8h10M9 4.5 12.5 8 9 11.5" strokeLinecap="round" strokeLinejoin="round" /></svg>;
-}
-
-function StateIcon({ status }: { status: string }) {
-  if (status === "Autorizado") return <span aria-hidden>✓</span>;
-  if (status === "Requiere atención") return <span aria-hidden>!</span>;
-  if (status === "Resultado incierto") return <span aria-hidden>?</span>;
-  return <span aria-hidden>•</span>;
+  return <svg aria-hidden fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>;
 }

@@ -7,6 +7,7 @@ export const dispatchFilterKeys = [
   "destination",
   "stage",
   "status",
+  "state",
   "from",
   "to"
 ] as const;
@@ -24,6 +25,7 @@ export type DispatchSearchRow = {
   vehiclePlate?: string;
   driverName?: string;
   stage: string;
+  state: string;
   rndcStatus: string;
   orderState: string;
   remesaStates: string[];
@@ -41,6 +43,7 @@ const queryNames: Record<DispatchFilterKey, string> = {
   destination: "destination",
   stage: "stage",
   status: "status",
+  state: "state",
   from: "from",
   to: "to"
 };
@@ -73,6 +76,7 @@ export function applyDispatchFilters<T extends DispatchSearchRow>(rows: readonly
           ? isAuthorized(row.orderState) && !isAuthorized(row.manifestState)
           : row.stage === normalized.stage))
         && (!normalized.status || row.rndcStatus === normalized.status)
+        && (!normalized.state || row.state === normalized.state)
         && (from === undefined || row.updatedAt >= from)
         && (to === undefined || row.updatedAt <= to);
     })

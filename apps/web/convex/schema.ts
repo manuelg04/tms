@@ -749,6 +749,7 @@ export default defineSchema({
   })
     .index("by_organization_and_code", ["organizationId", "code"])
     .index("by_organization_and_status", ["organizationId", "status"])
+    .index("by_organization_status_and_updated_at", ["organizationId", "status", "updatedAt"])
     .index("by_organization_and_updated_at", ["organizationId", "updatedAt"])
     .index("by_service_order", ["serviceOrderId"])
     .searchIndex("search_dispatches", { searchField: "searchText", filterFields: ["organizationId"] }),

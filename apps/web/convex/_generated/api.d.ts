@@ -19,6 +19,7 @@ import type * as evidence from "../evidence.js";
 import type * as expedientes from "../expedientes.js";
 import type * as fleet from "../fleet.js";
 import type * as lookups from "../lookups.js";
+import type * as maintenance from "../maintenance.js";
 import type * as masterData from "../masterData.js";
 import type * as model_access from "../model/access.js";
 import type * as model_actionableNotification from "../model/actionableNotification.js";
@@ -67,6 +68,7 @@ declare const fullApi: ApiFromModules<{
   expedientes: typeof expedientes;
   fleet: typeof fleet;
   lookups: typeof lookups;
+  maintenance: typeof maintenance;
   masterData: typeof masterData;
   "model/access": typeof model_access;
   "model/actionableNotification": typeof model_actionableNotification;

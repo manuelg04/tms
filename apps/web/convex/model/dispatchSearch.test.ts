@@ -17,6 +17,7 @@ const baseRow: DispatchSearchRow = {
   vehiclePlate: "UZN424",
   driverName: "María Pérez",
   stage: "envio_rndc",
+    state: "draft",
   rndcStatus: "Pendiente",
   orderState: "authorized",
   remesaStates: ["authorized"],

@@ -34,6 +34,7 @@
     "rndc:lookup-owner-vehicle": "npm run rndc:lookup-owner-vehicle -w @tms/rndc-api",
     "rndc:lookup-owner-vehicles": "npm run rndc:lookup-owner-vehicles -w @tms/rndc-api",
     "ingest:fleet": "npm run ingest:fleet -w @tms/web --",
+    "ingest:rndc-catalogs": "npm run ingest:rndc-catalogs -w @tms/web --",
     "auth:setup-demo": "npm run auth:setup-demo -w @tms/web",
     "demo:bootstrap": "npm run demo:bootstrap -w @tms/web"
   },

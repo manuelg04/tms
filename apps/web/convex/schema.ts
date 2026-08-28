@@ -133,6 +133,60 @@ const rndcOperationType = v.union(
   v.literal("query_acceptance")
 );
 
+const rndcReferenceCatalogKind = v.union(
+  v.literal("vehicle_line"),
+  v.literal("insurer"),
+  v.literal("packaging"),
+  v.literal("body_type")
+);
+
+const rndcReferenceImportStatus = v.union(
+  v.literal("running"),
+  v.literal("completed"),
+  v.literal("failed")
+);
+
+const rndcReferenceFailureCode = v.union(
+  v.literal("SOURCE_VALIDATION_FAILED"),
+  v.literal("BATCH_APPLY_FAILED"),
+  v.literal("VERIFICATION_FAILED"),
+  v.literal("IMPORT_INTERRUPTED"),
+  v.literal("INTERNAL_ERROR")
+);
+
+const rndcReferenceFailureMessage = v.union(
+  v.literal("The RNDC catalog source could not be validated"),
+  v.literal("An RNDC catalog batch could not be applied"),
+  v.literal("The RNDC catalog import could not be verified"),
+  v.literal("The RNDC catalog import was interrupted"),
+  v.literal("The RNDC catalog import failed")
+);
+
+const rndcReferenceFileSummary = v.object({
+  fileName: v.string(),
+  sha256: v.string(),
+  catalogDigest: v.optional(v.string()),
+  rowsRead: v.number(),
+  normalizedRows: v.number(),
+  historicalRows: v.number(),
+  batchCount: v.number()
+});
+
+const rndcReferenceOutcome = v.object({
+  batchesApplied: v.number(),
+  inserted: v.number(),
+  updated: v.number(),
+  unchanged: v.number(),
+  outdated: v.number()
+});
+
+const rndcReferenceTotals = v.object({
+  vehicleLines: rndcReferenceOutcome,
+  insurers: rndcReferenceOutcome,
+  packages: rndcReferenceOutcome,
+  bodyTypes: rndcReferenceOutcome
+});
+
 export default defineSchema({
   trips: defineTable({
     organizationId: v.optional(v.id("organizations")),
@@ -243,7 +297,8 @@ export default defineSchema({
     updatedAt: v.number()
   })
     .index("by_document", ["document"])
-    .index("by_organization_and_document", ["organizationId", "document"]),
+    .index("by_organization_and_document", ["organizationId", "document"])
+    .searchIndex("search_name", { searchField: "name", filterFields: ["organizationId"] }),
 
   thirdParties: defineTable({
     organizationId: v.id("organizations"),
@@ -274,7 +329,8 @@ export default defineSchema({
     updatedAt: v.number()
   })
     .index("by_organization_and_document", ["organizationId", "document"])
-    .index("by_organization_and_name", ["organizationId", "name"]),
+    .index("by_organization_and_name", ["organizationId", "name"])
+    .searchIndex("search_name", { searchField: "name", filterFields: ["organizationId"] }),
 
   controlPoints: defineTable({
     organizationId: v.id("organizations"),
@@ -371,6 +427,115 @@ export default defineSchema({
     .index("by_plate", ["plate"])
     .index("by_organization_and_plate", ["organizationId", "plate"])
     .index("by_organization_and_status", ["organizationId", "status"]),
+
+  rndcReferenceImportRuns: defineTable({
+    clientRunId: v.string(),
+    status: rndcReferenceImportStatus,
+    files: v.object({
+      vehicleLines: rndcReferenceFileSummary,
+      insurers: rndcReferenceFileSummary,
+      packages: rndcReferenceFileSummary,
+      bodyTypes: rndcReferenceFileSummary
+    }),
+    totals: rndcReferenceTotals,
+    certification: v.optional(v.object({
+      totals: rndcReferenceTotals,
+      certifiedAt: v.number()
+    })),
+    failureCode: v.optional(rndcReferenceFailureCode),
+    failureMessage: v.optional(rndcReferenceFailureMessage),
+    startedAt: v.number(),
+    updatedAt: v.number(),
+    finishedAt: v.optional(v.number())
+  }).index("by_client_run_id", ["clientRunId"]),
+
+  rndcVehicleLines: defineTable({
+    makeCode: v.string(),
+    makeName: v.optional(v.string()),
+    lineCode: v.string(),
+    lineName: v.optional(v.string()),
+    grossWeightKg: v.number(),
+    sourceRegisteredAt: v.string(),
+    contentHash: v.string(),
+    sourceImportRunId: v.id("rndcReferenceImportRuns"),
+    createdAt: v.number(),
+    updatedAt: v.number()
+  })
+    .index("by_make_and_line", ["makeCode", "lineCode"])
+    .index("by_source_import_run", ["sourceImportRunId"]),
+
+  rndcInsurers: defineTable({
+    insurerNit: v.string(),
+    name: v.string(),
+    insurerType: v.optional(v.string()),
+    sourceRegisteredAt: v.string(),
+    contentHash: v.string(),
+    sourceImportRunId: v.id("rndcReferenceImportRuns"),
+    createdAt: v.number(),
+    updatedAt: v.number()
+  })
+    .index("by_nit", ["insurerNit"])
+    .index("by_source_import_run", ["sourceImportRunId"])
+    .searchIndex("search_name", { searchField: "name" }),
+
+  rndcPackaging: defineTable({
+    code: v.string(),
+    description: v.string(),
+    fullDescription: v.string(),
+    definition: v.string(),
+    minimumEmptyWeightKg: v.number(),
+    maximumEmptyWeightKg: v.number(),
+    hazardous: v.optional(v.boolean()),
+    packageTypeCode: v.optional(v.string()),
+    packageTypeName: v.optional(v.string()),
+    materialCode: v.optional(v.string()),
+    materialName: v.optional(v.string()),
+    operationType: v.string(),
+    sourceRegisteredAt: v.string(),
+    contentHash: v.string(),
+    sourceImportRunId: v.id("rndcReferenceImportRuns"),
+    createdAt: v.number(),
+    updatedAt: v.number()
+  })
+    .index("by_code", ["code"])
+    .index("by_source_import_run", ["sourceImportRunId"])
+    .searchIndex("search_description", { searchField: "fullDescription" }),
+
+  rndcBodyTypes: defineTable({
+    code: v.string(),
+    description: v.string(),
+    sourceRegisteredAt: v.string(),
+    contentHash: v.string(),
+    sourceImportRunId: v.id("rndcReferenceImportRuns"),
+    createdAt: v.number(),
+    updatedAt: v.number()
+  })
+    .index("by_code", ["code"])
+    .index("by_source_import_run", ["sourceImportRunId"]),
+
+  rndcReferenceImportBatches: defineTable({
+    importRunId: v.id("rndcReferenceImportRuns"),
+    catalog: rndcReferenceCatalogKind,
+    batchIndex: v.number(),
+    batchHash: v.string(),
+    rowCount: v.number(),
+    inserted: v.number(),
+    updated: v.number(),
+    unchanged: v.number(),
+    outdated: v.number(),
+    createdAt: v.number()
+  }).index("by_run_catalog_and_batch", ["importRunId", "catalog", "batchIndex"]),
+
+  rndcReferenceImportKeys: defineTable({
+    importRunId: v.id("rndcReferenceImportRuns"),
+    catalog: rndcReferenceCatalogKind,
+    naturalKey: v.string(),
+    batchIndex: v.number(),
+    contentHash: v.string(),
+    createdAt: v.number()
+  })
+    .index("by_run_catalog_and_key", ["importRunId", "catalog", "naturalKey"])
+    .index("by_run_catalog_and_batch", ["importRunId", "catalog", "batchIndex"]),
 
   driverVehicles: defineTable({
     driverId: v.id("drivers"),

@@ -1560,8 +1560,7 @@ button {
 .route-guided-grid { display: grid; grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1fr); align-items: center; gap: 10px; margin-top: 20px; }
 .route-guided-grid fieldset { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
 .route-guided-grid fieldset legend { padding: 0 7px; font-weight: 700; }
-.route-guided-grid .form-field:first-of-type,
-.route-guided-grid .form-field:nth-of-type(3) { grid-column: 1 / -1; }
+.route-guided-grid .form-field.span-2 { grid-column: 1 / -1; }
 .route-guided-grid .route-connector { font-size: 22px; color: var(--ink-faint); text-align: center; }
 
 .inheritance-note,
@@ -1829,8 +1828,7 @@ button {
   .route-guided-grid { grid-template-columns: 1fr; }
   .route-guided-grid .route-connector { transform: rotate(90deg); }
   .route-guided-grid fieldset { grid-template-columns: 1fr; }
-  .route-guided-grid .form-field:first-of-type,
-  .route-guided-grid .form-field:nth-of-type(3) { grid-column: auto; }
+  .route-guided-grid .form-field.span-2 { grid-column: auto; }
   .guided-action-bar { left: 0; min-height: 74px; padding: 10px 12px; }
   .guided-action-bar > span { display: none; }
   .guided-action-bar .primary-action { flex: 1; }
@@ -3628,3 +3626,67 @@ button {
 
   .correction-document-row > .document-unlinked { grid-row: 3; justify-self: start; }
 }
+
+.form-field > span em { color: var(--bad); font-style: normal; }
+.search-select-control { position: relative; }
+.search-select-control input { padding-right: 34px; }
+.search-select-control input.mono { font-family: var(--font-mono); text-transform: uppercase; }
+.search-select.has-selection .search-select-control input { border-color: #9ec9b1; background: #f4fbf7; font-weight: 600; }
+.search-select-icon,
+.search-select-clear { position: absolute; top: 50%; right: 8px; transform: translateY(-50%); display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: var(--ink-faint); font-size: 14px; }
+.search-select.has-selection .search-select-icon { color: var(--ok); font-weight: 700; }
+.search-select-clear { border: 0; background: var(--neutral-chip); color: var(--ink-soft); cursor: pointer; font-size: 15px; line-height: 1; }
+.search-select-clear:hover { background: var(--bad-bg); color: var(--bad); }
+.search-select-list { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 40; max-height: 288px; overflow-y: auto; margin: 0; padding: 4px; list-style: none; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); box-shadow: 0 14px 34px rgba(12, 25, 44, .16); }
+.search-select-list li { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 5px; cursor: pointer; }
+.search-select-list li.active { background: var(--plate-soft); }
+.search-select-list li > div { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.search-select-list li strong { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+.search-select-list li em { flex-shrink: 0; font-style: normal; font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-soft); background: var(--neutral-chip); border-radius: 4px; padding: 1px 6px; }
+.search-select-list li small { color: var(--ink-soft); font-size: 11px; }
+.search-select-list li.search-select-empty { cursor: default; color: var(--ink-faint); font-size: 12px; padding: 12px 10px; }
+.search-select-hint { color: var(--ink-faint); font-size: 10.5px; font-family: var(--font-mono); }
+.money-field .money-input input { min-height: 35px; font-family: var(--font-mono); font-size: 13px; text-align: right; }
+.money-field .money-input:focus-within { border-color: var(--cab); outline: 3px solid rgba(255, 199, 44, 0.34); }
+
+.date-field { position: relative; }
+.date-field-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-height: 37px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: var(--surface); color: var(--ink); font: inherit; font-size: 12.5px; padding: 8px 9px; cursor: pointer; text-align: left; }
+.date-field-trigger.empty { color: var(--ink-faint); }
+.date-field-trigger:focus-visible { border-color: var(--cab); outline: 3px solid rgba(255, 199, 44, 0.34); }
+.date-field-trigger em { font-style: normal; color: var(--ink-faint); font-size: 11px; }
+.date-popover { position: absolute; top: calc(100% + 4px); left: 0; z-index: 40; width: 272px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: 0 14px 34px rgba(12, 25, 44, .16); padding: 10px; }
+.date-popover.flip { top: auto; bottom: calc(100% + 4px); }
+.date-popover-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.date-popover-head strong { font-size: 13px; text-transform: capitalize; }
+.date-popover-head button,
+.date-popover-foot button { border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); font: inherit; font-size: 12px; padding: 4px 9px; cursor: pointer; }
+.date-popover-head button:hover,
+.date-popover-foot button:hover { background: var(--surface-alt); }
+.date-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.date-weekday { text-align: center; font-size: 10px; font-weight: 700; color: var(--ink-faint); padding: 3px 0; }
+.date-day { height: 32px; border: 0; border-radius: 6px; background: transparent; color: var(--ink); font: inherit; font-size: 12.5px; cursor: pointer; }
+.date-day:hover { background: var(--surface-alt); }
+.date-day.today { box-shadow: inset 0 0 0 1px var(--line-strong); font-weight: 700; }
+.date-day.selected { background: var(--cab); color: #fff; font-weight: 700; }
+.date-day:disabled { color: var(--ink-faint); cursor: not-allowed; opacity: .5; }
+.date-time-row { display: flex; align-items: center; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+.date-time-row > span { flex: 1; font-size: 11.5px; font-weight: 600; color: var(--ink-soft); }
+.date-time-row select { min-height: 32px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); font: inherit; font-family: var(--font-mono); font-size: 13px; padding: 4px 6px; }
+.date-popover-foot { display: flex; gap: 6px; margin-top: 10px; }
+.date-popover-foot button.muted { margin-left: auto; color: var(--ink-soft); }
+.date-popover-foot button.primary { background: var(--cab); border-color: var(--cab); color: #fff; }
+.field-group-note { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; margin: 2px 0 -4px; color: var(--ink-soft); font-size: 11.5px; }
+.field-group-note strong { color: var(--ink); font-size: 12px; }
+.field-group-note::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.vehicle-pick-card { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-alt); padding: 12px 14px; }
+.vehicle-pick-card div { display: flex; flex-direction: column; gap: 2px; }
+.vehicle-pick-card small { color: var(--ink-faint); font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+.vehicle-pick-card strong { font-size: 12.5px; font-weight: 600; }
+.vehicle-pick-card strong.warn { color: var(--wait); }
+.driver-choice-list { display: grid; gap: 6px; }
+.driver-choice { display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: var(--surface); padding: 9px 11px; font: inherit; font-size: 12.5px; color: var(--ink); cursor: pointer; text-align: left; }
+.driver-choice:hover { border-color: var(--cab); }
+.driver-choice.selected { border-color: var(--ok); background: #f4fbf7; }
+.driver-choice small { font-family: var(--font-mono); color: var(--ink-soft); }
+.driver-choice b { color: var(--ok); }
+@media (max-width: 900px) { .vehicle-pick-card { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

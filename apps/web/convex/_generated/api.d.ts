@@ -18,6 +18,7 @@ import type * as dispatches from "../dispatches.js";
 import type * as evidence from "../evidence.js";
 import type * as expedientes from "../expedientes.js";
 import type * as fleet from "../fleet.js";
+import type * as lookups from "../lookups.js";
 import type * as masterData from "../masterData.js";
 import type * as model_access from "../model/access.js";
 import type * as model_actionableNotification from "../model/actionableNotification.js";
@@ -39,11 +40,14 @@ import type * as model_officialDocumentIdentity from "../model/officialDocumentI
 import type * as model_operationIntent from "../model/operationIntent.js";
 import type * as model_operationState from "../model/operationState.js";
 import type * as model_reconciliationOutcome from "../model/reconciliationOutcome.js";
+import type * as model_rndcCatalogs from "../model/rndcCatalogs.js";
+import type * as model_searchText from "../model/searchText.js";
 import type * as model_volumeFixtures from "../model/volumeFixtures.js";
 import type * as notifications from "../notifications.js";
 import type * as officialDocuments from "../officialDocuments.js";
 import type * as rndc from "../rndc.js";
 import type * as rndcOperations from "../rndcOperations.js";
+import type * as rndcReferenceCatalogs from "../rndcReferenceCatalogs.js";
 
 import type {
   ApiFromModules,
@@ -62,6 +66,7 @@ declare const fullApi: ApiFromModules<{
   evidence: typeof evidence;
   expedientes: typeof expedientes;
   fleet: typeof fleet;
+  lookups: typeof lookups;
   masterData: typeof masterData;
   "model/access": typeof model_access;
   "model/actionableNotification": typeof model_actionableNotification;
@@ -83,11 +88,14 @@ declare const fullApi: ApiFromModules<{
   "model/operationIntent": typeof model_operationIntent;
   "model/operationState": typeof model_operationState;
   "model/reconciliationOutcome": typeof model_reconciliationOutcome;
+  "model/rndcCatalogs": typeof model_rndcCatalogs;
+  "model/searchText": typeof model_searchText;
   "model/volumeFixtures": typeof model_volumeFixtures;
   notifications: typeof notifications;
   officialDocuments: typeof officialDocuments;
   rndc: typeof rndc;
   rndcOperations: typeof rndcOperations;
+  rndcReferenceCatalogs: typeof rndcReferenceCatalogs;
 }>;
 
 /**

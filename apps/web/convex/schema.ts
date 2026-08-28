@@ -513,6 +513,28 @@ export default defineSchema({
     .index("by_code", ["code"])
     .index("by_source_import_run", ["sourceImportRunId"]),
 
+  rndcDivisions: defineTable({
+    code: v.string(),
+    name: v.string(),
+    zoneCode: v.string(),
+    isMunicipality: v.boolean(),
+    onRoad: v.boolean(),
+    municipalityCode: v.string(),
+    municipalityName: v.string(),
+    departmentCode: v.string(),
+    departmentName: v.string(),
+    latitude: v.optional(v.string()),
+    longitude: v.optional(v.string()),
+    searchText: v.string(),
+    rndcRegisteredAt: v.optional(v.string()),
+    source: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number()
+  })
+    .index("by_code", ["code"])
+    .index("by_municipality", ["municipalityCode", "isMunicipality"])
+    .searchIndex("search_text", { searchField: "searchText", filterFields: ["isMunicipality"] }),
+
   rndcReferenceImportBatches: defineTable({
     importRunId: v.id("rndcReferenceImportRuns"),
     catalog: rndcReferenceCatalogKind,

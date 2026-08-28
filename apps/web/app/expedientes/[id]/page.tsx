@@ -138,6 +138,7 @@ export default function DespachoDetailPage() {
           volumeM3: value(data, "volumeM3"),
           packagingCode: required(data, "packagingCode"),
           merchandiseCode: value(data, "merchandiseCode"),
+          natureOfCargo: value(data, "natureOfCargo") ?? previous?.natureOfCargo,
           observations: value(data, "observations"),
           generatesConsignment: true
         }

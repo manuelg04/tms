@@ -46,9 +46,8 @@ test("dispatch documents can be completed and emitted in separate sessions", asy
 
   const assignmentCard = documentCard(page, "Vehículo y conductor");
   await assignmentCard.getByRole("button", { name: "Editar" }).click();
-  await page.getByLabel("Documento del conductor").fill("1000000001");
-  await page.getByLabel("Placa del vehículo").fill("DEM001");
-  await expect(page.locator("#stage-primary-form .lookup-card small.ok")).toHaveCount(2);
+  await pickOption(page, "Placa del vehículo", "DEM001", /DEM001/);
+  await expect(page.locator("#stage-primary-form .driver-choice.selected")).toContainText("CONDUCTOR DEMO");
   await page.getByRole("button", { name: "Guardar cambios" }).click();
   await expect(assignmentCard.getByText("Completado")).toBeVisible();
 
@@ -71,18 +70,18 @@ test("dispatch documents can be completed and emitted in separate sessions", asy
   const consignmentCard = documentCard(page, "Remesas");
   await consignmentCard.getByRole("button", { name: "Editar" }).click();
   await page.getByLabel("Valor declarado").fill("5000000");
+  await expect(page.getByLabel("Valor declarado")).toHaveValue("5.000.000");
   await page.getByLabel("Número de póliza").fill("POL-ASYNC-1");
-  await page.getByLabel("Vencimiento de póliza").fill("2027-07-13");
-  await page.getByLabel("NIT de la aseguradora").fill("900123456");
+  await pickDate(page, "Vencimiento de póliza", "Mañana");
+  await pickOption(page, "Aseguradora", "seguros", /./);
   await page.getByRole("button", { name: "Guardar cambios" }).click();
 
   const manifestCard = documentCard(page, "Manifiesto");
   await manifestCard.getByRole("button", { name: "Editar" }).click();
-  await page.getByLabel("Fecha de expedición").fill("2026-07-13");
-  await page.getByLabel("Entrega estimada").fill("2026-07-15");
+  await pickDate(page, "Entrega estimada", "Mañana");
   await page.getByLabel("Tipo de manifiesto").fill("General");
   await page.getByLabel("Flete total").fill("2500000");
-  await page.getByLabel("Neto a pagar").fill("2500000");
+  await expect(page.getByLabel("Neto a pagar")).toHaveValue("2.500.000");
   await page.getByLabel("Responsable de pago").fill("MTM");
   await page.getByRole("button", { name: "Guardar cambios" }).click();
 
@@ -208,34 +207,43 @@ async function login(page: Page) {
   await page.goto("/expedientes");
 }
 
+async function pickOption(page: Page, label: string, term: string, option: string | RegExp, scope: Page | ReturnType<Page["locator"]> = page) {
+  const combo = scope.getByRole("combobox", { name: label, exact: true });
+  await combo.click();
+  await combo.fill(term);
+  await page.getByRole("listbox").getByRole("option", { name: option }).first().click();
+}
+
+async function pickDate(page: Page, label: string, quick: "Hoy" | "Mañana", withTime = false) {
+  await page.getByRole("button", { name: label, exact: true }).click();
+  const popover = page.getByRole("dialog").last();
+  await popover.getByRole("button", { name: quick, exact: true }).click();
+  if (withTime) await popover.getByRole("button", { name: "Listo", exact: true }).click();
+}
+
 async function fillLoadingOrder(page: Page, suffix: string) {
   await page.getByLabel("Orden de servicio").fill(`OS-${suffix}`);
+  await page.getByRole("combobox", { name: "Cliente o razón social", exact: true }).fill(`Cliente ${suffix}`);
   await page.getByLabel("Código del cliente").fill(`CLI-${suffix}`);
-  await page.getByLabel("Cliente o razón social").fill(`Cliente ${suffix}`);
-  await page.getByLabel("Tipo de identificación", { exact: true }).first().fill("NIT");
   await page.getByLabel("Identificación del cliente").fill(`900${suffix.replace(/\D/g, "").slice(-6)}`);
-  await page.getByLabel("Código sede RNDC remitente").fill("1");
+  await page.getByLabel("Sede RNDC remitente").fill("1");
   const loading = page.getByRole("group", { name: "Cargue", exact: true });
   await loading.getByLabel("Lugar").fill("Bodega Bogotá");
-  await loading.getByLabel("Ciudad").fill("Bogotá");
+  await pickOption(page, "Municipio", "Bogota", /Bogota/i, loading);
   await loading.getByLabel("Dirección").fill("Calle 10 # 20-30");
-  await loading.getByLabel("Código municipio RNDC").fill("11001000");
-  await loading.getByLabel("Cita de cargue").fill("2026-07-14T08:00");
+  await pickDate(page, "Cita de cargue", "Mañana", true);
   const unloading = page.getByRole("group", { name: "Descargue", exact: true });
   await unloading.getByLabel("Lugar").fill("Centro Medellín");
-  await unloading.getByLabel("Ciudad").fill("Medellín");
+  await pickOption(page, "Municipio", "Medellin", /Medellin/i, unloading);
   await unloading.getByLabel("Dirección").fill("Carrera 40 # 50-60");
-  await unloading.getByLabel("Código municipio RNDC").fill("05001000");
-  await unloading.getByLabel("Cita de descargue").fill("2026-07-15T14:00");
-  await page.getByLabel("Destinatario", { exact: true }).fill(`Destinatario ${suffix}`);
-  await page.getByLabel("Tipo de identificación", { exact: true }).nth(1).fill("NIT");
+  await pickDate(page, "Cita de descargue", "Mañana", true);
+  await page.getByRole("combobox", { name: "Destinatario", exact: true }).fill(`Destinatario ${suffix}`);
   await page.getByLabel("Identificación destinatario", { exact: true }).fill("901234567");
-  await page.getByLabel("Código sede RNDC destinatario").fill("1");
+  await page.getByLabel("Sede RNDC destinatario").fill("1");
   await page.getByLabel("Mercancía", { exact: true }).fill("Carga seca");
   await page.getByLabel("Peso total (TN)").fill("12.5");
-  await page.getByLabel("Tipo de empaque").fill("PAQUETE");
+  await pickOption(page, "Tipo de empaque", "paquete", /paquete/i);
   await page.getByLabel("Código de mercancía").fill("005229");
-  await page.getByLabel("Naturaleza de la carga").fill("1");
 }
 
 function documentCard(page: Page, title: string) {

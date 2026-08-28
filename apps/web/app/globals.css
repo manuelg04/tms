@@ -3782,3 +3782,12 @@ button {
 .load-more-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
 .load-more-count { font-size: 12px; color: var(--ink-soft); }
 .load-more-bar .load-more { margin: 0; }
+
+.related-empty { color: var(--ink-faint); font-size: 12px; }
+.related-item { position: relative; }
+.related-remove { border: 0; background: transparent; color: var(--ink-faint); font-size: 15px; line-height: 1; padding: 0 2px; cursor: pointer; }
+.related-remove:hover { color: var(--bad); }
+.link-editor { display: flex; gap: 8px; margin-top: 8px; max-width: 420px; }
+.link-editor input { flex: 1; min-height: 32px; border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; font: inherit; font-size: 12.5px; }
+.link-editor input.mono { font-family: var(--font-mono); text-transform: uppercase; }
+.link-editor input:focus { border-color: var(--cab); outline: 3px solid rgba(255, 199, 44, 0.34); }

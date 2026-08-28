@@ -294,6 +294,47 @@ export const upsertVehicle = mutation({
   }
 });
 
+export const linkDriverVehicle = mutation({
+  args: { plate: v.string(), document: v.string() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin", "operator"]);
+    const plate = args.plate.trim().toUpperCase();
+    const document = args.document.trim();
+    if (!plate || !document) throw new ConvexError({ code: "INVALID", message: "Indica la placa y el documento del conductor" });
+    const vehicle = await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).eq("plate", plate)).unique();
+    if (!vehicle) throw new ConvexError({ code: "NOT_FOUND", message: `El vehículo ${plate} no existe en maestros` });
+    const driver = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", document)).unique();
+    if (!driver) throw new ConvexError({ code: "NOT_FOUND", message: `El conductor ${document} no existe en maestros` });
+    const now = Date.now();
+    const relation = await ctx.db.query("driverVehicles").withIndex("by_document_and_plate", (q) => q.eq("driverDocument", document).eq("vehiclePlate", plate)).unique();
+    if (relation) {
+      await ctx.db.patch(relation._id, { driverId: driver._id, vehicleId: vehicle._id, matchBasis: "manual", matchConfidence: "confirmed", updatedAt: now });
+    } else {
+      await ctx.db.insert("driverVehicles", { driverId: driver._id, vehicleId: vehicle._id, driverDocument: document, vehiclePlate: plate, matchBasis: "manual", matchConfidence: "confirmed", roles: ["primary"], createdAt: now, updatedAt: now });
+    }
+    await appendAudit(ctx, { organizationId: actor.organizationId, actorType: "user", actorId: actor._id, action: "vehicle.driver_linked", entityType: "vehicle", entityId: vehicle._id, createdAt: now, detailsJson: JSON.stringify({ plate, document }) });
+    return null;
+  }
+});
+
+export const unlinkDriverVehicle = mutation({
+  args: { plate: v.string(), document: v.string() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin", "operator"]);
+    const plate = args.plate.trim().toUpperCase();
+    const document = args.document.trim();
+    const vehicle = await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).eq("plate", plate)).unique();
+    if (!vehicle) throw new ConvexError({ code: "NOT_FOUND", message: `El vehículo ${plate} no existe en maestros` });
+    const relation = await ctx.db.query("driverVehicles").withIndex("by_document_and_plate", (q) => q.eq("driverDocument", document).eq("vehiclePlate", plate)).unique();
+    if (!relation) return null;
+    await ctx.db.delete(relation._id);
+    await appendAudit(ctx, { organizationId: actor.organizationId, actorType: "user", actorId: actor._id, action: "vehicle.driver_unlinked", entityType: "vehicle", entityId: vehicle._id, createdAt: Date.now(), detailsJson: JSON.stringify({ plate, document }) });
+    return null;
+  }
+});
+
 export const listThirdParties = query({
   args: {},
   returns: v.array(v.any()),

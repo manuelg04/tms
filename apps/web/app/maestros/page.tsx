@@ -147,6 +147,17 @@ export default function MaestrosPage() {
   const upsertDriver = useMutation(api.fleet.upsertDriver);
   const upsertVehicle = useMutation(api.fleet.upsertVehicle);
   const upsertThirdParty = useMutation(api.fleet.upsertThirdParty);
+  const linkDriverVehicle = useMutation(api.fleet.linkDriverVehicle);
+  const unlinkDriverVehicle = useMutation(api.fleet.unlinkDriverVehicle);
+  async function runLink(action: () => Promise<null>, success: string) {
+    try {
+      await action();
+      setNotice({ tone: "ok", text: success });
+    } catch (error) {
+      setNotice({ tone: "bad", text: readable(error) });
+      throw error;
+    }
+  }
   const documentSearchPrefix = useDebounced(documentFilter.trim(), 250);
   const plateSearchPrefix = useDebounced(plateFilter.trim().toUpperCase(), 250);
   const thirdPartySearchPrefix = useDebounced(thirdPartyFilter.trim(), 250);
@@ -317,6 +328,8 @@ export default function MaestrosPage() {
           detail={selectedDriver as DriverDetail | null | undefined}
           document={selectedDocument}
           onClose={() => setSelectedDocument(null)}
+          onLink={(plate) => runLink(() => linkDriverVehicle({ plate, document: selectedDocument }), `Vehículo ${plate.toUpperCase()} asociado al conductor.`)}
+          onUnlink={(plate) => runLink(() => unlinkDriverVehicle({ plate, document: selectedDocument }), `Vehículo ${plate} desasociado del conductor.`)}
         />
       ) : null}
 
@@ -324,6 +337,8 @@ export default function MaestrosPage() {
         <VehicleDetailPanel
           detail={selectedVehicle as VehicleDetail | null | undefined}
           onClose={() => setSelectedPlate(null)}
+          onLink={(document) => runLink(() => linkDriverVehicle({ plate: selectedPlate, document }), `Conductor ${document} asociado al vehículo.`)}
+          onUnlink={(document) => runLink(() => unlinkDriverVehicle({ plate: selectedPlate, document }), `Conductor ${document} desasociado del vehículo.`)}
           plate={selectedPlate}
         />
       ) : null}
@@ -417,11 +432,15 @@ function readable(error: unknown): string {
 function DriverDetailPanel({
   detail,
   document,
-  onClose
+  onClose,
+  onLink,
+  onUnlink
 }: {
   detail: DriverDetail | null | undefined;
   document: string;
   onClose: () => void;
+  onLink: (plate: string) => Promise<void>;
+  onUnlink: (plate: string) => Promise<void>;
 }) {
   const title = detail && detail.name && detail.name.trim() !== "" ? detail.name : document;
 
@@ -464,7 +483,8 @@ function DriverDetailPanel({
             ) : null}
             <ReadOnlyField label="Actualizado">{formatTimestamp(detail.updatedAt)}</ReadOnlyField>
             <ReadOnlyField label="Vehículos asociados" wide>
-              <RelatedVehicles vehicles={detail.vehicles} />
+              <RelatedVehicles onUnlink={onUnlink} vehicles={detail.vehicles} />
+              <LinkEditor label="Asociar vehículo por placa" onLink={onLink} placeholder="Placa" uppercase />
             </ReadOnlyField>
           </div>
         </div>
@@ -476,10 +496,14 @@ function DriverDetailPanel({
 function VehicleDetailPanel({
   detail,
   onClose,
+  onLink,
+  onUnlink,
   plate
 }: {
   detail: VehicleDetail | null | undefined;
   onClose: () => void;
+  onLink: (document: string) => Promise<void>;
+  onUnlink: (document: string) => Promise<void>;
   plate: string;
 }) {
   const title = detail ? detail.plate : plate;
@@ -525,7 +549,8 @@ function VehicleDetailPanel({
             <ReadOnlyField label="Registrado en RNDC">{valueOrDash(detail.rndcRegisteredAt)}</ReadOnlyField>
             <ReadOnlyField label="Actualizado">{formatTimestamp(detail.updatedAt)}</ReadOnlyField>
             <ReadOnlyField label="Conductores asociados" wide>
-              <RelatedDrivers drivers={detail.drivers} />
+              <RelatedDrivers drivers={detail.drivers} onUnlink={onUnlink} />
+              <LinkEditor label="Asociar conductor por documento" onLink={onLink} placeholder="Documento del conductor" />
             </ReadOnlyField>
           </div>
         </div>
@@ -767,9 +792,9 @@ function partyLabel(name: string | undefined, document: string | undefined): Rea
   );
 }
 
-function RelatedVehicles({ vehicles }: { vehicles: DriverDetail["vehicles"] }) {
+function RelatedVehicles({ onUnlink, vehicles }: { onUnlink: (plate: string) => Promise<void>; vehicles: DriverDetail["vehicles"] }) {
   if (vehicles.length === 0) {
-    return "—";
+    return <span className="related-empty">Sin vehículos asociados</span>;
   }
 
   return (
@@ -778,15 +803,47 @@ function RelatedVehicles({ vehicles }: { vehicles: DriverDetail["vehicles"] }) {
         <span className="related-item" key={vehicle.vehiclePlate}>
           <span className="plate-chip">{vehicle.vehiclePlate}</span>
           <small>{valuesLabel([vehicle.make, vehicle.line, vehicle.modelYear])}</small>
+          <button aria-label={`Desasociar ${vehicle.vehiclePlate}`} className="related-remove" onClick={() => void onUnlink(vehicle.vehiclePlate)} title="Desasociar" type="button">×</button>
         </span>
       ))}
     </div>
   );
 }
 
-function RelatedDrivers({ drivers }: { drivers: VehicleDetail["drivers"] }) {
+function LinkEditor({ label, onLink, placeholder, uppercase }: { label: string; onLink: (value: string) => Promise<void>; placeholder: string; uppercase?: boolean }) {
+  const [value, setValue] = useState("");
+  const [busy, setBusy] = useState(false);
+  async function submit() {
+    const trimmed = value.trim();
+    if (!trimmed || busy) return;
+    setBusy(true);
+    try {
+      await onLink(uppercase ? trimmed.toUpperCase() : trimmed);
+      setValue("");
+    } catch {
+      setValue(value);
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="link-editor">
+      <input
+        aria-label={label}
+        className={uppercase ? "mono" : undefined}
+        onChange={(event) => setValue(event.target.value)}
+        onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void submit(); } }}
+        placeholder={placeholder}
+        value={value}
+      />
+      <button className="ghost-button" disabled={busy || value.trim() === ""} onClick={() => void submit()} type="button">{busy ? "Asociando…" : "Asociar"}</button>
+    </div>
+  );
+}
+
+function RelatedDrivers({ drivers, onUnlink }: { drivers: VehicleDetail["drivers"]; onUnlink: (document: string) => Promise<void> }) {
   if (drivers.length === 0) {
-    return "—";
+    return <span className="related-empty">Sin conductores asociados</span>;
   }
 
   return (
@@ -795,6 +852,7 @@ function RelatedDrivers({ drivers }: { drivers: VehicleDetail["drivers"] }) {
         <span className="related-item" key={driver.driverDocument}>
           <span className="radicado">{driver.driverDocument}</span>
           <small>{valueOrDash(driver.name)}</small>
+          <button aria-label={`Desasociar ${driver.driverDocument}`} className="related-remove" onClick={() => void onUnlink(driver.driverDocument)} title="Desasociar" type="button">×</button>
         </span>
       ))}
     </div>

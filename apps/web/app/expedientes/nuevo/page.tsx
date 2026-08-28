@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useRef, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
@@ -47,13 +48,67 @@ const EMPTY_STATE: BaseState = {
   packagingCode: "", packagingDescription: ""
 };
 
+type Template = {
+  code: string;
+  customerCode: string;
+  order: NonNullable<Detail["expediente"]["loadingOrderDraft"]>;
+};
+
+type Detail = NonNullable<typeof api.expedientes.detail._returnType>;
+
+function templateState(template: Template | null): BaseState {
+  if (!template) return EMPTY_STATE;
+  const order = template.order;
+  return {
+    ...EMPTY_STATE,
+    customerCode: template.customerCode,
+    customerName: order.sender?.name ?? "",
+    customerIdType: order.sender?.identificationType ?? "N",
+    customerId: order.sender?.identificationNumber ?? "",
+    customerPhone: order.sender?.phone ?? "",
+    customerCellphone: order.sender?.cellphone ?? "",
+    senderSiteCode: order.sender?.siteCode ?? "",
+    originName: order.loading?.siteName ?? "",
+    originAddress: order.loading?.address ?? "",
+    originCity: order.loading?.cityName ?? "",
+    originMunicipality: order.loading?.municipalityCode ?? order.sender?.municipalityCode ?? "",
+    destinationName: order.unloading?.siteName ?? "",
+    destinationAddress: order.unloading?.address ?? "",
+    destinationCity: order.unloading?.cityName ?? "",
+    destinationMunicipality: order.unloading?.municipalityCode ?? order.recipient?.municipalityCode ?? "",
+    recipientName: order.recipient?.name ?? "",
+    recipientIdType: order.recipient?.identificationType ?? "N",
+    recipientId: order.recipient?.identificationNumber ?? "",
+    recipientPhone: order.recipient?.phone ?? "",
+    recipientCellphone: order.recipient?.cellphone ?? "",
+    recipientSiteCode: order.recipient?.siteCode ?? "",
+    packagingCode: order.packagingCode ?? ""
+  };
+}
+
 export default function NuevoDespachoPage() {
+  return <Suspense fallback={<div className="skeleton">Preparando el formulario…</div>}><NuevoDespachoLoader /></Suspense>;
+}
+
+function NuevoDespachoLoader() {
+  const params = useSearchParams();
+  const sourceId = params.get("desde");
+  const source = useQuery(api.expedientes.detail, sourceId ? { expedienteId: sourceId as Id<"expedientes"> } : "skip");
+  if (sourceId && source === undefined) return <div className="skeleton">Copiando datos del despacho anterior…</div>;
+  const template: Template | null = sourceId && source?.expediente.loadingOrderDraft
+    ? { code: source.expediente.code, customerCode: source.customer.code, order: source.expediente.loadingOrderDraft }
+    : null;
+  return <NuevoDespachoForm key={sourceId ?? "nuevo"} sourceId={sourceId} template={template} />;
+}
+
+function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; template: Template | null }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const me = useQuery(api.access.me, {});
   const [error, setError] = useState("");
   const [savingAction, setSavingAction] = useState<"draft" | "open" | null>(null);
-  const [state, setState] = useState<BaseState>(EMPTY_STATE);
+  const [state, setState] = useState<BaseState>(() => templateState(template));
+  const copied = template?.order;
   const update = (patch: Partial<BaseState>) => setState((current) => ({ ...current, ...patch }));
   const today = new Date().toISOString().slice(0, 10);
   const upsertCustomer = useMutation(api.masterData.upsertCustomer);
@@ -145,12 +200,13 @@ export default function NuevoDespachoPage() {
       <section className="base-dispatch-intro">
         <div>
           <span className="eyebrow">Nuevo despacho</span>
-          <h2>Datos base del despacho</h2>
+          <h2>{template ? `Copia de ${template.code}` : "Datos base del despacho"}</h2>
           <p>Busca cliente, destinatario y sedes en el RNDC; identificación, direcciones y municipios se completan solos.</p>
         </div>
         <div className="base-dispatch-outcome"><strong>Al guardar</strong><span>Se abre el centro documental del despacho</span></div>
       </section>
 
+      {template ? <div className="operation-notice ok" role="status"><span />Datos copiados de <Link href={`/expedientes/${sourceId}`}>{template.code}</Link>: revisa citas, peso, sellos y orden de servicio antes de guardar. Nada se crea hasta que guardes.</div> : null}
       <div className="base-document-path" aria-label="Documentos que se completan después"><span className="active">1. Datos base</span><span>Orden de cargue</span><span>Remesas</span><span>Vehículo y conductor</span><span>Manifiesto</span><span>Cumplidos</span></div>
 
       <div className="guided-form-stage">
@@ -160,10 +216,10 @@ export default function NuevoDespachoPage() {
             <div className="field-group-note"><strong>Datos básicos</strong></div>
             <DateField label="Fecha" name="expeditionDate" required value={today} />
             <Field label="Nro. de orden de cargue" name="orderNumberPreview" placeholder="Automático" readOnly />
-            <Field label="Agencia responsable" name="agencyCode" placeholder="Principal" />
+            <Field defaultValue={copied?.agencyCode} label="Agencia responsable" name="agencyCode" placeholder="Principal" />
             <label className="form-field checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked name="generatesConsignment" type="checkbox" /><em>Crear la remesa desde esta orden</em></span></label>
             <Field className="span-2" label="Orden de servicio" name="serviceOrderCode" placeholder="OS-2026-001" required />
-            <Field className="span-2" label="Referencia del cliente" name="customerReference" placeholder="Pedido o contrato" />
+            <Field className="span-2" defaultValue={copied?.customerReference} label="Referencia del cliente" name="customerReference" placeholder="Pedido o contrato" />
             <div className="field-group-note"><strong>Datos del remitente</strong></div>
             <PartyField
               className="span-2"
@@ -173,7 +229,7 @@ export default function NuevoDespachoPage() {
               onType={(name) => update({ customer: null, customerName: name })}
               required
               role="sender"
-              selected={state.customer}
+              selected={state.customer ?? (state.customerName && state.customerId ? { name: state.customerName, document: state.customerId, documentType: state.customerIdType } : null)}
               typedName={state.customer ? undefined : state.customerName}
             />
             <IdTypeField label="Tipo de identificación" name="customerIdType" onChange={(value) => update({ customerIdType: value })} required value={state.customerIdType} />
@@ -228,7 +284,7 @@ export default function NuevoDespachoPage() {
               onType={(name) => update({ recipient: null, recipientName: name })}
               required
               role="recipient"
-              selected={state.recipient}
+              selected={state.recipient ?? (state.recipientName && state.recipientId ? { name: state.recipientName, document: state.recipientId, documentType: state.recipientIdType } : null)}
               typedName={state.recipient ? undefined : state.recipientName}
             />
             <IdTypeField label="Tipo de identificación" name="recipientIdType" onChange={(value) => update({ recipientIdType: value })} required value={state.recipientIdType} />
@@ -249,22 +305,22 @@ export default function NuevoDespachoPage() {
             />
             <input name="recipientSiteCode" type="hidden" value={state.recipientSiteCode} />
             <div className="field-group-note"><strong>Datos del vehículo</strong></div>
-            <MoneyField label="Flete conductor" name="driverFreight" />
+            <MoneyField label="Flete conductor" name="driverFreight" value={copied?.driverFreight} />
             <span className="field-hint span-2">La placa y el conductor se asignan después, en la etapa «Vehículo y conductor».</span>
             <div className="field-group-note"><strong>Datos de la mercancía</strong></div>
-            <Field className="span-2" label="Mercancía" name="cargoDescription" required />
-            <Field label="Código de mercancía" name="merchandiseCode" required />
-            <Field label="Cantidad" name="cargoQuantity" type="number" />
-            <Field label="Unidad" name="cargoUnit" placeholder="kg, unidades, galones" />
-            <Field label="Peso total (TN)" min="0" name="weightTons" required step="0.001" type="number" />
-            <Field label="Volumen m³" min="0" name="volumeM3" step="0.01" type="number" />
+            <Field className="span-2" defaultValue={copied?.cargoDescription} label="Mercancía" name="cargoDescription" required />
+            <Field defaultValue={copied?.merchandiseCode} label="Código de mercancía" name="merchandiseCode" required />
+            <Field defaultValue={copied?.cargoQuantity} label="Cantidad" name="cargoQuantity" type="number" />
+            <Field defaultValue={copied?.cargoUnit} label="Unidad" name="cargoUnit" placeholder="kg, unidades, galones" />
+            <Field defaultValue={copied?.weightTons} label="Peso total (TN)" min="0" name="weightTons" required step="0.001" type="number" />
+            <Field defaultValue={copied?.volumeM3} label="Volumen m³" min="0" name="volumeM3" step="0.01" type="number" />
             <PackagingField code={state.packagingCode || undefined} description={state.packagingDescription} label="Tipo de empaque" name="packagingCode" onClear={() => update({ packagingCode: "", packagingDescription: "" })} onSelect={(option) => update({ packagingCode: option.code, packagingDescription: option.description })} required />
-            <CargoNatureField name="natureOfCargo" required />
+            <CargoNatureField name="natureOfCargo" required value={copied?.natureOfCargo} />
             <div className="field-group-note"><strong>Observaciones especiales</strong></div>
             <label className="form-field"><span>Sellos y/o precintos</span><textarea name="sealNumbers" rows={3} /></label>
-            <label className="form-field"><span>Condiciones de cargue</span><textarea name="loadingConditions" rows={3} /></label>
-            <label className="form-field"><span>Embalaje especial</span><textarea name="specialPackaging" rows={3} /></label>
-            <label className="form-field span-2"><span>Observaciones</span><textarea name="orderObservations" rows={3} /></label>
+            <label className="form-field"><span>Condiciones de cargue</span><textarea defaultValue={copied?.loadingConditions} name="loadingConditions" rows={3} /></label>
+            <label className="form-field"><span>Embalaje especial</span><textarea defaultValue={copied?.specialPackaging} name="specialPackaging" rows={3} /></label>
+            <label className="form-field span-2"><span>Observaciones</span><textarea defaultValue={copied?.observations} name="orderObservations" rows={3} /></label>
             <div className="field-group-note"><strong>Fechas de cargue</strong></div>
             <DateField label="Fecha mínima" name="minLoadingDate" required value={today} />
             <DateField label="Fecha máxima" name="maxLoadingDate" required value={today} />

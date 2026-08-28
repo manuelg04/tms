@@ -358,7 +358,10 @@ export default function DespachoDetailPage() {
           <div className="hero-title-line"><h2>{detail.expediente.code}</h2><StatusBadge status={detail.expediente.status} /></div>
           <p>{detail.customer.name} · Orden de servicio {detail.serviceOrder.code}</p>
         </div>
-        <div className="dispatch-hero-route"><span>{detail.loadingLocation.city}</span><strong>→</strong><span>{detail.unloadingLocation.city}</span></div>
+        <div className="dispatch-hero-side">
+          <div className="dispatch-hero-route"><span>{detail.loadingLocation.city}</span><strong>→</strong><span>{detail.unloadingLocation.city}</span></div>
+          {detail.expediente.loadingOrderDraft ? <Link className="ghost-button duplicate-link" href={`/expedientes/nuevo?desde=${detail.expediente._id}`} title="Crear un despacho nuevo con los mismos datos base">Duplicar despacho</Link> : null}
+        </div>
       </section>
 
       <section className="dispatch-compact-summary" aria-label="Resumen del despacho">

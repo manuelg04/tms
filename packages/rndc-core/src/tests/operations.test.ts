@@ -93,6 +93,9 @@ test("builds driver vehicle registration with separate owner holder and driver r
   assert.equal(vehicle.CODTIPOIDTENEDOR, "C");
   assert.equal(vehicle.NUMIDTENEDOR, "11111111");
   assert.equal(vehicle.NUMPLACA, "JVK276");
+  assert.equal(vehicle.CODMARCAVEHICULOCARGA, scenario.vehicle.rndcMakeCode);
+  assert.equal(vehicle.CODTIPOCOMBUSTIBLE, scenario.vehicle.rndcFuelCode);
+  assert.equal(vehicle.CODTIPOCARROCERIA, scenario.vehicle.rndcBodyTypeCode);
 });
 
 test("does not duplicate third party registration when one person has multiple vehicle roles", () => {

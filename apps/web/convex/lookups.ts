@@ -58,6 +58,15 @@ const roleValidator = v.union(
   v.literal("holder"),
   v.literal("sender"),
   v.literal("recipient"),
+  v.literal("insured"),
+  v.literal("insurance_company"),
+  v.literal("transport_company"),
+  v.literal("legal_representative"),
+  v.literal("commercial"),
+  v.literal("consignee"),
+  v.literal("employee"),
+  v.literal("logistics_operator"),
+  v.literal("fiscal_reviewer"),
   v.literal("other")
 );
 
@@ -179,6 +188,90 @@ export const insurersSearch = query({
       ? await ctx.db.query("rndcInsurers").withIndex("by_nit", (q) => q.gte("insurerNit", term).lt("insurerNit", term + "￿")).take(LIMIT)
       : await ctx.db.query("rndcInsurers").withSearchIndex("search_name", (q) => q.search("name", term)).take(LIMIT);
     return rows.map((row) => ({ insurerNit: row.insurerNit, name: row.name }));
+  }
+});
+
+export const vehicleLinesSearch = query({
+  args: { term: v.string() },
+  returns: v.array(v.object({
+    makeCode: v.string(),
+    makeName: v.optional(v.string()),
+    lineCode: v.string(),
+    lineName: v.optional(v.string()),
+    grossWeightKg: v.number()
+  })),
+  handler: async (ctx, args) => {
+    await requireActor(ctx);
+    const term = args.term.trim();
+    if (!term) return [];
+    const normalizedCode = term.toUpperCase().replace(/\s+/g, "");
+    const codeLike = /^[A-Z0-9]+$/.test(normalizedCode);
+    const [makeMatches, lineCodeMatches, makeNameMatches, lineNameMatches] = await Promise.all([
+      codeLike
+        ? ctx.db.query("rndcVehicleLines").withIndex("by_make_and_line", (q) => q.gte("makeCode", normalizedCode).lt("makeCode", normalizedCode + "￿")).take(LIMIT)
+        : Promise.resolve([]),
+      codeLike
+        ? ctx.db.query("rndcVehicleLines").withIndex("by_line_and_make", (q) => q.gte("lineCode", normalizedCode).lt("lineCode", normalizedCode + "￿")).take(LIMIT)
+        : Promise.resolve([]),
+      ctx.db.query("rndcVehicleLines").withSearchIndex("search_make", (q) => q.search("makeName", term)).take(LIMIT),
+      ctx.db.query("rndcVehicleLines").withSearchIndex("search_line", (q) => q.search("lineName", term)).take(LIMIT)
+    ]);
+    const unique = new Map<string, Doc<"rndcVehicleLines">>();
+    for (const row of [...makeMatches, ...lineCodeMatches, ...makeNameMatches, ...lineNameMatches]) {
+      unique.set(`${row.makeCode}:${row.lineCode}`, row);
+    }
+    return [...unique.values()].slice(0, LIMIT).map((row) => ({
+      makeCode: row.makeCode,
+      makeName: row.makeName,
+      lineCode: row.lineCode,
+      lineName: row.lineName,
+      grossWeightKg: row.grossWeightKg
+    }));
+  }
+});
+
+export const bodyTypesSearch = query({
+  args: { term: v.string() },
+  returns: v.array(v.object({ code: v.string(), description: v.string() })),
+  handler: async (ctx, args) => {
+    await requireActor(ctx);
+    const term = args.term.trim();
+    if (!term) return [];
+    const normalizedCode = term.toUpperCase().replace(/\s+/g, "");
+    const [codeMatches, descriptionMatches] = await Promise.all([
+      ctx.db.query("rndcBodyTypes").withIndex("by_code", (q) => q.gte("code", normalizedCode).lt("code", normalizedCode + "￿")).take(LIMIT),
+      ctx.db.query("rndcBodyTypes").withSearchIndex("search_description", (q) => q.search("description", term)).take(LIMIT)
+    ]);
+    const unique = new Map<string, Doc<"rndcBodyTypes">>();
+    for (const row of [...codeMatches, ...descriptionMatches]) unique.set(row.code, row);
+    return [...unique.values()].slice(0, LIMIT).map((row) => ({ code: row.code, description: row.description }));
+  }
+});
+
+export const trailersSearch = query({
+  args: { term: v.string() },
+  returns: v.array(v.object({
+    _id: v.id("trailers"),
+    plate: v.string(),
+    trailerType: v.optional(v.string()),
+    configuration: v.optional(v.string()),
+    status: v.union(v.literal("available"), v.literal("assigned"), v.literal("maintenance"), v.literal("inactive"))
+  })),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
+    const prefix = args.term.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if (!prefix) return [];
+    const trailers = await ctx.db
+      .query("trailers")
+      .withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).gte("plate", prefix).lt("plate", prefix + "￿"))
+      .take(LIMIT);
+    return trailers.map((trailer) => ({
+      _id: trailer._id,
+      plate: trailer.plate,
+      trailerType: trailer.trailerType,
+      configuration: trailer.configuration,
+      status: trailer.status
+    }));
   }
 });
 

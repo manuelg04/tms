@@ -56,7 +56,10 @@ export async function POST(request: Request): Promise<Response> {
       possessor: party(bundle.possessor, "poseedor"),
       vehicle: {
         plate: text(bundle.vehicle.plate, "placa"),
-        configuration: text(bundle.vehicle.configuration, "configuración RNDC"),
+        rndcConfigurationCode: text(bundle.vehicle.rndcConfigurationCode, "configuración RNDC"),
+        rndcMakeCode: text(bundle.vehicle.rndcMakeCode, "marca RNDC"),
+        rndcBodyTypeCode: text(bundle.vehicle.rndcBodyTypeCode, "carrocería RNDC"),
+        rndcFuelCode: text(bundle.vehicle.rndcFuelCode, "combustible RNDC"),
         line: text(bundle.vehicle.line, "línea RNDC"),
         modelYear: text(bundle.vehicle.modelYear, "modelo"),
         emptyWeightTn: text(bundle.vehicle.emptyWeightTn, "peso vacío"),

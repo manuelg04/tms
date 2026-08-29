@@ -470,6 +470,9 @@ const requiredFormFields: Record<FormOperation, string[]> = {
     "vehicleHolder.cityCode",
     "vehicle.plate",
     "vehicle.rndcConfigurationCode",
+    "vehicle.rndcMakeCode",
+    "vehicle.rndcFuelCode",
+    "vehicle.rndcBodyTypeCode",
     "vehicle.lineCode",
     "vehicle.modelYear",
     "vehicle.emptyWeightKg",
@@ -823,6 +826,9 @@ function buildBlankScenario(config: RndcConfig): DemoScenario {
       brand: "",
       configuration: "",
       rndcConfigurationCode: "",
+      rndcMakeCode: "",
+      rndcFuelCode: "",
+      rndcBodyTypeCode: "",
       lineCode: "",
       colorCode: "",
       modelYear: "",
@@ -960,6 +966,9 @@ function applyVehicle(target: VehicleData, record: Record<string, unknown>): voi
   target.brand = readString(record, "brand", target.brand);
   target.configuration = readString(record, "configuration", target.configuration);
   target.rndcConfigurationCode = readString(record, "rndcConfigurationCode", target.rndcConfigurationCode);
+  target.rndcMakeCode = readString(record, "rndcMakeCode", target.rndcMakeCode);
+  target.rndcFuelCode = readString(record, "rndcFuelCode", target.rndcFuelCode);
+  target.rndcBodyTypeCode = readString(record, "rndcBodyTypeCode", target.rndcBodyTypeCode);
   target.lineCode = readString(record, "lineCode", target.lineCode);
   target.colorCode = readString(record, "colorCode", target.colorCode);
   target.modelYear = readString(record, "modelYear", target.modelYear);

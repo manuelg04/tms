@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import Link from "next/link";
+import { useEffect, useState, type ReactNode } from "react";
 import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { formatTimestamp } from "../lib/labels";
 
-type Tab = "conductores" | "vehiculos" | "terceros";
+type Tab = "conductores" | "vehiculos" | "remolques" | "terceros";
 
 const PAGE_SIZE = 50;
 
@@ -21,8 +22,6 @@ function useDebounced(value: string, delayMs: number): string {
   }, [value, delayMs]);
   return debounced;
 }
-type Creator = "conductor" | "vehiculo" | "tercero";
-
 type DriverRow = {
   _id: string;
   document: string;
@@ -53,11 +52,44 @@ type ThirdPartyRow = {
   documentType: string;
   name: string;
   phone?: string;
-  roles: Array<"driver" | "owner" | "possessor" | "holder" | "sender" | "recipient" | "other">;
+  roles: ThirdPartyRole[];
   city?: string;
   siteCount?: number;
   updatedAt: number;
 };
+
+type TrailerRow = {
+  _id: string;
+  plate: string;
+  trailerType?: string;
+  make?: string;
+  modelYear?: string;
+  configuration?: string;
+  capacityKg?: number;
+  emptyWeightKg?: number;
+  ownerName?: string;
+  status: string;
+  updatedAt: number;
+};
+
+type TrailerDetail = TrailerRow & {
+  linkedVehicleId?: string;
+  emptyWeightKg?: number;
+  widthM?: number;
+  heightM?: number;
+  lengthM?: number;
+  rearVolumeM3?: number;
+  ownerDocumentType?: string;
+  ownerDocument?: string;
+  bodyType?: string;
+  procedureType?: string;
+  chassisSerial?: string;
+  color?: string;
+  observations?: string;
+  attachments: Array<{ slot: string; fileName: string; contentType: string; size: number; url: string | null }>;
+};
+
+type ThirdPartyRole = "driver" | "owner" | "possessor" | "holder" | "sender" | "recipient" | "insured" | "insurance_company" | "transport_company" | "legal_representative" | "commercial" | "consignee" | "employee" | "logistics_operator" | "fiscal_reviewer" | "other";
 
 type DriverDetail = {
   _id: string;
@@ -138,15 +170,12 @@ export default function MaestrosPage() {
   const [tab, setTab] = useState<Tab>("conductores");
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const [selectedPlate, setSelectedPlate] = useState<string | null>(null);
+  const [selectedTrailerPlate, setSelectedTrailerPlate] = useState<string | null>(null);
   const [documentFilter, setDocumentFilter] = useState("");
   const [plateFilter, setPlateFilter] = useState("");
+  const [trailerFilter, setTrailerFilter] = useState("");
   const [thirdPartyFilter, setThirdPartyFilter] = useState("");
-  const [creator, setCreator] = useState<Creator | null>(null);
-  const [notice, setNotice] = useState<{ tone: "ok" | "bad" | "wait"; text: string } | null>(null);
-  const [saving, setSaving] = useState(false);
-  const upsertDriver = useMutation(api.fleet.upsertDriver);
-  const upsertVehicle = useMutation(api.fleet.upsertVehicle);
-  const upsertThirdParty = useMutation(api.fleet.upsertThirdParty);
+  const [notice, setNotice] = useState<{ tone: "ok" | "bad"; text: string } | null>(null);
   const linkDriverVehicle = useMutation(api.fleet.linkDriverVehicle);
   const unlinkDriverVehicle = useMutation(api.fleet.unlinkDriverVehicle);
   async function runLink(action: () => Promise<null>, success: string) {
@@ -160,16 +189,19 @@ export default function MaestrosPage() {
   }
   const documentSearchPrefix = useDebounced(documentFilter.trim(), 250);
   const plateSearchPrefix = useDebounced(plateFilter.trim().toUpperCase(), 250);
+  const trailerSearchPrefix = useDebounced(trailerFilter.trim().toUpperCase(), 250);
   const thirdPartySearchPrefix = useDebounced(thirdPartyFilter.trim(), 250);
-  const activeFilter = tab === "conductores" ? documentSearchPrefix : tab === "vehiculos" ? plateSearchPrefix : thirdPartySearchPrefix;
+  const activeFilter = tab === "conductores" ? documentSearchPrefix : tab === "vehiculos" ? plateSearchPrefix : tab === "remolques" ? trailerSearchPrefix : thirdPartySearchPrefix;
   const isFiltering = activeFilter !== "";
   const driversPage = usePaginatedQuery(api.fleet.driversPage, tab === "conductores" ? { prefix: documentSearchPrefix || undefined } : "skip", { initialNumItems: PAGE_SIZE });
   const vehiclesPage = usePaginatedQuery(api.fleet.vehiclesPage, tab === "vehiculos" ? { prefix: plateSearchPrefix || undefined } : "skip", { initialNumItems: PAGE_SIZE });
+  const trailersPage = usePaginatedQuery(api.fleet.trailersPage, tab === "remolques" ? { prefix: trailerSearchPrefix || undefined } : "skip", { initialNumItems: PAGE_SIZE });
   const thirdPartiesPage = usePaginatedQuery(api.fleet.thirdPartiesPage, tab === "terceros" ? { prefix: thirdPartySearchPrefix || undefined } : "skip", { initialNumItems: PAGE_SIZE });
   const drivers = driversPage.results as DriverRow[];
   const vehicles = vehiclesPage.results as VehicleRow[];
+  const trailers = trailersPage.results as TrailerRow[];
   const thirdParties = thirdPartiesPage.results as ThirdPartyRow[];
-  const activePage = tab === "conductores" ? driversPage : tab === "vehiculos" ? vehiclesPage : thirdPartiesPage;
+  const activePage = tab === "conductores" ? driversPage : tab === "vehiculos" ? vehiclesPage : tab === "remolques" ? trailersPage : thirdPartiesPage;
   const pageStatus = activePage.status;
   const loadedCount = activePage.results.length;
   const selectedDriver = useQuery(
@@ -180,94 +212,34 @@ export default function MaestrosPage() {
     api.fleet.vehicleDetail,
     tab === "vehiculos" && selectedPlate ? { plate: selectedPlate } : "skip"
   );
+  const selectedTrailer = useQuery(
+    api.fleet.trailerDetail,
+    tab === "remolques" && selectedTrailerPlate ? { plate: selectedTrailerPlate } : "skip"
+  );
 
   function selectTab(nextTab: Tab) {
     setTab(nextTab);
     setSelectedDocument(null);
     setSelectedPlate(null);
+    setSelectedTrailerPlate(null);
     setDocumentFilter("");
     setPlateFilter("");
+    setTrailerFilter("");
     setThirdPartyFilter("");
-  }
-
-  async function saveMaster(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!creator) return;
-    const form = event.currentTarget;
-    setSaving(true);
-    setNotice({ tone: "wait", text: "Guardando el maestro…" });
-    const data = new FormData(form);
-    try {
-      if (creator === "conductor") {
-        await upsertDriver({ input: {
-          documentType: required(data, "documentType"),
-          document: required(data, "document"),
-          name: required(data, "name"),
-          address: required(data, "address"),
-          cityCode: required(data, "cityCode"),
-          cellphone: required(data, "phone"),
-          licenseCategory: required(data, "licenseCategory"),
-          licenseNumber: required(data, "licenseNumber"),
-          licenseExpiresAt: required(data, "licenseExpiresAt")
-        } });
-        setTab("conductores");
-        setNotice({ tone: "ok", text: "Conductor guardado. Quedó disponible para asignarlo a un vehículo o despacho." });
-      } else if (creator === "tercero") {
-        await upsertThirdParty({ input: partyInput(data, required(data, "role") as "owner" | "possessor" | "holder" | "sender" | "recipient" | "other") });
-        setTab("terceros");
-        setNotice({ tone: "ok", text: "Tercero guardado y disponible para reutilizarlo como propietario, poseedor u otro rol." });
-      } else {
-        const owner = partyInput(data, "owner", "owner");
-        const possessor = partyInput(data, "possessor", "possessor");
-        await upsertThirdParty({ input: owner });
-        await upsertThirdParty({ input: possessor });
-        const driverDocument = required(data, "driverDocument");
-        const plate = required(data, "plate").toUpperCase();
-        await upsertVehicle({
-          driverDocument,
-          input: {
-            plate,
-            make: value(data, "make"),
-            line: required(data, "line"),
-            modelYear: required(data, "modelYear"),
-            color: required(data, "color"),
-            configuration: required(data, "configuration"),
-            capacityTn: required(data, "capacityTn"),
-            emptyWeightTn: required(data, "emptyWeightTn"),
-            ownerDocument: owner.document,
-            ownerName: owner.name,
-            ownerCellphone: owner.phone,
-            possessorDocument: possessor.document,
-            possessorName: possessor.name,
-            possessorCellphone: possessor.phone,
-            insurerNit: required(data, "insurerNit"),
-            soatExpiresAt: required(data, "soatExpiresAt"),
-            soatNumber: required(data, "soatNumber")
-          }
-        });
-        const response = await fetch("/api/rndc/masters/register", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ driverDocument, vehiclePlate: plate }) });
-        const result = await response.json() as { error?: string; evidenceStored?: boolean };
-        if (!response.ok || result.evidenceStored !== true) throw new Error(result.error ?? "El maestro quedó guardado, pero la simulación RNDC no terminó con evidencia.");
-        setTab("vehiculos");
-        setNotice({ tone: "ok", text: "Vehículo, conductor, propietario y poseedor quedaron guardados y la preparación RNDC terminó en modo de prueba." });
-      }
-      form.reset();
-      setCreator(null);
-    } catch (error) {
-      setNotice({ tone: "bad", text: readable(error) });
-    } finally {
-      setSaving(false);
-    }
   }
 
   return (
     <>
       <section className="master-create-panel">
-        <div><span className="eyebrow">Administración operativa</span><h2>Crear y actualizar maestros</h2><p>Registra cada dato una sola vez. Los despachos lo reutilizan y el envío RNDC permanece protegido.</p></div>
-        <div className="master-create-actions"><button className="ghost-button" onClick={() => setCreator("conductor")} type="button">Nuevo conductor</button><button className="ghost-button" onClick={() => setCreator("vehiculo")} type="button">Nuevo vehículo</button><button className="ghost-button" onClick={() => setCreator("tercero")} type="button">Nuevo tercero</button></div>
+        <div><span className="eyebrow">Administración operativa</span><h2>Crear y consultar maestros</h2><p>Registra cada recurso una sola vez para reutilizarlo de forma segura en la operación.</p></div>
+        <div className="master-create-actions">
+          <Link className="ghost-button" href="/maestros/nuevo/conductor">Registrar conductor</Link>
+          <Link className="ghost-button" href="/maestros/nuevo/tercero">Registrar tercero</Link>
+          <Link className="ghost-button" href="/maestros/nuevo/remolque">Registrar remolque</Link>
+          <Link className="primary-action" href="/maestros/nuevo/vehiculo">Registrar vehículo</Link>
+        </div>
       </section>
       {notice ? <div className={`operation-notice ${notice.tone}`} role="status"><span />{notice.text}<button aria-label="Cerrar aviso" onClick={() => setNotice(null)} type="button">×</button></div> : null}
-      {creator ? <MasterForm creator={creator} onCancel={() => setCreator(null)} onSubmit={saveMaster} saving={saving} /> : null}
       <div className="filters" role="group" aria-label="Maestros de flota">
         <button
           aria-pressed={tab === "conductores"}
@@ -283,7 +255,15 @@ export default function MaestrosPage() {
           onClick={() => selectTab("vehiculos")}
           type="button"
         >
-          Vehiculos
+          Vehículos
+        </button>
+        <button
+          aria-pressed={tab === "remolques"}
+          className={tab === "remolques" ? "ops-tab active" : "ops-tab"}
+          onClick={() => selectTab("remolques")}
+          type="button"
+        >
+          Remolques
         </button>
         <button
           aria-pressed={tab === "terceros"}
@@ -310,6 +290,15 @@ export default function MaestrosPage() {
             placeholder="Filtrar por placa"
             type="search"
             value={plateFilter}
+          />
+        ) : tab === "remolques" ? (
+          <input
+            aria-label="Filtrar remolques por placa"
+            className="filter-input"
+            onChange={(event) => setTrailerFilter(event.target.value)}
+            placeholder="Filtrar por placa"
+            type="search"
+            value={trailerFilter}
           />
         ) : (
           <input
@@ -343,7 +332,11 @@ export default function MaestrosPage() {
         />
       ) : null}
 
-      <section className="panel" aria-label={tab === "conductores" ? "Listado de conductores" : tab === "vehiculos" ? "Listado de vehiculos" : "Listado de terceros"}>
+      {tab === "remolques" && selectedTrailerPlate ? (
+        <TrailerDetailPanel detail={selectedTrailer as TrailerDetail | null | undefined} onClose={() => setSelectedTrailerPlate(null)} plate={selectedTrailerPlate} />
+      ) : null}
+
+      <section className="panel" aria-label={tab === "conductores" ? "Listado de conductores" : tab === "vehiculos" ? "Listado de vehículos" : tab === "remolques" ? "Listado de remolques" : "Listado de terceros"}>
         {pageStatus === "LoadingFirstPage" ? (
           <div className="skeleton">Cargando…</div>
         ) : tab === "conductores" ? (
@@ -358,6 +351,8 @@ export default function MaestrosPage() {
             rows={vehicles}
             selectedPlate={selectedPlate}
           />
+        ) : tab === "remolques" ? (
+          <TrailersTable onSelect={(plate) => setSelectedTrailerPlate((current) => current === plate ? null : plate)} rows={trailers} selectedPlate={selectedTrailerPlate} />
         ) : (
           <ThirdPartiesTable rows={thirdParties} />
         )}
@@ -382,45 +377,6 @@ export default function MaestrosPage() {
       ) : null}
     </>
   );
-}
-
-function MasterForm({ creator, onCancel, onSubmit, saving }: { creator: Creator; onCancel: () => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void; saving: boolean }) {
-  return <section className="panel master-form-panel" aria-labelledby="master-form-title"><div className="panel-head"><div><span className="eyebrow">Nuevo registro</span><h2 id="master-form-title">{creator === "conductor" ? "Conductor" : creator === "vehiculo" ? "Vehículo y responsables" : "Tercero"}</h2></div><button className="text-button" onClick={onCancel} type="button">Cerrar</button></div><form className="modal-form master-form" onSubmit={onSubmit}>
-    {creator === "conductor" ? <DriverFields /> : creator === "vehiculo" ? <VehicleFields /> : <ThirdPartyFields />}
-    <div className="modal-actions wide"><button className="ghost-button" onClick={onCancel} type="button">Cancelar</button><button className="primary-action" disabled={saving} type="submit">{saving ? "Guardando…" : creator === "vehiculo" ? "Guardar y simular RNDC" : "Guardar maestro"}</button></div>
-  </form></section>;
-}
-
-function DriverFields() {
-  return <><label><span>Tipo de identificación</span><select defaultValue="C" name="documentType"><option value="C">Cédula</option><option value="E">Cédula de extranjería</option><option value="P">Pasaporte</option></select></label><label><span>Documento</span><input name="document" required /></label><label className="wide"><span>Nombre completo</span><input name="name" required /></label><label><span>Teléfono</span><input name="phone" required /></label><label><span>Código DANE del municipio</span><input name="cityCode" required /></label><label className="wide"><span>Dirección</span><input name="address" required /></label><label><span>Categoría de licencia</span><input name="licenseCategory" placeholder="C2" required /></label><label><span>Número de licencia</span><input name="licenseNumber" required /></label><label><span>Vencimiento de licencia</span><input name="licenseExpiresAt" required type="date" /></label></>;
-}
-
-function ThirdPartyFields() {
-  return <><label><span>Rol principal</span><select defaultValue="owner" name="role"><option value="owner">Propietario</option><option value="possessor">Poseedor</option><option value="holder">Tenedor</option><option value="sender">Remitente</option><option value="recipient">Destinatario</option><option value="other">Otro tercero</option></select></label><PartyFields /></>;
-}
-
-function VehicleFields() {
-  return <><div className="master-form-section wide"><strong>Vehículo</strong><p>Datos técnicos y de seguro que usará el RNDC.</p></div><label><span>Placa</span><input name="plate" required /></label><label><span>Marca</span><input name="make" /></label><label><span>Código de línea RNDC</span><input name="line" required /></label><label><span>Modelo</span><input inputMode="numeric" name="modelYear" required /></label><label><span>Configuración RNDC</span><input name="configuration" placeholder="2" required /></label><label><span>Código de color RNDC</span><input name="color" placeholder="1" required /></label><label><span>Peso vacío (TN)</span><input inputMode="decimal" name="emptyWeightTn" required /></label><label><span>Capacidad (TN)</span><input inputMode="decimal" name="capacityTn" required /></label><label><span>NIT aseguradora SOAT</span><input name="insurerNit" required /></label><label><span>Número SOAT</span><input name="soatNumber" required /></label><label><span>Vencimiento SOAT</span><input name="soatExpiresAt" required type="date" /></label><label><span>Documento conductor</span><input name="driverDocument" required /></label><div className="master-form-section wide"><strong>Propietario</strong><p>Puede ser la misma persona que el poseedor.</p></div><PartyFields prefix="owner" /><div className="master-form-section wide"><strong>Poseedor o tenedor</strong><p>Titular operativo que aparecerá en el manifiesto.</p></div><PartyFields prefix="possessor" /></>;
-}
-
-function PartyFields({ prefix }: { prefix?: string }) {
-  const key = (name: string) => prefix ? `${prefix}_${name}` : name;
-  return <><label><span>Tipo de identificación</span><select defaultValue="C" name={key("documentType")}><option value="C">Cédula</option><option value="N">NIT</option><option value="E">Cédula de extranjería</option><option value="P">Pasaporte</option></select></label><label><span>Identificación</span><input name={key("document")} required /></label><label className="wide"><span>Nombre o razón social</span><input name={key("name")} required /></label><label><span>Teléfono</span><input name={key("phone")} required /></label><label><span>Código DANE del municipio</span><input name={key("cityCode")} required /></label><label className="wide"><span>Dirección</span><input name={key("address")} required /></label></>;
-}
-
-function partyInput(data: FormData, role: "owner" | "possessor" | "holder" | "sender" | "recipient" | "other", prefix?: string) {
-  const key = (name: string) => prefix ? `${prefix}_${name}` : name;
-  return { documentType: required(data, key("documentType")), document: required(data, key("document")), name: required(data, key("name")), phone: required(data, key("phone")), address: required(data, key("address")), cityCode: required(data, key("cityCode")), roles: [role] };
-}
-
-function required(data: FormData, key: string): string {
-  const result = data.get(key)?.toString().trim();
-  if (!result) throw new Error(`Completa ${key.replaceAll("_", " ")}.`);
-  return result;
-}
-
-function value(data: FormData, key: string): string | undefined {
-  return data.get(key)?.toString().trim() || undefined;
 }
 
 function readable(error: unknown): string {
@@ -552,6 +508,41 @@ function VehicleDetailPanel({
               <RelatedDrivers drivers={detail.drivers} onUnlink={onUnlink} />
               <LinkEditor label="Asociar conductor por documento" onLink={onLink} placeholder="Documento del conductor" />
             </ReadOnlyField>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
+function TrailerDetailPanel({ detail, onClose, plate }: { detail: TrailerDetail | null | undefined; onClose: () => void; plate: string }) {
+  return (
+    <section className="panel">
+      <div className="panel-head">
+        <h2>Remolque {plate}</h2>
+        <button className="text-button" onClick={onClose} type="button">Cerrar</button>
+      </div>
+      {detail === undefined ? <div className="skeleton">Cargando detalle…</div> : detail === null ? <div className="empty-state">No encontrado</div> : (
+        <div className="detail-body">
+          <div className="field-grid">
+            <ReadOnlyField label="Placa"><span className="plate-chip">{detail.plate}</span></ReadOnlyField>
+            <ReadOnlyField label="Estado">{trailerStatusLabel(detail.status)}</ReadOnlyField>
+            <ReadOnlyField label="Tipo">{valueOrDash(detail.trailerType)}</ReadOnlyField>
+            <ReadOnlyField label="Marca y modelo">{valuesLabel([detail.make, detail.modelYear])}</ReadOnlyField>
+            <ReadOnlyField label="Configuración">{valueOrDash(detail.configuration)}</ReadOnlyField>
+            <ReadOnlyField label="Carrocería">{valueOrDash(detail.bodyType)}</ReadOnlyField>
+            <ReadOnlyField label="Capacidad">{formatTrailerWeight(detail.capacityKg)}</ReadOnlyField>
+            <ReadOnlyField label="Peso vacío">{formatTrailerWeight(detail.emptyWeightKg)}</ReadOnlyField>
+            <ReadOnlyField label="Dimensiones">{formatTrailerDimensions(detail)}</ReadOnlyField>
+            <ReadOnlyField label="Volumen posterior">{detail.rearVolumeM3 === undefined ? "—" : `${formatDecimal(detail.rearVolumeM3)} m³`}</ReadOnlyField>
+            <ReadOnlyField label="Propietario" wide>{partyLabel(detail.ownerName, detail.ownerDocument)}</ReadOnlyField>
+            <ReadOnlyField label="Vehículo habitual">{detail.linkedVehicleId ? "Vinculación registrada" : "Sin vehículo habitual"}</ReadOnlyField>
+            <ReadOnlyField label="Serie de chasis">{valueOrDash(detail.chassisSerial)}</ReadOnlyField>
+            <ReadOnlyField label="Color">{valueOrDash(detail.color)}</ReadOnlyField>
+            <ReadOnlyField label="Tipo de trámite">{valueOrDash(detail.procedureType)}</ReadOnlyField>
+            {detail.observations ? <ReadOnlyField label="Observaciones" wide>{detail.observations}</ReadOnlyField> : null}
+            <ReadOnlyField label="Adjuntos" wide><TrailerAttachments attachments={detail.attachments} /></ReadOnlyField>
+            <ReadOnlyField label="Actualizado">{formatTimestamp(detail.updatedAt)}</ReadOnlyField>
           </div>
         </div>
       )}
@@ -703,6 +694,23 @@ function ThirdPartiesTable({ rows }: { rows: ThirdPartyRow[] }) {
   );
 }
 
+function TrailersTable({ onSelect, rows, selectedPlate }: { onSelect: (plate: string) => void; rows: TrailerRow[]; selectedPlate: string | null }) {
+  if (rows.length === 0) return <div className="empty-state">Sin registros</div>;
+  return (
+    <>
+      <div className="table-wrap master-desktop-table">
+        <table className="doc-table">
+          <thead><tr><th>Placa</th><th>Tipo</th><th>Marca / modelo</th><th>Configuración</th><th>Capacidad</th><th>Propietario</th><th>Estado</th><th>Actualizado</th></tr></thead>
+          <tbody>{rows.map((row) => <tr aria-selected={selectedPlate === row.plate} className={selectedPlate === row.plate ? "row-click row-selected" : "row-click"} key={row._id} onClick={() => onSelect(row.plate)}><td><span className="plate-chip">{row.plate}</span></td><td>{valueOrDash(row.trailerType)}</td><td>{valuesLabel([row.make, row.modelYear])}</td><td>{valueOrDash(row.configuration)}</td><td>{formatTrailerWeight(row.capacityKg)}</td><td>{valueOrDash(row.ownerName)}</td><td>{trailerStatusLabel(row.status)}</td><td className="cell-date">{formatTimestamp(row.updatedAt)}</td></tr>)}</tbody>
+        </table>
+      </div>
+      <div className="master-mobile-list">
+        {rows.map((row) => <button className={selectedPlate === row.plate ? "master-mobile-card selected" : "master-mobile-card"} key={row._id} onClick={() => onSelect(row.plate)} type="button"><span className="master-mobile-heading"><span className="plate-chip">{row.plate}</span><small>{formatTimestamp(row.updatedAt)}</small></span><strong>{valuesLabel([row.make, row.modelYear])}</strong><span>{valuesLabel([row.trailerType, row.configuration])} · {formatTrailerWeight(row.capacityKg)}</span><span>{valueOrDash(row.ownerName)} · {trailerStatusLabel(row.status)}</span></button>)}
+      </div>
+    </>
+  );
+}
+
 function ReadOnlyField({ children, label, wide }: { children: ReactNode; label: string; wide?: boolean }) {
   return (
     <div className={wide ? "field wide" : "field"}>
@@ -715,6 +723,7 @@ function ReadOnlyField({ children, label, wide }: { children: ReactNode; label: 
 const VEHICLE_KIND_LABELS: Record<string, string> = {
   cabezote: "Cabezote",
   rigido: "Rígido",
+  liviano: "Liviano",
   remolque: "Remolque",
   otro: "Otro"
 };
@@ -725,12 +734,14 @@ function vehicleKindLabel(kind: string | undefined, configuration: string | unde
 }
 
 function vehicleStatusLabel(status: string | undefined, soatExpiresAt: string | undefined) {
-  if (status === "activo") {
+  if (status === "activo" || status === "active") {
     return soatExpiresAt ? `Activo · SOAT ${soatExpiresAt}` : "Activo";
   }
   if (status === "archivado") {
     return soatExpiresAt ? `Archivado · SOAT venció ${soatExpiresAt}` : "Archivado";
   }
+  if (status === "maintenance") return soatExpiresAt ? `Mantenimiento · SOAT ${soatExpiresAt}` : "Mantenimiento";
+  if (status === "inactive") return soatExpiresAt ? `Inactivo · SOAT ${soatExpiresAt}` : "Inactivo";
   return "—";
 }
 
@@ -751,8 +762,52 @@ function valuesLabel(values: Array<string | undefined>) {
 }
 
 function rolesLabel(roles: ThirdPartyRow["roles"]) {
-  const labels = { driver: "Conductor", owner: "Propietario", possessor: "Poseedor", holder: "Tenedor", sender: "Remitente", recipient: "Destinatario", other: "Otro" };
-  return roles.map((role) => labels[role]).join(" · ");
+  return roles.map((role) => THIRD_PARTY_ROLE_LABELS[role]).join(" · ");
+}
+
+const THIRD_PARTY_ROLE_LABELS: Record<ThirdPartyRole, string> = {
+  driver: "Conductor",
+  owner: "Propietario",
+  possessor: "Poseedor",
+  holder: "Tenedor",
+  sender: "Remitente",
+  recipient: "Destinatario",
+  insured: "Asegurado",
+  insurance_company: "Compañía de seguros",
+  transport_company: "Empresa de transporte",
+  legal_representative: "Representante legal",
+  commercial: "Comercial",
+  consignee: "Consignatario",
+  employee: "Empleado",
+  logistics_operator: "Operador logístico",
+  fiscal_reviewer: "Revisor fiscal",
+  other: "Otro"
+};
+
+function formatTrailerWeight(value: number | undefined): string {
+  return value === undefined ? "—" : `${formatDecimal(value / 1000)} t`;
+}
+
+function trailerStatusLabel(status: string): string {
+  return ({ available: "Disponible", assigned: "Asignado", maintenance: "Mantenimiento", inactive: "Inactivo" } as Record<string, string>)[status] ?? status;
+}
+
+function formatTrailerDimensions(detail: Pick<TrailerDetail, "widthM" | "heightM" | "lengthM">): string {
+  if (detail.widthM === undefined && detail.heightM === undefined && detail.lengthM === undefined) return "—";
+  return `${detail.widthM === undefined ? "—" : formatDecimal(detail.widthM)} × ${detail.heightM === undefined ? "—" : formatDecimal(detail.heightM)} × ${detail.lengthM === undefined ? "—" : formatDecimal(detail.lengthM)} m`;
+}
+
+function formatDecimal(value: number): string {
+  return new Intl.NumberFormat("es-CO", { maximumFractionDigits: 2 }).format(value);
+}
+
+function TrailerAttachments({ attachments }: { attachments: TrailerDetail["attachments"] }) {
+  if (attachments.length === 0) return <span className="related-empty">Sin archivos adjuntos</span>;
+  return <div className="related-list">{attachments.map((attachment) => attachment.url ? <a className="related-item" href={attachment.url} key={`${attachment.slot}:${attachment.fileName}`} rel="noreferrer" target="_blank"><strong>{attachment.fileName}</strong><small>{attachment.contentType} · {formatFileBytes(attachment.size)}</small></a> : <span className="related-item" key={`${attachment.slot}:${attachment.fileName}`}><strong>{attachment.fileName}</strong><small>{attachment.contentType} · {formatFileBytes(attachment.size)}</small></span>)}</div>;
+}
+
+function formatFileBytes(bytes: number): string {
+  return bytes >= 1024 * 1024 ? `${formatDecimal(bytes / 1024 / 1024)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
 
 function documentLabel(document: string, documentType: string | undefined) {

@@ -121,6 +121,9 @@ export type VehicleData = {
   brand: string;
   configuration: string;
   rndcConfigurationCode: string;
+  rndcMakeCode: string;
+  rndcFuelCode: string;
+  rndcBodyTypeCode: string;
   lineCode: string;
   colorCode: string;
   modelYear: string;

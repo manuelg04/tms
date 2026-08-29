@@ -9,6 +9,11 @@ import { SearchSelect } from "./search-select";
 export type PartyPick = { _id: Id<"thirdParties">; document: string; documentType: string; name: string; city?: string; cityCode?: string; phone?: string; siteCount?: number };
 export type SitePick = { _id: Id<"thirdPartySites">; siteCode: string; siteName: string; address?: string; city?: string; cityCode?: string };
 export type DivisionPick = { code: string; name: string; isMunicipality: boolean; municipalityName: string; departmentName: string };
+export type DriverPick = { _id: Id<"drivers">; document: string; name?: string; phone?: string; licenseCategory?: string; licenseExpiresAt?: string };
+export type VehiclePick = { _id: Id<"vehicles">; plate: string; make?: string; line?: string; modelYear?: string; configuration?: string; status?: string };
+export type TrailerPick = { _id: Id<"trailers">; plate: string; trailerType?: string; configuration?: string; status: string };
+export type VehicleLinePick = { makeCode: string; makeName?: string; lineCode: string; lineName?: string; grossWeightKg: number };
+export type BodyTypePick = { code: string; description: string };
 
 const ID_TYPE_LABELS: Record<string, string> = { N: "NIT", C: "CC", E: "CE", P: "Pasaporte" };
 
@@ -25,7 +30,7 @@ export function divisionLabel(division: DivisionPick | null | undefined): string
   return division.isMunicipality ? `${division.name}, ${division.departmentName}` : `${division.name} (${division.municipalityName}), ${division.departmentName}`;
 }
 
-export function PartyField({ className, label, role, required, disabled, selected, typedName, onType, onSelect, onClear, hint }: { className?: string; label: string; role?: "sender" | "recipient" | "owner" | "holder"; required?: boolean; disabled?: boolean; selected?: { name?: string; document?: string; documentType?: string } | null; typedName?: string; onType?: (name: string) => void; onSelect: (party: PartyPick) => void; onClear?: () => void; hint?: string }) {
+export function PartyField({ className, label, role, required, disabled, selected, typedName, onType, onSelect, onClear, hint }: { className?: string; label: string; role?: "sender" | "recipient" | "owner" | "possessor" | "holder"; required?: boolean; disabled?: boolean; selected?: { name?: string; document?: string; documentType?: string } | null; typedName?: string; onType?: (name: string) => void; onSelect: (party: PartyPick) => void; onClear?: () => void; hint?: string }) {
   const [term, setTerm] = useState("");
   const results = useQuery(api.lookups.partiesSearch, term.trim().length >= 2 ? { term, role } : "skip");
   const selectedLabel = selected?.name ? selected.name : undefined;
@@ -173,6 +178,130 @@ export function InsurerField({ className, label, name, required, disabled, nit, 
       />
       <input name={name} type="hidden" value={nit ?? ""} />
     </>
+  );
+}
+
+export function DriverField({ className, label, required, disabled, selected, onSelect, onClear }: { className?: string; label: string; required?: boolean; disabled?: boolean; selected?: DriverPick | null; onSelect: (driver: DriverPick) => void; onClear?: () => void }) {
+  const [term, setTerm] = useState("");
+  const results = useQuery(api.lookups.driversLookup, term.trim().length >= 2 ? { term } : "skip");
+  return (
+    <SearchSelect
+      className={className}
+      disabled={disabled}
+      emptyText="No hay conductores con ese nombre o documento"
+      hint={selected ? [selected.phone, selected.licenseCategory ? `Licencia ${selected.licenseCategory}` : undefined].filter(Boolean).join(" · ") : undefined}
+      label={label}
+      onClear={onClear}
+      onSearch={setTerm}
+      onSelect={(key) => {
+        const driver = results?.find((row) => row._id === key);
+        if (driver) onSelect(driver);
+      }}
+      options={results?.map((driver) => ({ key: driver._id, title: driver.name ?? driver.document, badge: `${idTypeLabel("C")} ${formatDocument(driver.document)}`, subtitle: [driver.phone, driver.licenseCategory ? `Licencia ${driver.licenseCategory}` : undefined].filter(Boolean).join(" · ") || undefined }))}
+      placeholder="Nombre o documento"
+      required={required}
+      selectedLabel={selected ? selected.name ?? selected.document : undefined}
+    />
+  );
+}
+
+export function VehicleField({ className, label, required, disabled, selected, onSelect, onClear }: { className?: string; label: string; required?: boolean; disabled?: boolean; selected?: VehiclePick | null; onSelect: (vehicle: VehiclePick) => void; onClear?: () => void }) {
+  const [term, setTerm] = useState("");
+  const results = useQuery(api.lookups.vehiclesWithDriversSearch, term.trim().length >= 2 ? { term } : "skip");
+  return (
+    <SearchSelect
+      className={className}
+      disabled={disabled}
+      emptyText="No hay vehículos con esa placa"
+      hint={selected ? [selected.make, selected.line, selected.modelYear, selected.configuration].filter(Boolean).join(" · ") : undefined}
+      label={label}
+      mono
+      onClear={onClear}
+      onSearch={setTerm}
+      onSelect={(key) => {
+        const vehicle = results?.find((row) => row._id === key);
+        if (vehicle) onSelect(vehicle);
+      }}
+      options={results?.map((vehicle) => ({ key: vehicle._id, title: vehicle.plate, badge: vehicle.status, subtitle: [vehicle.make, vehicle.line, vehicle.modelYear, vehicle.configuration].filter(Boolean).join(" · ") || undefined }))}
+      placeholder="ABC123"
+      required={required}
+      selectedLabel={selected?.plate}
+    />
+  );
+}
+
+export function TrailerField({ className, label, required, disabled, selected, onSelect, onClear }: { className?: string; label: string; required?: boolean; disabled?: boolean; selected?: TrailerPick | null; onSelect: (trailer: TrailerPick) => void; onClear?: () => void }) {
+  const [term, setTerm] = useState("");
+  const results = useQuery(api.lookups.trailersSearch, term.trim().length >= 2 ? { term } : "skip");
+  return (
+    <SearchSelect
+      className={className}
+      disabled={disabled}
+      emptyText="No hay remolques con esa placa"
+      hint={selected ? [selected.trailerType, selected.configuration].filter(Boolean).join(" · ") : undefined}
+      label={label}
+      mono
+      onClear={onClear}
+      onSearch={setTerm}
+      onSelect={(key) => {
+        const trailer = results?.find((row) => row._id === key);
+        if (trailer) onSelect(trailer);
+      }}
+      options={results?.map((trailer) => ({ key: trailer._id, title: trailer.plate, badge: trailer.status, subtitle: [trailer.trailerType, trailer.configuration].filter(Boolean).join(" · ") || undefined }))}
+      placeholder="R12345"
+      required={required}
+      selectedLabel={selected?.plate}
+    />
+  );
+}
+
+export function VehicleLineField({ className, required, disabled, selected, onSelect, onClear }: { className?: string; required?: boolean; disabled?: boolean; selected?: VehicleLinePick | null; onSelect: (line: VehicleLinePick) => void; onClear?: () => void }) {
+  const [term, setTerm] = useState("");
+  const results = useQuery(api.lookups.vehicleLinesSearch, term.trim().length >= 2 ? { term } : "skip");
+  const selectedLabel = selected ? [selected.makeName ?? selected.makeCode, selected.lineName ?? selected.lineCode].join(" · ") : undefined;
+  return (
+    <SearchSelect
+      className={className}
+      disabled={disabled}
+      emptyText="No hay líneas RNDC con ese nombre o código"
+      hint={selected ? `Marca ${selected.makeCode} · Línea ${selected.lineCode}` : undefined}
+      label="Marca y línea"
+      onClear={onClear}
+      onSearch={setTerm}
+      onSelect={(key) => {
+        const line = results?.find((row) => `${row.makeCode}:${row.lineCode}` === key);
+        if (line) onSelect(line);
+      }}
+      options={results?.map((line) => ({ key: `${line.makeCode}:${line.lineCode}`, title: line.lineName ?? line.lineCode, badge: `${line.makeCode}:${line.lineCode}`, subtitle: line.makeName }))}
+      placeholder="Marca, línea o código"
+      required={required}
+      selectedLabel={selectedLabel}
+    />
+  );
+}
+
+export function BodyTypeField({ className, required, disabled, selected, onSelect, onClear }: { className?: string; required?: boolean; disabled?: boolean; selected?: BodyTypePick | null; onSelect: (bodyType: BodyTypePick) => void; onClear?: () => void }) {
+  const [term, setTerm] = useState("");
+  const results = useQuery(api.lookups.bodyTypesSearch, term.trim().length >= 1 ? { term } : "skip");
+  return (
+    <SearchSelect
+      className={className}
+      disabled={disabled}
+      emptyText="No hay carrocerías con ese nombre o código"
+      hint={selected ? `Código RNDC ${selected.code}` : undefined}
+      label="Carrocería"
+      minLength={1}
+      onClear={onClear}
+      onSearch={setTerm}
+      onSelect={(key) => {
+        const bodyType = results?.find((row) => row.code === key);
+        if (bodyType) onSelect(bodyType);
+      }}
+      options={results?.map((bodyType) => ({ key: bodyType.code, title: bodyType.description, badge: bodyType.code }))}
+      placeholder="Tipo o código"
+      required={required}
+      selectedLabel={selected?.description}
+    />
   );
 }
 

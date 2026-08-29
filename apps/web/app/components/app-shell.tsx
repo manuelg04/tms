@@ -47,7 +47,7 @@ const pageMeta: Record<string, PageMeta> = {
   },
   "/maestros": {
     title: "Maestros",
-    subtitle: "Conductores y vehiculos del registro de flota"
+    subtitle: "Conductores, terceros, remolques y vehículos de la operación"
   }
 };
 
@@ -231,6 +231,13 @@ export function AppShell({ children }: { children: ReactNode }) {
 }
 
 function resolvePageMeta(pathname: string): PageMeta {
+  if (pathname.startsWith("/maestros/nuevo/")) {
+    const resource = pathname.split("/")[3];
+    const labels: Record<string, string> = { conductor: "conductor", tercero: "tercero", remolque: "remolque", vehiculo: "vehículo" };
+    const label = labels[resource];
+    if (label) return { title: `Registrar ${label}`, subtitle: "Creación interna del maestro operativo" };
+  }
+
   if (pathname.startsWith("/expedientes/") && pathname !== "/expedientes/nuevo") {
     return {
       title: "Expediente de viaje",

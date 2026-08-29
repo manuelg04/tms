@@ -187,6 +187,18 @@ const rndcReferenceTotals = v.object({
   bodyTypes: rndcReferenceOutcome
 });
 
+const masterWorkReference = v.object({
+  company: v.string(),
+  contactName: v.optional(v.string()),
+  phone: v.optional(v.string()),
+  position: v.optional(v.string()),
+  trips: v.optional(v.string()),
+  tenure: v.optional(v.string()),
+  city: v.optional(v.string()),
+  cityCode: v.optional(v.string()),
+  merchandise: v.optional(v.string())
+});
+
 export default defineSchema({
   trips: defineTable({
     organizationId: v.optional(v.id("organizations")),
@@ -274,6 +286,9 @@ export default defineSchema({
     document: v.string(),
     documentType: v.optional(v.string()),
     name: v.optional(v.string()),
+    firstNames: v.optional(v.string()),
+    firstLastName: v.optional(v.string()),
+    secondLastName: v.optional(v.string()),
     status: v.optional(v.string()),
     birthDate: v.optional(v.string()),
     sex: v.optional(v.string()),
@@ -284,14 +299,21 @@ export default defineSchema({
     phone1: v.optional(v.string()),
     phone2: v.optional(v.string()),
     cellphone: v.optional(v.string()),
+    mobileOperator: v.optional(v.string()),
+    rating: v.optional(v.string()),
     licenseNumber: v.optional(v.string()),
     licenseCategory: v.optional(v.string()),
     licenseExpiresAt: v.optional(v.string()),
     eps: v.optional(v.string()),
     arp: v.optional(v.string()),
     pensionFund: v.optional(v.string()),
+    crewCardNumber: v.optional(v.string()),
+    crewCardExpiresAt: v.optional(v.string()),
     hazmatCourse: v.optional(v.string()),
     hazmatCourseExpiresAt: v.optional(v.string()),
+    emergencyContactName: v.optional(v.string()),
+    emergencyContactPhone: v.optional(v.string()),
+    workReferences: v.optional(v.array(masterWorkReference)),
     observations: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number()
@@ -302,15 +324,27 @@ export default defineSchema({
 
   thirdParties: defineTable({
     organizationId: v.id("organizations"),
+    personType: v.optional(v.union(v.literal("natural"), v.literal("legal"))),
     documentType: v.string(),
     document: v.string(),
     name: v.string(),
+    firstNames: v.optional(v.string()),
+    firstLastName: v.optional(v.string()),
+    secondLastName: v.optional(v.string()),
+    legalName: v.optional(v.string()),
+    verificationDigit: v.optional(v.string()),
+    abbreviation: v.optional(v.string()),
     phone: v.optional(v.string()),
+    phone2: v.optional(v.string()),
     address: v.optional(v.string()),
     cityCode: v.optional(v.string()),
     cellphone: v.optional(v.string()),
     city: v.optional(v.string()),
+    fax: v.optional(v.string()),
+    website: v.optional(v.string()),
     email: v.optional(v.string()),
+    taxRegime: v.optional(v.string()),
+    observations: v.optional(v.string()),
     siteCount: v.optional(v.number()),
     rndcRegisteredAt: v.optional(v.string()),
     source: v.optional(v.string()),
@@ -321,6 +355,15 @@ export default defineSchema({
       v.literal("holder"),
       v.literal("sender"),
       v.literal("recipient"),
+      v.literal("insured"),
+      v.literal("insurance_company"),
+      v.literal("transport_company"),
+      v.literal("legal_representative"),
+      v.literal("commercial"),
+      v.literal("consignee"),
+      v.literal("employee"),
+      v.literal("logistics_operator"),
+      v.literal("fiscal_reviewer"),
       v.literal("other")
     )),
     createdBy: v.optional(v.id("users")),
@@ -387,17 +430,31 @@ export default defineSchema({
     make: v.optional(v.string()),
     line: v.optional(v.string()),
     modelYear: v.optional(v.string()),
+    repoweredModelYear: v.optional(v.string()),
     color: v.optional(v.string()),
     bodyType: v.optional(v.string()),
     configuration: v.optional(v.string()),
     trailer: v.optional(v.string()),
     linkType: v.optional(v.string()),
+    engineNumber: v.optional(v.string()),
+    serialNumber: v.optional(v.string()),
     capacityTn: v.optional(v.string()),
     emptyWeightTn: v.optional(v.string()),
+    affiliatedTo: v.optional(v.string()),
+    technicalInspectionNumber: v.optional(v.string()),
+    technicalInspectionExpiresAt: v.optional(v.string()),
+    emissionsCertificateExpiresAt: v.optional(v.string()),
+    cargoRegistryNumber: v.optional(v.string()),
+    operationCardNumber: v.optional(v.string()),
+    transitLicenseNumber: v.optional(v.string()),
+    checkListExpress: v.optional(v.boolean()),
+    rating: v.optional(v.string()),
+    ownerThirdPartyId: v.optional(v.id("thirdParties")),
     ownerDocument: v.optional(v.string()),
     ownerName: v.optional(v.string()),
     ownerCellphone: v.optional(v.string()),
     ownerPhone: v.optional(v.string()),
+    possessorThirdPartyId: v.optional(v.id("thirdParties")),
     possessorDocument: v.optional(v.string()),
     possessorName: v.optional(v.string()),
     possessorCellphone: v.optional(v.string()),
@@ -406,6 +463,10 @@ export default defineSchema({
     insurerName: v.optional(v.string()),
     soatExpiresAt: v.optional(v.string()),
     soatNumber: v.optional(v.string()),
+    liabilityPolicyNumber: v.optional(v.string()),
+    liabilityInsurerNit: v.optional(v.string()),
+    liabilityInsurerName: v.optional(v.string()),
+    liabilityExpiresAt: v.optional(v.string()),
     vehicleKind: v.optional(v.string()),
     status: v.optional(v.string()),
     configurationLabel: v.optional(v.string()),
@@ -421,6 +482,14 @@ export default defineSchema({
     rndcRegisteredAt: v.optional(v.string()),
     source: v.optional(v.string()),
     sourceCompanyNit: v.optional(v.string()),
+    defaultTrailerId: v.optional(v.id("trailers")),
+    transitAuthority: v.optional(v.string()),
+    importDeclarationNumber: v.optional(v.string()),
+    publicServiceEntryMethod: v.optional(v.string()),
+    observations: v.optional(v.string()),
+    gpsOperator: v.optional(v.string()),
+    gpsUsername: v.optional(v.string()),
+    workReferences: v.optional(v.array(masterWorkReference)),
     createdAt: v.number(),
     updatedAt: v.number()
   })
@@ -462,7 +531,10 @@ export default defineSchema({
     updatedAt: v.number()
   })
     .index("by_make_and_line", ["makeCode", "lineCode"])
-    .index("by_source_import_run", ["sourceImportRunId"]),
+    .index("by_line_and_make", ["lineCode", "makeCode"])
+    .index("by_source_import_run", ["sourceImportRunId"])
+    .searchIndex("search_make", { searchField: "makeName" })
+    .searchIndex("search_line", { searchField: "lineName" }),
 
   rndcInsurers: defineTable({
     insurerNit: v.string(),
@@ -511,7 +583,8 @@ export default defineSchema({
     updatedAt: v.number()
   })
     .index("by_code", ["code"])
-    .index("by_source_import_run", ["sourceImportRunId"]),
+    .index("by_source_import_run", ["sourceImportRunId"])
+    .searchIndex("search_description", { searchField: "description" }),
 
   rndcDivisions: defineTable({
     code: v.string(),
@@ -560,6 +633,7 @@ export default defineSchema({
     .index("by_run_catalog_and_batch", ["importRunId", "catalog", "batchIndex"]),
 
   driverVehicles: defineTable({
+    organizationId: v.optional(v.id("organizations")),
     driverId: v.id("drivers"),
     vehicleId: v.id("vehicles"),
     driverDocument: v.string(),
@@ -572,7 +646,37 @@ export default defineSchema({
   })
     .index("by_document_and_plate", ["driverDocument", "vehiclePlate"])
     .index("by_driver", ["driverId"])
-    .index("by_vehicle", ["vehicleId"]),
+    .index("by_vehicle", ["vehicleId"])
+    .index("by_organization_document_and_plate", ["organizationId", "driverDocument", "vehiclePlate"])
+    .index("by_organization_and_driver", ["organizationId", "driverId"])
+    .index("by_organization_and_vehicle", ["organizationId", "vehicleId"]),
+
+  masterAttachments: defineTable({
+    organizationId: v.id("organizations"),
+    resourceType: v.union(
+      v.literal("driver"),
+      v.literal("third_party"),
+      v.literal("trailer"),
+      v.literal("vehicle")
+    ),
+    resourceId: v.string(),
+    slot: v.union(
+      v.literal("profile"),
+      v.literal("front"),
+      v.literal("left"),
+      v.literal("right"),
+      v.literal("rear")
+    ),
+    storageId: v.id("_storage"),
+    fileName: v.string(),
+    contentType: v.string(),
+    size: v.number(),
+    sha256: v.string(),
+    createdBy: v.id("users"),
+    createdAt: v.number()
+  })
+    .index("by_storage_id", ["storageId"])
+    .index("by_organization_resource_slot_and_created_at", ["organizationId", "resourceType", "resourceId", "slot", "createdAt"]),
 
   notifications: defineTable({
     organizationId: v.optional(v.id("organizations")),
@@ -767,9 +871,25 @@ export default defineSchema({
     organizationId: v.id("organizations"),
     plate: v.string(),
     trailerType: v.optional(v.string()),
+    linkedVehicleId: v.optional(v.id("vehicles")),
+    make: v.optional(v.string()),
+    modelYear: v.optional(v.string()),
     configuration: v.optional(v.string()),
     capacityKg: v.optional(v.number()),
+    emptyWeightKg: v.optional(v.number()),
+    widthM: v.optional(v.number()),
+    heightM: v.optional(v.number()),
+    lengthM: v.optional(v.number()),
+    rearVolumeM3: v.optional(v.number()),
+    ownerThirdPartyId: v.optional(v.id("thirdParties")),
+    ownerDocumentType: v.optional(v.string()),
     ownerDocument: v.optional(v.string()),
+    ownerName: v.optional(v.string()),
+    bodyType: v.optional(v.string()),
+    procedureType: v.optional(v.string()),
+    chassisSerial: v.optional(v.string()),
+    color: v.optional(v.string()),
+    observations: v.optional(v.string()),
     status: v.union(v.literal("available"), v.literal("assigned"), v.literal("maintenance"), v.literal("inactive")),
     createdBy: v.id("users"),
     updatedBy: v.id("users"),
@@ -777,7 +897,8 @@ export default defineSchema({
     updatedAt: v.number()
   })
     .index("by_organization_and_plate", ["organizationId", "plate"])
-    .index("by_organization_and_status", ["organizationId", "status"]),
+    .index("by_organization_and_status", ["organizationId", "status"])
+    .index("by_organization_and_linked_vehicle", ["organizationId", "linkedVehicleId"]),
 
   expedientes: defineTable({
     organizationId: v.id("organizations"),

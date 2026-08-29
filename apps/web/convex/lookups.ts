@@ -189,11 +189,14 @@ export const vehiclesWithDriversSearch = query({
     plate: v.string(),
     make: v.optional(v.string()),
     line: v.optional(v.string()),
+    modelYear: v.optional(v.string()),
+    color: v.optional(v.string()),
+    trailer: v.optional(v.string()),
     configuration: v.optional(v.string()),
     capacityTn: v.optional(v.string()),
     status: v.optional(v.string()),
     soatExpiresAt: v.optional(v.string()),
-    drivers: v.array(v.object({ _id: v.id("drivers"), document: v.string(), name: v.optional(v.string()), licenseCategory: v.optional(v.string()), licenseExpiresAt: v.optional(v.string()) }))
+    drivers: v.array(v.object({ _id: v.id("drivers"), document: v.string(), name: v.optional(v.string()), phone: v.optional(v.string()), licenseCategory: v.optional(v.string()), licenseExpiresAt: v.optional(v.string()) }))
   })),
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx);
@@ -207,16 +210,16 @@ export const vehiclesWithDriversSearch = query({
       const relations = await ctx.db.query("driverVehicles").withIndex("by_vehicle", (q) => q.eq("vehicleId", vehicle._id)).take(20);
       const drivers = (await Promise.all(relations.map(async (relation) => {
         const driver = await ctx.db.get("drivers", relation.driverId);
-        return driver ? { _id: driver._id, document: driver.document, name: driver.name, licenseCategory: driver.licenseCategory, licenseExpiresAt: driver.licenseExpiresAt } : null;
+        return driver ? { _id: driver._id, document: driver.document, name: driver.name, phone: driver.cellphone ?? driver.phone1 ?? driver.phone2, licenseCategory: driver.licenseCategory, licenseExpiresAt: driver.licenseExpiresAt } : null;
       }))).filter((driver): driver is NonNullable<typeof driver> => driver !== null);
-      return { _id: vehicle._id, plate: vehicle.plate, make: vehicle.make, line: vehicle.line, configuration: vehicle.configuration, capacityTn: vehicle.capacityTn, status: vehicle.status, soatExpiresAt: vehicle.soatExpiresAt, drivers };
+      return { _id: vehicle._id, plate: vehicle.plate, make: vehicle.make, line: vehicle.line, modelYear: vehicle.modelYear, color: vehicle.color, trailer: vehicle.trailer, configuration: vehicle.configuration, capacityTn: vehicle.capacityTn, status: vehicle.status, soatExpiresAt: vehicle.soatExpiresAt, drivers };
     }));
   }
 });
 
 export const driversLookup = query({
   args: { term: v.string() },
-  returns: v.array(v.object({ _id: v.id("drivers"), document: v.string(), name: v.optional(v.string()), licenseCategory: v.optional(v.string()), licenseExpiresAt: v.optional(v.string()) })),
+  returns: v.array(v.object({ _id: v.id("drivers"), document: v.string(), name: v.optional(v.string()), phone: v.optional(v.string()), licenseCategory: v.optional(v.string()), licenseExpiresAt: v.optional(v.string()) })),
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx);
     const term = args.term.trim();
@@ -224,7 +227,7 @@ export const driversLookup = query({
     const drivers = isDocumentTerm(term)
       ? await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).gte("document", term).lt("document", term + "￿")).take(LIMIT)
       : await ctx.db.query("drivers").withSearchIndex("search_name", (q) => q.search("name", term).eq("organizationId", actor.organizationId)).take(LIMIT);
-    return drivers.map((driver) => ({ _id: driver._id, document: driver.document, name: driver.name, licenseCategory: driver.licenseCategory, licenseExpiresAt: driver.licenseExpiresAt }));
+    return drivers.map((driver) => ({ _id: driver._id, document: driver.document, name: driver.name, phone: driver.cellphone ?? driver.phone1 ?? driver.phone2, licenseCategory: driver.licenseCategory, licenseExpiresAt: driver.licenseExpiresAt }));
   }
 });
 

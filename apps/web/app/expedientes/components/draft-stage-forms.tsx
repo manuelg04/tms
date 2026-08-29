@@ -7,7 +7,7 @@ import type { Id } from "../../../convex/_generated/dataModel";
 import { DateField } from "../../components/fields/date-field";
 import { CargoNatureField, IdTypeField, InsurerField, MunicipalityField, PackagingField, PartyField, SiteField, formatDocument, type PartyPick } from "../../components/fields/lookup-fields";
 import { MoneyField, formatThousands } from "../../components/fields/money-field";
-import { SearchSelect } from "../../components/fields/search-select";
+import { VehicleAssignmentPicker, type VehicleAssignmentValue } from "./vehicle-assignment-picker";
 
 type LoadingOrder = {
   expeditionDate?: string;
@@ -345,104 +345,14 @@ export function ConsignmentsForm({ onSubmit, order, readOnly, remesas }: { onSub
   );
 }
 
-type VehiclePick = { _id: Id<"vehicles">; plate: string; make?: string; line?: string; configuration?: string; capacityTn?: string; status?: string; soatExpiresAt?: string; drivers: Array<{ _id: Id<"drivers">; document: string; name?: string; licenseCategory?: string; licenseExpiresAt?: string }> };
-type DriverPick = { _id: Id<"drivers">; document: string; name?: string; licenseCategory?: string; licenseExpiresAt?: string };
-
-function expired(date: string | undefined): boolean {
-  return Boolean(date && date < new Date().toISOString().slice(0, 10));
-}
-
 export function AssignmentForm({ currentDriverDocument, currentVehiclePlate, onSubmit, readOnly }: { currentDriverDocument?: string; currentVehiclePlate?: string; onSubmit: (values: { driverId?: string; vehicleId?: string }) => void; readOnly: boolean }) {
-  const [plateTerm, setPlateTerm] = useState("");
-  const [driverTerm, setDriverTerm] = useState("");
-  const [vehicle, setVehicle] = useState<VehiclePick | null>(null);
-  const [driver, setDriver] = useState<DriverPick | null>(null);
-  const vehicles = useQuery(api.lookups.vehiclesWithDriversSearch, plateTerm.trim() ? { term: plateTerm } : "skip");
-  const initialVehicles = useQuery(api.lookups.vehiclesWithDriversSearch, currentVehiclePlate && !vehicle ? { term: currentVehiclePlate } : "skip");
-  const drivers = useQuery(api.lookups.driversLookup, driverTerm.trim().length >= 2 ? { term: driverTerm } : "skip");
-  const initialDrivers = useQuery(api.lookups.driversLookup, currentDriverDocument && !driver ? { term: currentDriverDocument } : "skip");
-
-  useEffect(() => {
-    if (!vehicle && initialVehicles) {
-      const match = initialVehicles.find((row) => row.plate === currentVehiclePlate);
-      if (match) setVehicle(match);
-    }
-  }, [initialVehicles, vehicle, currentVehiclePlate]);
-
-  useEffect(() => {
-    if (!driver && initialDrivers) {
-      const match = initialDrivers.find((row) => row.document === currentDriverDocument);
-      if (match) setDriver(match);
-    }
-  }, [initialDrivers, driver, currentDriverDocument]);
-
-  function pickVehicle(next: VehiclePick) {
-    setVehicle(next);
-    if (next.drivers.length === 1) setDriver(next.drivers[0]);
-    else if (driver && !next.drivers.some((row) => row._id === driver._id)) setDriver(null);
-  }
-
-  const linkedDrivers = vehicle?.drivers ?? [];
-  const driverIsLinked = driver ? linkedDrivers.some((row) => row._id === driver._id) : false;
+  const [assignment, setAssignment] = useState<VehicleAssignmentValue>({ vehicle: null, driver: null });
 
   return (
-    <form className="form-compact" id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit({ driverId: driver?._id, vehicleId: vehicle?._id }); }}>
+    <form className="form-compact" id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit({ driverId: assignment.driver?._id, vehicleId: assignment.vehicle?._id }); }}>
       <StageHeading number="03" title="Vehículo y conductor" text="Empieza por la placa: el sistema propone los conductores vinculados a ese vehículo en el RNDC." readOnly={readOnly} />
       <fieldset className="stage-form-fields" disabled={readOnly}>
-        <SearchSelect
-          emptyText="No hay vehículos con esa placa"
-          hint={vehicle ? `${vehicle.drivers.length} conductor${vehicle.drivers.length === 1 ? "" : "es"} vinculado${vehicle.drivers.length === 1 ? "" : "s"}` : undefined}
-          label="Placa del vehículo"
-          minLength={2}
-          mono
-          onClear={() => { setVehicle(null); setDriver(null); }}
-          onSearch={setPlateTerm}
-          onSelect={(key) => {
-            const next = vehicles?.find((row) => row._id === key);
-            if (next) pickVehicle(next);
-          }}
-          options={vehicles?.map((row) => ({ key: row._id, title: row.plate, badge: row.status, subtitle: [row.make, row.line, row.configuration].filter(Boolean).join(" · ") }))}
-          placeholder="ABC123"
-          required
-          selectedLabel={vehicle?.plate}
-        />
-        {vehicle ? (
-          <div className="vehicle-pick-card">
-            <div><small>Vehículo</small><strong>{[vehicle.make, vehicle.line].filter(Boolean).join(" ") || "—"}</strong></div>
-            <div><small>Configuración</small><strong>{vehicle.configuration ?? "—"}</strong></div>
-            <div><small>Capacidad</small><strong>{vehicle.capacityTn ? `${vehicle.capacityTn} TN` : "—"}</strong></div>
-            <div><small>SOAT</small><strong className={expired(vehicle.soatExpiresAt) ? "warn" : undefined}>{vehicle.soatExpiresAt ? `${expired(vehicle.soatExpiresAt) ? "Vencido " : "Vence "}${vehicle.soatExpiresAt}` : "—"}</strong></div>
-          </div>
-        ) : null}
-        {vehicle && linkedDrivers.length > 0 ? (
-          <div className="form-field span-2">
-            <span>Conductores vinculados a {vehicle.plate}</span>
-            <div className="driver-choice-list">
-              {linkedDrivers.map((row) => (
-                <button className={`driver-choice ${driver?._id === row._id ? "selected" : ""}`} key={row._id} onClick={() => setDriver(row)} type="button">
-                  <span>{row.name ?? "Sin nombre"}<br /><small>CC {formatDocument(row.document)}{row.licenseCategory ? ` · Licencia ${row.licenseCategory}` : ""}{expired(row.licenseExpiresAt) ? " · Licencia vencida" : ""}</small></span>
-                  {driver?._id === row._id ? <b>✓ Asignado</b> : null}
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : null}
-        <SearchSelect
-          className={linkedDrivers.length > 0 ? undefined : "span-2"}
-          emptyText="No hay conductores con ese nombre o documento"
-          hint={driver && !driverIsLinked ? `CC ${formatDocument(driver.document)}${driver.licenseCategory ? ` · Licencia ${driver.licenseCategory}` : ""}${expired(driver.licenseExpiresAt) ? " · Licencia vencida" : ""}${vehicle ? " · No está vinculado a esta placa en el RNDC" : ""}` : linkedDrivers.length > 0 ? "Sólo si el conductor no está en la lista de arriba" : undefined}
-          label={linkedDrivers.length > 0 ? "Otro conductor" : "Conductor"}
-          onClear={() => setDriver(null)}
-          onSearch={setDriverTerm}
-          onSelect={(key) => {
-            const next = drivers?.find((row) => row._id === key);
-            if (next) setDriver(next);
-          }}
-          options={drivers?.map((row) => ({ key: row._id, title: row.name ?? row.document, badge: `CC ${formatDocument(row.document)}`, subtitle: row.licenseCategory ? `Licencia ${row.licenseCategory}` : undefined }))}
-          placeholder="Nombre o cédula"
-          required={linkedDrivers.length === 0}
-          selectedLabel={driver && !driverIsLinked ? (driver.name ?? driver.document) : undefined}
-        />
+        <VehicleAssignmentPicker currentDriverDocument={currentDriverDocument} currentVehiclePlate={currentVehiclePlate} disabled={readOnly} onChange={setAssignment} value={assignment} />
       </fieldset>
     </form>
   );

@@ -641,6 +641,10 @@ export default defineSchema({
     email: v.optional(v.string()),
     phone: v.optional(v.string()),
     status: organizationStatus,
+    source: v.optional(v.string()),
+    sourceContentHash: v.optional(v.string()),
+    sourceCapturedAt: v.optional(v.string()),
+    sourceImportRunId: v.optional(v.id("avansatCustomerImportRuns")),
     createdBy: v.id("users"),
     updatedBy: v.id("users"),
     createdAt: v.number(),
@@ -669,6 +673,69 @@ export default defineSchema({
   })
     .index("by_customer_and_code", ["customerId", "code"])
     .index("by_organization_and_customer", ["organizationId", "customerId"]),
+
+  avansatCustomerImportRuns: defineTable({
+    organizationId: v.id("organizations"),
+    clientRunId: v.string(),
+    manifestHash: v.string(),
+    capturedAt: v.string(),
+    expectedTotal: v.number(),
+    batchCount: v.number(),
+    status: v.union(v.literal("running"), v.literal("completed"), v.literal("failed")),
+    totals: v.object({
+      batchesApplied: v.number(),
+      customersInserted: v.number(),
+      customersUpdated: v.number(),
+      customersUnchanged: v.number(),
+      locationsInserted: v.number(),
+      locationsUpdated: v.number(),
+      locationsUnchanged: v.number(),
+      snapshotsInserted: v.number()
+    }),
+    certifiedAt: v.optional(v.number()),
+    startedAt: v.number(),
+    updatedAt: v.number(),
+    finishedAt: v.optional(v.number())
+  })
+    .index("by_client_run_id", ["clientRunId"])
+    .index("by_organization_and_status", ["organizationId", "status"]),
+
+  avansatCustomerImportBatches: defineTable({
+    importRunId: v.id("avansatCustomerImportRuns"),
+    batchIndex: v.number(),
+    batchHash: v.string(),
+    rowCount: v.number(),
+    customersInserted: v.number(),
+    customersUpdated: v.number(),
+    customersUnchanged: v.number(),
+    locationsInserted: v.number(),
+    locationsUpdated: v.number(),
+    locationsUnchanged: v.number(),
+    snapshotsInserted: v.number(),
+    createdAt: v.number()
+  }).index("by_run_and_batch", ["importRunId", "batchIndex"]),
+
+  avansatCustomerImportKeys: defineTable({
+    importRunId: v.id("avansatCustomerImportRuns"),
+    document: v.string(),
+    batchIndex: v.number(),
+    contentHash: v.string(),
+    createdAt: v.number()
+  }).index("by_run_and_document", ["importRunId", "document"]),
+
+  avansatCustomerSnapshots: defineTable({
+    organizationId: v.id("organizations"),
+    customerId: v.id("customers"),
+    importRunId: v.id("avansatCustomerImportRuns"),
+    document: v.string(),
+    contentHash: v.string(),
+    capturedAt: v.string(),
+    sourceJson: v.string(),
+    createdAt: v.number()
+  })
+    .index("by_customer", ["customerId"])
+    .index("by_organization_and_document", ["organizationId", "document"])
+    .index("by_import_run", ["importRunId"]),
 
   serviceOrders: defineTable({
     organizationId: v.id("organizations"),

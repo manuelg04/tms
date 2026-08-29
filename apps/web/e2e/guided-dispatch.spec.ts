@@ -21,10 +21,12 @@ test("base creation hands the operator to the document hub", async ({ page }) =>
   await page.goto("/expedientes/nuevo");
   await fillLoadingOrder(page, `GUIDED-${Date.now()}`);
   await expect(page.locator("#loading-order-title")).toBeVisible();
+  await expect(page.getByText("CONDUCTOR DEMO", { exact: true })).toBeVisible();
   await expect(page.getByText("Paso 1 de 5")).toHaveCount(0);
   await page.getByRole("button", { name: "Crear despacho y abrir documentos" }).click();
   await expect(page).toHaveURL(/\/expedientes\/[^/?]+\?stage=orden_cargue/);
   await expect(page.getByRole("region", { name: "Documentos del despacho" })).toBeVisible();
+  await expect(documentCard(page, "Vehículo y conductor").getByText("Completado")).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 
@@ -45,10 +47,6 @@ test("dispatch documents can be completed and emitted in separate sessions", asy
   const detailUrl = page.url();
 
   const assignmentCard = documentCard(page, "Vehículo y conductor");
-  await assignmentCard.getByRole("button", { name: "Editar" }).click();
-  await pickOption(page, "Placa del vehículo", "DEM001", /DEM001/);
-  await expect(page.locator("#stage-primary-form .driver-choice.selected")).toContainText("CONDUCTOR DEMO");
-  await page.getByRole("button", { name: "Guardar cambios" }).click();
   await expect(assignmentCard.getByText("Completado")).toBeVisible();
 
   const orderCard = documentCard(page, "Orden de cargue");
@@ -243,6 +241,8 @@ async function fillLoadingOrder(page: Page, suffix: string) {
   await page.getByLabel("Identificación destinatario", { exact: true }).fill("901234567");
   await page.getByLabel("Teléfono destinatario").fill("6045559876");
   await page.getByLabel("Sede RNDC destinatario").fill("1");
+  await pickOption(page, "Placa del vehículo", "DEM001", /DEM001/);
+  await page.getByLabel("Flete conductor").fill("2500000");
   await page.getByLabel("Mercancía", { exact: true }).fill("Carga seca");
   await page.getByLabel("Peso total (TN)").fill("12.5");
   await pickOption(page, "Tipo de empaque", "paquete", /paquete/i);

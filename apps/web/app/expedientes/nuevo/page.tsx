@@ -9,6 +9,8 @@ import type { Id } from "../../../convex/_generated/dataModel";
 import { DateField } from "../../components/fields/date-field";
 import { MoneyField } from "../../components/fields/money-field";
 import { CargoNatureField, IdTypeField, MunicipalityField, PackagingField, PartyField, SiteField, type PartyPick, type SitePick } from "../../components/fields/lookup-fields";
+import { VehicleAssignmentPicker, type VehicleAssignmentValue } from "../components/vehicle-assignment-picker";
+import { requiredAssignmentIds, requiredDriverFreight } from "../components/vehicle-assignment-state";
 
 type BaseState = {
   customer: PartyPick | null;
@@ -108,6 +110,7 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
   const [error, setError] = useState("");
   const [savingAction, setSavingAction] = useState<"draft" | "open" | null>(null);
   const [state, setState] = useState<BaseState>(() => templateState(template));
+  const [assignment, setAssignment] = useState<VehicleAssignmentValue>({ vehicle: null, driver: null });
   const copied = template?.order;
   const update = (patch: Partial<BaseState>) => setState((current) => ({ ...current, ...patch }));
   const today = new Date().toISOString().slice(0, 10);
@@ -116,6 +119,7 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
   const upsertOrder = useMutation(api.masterData.upsertServiceOrder);
   const createDraft = useMutation(api.dispatches.createDraft);
   const saveLoadingOrder = useMutation(api.dispatches.saveLoadingOrderDraft);
+  const saveAssignment = useMutation(api.dispatches.saveAssignmentDraft);
 
   async function saveBase(action: "draft" | "open") {
     if (!me || !formRef.current) {
@@ -128,6 +132,7 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
     const data = new FormData(formRef.current);
 
     try {
+      const assignmentIds = requiredAssignmentIds(assignment);
       const customerCode = requiredText(data, "customerCode");
       const customerId = await upsertCustomer({
         organizationId: me.organizationId,
@@ -181,10 +186,13 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
         agencyCode: optionalText(data, "agencyCode"),
         notes: optionalText(data, "orderObservations")
       });
-      await saveLoadingOrder({
-        expedienteId: created.expedienteId,
-        draft: loadingOrderDraft(data, customerId)
-      });
+      await Promise.all([
+        saveLoadingOrder({
+          expedienteId: created.expedienteId,
+          draft: loadingOrderDraft(data, customerId)
+        }),
+        saveAssignment({ expedienteId: created.expedienteId, ...assignmentIds })
+      ]);
 
       router.push(action === "open" ? `/expedientes/${created.expedienteId}?stage=orden_cargue#centro-documental` : `/expedientes/${created.expedienteId}`);
     } catch (cause) {
@@ -305,8 +313,9 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
             />
             <input name="recipientSiteCode" type="hidden" value={state.recipientSiteCode} />
             <div className="field-group-note"><strong>Datos del vehículo</strong></div>
-            <MoneyField label="Flete conductor" name="driverFreight" value={copied?.driverFreight} />
-            <span className="field-hint span-2">La placa y el conductor se asignan después, en la etapa «Vehículo y conductor».</span>
+            <VehicleAssignmentPicker onChange={setAssignment} value={assignment} />
+            <MoneyField label="Flete conductor" name="driverFreight" required value={copied?.driverFreight} />
+            <span className="field-hint span-2">La asignación quedará guardada en el despacho y podrás corregirla después, antes de emitir documentos.</span>
             <div className="field-group-note"><strong>Datos de la mercancía</strong></div>
             <Field className="span-2" defaultValue={copied?.cargoDescription} label="Mercancía" name="cargoDescription" required />
             <Field defaultValue={copied?.merchandiseCode} label="Código de mercancía" name="merchandiseCode" required />
@@ -398,7 +407,7 @@ function loadingOrderDraft(data: FormData, customerId: Id<"customers">) {
     packagingCode: requiredText(data, "packagingCode"),
     merchandiseCode: optionalText(data, "merchandiseCode"),
     natureOfCargo: optionalText(data, "natureOfCargo"),
-    driverFreight: optionalText(data, "driverFreight"),
+    driverFreight: requiredDriverFreight(optionalText(data, "driverFreight")),
     sealNumbers: optionalText(data, "sealNumbers"),
     loadingConditions: optionalText(data, "loadingConditions"),
     specialPackaging: optionalText(data, "specialPackaging"),

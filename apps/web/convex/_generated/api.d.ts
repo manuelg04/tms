@@ -10,6 +10,7 @@
 
 import type * as access from "../access.js";
 import type * as audit from "../audit.js";
+import type * as avansatCustomers from "../avansatCustomers.js";
 import type * as counters from "../counters.js";
 import type * as dashboard from "../dashboard.js";
 import type * as dispatchExceptions from "../dispatchExceptions.js";
@@ -24,6 +25,7 @@ import type * as masterData from "../masterData.js";
 import type * as model_access from "../model/access.js";
 import type * as model_actionableNotification from "../model/actionableNotification.js";
 import type * as model_advancedWorkflow from "../model/advancedWorkflow.js";
+import type * as model_avansatCustomers from "../model/avansatCustomers.js";
 import type * as model_consecutiveRange from "../model/consecutiveRange.js";
 import type * as model_dashboardStatus from "../model/dashboardStatus.js";
 import type * as model_dispatchPresentation from "../model/dispatchPresentation.js";
@@ -59,6 +61,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   access: typeof access;
   audit: typeof audit;
+  avansatCustomers: typeof avansatCustomers;
   counters: typeof counters;
   dashboard: typeof dashboard;
   dispatchExceptions: typeof dispatchExceptions;
@@ -73,6 +76,7 @@ declare const fullApi: ApiFromModules<{
   "model/access": typeof model_access;
   "model/actionableNotification": typeof model_actionableNotification;
   "model/advancedWorkflow": typeof model_advancedWorkflow;
+  "model/avansatCustomers": typeof model_avansatCustomers;
   "model/consecutiveRange": typeof model_consecutiveRange;
   "model/dashboardStatus": typeof model_dashboardStatus;
   "model/dispatchPresentation": typeof model_dispatchPresentation;

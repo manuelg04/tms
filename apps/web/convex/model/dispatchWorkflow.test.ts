@@ -335,7 +335,18 @@ test("an empty loading order reports it has not started", () => {
 
 test("a consignment inherits known order data and only asks for the differences", () => {
   const missing = consignmentMissingFields(
-    { consignmentClass: "terrestre_carga", declaredValue: "5000000", policyNumber: "POL-1", policyExpiresOn: "2027-07-13", insurerNit: "900123456" },
+    {
+      consignmentClass: "terrestre_carga",
+      declaredValue: "5000000",
+      consignmentValue: "400000",
+      policyNumber: "POL-1",
+      policyExpiresOn: "2027-07-13",
+      insurerNit: "900123456",
+      remissions: [{ remissionNumber: "REM-1", quantity: "10", packagingClass: "GRANEL", description: "MAIZ", weightTons: "34" }],
+      unitOfMeasure: "TN",
+      loading: { agreedHours: "1" },
+      unloading: { agreedHours: "2" }
+    },
     completeOrder
   );
 
@@ -349,8 +360,11 @@ test("a consignment without inherited order data lists everything it needs", () 
   assert.ok(missing.includes("Remitente"));
   assert.ok(missing.includes("Destinatario"));
   assert.ok(missing.includes("Sitio y cita de descargue"));
-  assert.ok(missing.includes("Remisiones con cantidad, descripción y peso"));
+  assert.ok(missing.includes("Remisiones con número, cantidad, clase de bultos, descripción y peso"));
   assert.ok(missing.includes("Póliza de la carga"));
+  assert.ok(missing.includes("Valor de la remesa"));
+  assert.ok(missing.includes("Unidad de medida"));
+  assert.ok(missing.includes("Horas pactadas de cargue y descargue"));
 });
 
 test("consignment overrides replace inherited order data", () => {
@@ -358,11 +372,15 @@ test("consignment overrides replace inherited order data", () => {
     {
       consignmentClass: "municipal",
       declaredValue: "100",
+      consignmentValue: "80",
       recipient: { name: "OTRO DESTINATARIO", identificationType: "NIT", identificationNumber: "111", siteCode: "1", municipalityCode: "68001000" },
-      remissions: [{ quantity: "10", description: "BULTOS", weightTons: "5" }],
+      remissions: [{ remissionNumber: "REM-2", quantity: "10", packagingClass: "GRANEL", description: "BULTOS", weightTons: "5" }],
       policyNumber: "POL-2",
       policyExpiresOn: "2027-07-13",
-      insurerNit: "900123456"
+      insurerNit: "900123456",
+      unitOfMeasure: "TN",
+      loading: { agreedHours: "1" },
+      unloading: { agreedHours: "2" }
     },
     { ...completeOrder, recipient: undefined }
   );
@@ -425,4 +443,63 @@ test("a consignment inherits the order cargo codes when it does not override the
 
   assert.equal(overridden.merchandiseCode, "009999");
   assert.equal(overridden.natureOfCargo, "2");
+});
+
+test("compacts effective consignment values into remesa-only overrides", async () => {
+  const module = await import("./dispatchWorkflow") as Record<string, unknown>;
+  const compact = module.compactConsignmentOverrides;
+  assert.equal(typeof compact, "function");
+  if (typeof compact !== "function") return;
+
+  const order = {
+    expeditionDate: "2026-08-29",
+    agencyCode: "Principal",
+    sender: { name: "Remitente", identificationType: "N", identificationNumber: "9001", address: "Calle 1", cityName: "Bogotá", municipalityCode: "11001000", phone: "6011" },
+    recipient: { name: "Destinatario", identificationType: "N", identificationNumber: "9002", address: "Calle 2", cityName: "Medellín", municipalityCode: "05001000", phone: "6041" },
+    loading: { address: "Calle 1", cityName: "Bogotá", municipalityCode: "11001000", appointmentAt: 1_788_000_000_000 },
+    unloading: { address: "Calle 2", cityName: "Medellín", municipalityCode: "05001000", appointmentAt: 1_788_100_000_000 },
+    cargoDescription: "MAÍZ",
+    cargoQuantity: "10",
+    cargoUnit: "TN",
+    weightTons: "10",
+    volumeM3: "15",
+    packagingCode: "10",
+    merchandiseCode: "005229",
+    natureOfCargo: "1"
+  };
+  const candidate = {
+    expeditionDate: order.expeditionDate,
+    agencyCode: order.agencyCode,
+    consignmentClass: "terrestre_carga",
+    operationType: "general",
+    sender: { ...order.sender },
+    recipient: { ...order.recipient, phone: "6042" },
+    loading: { ...order.loading },
+    unloading: { ...order.unloading },
+    declaredValue: "5000000",
+    consignmentValue: "400000",
+    policyHolder: "transport_company",
+    policyNumber: "AB002905",
+    policyExpiresOn: "2027-04-09",
+    insurerNit: "860002400",
+    remissions: [{ remissionNumber: "REM-1", quantity: "10", packagingClass: "10", description: "MAÍZ", weightTons: "10", volumeM3: "15" }],
+    unitOfMeasure: "TN",
+    packagingCode: "10",
+    merchandiseCode: "005229",
+    natureOfCargo: "1"
+  };
+  const result = compact(candidate, order) as Record<string, unknown>;
+
+  assert.equal(result.expeditionDate, undefined);
+  assert.equal(result.agencyCode, undefined);
+  assert.equal(result.sender, undefined);
+  assert.deepEqual(result.recipient, { phone: "6042" });
+  assert.equal(result.loading, undefined);
+  assert.equal(result.unloading, undefined);
+  assert.equal(result.unitOfMeasure, undefined);
+  assert.equal(result.packagingCode, undefined);
+  assert.equal(result.merchandiseCode, undefined);
+  assert.equal(result.natureOfCargo, undefined);
+  assert.equal(result.declaredValue, "5000000");
+  assert.deepEqual(result.remissions, candidate.remissions);
 });

@@ -9,6 +9,7 @@ import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { dispatchPrimaryAction } from "../../../convex/model/dispatchPresentation";
 import {
+  compactConsignmentOverrides,
   consignmentMissingFields,
   emissionDependencyBlockers,
   loadingOrderMissingFields,
@@ -59,7 +60,9 @@ export default function DespachoDetailPage() {
   const [notice, setNotice] = useState<{ tone: "ok" | "bad" | "wait"; text: string } | null>(null);
   const [advancedModal, setAdvancedModal] = useState<AdvancedModal>(null);
   const appliedActionEntry = useRef("");
+  const ensuringConsignment = useRef("");
   const saveLoadingOrder = useMutation(api.dispatches.saveLoadingOrderDraft);
+  const ensureConsignment = useMutation(api.dispatches.ensureConsignmentDraft);
   const saveConsignments = useMutation(api.dispatches.saveConsignmentsDraft);
   const saveAssignment = useMutation(api.dispatches.saveAssignmentDraft);
   const saveManifest = useMutation(api.dispatches.saveManifestDraft);
@@ -81,6 +84,23 @@ export default function DespachoDetailPage() {
     appliedActionEntry.current = entryKey;
     setAdvancedModal(entry.action);
   }, [entry.action, entry.showCorrections, entryKey, user?.role]);
+
+  useEffect(() => {
+    if (selectedStage !== "remesas") {
+      ensuringConsignment.current = "";
+      return;
+    }
+    if (!detailResult || (user?.role !== "operator" && user?.role !== "admin") || !["draft", "in_progress", "ready"].includes(detailResult.expediente.status)) return;
+    const withoutNumber = detailResult.remesas.find((remesa) => !remesa.number);
+    const sequence = withoutNumber?.sequence ?? (detailResult.remesas.length === 0 ? 1 : undefined);
+    if (sequence === undefined) return;
+    const key = `${detailResult.expediente._id}:${sequence}`;
+    if (ensuringConsignment.current === key) return;
+    ensuringConsignment.current = key;
+    void ensureConsignment({ expedienteId, sequence }).catch((cause) => {
+      setNotice({ tone: "bad", text: cause instanceof Error ? cause.message : "No fue posible preparar el consecutivo de la remesa. Vuelve a abrir esta etapa para reintentar." });
+    });
+  }, [detailResult, ensureConsignment, expedienteId, selectedStage, user?.role]);
 
   if (detailResult === undefined || stageResult === undefined) {
     return <div className="full-page-state">Preparando el despacho…</div>;
@@ -162,32 +182,41 @@ export default function DespachoDetailPage() {
         expedienteId,
         upserts: editableRows.map((remesa, index) => {
           const key = remesa?._id ?? "new";
+          const candidate = {
+            ...remesa?.draft,
+            expeditionDate: required(data, `${key}_expeditionDate`),
+            consignmentClass: (value(data, `${key}_class`) ?? "terrestre_carga") as "municipal" | "terrestre_carga",
+            operationType: "general" as const,
+            consolidatedType: value(data, `${key}_consolidatedType`),
+            gpsOperator: value(data, `${key}_gpsOperator`),
+            agencyCode: required(data, `${key}_agencyCode`),
+            sender: partyFromForm(data, `${key}_sender`, `${key}_loadingAddress`, `${key}_loadingCity`, `${key}_loadingMunicipality`),
+            recipient: partyFromForm(data, `${key}_recipient`, `${key}_unloadingAddress`, `${key}_unloadingCity`, `${key}_unloadingMunicipality`),
+            loading: siteFromForm(data, `${key}_loading`),
+            unloading: siteFromForm(data, `${key}_unloading`),
+            cashConsignment: data.get(`${key}_cashConsignment`) === "on",
+            cashOnDelivery: data.get(`${key}_cashOnDelivery`) === "on",
+            declaredValue: required(data, `${key}_declaredValue`),
+            consignmentValue: required(data, `${key}_consignmentValue`),
+            insurancePercent: value(data, `${key}_insurancePercent`),
+            policyHolder: "transport_company" as const,
+            policyNumber: required(data, `${key}_policyNumber`),
+            policyExpiresOn: required(data, `${key}_policyExpiresOn`),
+            insurerNit: required(data, `${key}_insurerNit`),
+            remissions: remissionRows(data, key),
+            unitOfMeasure: required(data, `${key}_unitOfMeasure`),
+            merchandiseCode: required(data, `${key}_merchandiseCode`),
+            packagingCode: required(data, `${key}_packagingCode`),
+            natureOfCargo: required(data, `${key}_natureOfCargo`),
+            packagingGroup: value(data, `${key}_packagingGroup`),
+            serviceOrderTransporter: value(data, `${key}_serviceOrderTransporter`),
+            transporterObservations: value(data, `${key}_transporterObservations`),
+            generalObservations: value(data, `${key}_observations`)
+          };
           return {
             remesaId: remesa?._id,
             sequence: remesa?.sequence ?? index + 1,
-            draft: {
-              ...remesa?.draft,
-              expeditionDate: value(data, `${key}_expeditionDate`),
-              consignmentClass: (value(data, `${key}_class`) ?? "terrestre_carga") as "municipal" | "terrestre_carga",
-              agencyCode: value(data, `${key}_agencyCode`),
-              sender: partyOverride(data, `${key}_sender`, `${key}_loadingAddress`),
-              recipient: partyOverride(data, `${key}_recipient`, `${key}_unloadingAddress`),
-              loading: siteOverride(data, `${key}_loading`),
-              unloading: siteOverride(data, `${key}_unloading`),
-              declaredValue: required(data, `${key}_declaredValue`),
-              consignmentValue: value(data, `${key}_consignmentValue`),
-              insurancePercent: value(data, `${key}_insurancePercent`),
-              policyNumber: required(data, `${key}_policyNumber`),
-              policyExpiresOn: required(data, `${key}_policyExpiresOn`),
-              insurerNit: required(data, `${key}_insurerNit`),
-              remissions: remissionRows(data, key),
-              unitOfMeasure: value(data, `${key}_unitOfMeasure`),
-              merchandiseCode: value(data, `${key}_merchandiseCode`),
-              packagingCode: value(data, `${key}_packagingCode`),
-              natureOfCargo: value(data, `${key}_natureOfCargo`),
-              transporterObservations: value(data, `${key}_transporterObservations`),
-              generalObservations: value(data, `${key}_observations`)
-            }
+            draft: compactConsignmentOverrides(candidate, detail.expediente.loadingOrderDraft)
           };
         })
       });
@@ -425,7 +454,7 @@ function renderStage(input: {
 }) {
   const detail = input.detail;
   if (input.selectedStage === "orden_cargue") return <LoadingOrderForm draft={detail.expediente.loadingOrderDraft ?? {}} onSubmit={input.saveOrder} readOnly={input.orderReadOnly} />;
-  if (input.selectedStage === "remesas") return <ConsignmentsForm onSubmit={input.saveRemesas} order={detail.expediente.loadingOrderDraft ?? {}} readOnly={!input.isEditable} remesas={detail.remesas} />;
+  if (input.selectedStage === "remesas") return <ConsignmentsForm context={{ customerName: detail.customer.name, loadingOrderNumber: detail.expediente.cargoNumber ?? detail.expediente.loadingOrderDraft?.orderNumber, manifestNumber: detail.expediente.manifestNumber ?? detail.expediente.manifestDraft?.manifestNumber, serviceOrderCode: detail.serviceOrder.code }} onSubmit={input.saveRemesas} order={detail.expediente.loadingOrderDraft ?? {}} readOnly={!input.isEditable} remesas={detail.remesas} />;
   if (input.selectedStage === "vehiculo_conductor") return <AssignmentForm currentDriverDocument={detail.driver?.document} currentVehiclePlate={detail.vehicle?.plate} onSubmit={input.saveFleet} readOnly={!input.isEditable} />;
   if (input.selectedStage === "manifiesto") return <ManifestForm context={{ agencyCode: detail.expediente.agencyCode, originCity: detail.remesas[0]?.draft?.loading?.cityName ?? detail.loadingLocation.city, destinationCity: detail.remesas[0]?.draft?.unloading?.cityName ?? detail.unloadingLocation.city, vehicle: detail.vehicle, trailer: detail.trailer, driver: detail.driver, secondDriver: detail.secondDriver }} draft={detail.expediente.manifestDraft ?? {}} onSubmit={input.saveManifestStage} readOnly={input.manifestReadOnly} />;
   if (input.selectedStage === "envio_rndc") return <ReviewStage mode="PRUEBA" summary={[
@@ -720,27 +749,34 @@ function definedEntries<T extends Record<string, unknown>>(source: T): Partial<T
   return Object.fromEntries(Object.entries(source).filter(([, entry]) => entry !== undefined)) as Partial<T>;
 }
 
-function partyOverride(data: FormData, prefix: string, addressKey: string) {
-  const override = definedEntries({
+function partyFromForm(data: FormData, prefix: string, addressKey: string, cityKey: string, municipalityKey: string) {
+  const party = definedEntries({
     name: value(data, `${prefix}Name`),
+    identificationType: value(data, `${prefix}IdType`),
     identificationNumber: value(data, `${prefix}Id`),
+    siteCode: value(data, `${prefix}SiteCode`),
     address: value(data, addressKey),
+    cityName: value(data, cityKey),
+    municipalityCode: value(data, municipalityKey),
     phone: value(data, `${prefix}Phone`),
     cellphone: value(data, `${prefix}Cellphone`)
   });
-  return Object.keys(override).length > 0 ? override : undefined;
+  return Object.keys(party).length > 0 ? party : undefined;
 }
 
-function siteOverride(data: FormData, prefix: string) {
+function siteFromForm(data: FormData, prefix: string) {
   const appointment = value(data, `${prefix}Appointment`);
-  const override = definedEntries({
+  const site = definedEntries({
+    siteName: value(data, `${prefix}SiteName`),
     address: value(data, `${prefix}Address`),
+    cityName: value(data, `${prefix}City`),
+    municipalityCode: value(data, `${prefix}Municipality`),
     latitude: value(data, `${prefix}Latitude`),
     longitude: value(data, `${prefix}Longitude`),
     agreedHours: value(data, `${prefix}Hours`),
     appointmentAt: appointment ? timestamp(data, `${prefix}Appointment`) : undefined
   });
-  return Object.keys(override).length > 0 ? override : undefined;
+  return Object.keys(site).length > 0 ? site : undefined;
 }
 
 function remissionRows(data: FormData, key: string) {

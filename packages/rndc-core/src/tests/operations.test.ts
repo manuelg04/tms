@@ -39,6 +39,20 @@ test("builds a remesa without inventing loading-order ancestry", () => {
   assert.equal(variables.CONSECUTIVOREMESA, scenario.remesaNumber);
 });
 
+test("uses the consignment agreed loading and unloading durations", () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  scenario.loadingAgreedHours = 3;
+  scenario.loadingAgreedMinutes = 30;
+  scenario.unloadingAgreedHours = 4;
+  scenario.unloadingAgreedMinutes = 45;
+  const variables = buildRemesaMessages(scenario)[0].request.variables as RndcXmlRecord;
+
+  assert.equal(variables.HORASPACTOCARGA, 3);
+  assert.equal(variables.MINUTOSPACTOCARGA, 30);
+  assert.equal(variables.HORASPACTODESCARGUE, 4);
+  assert.equal(variables.MINUTOSPACTODESCARGUE, 45);
+});
+
 test("builds a Viaje Vacío manifest without remesas trip or tracking fields", () => {
   const scenario = buildMtmReferenceScenario(loadConfig());
   scenario.workflowVariant = "empty_manifest";

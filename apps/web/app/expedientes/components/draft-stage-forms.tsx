@@ -8,6 +8,7 @@ import { DateField } from "../../components/fields/date-field";
 import { CargoNatureField, IdTypeField, InsurerField, MunicipalityField, PackagingField, PartyField, SiteField, formatDocument, type PartyPick } from "../../components/fields/lookup-fields";
 import { MoneyField, formatThousands } from "../../components/fields/money-field";
 import { VehicleAssignmentPicker, type VehicleAssignmentValue } from "./vehicle-assignment-picker";
+import { effectiveConsignment } from "../../../convex/model/dispatchWorkflow";
 
 type LoadingOrder = {
   expeditionDate?: string;
@@ -48,14 +49,20 @@ type Remesa = {
   draft?: {
     expeditionDate?: string;
     consignmentClass?: "municipal" | "terrestre_carga";
+    operationType?: "general";
+    consolidatedType?: string;
+    gpsOperator?: string;
     agencyCode?: string;
     sender?: RemesaParty;
     recipient?: RemesaParty;
     loading?: RemesaSite;
     unloading?: RemesaSite;
+    cashConsignment?: boolean;
+    cashOnDelivery?: boolean;
     declaredValue?: string;
     consignmentValue?: string;
     insurancePercent?: string;
+    policyHolder?: "transport_company";
     policyNumber?: string;
     policyExpiresOn?: string;
     insurerNit?: string;
@@ -64,9 +71,18 @@ type Remesa = {
     packagingCode?: string;
     natureOfCargo?: string;
     merchandiseCode?: string;
+    packagingGroup?: string;
+    serviceOrderTransporter?: string;
     transporterObservations?: string;
     generalObservations?: string;
   };
+};
+
+type RemesaContext = {
+  customerName: string;
+  loadingOrderNumber?: string;
+  manifestNumber?: string;
+  serviceOrderCode: string;
 };
 
 type Manifest = {
@@ -239,14 +255,38 @@ function inherited(value: string | undefined): string {
   return value ?? "—";
 }
 
-function RemesaCard({ order, readOnly, remesa }: { order: LoadingOrder; readOnly: boolean; remesa: Remesa }) {
+type RemesaPartyEditorState = RemesaParty & { selected: PartyPick | null };
+
+function remesaPartyState(source: RemesaParty | undefined): RemesaPartyEditorState {
+  return { ...source, selected: null, identificationType: source?.identificationType ?? "N" };
+}
+
+function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaContext; order: LoadingOrder; readOnly: boolean; remesa: Remesa }) {
   const key = remesa._id;
   const draft = remesa.draft ?? {};
+  const effective = effectiveConsignment(draft, order);
+  const [consignmentClass, setConsignmentClass] = useState(effective.consignmentClass ?? "terrestre_carga");
+  const [sender, setSender] = useState<RemesaPartyEditorState>(() => remesaPartyState(effective.sender));
+  const [recipient, setRecipient] = useState<RemesaPartyEditorState>(() => remesaPartyState(effective.recipient));
+  const [loading, setLoading] = useState(() => ({
+    ...effective.loading,
+    address: effective.loading?.address ?? effective.sender?.address ?? "",
+    cityName: effective.loading?.cityName ?? effective.sender?.cityName ?? "",
+    municipalityCode: effective.loading?.municipalityCode ?? effective.sender?.municipalityCode ?? ""
+  }));
+  const [unloading, setUnloading] = useState(() => ({
+    ...effective.unloading,
+    address: effective.unloading?.address ?? effective.recipient?.address ?? "",
+    cityName: effective.unloading?.cityName ?? effective.recipient?.cityName ?? "",
+    municipalityCode: effective.unloading?.municipalityCode ?? effective.recipient?.municipalityCode ?? ""
+  }));
   const [insurer, setInsurer] = useState({ nit: draft.insurerNit ?? "", name: "" });
-  const [packaging, setPackaging] = useState({ code: draft.packagingCode ?? "", description: "" });
-  const [remissions, setRemissions] = useState<Array<Remission & { rowId: number }>>(() => (draft.remissions?.length ? draft.remissions : [{}]).map((line, index) => ({ ...line, rowId: index })));
+  const [packaging, setPackaging] = useState({ code: effective.packagingCode ?? "", description: "" });
+  const [remissions, setRemissions] = useState<Array<Remission & { rowId: number }>>(() => (effective.remissions?.length ? effective.remissions : [{}]).map((line, index) => ({ ...line, rowId: index })));
   const resolved = useQuery(api.lookups.insurersSearch, insurer.nit && !insurer.name ? { term: insurer.nit } : "skip");
+  const packagingDetail = useQuery(api.rndcReferenceCatalogs.packagingByCode, packaging.code ? { code: packaging.code } : "skip");
   const insurerName = insurer.name || resolved?.find((row) => row.insurerNit === insurer.nit)?.name;
+  const packagingGroup = draft.packagingGroup ?? [packagingDetail?.packageTypeCode, packagingDetail?.packageTypeName].filter(Boolean).join(" · ");
   const today = new Date().toISOString().slice(0, 10);
   const locked = readOnly || remesa.officialState !== "draft";
 
@@ -255,57 +295,85 @@ function RemesaCard({ order, readOnly, remesa }: { order: LoadingOrder; readOnly
       <legend>Remesa {remesa.number ?? remesa.sequence}</legend>
       <input name="remesaId" type="hidden" value={remesa._id} />
 
+      <div className="field-group-note"><strong>Tipo de remesa</strong></div>
+      <div className="remesa-choice-group span-2">
+        <label><input aria-label="Remesa municipal" checked={consignmentClass === "municipal"} name={`${key}_class`} onChange={() => setConsignmentClass("municipal")} type="radio" value="municipal" /><span>Remesa municipal</span></label>
+        <label><input aria-label="Remesa terrestre de carga" checked={consignmentClass === "terrestre_carga"} name={`${key}_class`} onChange={() => setConsignmentClass("terrestre_carga")} type="radio" value="terrestre_carga" /><span>Remesa terrestre de carga</span></label>
+      </div>
+
+      <div className="field-group-note"><strong>Información del cliente</strong></div>
+      <label className="form-field checkbox-field"><span>De orden de cargue</span><span className="checkbox-control"><input aria-label="De orden de cargue" checked disabled readOnly type="checkbox" /><em>Sí</em></span></label>
+      <Field className="span-2" label="Cliente" name={`${key}_customerPreview`} readOnly value={context.customerName} />
+      <Field label="Nro. de orden de cargue" name={`${key}_orderPreview`} readOnly value={context.loadingOrderNumber} />
+
       <div className="field-group-note"><strong>Datos básicos</strong></div>
-      <label className="form-field"><span>Tipo de remesa</span><select defaultValue={draft.consignmentClass ?? "terrestre_carga"} name={`${key}_class`}><option value="terrestre_carga">Terrestre de carga</option><option value="municipal">Municipal</option></select></label>
-      <DateField label="Fecha" name={`${key}_expeditionDate`} value={draft.expeditionDate ?? order.expeditionDate ?? today} />
+      <DateField label="Fecha" name={`${key}_expeditionDate`} required value={effective.expeditionDate ?? today} />
+      <Field label="Agencia" name={`${key}_agencyCode`} required value={effective.agencyCode ?? "Principal"} />
+      <MunicipalityField code={loading.municipalityCode || undefined} label="Origen" name={`${key}_loadingMunicipality`} onClear={() => setLoading({ ...loading, municipalityCode: "", cityName: "" })} onSelect={(division) => setLoading({ ...loading, municipalityCode: division.code, cityName: division.isMunicipality ? division.name : division.municipalityName })} required />
+      <MunicipalityField code={unloading.municipalityCode || undefined} label="Destino" name={`${key}_unloadingMunicipality`} onClear={() => setUnloading({ ...unloading, municipalityCode: "", cityName: "" })} onSelect={(division) => setUnloading({ ...unloading, municipalityCode: division.code, cityName: division.isMunicipality ? division.name : division.municipalityName })} required />
       <Field label="Nro. de remesa" name={`${key}_numberPreview`} placeholder="Automático" readOnly value={remesa.number} />
-      <Field label="Agencia" name={`${key}_agencyCode`} placeholder={inherited(order.agencyCode)} value={draft.agencyCode} />
+      <Field label="Tipo de remesa" name={`${key}_operationTypePreview`} readOnly value="General" />
+      <Field label="Tipo consolidado" name={`${key}_consolidatedType`} value={draft.consolidatedType} />
+      <Field label="Operador GPS RNDC" name={`${key}_gpsOperator`} value={draft.gpsOperator} />
+      <input name={`${key}_operationType`} type="hidden" value="general" />
+      <input name={`${key}_loadingCity`} type="hidden" value={loading.cityName ?? ""} />
+      <input name={`${key}_unloadingCity`} type="hidden" value={unloading.cityName ?? ""} />
 
       <div className="field-group-note"><strong>Sitio de cargue</strong></div>
-      <Field className="span-2" label="Remitente" name={`${key}_senderName`} placeholder={inherited(order.sender?.name)} value={draft.sender?.name} />
-      <Field label="Identificación remitente" name={`${key}_senderId`} placeholder={inherited(order.sender?.identificationNumber)} value={draft.sender?.identificationNumber} />
-      <Field label="Dirección de cargue" name={`${key}_loadingAddress`} placeholder={inherited(order.loading?.address)} value={draft.loading?.address ?? draft.sender?.address} />
-      <Field label="Teléfono remitente" name={`${key}_senderPhone`} placeholder={inherited(order.sender?.phone)} type="tel" value={draft.sender?.phone} />
-      <Field label="Celular remitente" name={`${key}_senderCellphone`} placeholder={inherited(order.sender?.cellphone)} type="tel" value={draft.sender?.cellphone} />
-      <Field label="Latitud (georreferencia)" name={`${key}_loadingLatitude`} placeholder="Opcional" value={draft.loading?.latitude} />
-      <Field label="Longitud (georreferencia)" name={`${key}_loadingLongitude`} placeholder="Opcional" value={draft.loading?.longitude} />
-      <Field label="Horas pactadas de cargue" min="0" name={`${key}_loadingHours`} placeholder="Opcional" step="0.5" type="number" value={draft.loading?.agreedHours} />
-      <DateField label="Cita de cargue" name={`${key}_loadingAppointment`} value={dateTimeValue(draft.loading?.appointmentAt)} withTime />
-      <span className="field-hint span-2">Vacía: usa la cita de la orden · {formatAppointment(order.loading?.appointmentAt)}</span>
+      <PartyField className="span-2" label="Remitente" onClear={() => setSender(remesaPartyState(undefined))} onSelect={(party) => { setSender({ ...sender, selected: party, name: party.name, identificationType: party.documentType, identificationNumber: party.document, address: party.address ?? sender.address, cityName: party.city ?? sender.cityName, municipalityCode: party.cityCode ?? sender.municipalityCode, phone: party.phone ?? sender.phone }); setLoading({ ...loading, address: party.address ?? loading.address, cityName: party.city ?? loading.cityName, municipalityCode: party.cityCode ?? loading.municipalityCode }); }} onType={(name) => setSender({ ...sender, selected: null, name })} required role="sender" selected={sender.selected ?? (sender.name ? { name: sender.name, document: sender.identificationNumber, documentType: sender.identificationType } : null)} typedName={sender.selected ? undefined : sender.name} />
+      <input name={`${key}_senderName`} type="hidden" value={sender.name ?? ""} />
+      <IdTypeField label="Tipo de identificación remitente" name={`${key}_senderIdType`} onChange={(identificationType) => setSender({ ...sender, identificationType })} required value={sender.identificationType ?? "N"} />
+      <Field label="Número de identificación remitente" name={`${key}_senderId`} onChange={(event) => setSender({ ...sender, identificationNumber: event.target.value })} required value={sender.identificationNumber} />
+      <Field className="span-2" label="Dirección remitente" name={`${key}_loadingAddress`} onChange={(event) => setLoading({ ...loading, address: event.target.value })} required value={loading.address} />
+      <Field label="Teléfono remitente" name={`${key}_senderPhone`} onChange={(event) => setSender({ ...sender, phone: event.target.value })} required type="tel" value={sender.phone} />
+      <Field label="Celular remitente" name={`${key}_senderCellphone`} onChange={(event) => setSender({ ...sender, cellphone: event.target.value })} type="tel" value={sender.cellphone} />
+      <Field label="Latitud cargue" name={`${key}_loadingLatitude`} placeholder="Opcional" value={loading.latitude} />
+      <Field label="Longitud cargue" name={`${key}_loadingLongitude`} placeholder="Opcional" value={loading.longitude} />
+      <DateField label="Cita de cargue" name={`${key}_loadingAppointment`} required value={dateTimeValue(loading.appointmentAt)} withTime />
+      <Field label="Horas pactadas cargue" min="0" name={`${key}_loadingHours`} required step="0.5" type="number" value={loading.agreedHours ?? "1"} />
+      <input name={`${key}_senderSiteCode`} type="hidden" value={sender.siteCode ?? ""} />
+      <input name={`${key}_loadingSiteName`} type="hidden" value={loading.siteName ?? ""} />
 
       <div className="field-group-note"><strong>Sitio de descargue</strong></div>
-      <Field className="span-2" label="Destinatario" name={`${key}_recipientName`} placeholder={inherited(order.recipient?.name)} value={draft.recipient?.name} />
-      <Field label="Identificación destinatario" name={`${key}_recipientId`} placeholder={inherited(order.recipient?.identificationNumber)} value={draft.recipient?.identificationNumber} />
-      <Field label="Dirección de descargue" name={`${key}_unloadingAddress`} placeholder={inherited(order.unloading?.address)} value={draft.unloading?.address ?? draft.recipient?.address} />
-      <Field label="Teléfono destinatario" name={`${key}_recipientPhone`} placeholder={inherited(order.recipient?.phone)} type="tel" value={draft.recipient?.phone} />
-      <Field label="Celular destinatario" name={`${key}_recipientCellphone`} placeholder={inherited(order.recipient?.cellphone)} type="tel" value={draft.recipient?.cellphone} />
-      <Field label="Latitud (georreferencia)" name={`${key}_unloadingLatitude`} placeholder="Opcional" value={draft.unloading?.latitude} />
-      <Field label="Longitud (georreferencia)" name={`${key}_unloadingLongitude`} placeholder="Opcional" value={draft.unloading?.longitude} />
-      <Field label="Horas pactadas de descargue" min="0" name={`${key}_unloadingHours`} placeholder="Opcional" step="0.5" type="number" value={draft.unloading?.agreedHours} />
-      <DateField label="Cita de descargue" name={`${key}_unloadingAppointment`} value={dateTimeValue(draft.unloading?.appointmentAt)} withTime />
-      <span className="field-hint span-2">Vacía: usa la cita de la orden · {formatAppointment(order.unloading?.appointmentAt)}</span>
+      <PartyField className="span-2" label="Destinatario" onClear={() => setRecipient(remesaPartyState(undefined))} onSelect={(party) => { setRecipient({ ...recipient, selected: party, name: party.name, identificationType: party.documentType, identificationNumber: party.document, address: party.address ?? recipient.address, cityName: party.city ?? recipient.cityName, municipalityCode: party.cityCode ?? recipient.municipalityCode, phone: party.phone ?? recipient.phone }); setUnloading({ ...unloading, address: party.address ?? unloading.address, cityName: party.city ?? unloading.cityName, municipalityCode: party.cityCode ?? unloading.municipalityCode }); }} onType={(name) => setRecipient({ ...recipient, selected: null, name })} required role="recipient" selected={recipient.selected ?? (recipient.name ? { name: recipient.name, document: recipient.identificationNumber, documentType: recipient.identificationType } : null)} typedName={recipient.selected ? undefined : recipient.name} />
+      <input name={`${key}_recipientName`} type="hidden" value={recipient.name ?? ""} />
+      <IdTypeField label="Tipo de identificación destinatario" name={`${key}_recipientIdType`} onChange={(identificationType) => setRecipient({ ...recipient, identificationType })} required value={recipient.identificationType ?? "N"} />
+      <Field label="Número de identificación destinatario" name={`${key}_recipientId`} onChange={(event) => setRecipient({ ...recipient, identificationNumber: event.target.value })} required value={recipient.identificationNumber} />
+      <Field className="span-2" label="Dirección destinatario" name={`${key}_unloadingAddress`} onChange={(event) => setUnloading({ ...unloading, address: event.target.value })} required value={unloading.address} />
+      <Field label="Teléfono destinatario" name={`${key}_recipientPhone`} onChange={(event) => setRecipient({ ...recipient, phone: event.target.value })} required type="tel" value={recipient.phone} />
+      <Field label="Celular destinatario" name={`${key}_recipientCellphone`} onChange={(event) => setRecipient({ ...recipient, cellphone: event.target.value })} type="tel" value={recipient.cellphone} />
+      <Field label="Latitud descargue" name={`${key}_unloadingLatitude`} placeholder="Opcional" value={unloading.latitude} />
+      <Field label="Longitud descargue" name={`${key}_unloadingLongitude`} placeholder="Opcional" value={unloading.longitude} />
+      <DateField label="Cita de descargue" name={`${key}_unloadingAppointment`} required value={dateTimeValue(unloading.appointmentAt)} withTime />
+      <Field label="Horas pactadas descargue" min="0" name={`${key}_unloadingHours`} required step="0.5" type="number" value={unloading.agreedHours ?? "2"} />
+      <input name={`${key}_recipientSiteCode`} type="hidden" value={recipient.siteCode ?? ""} />
+      <input name={`${key}_unloadingSiteName`} type="hidden" value={unloading.siteName ?? ""} />
 
       <div className="field-group-note"><strong>Datos del despacho</strong></div>
-      <MoneyField label="Valor declarado" name={`${key}_declaredValue`} required value={draft.declaredValue} />
-      <MoneyField label="Valor remesa" name={`${key}_consignmentValue`} value={draft.consignmentValue} />
+      <label className="form-field checkbox-field"><span>Remesa contado</span><span className="checkbox-control"><input aria-label="Remesa contado" defaultChecked={draft.cashConsignment} name={`${key}_cashConsignment`} type="checkbox" /><em>Sí / No</em></span></label>
+      <label className="form-field checkbox-field"><span>Remesa contraentrega</span><span className="checkbox-control"><input aria-label="Remesa contraentrega" defaultChecked={draft.cashOnDelivery} name={`${key}_cashOnDelivery`} type="checkbox" /><em>Sí / No</em></span></label>
+      <MoneyField label="Valor declarado mercancía" name={`${key}_declaredValue`} required value={draft.declaredValue} />
+      <MoneyField label="Valor remesa" name={`${key}_consignmentValue`} required value={draft.consignmentValue} />
+      <Field label="Nro. manifiesto" name={`${key}_manifestPreview`} placeholder="Pendiente" readOnly value={context.manifestNumber} />
       <Field label="% seguro" max="100" min="0" name={`${key}_insurancePercent`} step="0.01" type="number" value={draft.insurancePercent} />
 
       <div className="field-group-note"><strong>Datos de la póliza</strong></div>
-      <InsurerField className="span-2" insurerName={insurerName} label="Aseguradora" name={`${key}_insurerNit`} nit={insurer.nit || undefined} onClear={() => setInsurer({ nit: "", name: "" })} onSelect={(option) => setInsurer({ nit: option.insurerNit, name: option.name })} required />
       <Field label="Tomador del seguro" name={`${key}_policyHolderPreview`} readOnly value="Empresa de transporte" />
-      <Field label="Número de póliza" name={`${key}_policyNumber`} required value={draft.policyNumber} />
-      <DateField label="Vencimiento de póliza" name={`${key}_policyExpiresOn`} required value={draft.policyExpiresOn} />
+      <InsurerField className="span-2" insurerName={insurerName} label="Aseguradora" name={`${key}_insurerNit`} nit={insurer.nit || undefined} onClear={() => setInsurer({ nit: "", name: "" })} onSelect={(option) => setInsurer({ nit: option.insurerNit, name: option.name })} required />
+      <Field label="Nro. póliza" name={`${key}_policyNumber`} required value={draft.policyNumber} />
+      <DateField label="Vigencia final" name={`${key}_policyExpiresOn`} required value={draft.policyExpiresOn} />
+      <input name={`${key}_policyHolder`} type="hidden" value="transport_company" />
 
       <div className="field-group-note"><strong>Remisiones</strong></div>
       <div className="remission-table">
         <div className="remission-row remission-head" aria-hidden="true"><span>Remisión Nro.</span><span>Cantidad</span><span>Clase de bultos</span><span>Descripción</span><span>Peso (TN)</span><span>Volumen m³</span><span /></div>
         {remissions.map((line, index) => (
           <div className="remission-row" key={line.rowId}>
-            <input aria-label={`Remisión ${index + 1} número`} defaultValue={line.remissionNumber} name={`${key}_rem${index}_number`} placeholder="Opcional" />
-            <input aria-label={`Remisión ${index + 1} cantidad`} defaultValue={line.quantity} name={`${key}_rem${index}_quantity`} placeholder={inherited(order.cargoQuantity)} />
-            <input aria-label={`Remisión ${index + 1} clase de bultos`} defaultValue={line.packagingClass} name={`${key}_rem${index}_packagingClass`} placeholder={inherited(order.packagingCode)} />
-            <input aria-label={`Remisión ${index + 1} descripción`} defaultValue={line.description} name={`${key}_rem${index}_description`} placeholder={inherited(order.cargoDescription)} />
-            <input aria-label={`Remisión ${index + 1} peso`} defaultValue={line.weightTons} min="0" name={`${key}_rem${index}_weightTons`} placeholder={inherited(order.weightTons)} step="0.001" type="number" />
+            <input aria-label={`Remisión ${index + 1} número`} defaultValue={line.remissionNumber} name={`${key}_rem${index}_number`} required />
+            <input aria-label={`Remisión ${index + 1} cantidad`} defaultValue={line.quantity} name={`${key}_rem${index}_quantity`} placeholder={inherited(order.cargoQuantity)} required />
+            <input aria-label={`Remisión ${index + 1} clase de bultos`} defaultValue={line.packagingClass} name={`${key}_rem${index}_packagingClass`} placeholder={inherited(order.packagingCode)} required />
+            <input aria-label={`Remisión ${index + 1} descripción`} defaultValue={line.description} name={`${key}_rem${index}_description`} placeholder={inherited(order.cargoDescription)} required />
+            <input aria-label={`Remisión ${index + 1} peso`} defaultValue={line.weightTons} min="0" name={`${key}_rem${index}_weightTons`} placeholder={inherited(order.weightTons)} required step="0.001" type="number" />
             <input aria-label={`Remisión ${index + 1} volumen`} defaultValue={line.volumeM3} min="0" name={`${key}_rem${index}_volumeM3`} placeholder={inherited(order.volumeM3)} step="0.01" type="number" />
             <button aria-label={`Quitar remisión ${index + 1}`} className="ghost-button" disabled={remissions.length === 1} onClick={() => setRemissions(remissions.filter((row) => row.rowId !== line.rowId))} type="button">×</button>
           </div>
@@ -315,11 +383,12 @@ function RemesaCard({ order, readOnly, remesa }: { order: LoadingOrder; readOnly
       </div>
 
       <div className="field-group-note"><strong>Resumen que pasa al manifiesto</strong></div>
-      <Field label="Unidad de medida" name={`${key}_unitOfMeasure`} placeholder={inherited(order.cargoUnit)} value={draft.unitOfMeasure} />
-      <Field label="Código de mercancía" name={`${key}_merchandiseCode`} placeholder={inherited(order.merchandiseCode)} value={draft.merchandiseCode} />
+      <Field label="Unidad de medida" name={`${key}_unitOfMeasure`} required value={effective.unitOfMeasure} />
+      <Field label="Mercancía" name={`${key}_merchandiseCode`} required value={effective.merchandiseCode} />
       <PackagingField code={packaging.code || undefined} description={packaging.description || undefined} label="Código de empaque" name={`${key}_packagingCode`} onClear={() => setPackaging({ code: "", description: "" })} onSelect={(option) => setPackaging({ code: option.code, description: option.description })} />
-      <CargoNatureField name={`${key}_natureOfCargo`} value={draft.natureOfCargo ?? order.natureOfCargo} />
-      <Field className="span-2" label="Orden de servicio transportador" name={`${key}_serviceOrderPreview`} placeholder="—" readOnly value={order.customerReference} />
+      <CargoNatureField name={`${key}_natureOfCargo`} required value={effective.natureOfCargo} />
+      <Field label="Grupo embalaje envase" name={`${key}_packagingGroup`} placeholder="Sin relación en catálogo" readOnly value={packagingGroup} />
+      <Field className="span-2" label="Orden de servicio transportador" name={`${key}_serviceOrderTransporter`} value={draft.serviceOrderTransporter ?? context.serviceOrderCode} />
       <label className="form-field"><span>Observaciones del transportador</span><textarea defaultValue={draft.transporterObservations} name={`${key}_transporterObservations`} rows={3} /></label>
       <label className="form-field span-2"><span>Observaciones generales</span><textarea defaultValue={draft.generalObservations} name={`${key}_observations`} rows={3} /></label>
       {remesa.officialState !== "draft" ? <span className="official-lock">Documento oficial · Sólo lectura</span> : null}
@@ -327,19 +396,14 @@ function RemesaCard({ order, readOnly, remesa }: { order: LoadingOrder; readOnly
   );
 }
 
-function formatAppointment(value: number | undefined): string {
-  if (!value) return "sin cita";
-  return new Date(value).toLocaleString("es-CO", { dateStyle: "medium", timeStyle: "short" });
-}
-
-export function ConsignmentsForm({ onSubmit, order, readOnly, remesas }: { onSubmit: (data: FormData) => void; order: LoadingOrder; readOnly: boolean; remesas: Remesa[] }) {
+export function ConsignmentsForm({ context, onSubmit, order, readOnly, remesas }: { context: RemesaContext; onSubmit: (data: FormData) => void; order: LoadingOrder; readOnly: boolean; remesas: Remesa[] }) {
   const rows = remesas.length > 0 ? remesas : [{ _id: "new", sequence: 1, officialState: "draft" }];
   return (
     <form className="form-compact" id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
-      <StageHeading number="02" title="Remesas" text="La orden ya aporta remitente, ruta, citas y carga. Completa únicamente las diferencias." readOnly={readOnly} />
-      <div className="inheritance-note"><span>✓</span><div><strong>Hereda de la orden de cargue</strong><p>Deja vacío lo que no cambie; el gris muestra lo que se tomará.</p></div></div>
+      <StageHeading number="02" title="Remesas" text="Revisa los datos heredados de la orden y completa la información propia de la remesa." readOnly={readOnly} />
+      <div className="inheritance-note"><span>✓</span><div><strong>Datos precargados desde la orden</strong><p>Puedes corregirlos antes de emitir; el sistema conserva únicamente las diferencias.</p></div></div>
       <div className="stage-remesa-list">
-        {rows.map((remesa) => <RemesaCard key={remesa._id} order={order} readOnly={readOnly} remesa={remesa} />)}
+        {rows.map((remesa) => <RemesaCard context={context} key={remesa._id} order={order} readOnly={readOnly} remesa={remesa} />)}
       </div>
     </form>
   );
@@ -437,7 +501,7 @@ function Field({ className = "", label, name, value, onChange, required, ...prop
   return (
     <label className={`form-field ${className}`}>
       <span>{label}{required ? <em aria-hidden="true"> *</em> : null}</span>
-      {onChange ? <input name={name} onChange={onChange} required={required} value={value ?? ""} {...props} /> : <input defaultValue={value} name={name} required={required} {...props} />}
+      {onChange || props.readOnly ? <input name={name} onChange={onChange} required={required} value={value ?? ""} {...props} /> : <input defaultValue={value} name={name} required={required} {...props} />}
     </label>
   );
 }

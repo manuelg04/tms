@@ -3,7 +3,7 @@ import { mutation, query } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
-import { claimNextConsecutive } from "./model/consecutiveRange";
+import { claimNextConsecutive, resolveConsignmentNumberClaim } from "./model/consecutiveRange";
 import { buildDispatchSnapshot, snapshotDataMatches, snapshotDataOf, type SnapshotKind } from "./model/dispatchSnapshot";
 import {
   assertStageEditable,
@@ -306,6 +306,90 @@ export const saveLoadingOrderDraft = mutation({
     });
     await refreshDispatchSearchText(ctx, expediente._id);
     return null;
+  }
+});
+
+export const ensureConsignmentDraft = mutation({
+  args: {
+    actorToken: v.optional(v.string()),
+    expedienteId: v.id("expedientes"),
+    sequence: v.number()
+  },
+  returns: v.object({ remesaId: v.id("expedienteRemesas"), number: v.string() }),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+    const expediente = await requireEditableExpediente(ctx, actor, args.expedienteId);
+    const existing = await ctx.db
+      .query("expedienteRemesas")
+      .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id).eq("sequence", args.sequence))
+      .unique();
+    const resolution = resolveConsignmentNumberClaim(
+      existing ? { expedienteId: existing.expedienteId, sequence: existing.sequence, number: existing.number } : null,
+      { expedienteId: expediente._id, sequence: args.sequence }
+    );
+
+    if (resolution.kind === "reuse" && existing) {
+      return { remesaId: existing._id, number: resolution.number };
+    }
+    if (existing) {
+      guardEdit(() => assertStageEditable("remesa", { officialState: existing.officialState }));
+    }
+    if (expediente.workflowVariant === "empty_manifest") {
+      throw new ConvexError({ code: "INVALID_STATE", message: "El manifiesto vacío no usa remesas" });
+    }
+
+    const now = Date.now();
+    const number = await claimConsecutive(ctx, expediente.organizationId, expediente.agencyCode ?? "", "remesa", now);
+    const numberOwner = await ctx.db
+      .query("expedienteRemesas")
+      .withIndex("by_organization_and_number", (q) => q.eq("organizationId", expediente.organizationId).eq("number", number))
+      .unique();
+    if (numberOwner && numberOwner._id !== existing?._id) {
+      throw new ConvexError({ code: "CONFLICT", message: `El consecutivo de remesa ${number} ya está en uso` });
+    }
+
+    let remesaId: Id<"expedienteRemesas">;
+    if (existing) {
+      await ctx.db.patch("expedienteRemesas", existing._id, { number, updatedBy: actor._id, updatedAt: now });
+      remesaId = existing._id;
+    } else {
+      const serviceOrder = await ctx.db.get("serviceOrders", expediente.serviceOrderId);
+      const orderDraft = expediente.loadingOrderDraft;
+      remesaId = await ctx.db.insert("expedienteRemesas", {
+        organizationId: expediente.organizationId,
+        expedienteId: expediente._id,
+        sequence: args.sequence,
+        number,
+        cargoDescription: orderDraft?.cargoDescription ?? "",
+        cargoUnit: orderDraft?.cargoUnit,
+        draft: {
+          consignmentClass: "terrestre_carga",
+          operationType: "general",
+          cashConsignment: false,
+          cashOnDelivery: false,
+          policyHolder: "transport_company",
+          serviceOrderTransporter: serviceOrder?.code
+        },
+        ...initialDocumentLifecycle(),
+        createdBy: actor._id,
+        updatedBy: actor._id,
+        createdAt: now,
+        updatedAt: now
+      });
+    }
+
+    await appendAudit(ctx, {
+      organizationId: expediente.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: resolution.kind === "create" ? "consignment.draft_created" : "consignment.number_assigned",
+      entityType: "expediente_remesa",
+      entityId: remesaId,
+      detailsJson: JSON.stringify({ number, sequence: args.sequence }),
+      createdAt: now
+    });
+    await refreshDispatchSearchText(ctx, expediente._id);
+    return { remesaId, number };
   }
 });
 

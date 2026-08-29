@@ -36,8 +36,8 @@ const consignmentSnapshot = {
   declaredValue: "58000000",
   sender: orderSnapshot.sender,
   recipient: orderSnapshot.recipient,
-  loading: orderSnapshot.loading,
-  unloading: orderSnapshot.unloading,
+  loading: { ...orderSnapshot.loading, agreedHours: "1.5" },
+  unloading: { ...orderSnapshot.unloading, agreedHours: "2.25" },
   remissions: [{ quantity: "12000", description: "MAIZ", weightTons: "34", packagingClass: "0" }],
   packagingCode: "0",
   merchandiseCode: "005229",
@@ -119,6 +119,10 @@ test("independently emitted order and remesa payloads use their own expedition d
   assert.equal(remesa.expeditionDate, "2026-07-09");
   assert.equal(remesa.vehicle.plate, "STO172");
   assert.equal(remesa.cargo.productName, "MAIZ");
+  assert.equal(remesa.loadingAgreedHours, 1);
+  assert.equal(remesa.loadingAgreedMinutes, 30);
+  assert.equal(remesa.unloadingAgreedHours, 2);
+  assert.equal(remesa.unloadingAgreedMinutes, 15);
   assert.equal(manifest.sender.cityName, "BARRANQUILLA");
   assert.equal(manifest.recipient.cityName, "GIRON");
   assert.equal(manifest.vehicleHolder.fullName, "AVILA CHAVEZ MARIA FERNANDA");

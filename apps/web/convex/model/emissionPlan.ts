@@ -314,6 +314,8 @@ function buildConsignmentPayload(
   const recipient = partyPayload(snapshot.recipient, "recipient", missing);
   const loadingDate = appointmentDate(snapshot.loading?.appointmentAt, "loadingAppointment", missing);
   const unloadingDate = appointmentDate(snapshot.unloading?.appointmentAt, "unloadingAppointment", missing);
+  const loadingDuration = agreedDuration(snapshot.loading?.agreedHours, "loadingAgreedHours", missing);
+  const unloadingDuration = agreedDuration(snapshot.unloading?.agreedHours, "unloadingAgreedHours", missing);
   const firstRemission = snapshot.remissions?.[0];
   const payload: Record<string, unknown> = {
     remesaNumber,
@@ -324,6 +326,10 @@ function buildConsignmentPayload(
     loadingAppointmentTime: loadingDate?.time,
     unloadingAppointmentDate: unloadingDate?.date,
     unloadingAppointmentTime: unloadingDate?.time,
+    loadingAgreedHours: loadingDuration?.hours,
+    loadingAgreedMinutes: loadingDuration?.minutes,
+    unloadingAgreedHours: unloadingDuration?.hours,
+    unloadingAgreedMinutes: unloadingDuration?.minutes,
     sender,
     recipient,
     driver: driverPayload(assignment, []),
@@ -565,6 +571,27 @@ function appointmentDate(
     hour12: false
   }).format(epochMs);
   return { date, time };
+}
+
+function agreedDuration(
+  value: string | undefined,
+  field: string,
+  missing: string[]
+): { hours: number; minutes: number } | undefined {
+  if (value === undefined || value.trim() === "") {
+    addMissing(field, missing);
+    return undefined;
+  }
+
+  const parsed = Number(value.trim().replace(",", "."));
+  const totalMinutes = Math.round(parsed * 60);
+
+  if (!Number.isFinite(parsed) || parsed < 0 || totalMinutes > 1439) {
+    addMissing(field, missing);
+    return undefined;
+  }
+
+  return { hours: Math.floor(totalMinutes / 60), minutes: totalMinutes % 60 };
 }
 
 function tonsToKg(weightTons: string | undefined, missing: string[]): number | undefined {

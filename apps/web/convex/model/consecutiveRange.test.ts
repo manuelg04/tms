@@ -38,3 +38,17 @@ test("rejects ranges with invalid configuration", () => {
   assert.throws(() => claimNextConsecutive({ prefix: "", padding: -1, nextValue: 1 }), /rango de consecutivos inválido/i);
   assert.throws(() => claimNextConsecutive({ prefix: "", padding: 4, nextValue: 1.5 }), /rango de consecutivos inválido/i);
 });
+
+test("resolves an idempotent five-digit consignment number claim", async () => {
+  const module = await import("./consecutiveRange") as Record<string, unknown>;
+  const resolve = module.resolveConsignmentNumberClaim;
+  assert.equal(typeof resolve, "function");
+  if (typeof resolve !== "function") return;
+
+  assert.deepEqual(resolve(null, { expedienteId: "exp-1", sequence: 1 }), { kind: "create" });
+  assert.deepEqual(resolve({ expedienteId: "exp-1", sequence: 1 }, { expedienteId: "exp-1", sequence: 1 }), { kind: "assign" });
+  assert.deepEqual(resolve({ expedienteId: "exp-1", sequence: 1, number: "44040" }, { expedienteId: "exp-1", sequence: 1 }), { kind: "reuse", number: "44040" });
+  assert.throws(() => resolve({ expedienteId: "exp-2", sequence: 1 }, { expedienteId: "exp-1", sequence: 1 }), /no pertenece/i);
+  assert.throws(() => resolve({ expedienteId: "exp-1", sequence: 2 }, { expedienteId: "exp-1", sequence: 1 }), /secuencia/i);
+  assert.throws(() => resolve({ expedienteId: "exp-1", sequence: 1, number: "4040" }, { expedienteId: "exp-1", sequence: 1 }), /cinco dígitos/i);
+});

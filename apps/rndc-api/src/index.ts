@@ -756,8 +756,12 @@ function buildScenarioFromForm(config: RndcConfig, payload: unknown, allowRefere
   scenario.expeditionDate = readDate(record, "expeditionDate", scenario.expeditionDate);
   scenario.loadingAppointmentDate = readDate(record, "loadingAppointmentDate", scenario.loadingAppointmentDate);
   scenario.loadingAppointmentTime = readString(record, "loadingAppointmentTime", scenario.loadingAppointmentTime);
+  scenario.loadingAgreedHours = readNumber(record, "loadingAgreedHours", scenario.loadingAgreedHours);
+  scenario.loadingAgreedMinutes = readNumber(record, "loadingAgreedMinutes", scenario.loadingAgreedMinutes);
   scenario.unloadingAppointmentDate = readDate(record, "unloadingAppointmentDate", scenario.unloadingAppointmentDate);
   scenario.unloadingAppointmentTime = readString(record, "unloadingAppointmentTime", scenario.unloadingAppointmentTime);
+  scenario.unloadingAgreedHours = readNumber(record, "unloadingAgreedHours", scenario.unloadingAgreedHours);
+  scenario.unloadingAgreedMinutes = readNumber(record, "unloadingAgreedMinutes", scenario.unloadingAgreedMinutes);
   scenario.balancePaymentDate = readDate(record, "balancePaymentDate", scenario.balancePaymentDate);
   scenario.loadingAppointment = appointment(scenario.loadingAppointmentDate, scenario.loadingAppointmentTime);
   scenario.unloadingAppointment = appointment(scenario.unloadingAppointmentDate, scenario.unloadingAppointmentTime);
@@ -870,9 +874,13 @@ function buildBlankScenario(config: RndcConfig): DemoScenario {
     loadingAppointment: "",
     loadingAppointmentDate: "",
     loadingAppointmentTime: "",
+    loadingAgreedHours: 1,
+    loadingAgreedMinutes: 0,
     unloadingAppointment: "",
     unloadingAppointmentDate: "",
     unloadingAppointmentTime: "",
+    unloadingAgreedHours: 2,
+    unloadingAgreedMinutes: 0,
     balancePaymentDate: "",
     observations: "",
     compliance: {
@@ -914,8 +922,12 @@ function scenarioToForm(scenario: DemoScenario): Record<string, unknown> {
     expeditionDate: scenario.expeditionDate,
     loadingAppointmentDate: scenario.loadingAppointmentDate,
     loadingAppointmentTime: scenario.loadingAppointmentTime,
+    loadingAgreedHours: scenario.loadingAgreedHours,
+    loadingAgreedMinutes: scenario.loadingAgreedMinutes,
     unloadingAppointmentDate: scenario.unloadingAppointmentDate,
     unloadingAppointmentTime: scenario.unloadingAppointmentTime,
+    unloadingAgreedHours: scenario.unloadingAgreedHours,
+    unloadingAgreedMinutes: scenario.unloadingAgreedMinutes,
     balancePaymentDate: scenario.balancePaymentDate,
     observations: scenario.observations,
     driver: scenario.driver,

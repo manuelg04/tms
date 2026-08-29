@@ -252,14 +252,20 @@ export type RemissionLineDraft = {
 export type ConsignmentDraft = {
   expeditionDate?: string;
   consignmentClass?: "municipal" | "terrestre_carga";
+  operationType?: "general";
+  consolidatedType?: string;
+  gpsOperator?: string;
   agencyCode?: string;
   sender?: PartyDraft;
   recipient?: PartyDraft;
   loading?: SiteAppointmentDraft;
   unloading?: SiteAppointmentDraft;
+  cashConsignment?: boolean;
+  cashOnDelivery?: boolean;
   declaredValue?: string;
   consignmentValue?: string;
   insurancePercent?: string;
+  policyHolder?: "transport_company";
   policyNumber?: string;
   insurerName?: string;
   insurerNit?: string;
@@ -269,6 +275,8 @@ export type ConsignmentDraft = {
   packagingCode?: string;
   natureOfCargo?: string;
   merchandiseCode?: string;
+  packagingGroup?: string;
+  serviceOrderTransporter?: string;
   transporterObservations?: string;
   generalObservations?: string;
   printedAt?: number;
@@ -394,11 +402,21 @@ export function consignmentMissingFields(
   if (!siteComplete(draft.unloading) && !siteComplete(order?.unloading)) {
     missing.push("Sitio y cita de descargue");
   }
+  const effective = effectiveConsignment(draft, order);
+  if (!validAgreedHours(effective.loading?.agreedHours) || !validAgreedHours(effective.unloading?.agreedHours)) {
+    missing.push("Horas pactadas de cargue y descargue");
+  }
   if (!present(draft.declaredValue)) {
     missing.push("Valor declarado");
   }
+  if (!present(draft.consignmentValue)) {
+    missing.push("Valor de la remesa");
+  }
   if (!present(draft.policyNumber) || !present(draft.policyExpiresOn) || !present(draft.insurerNit)) {
     missing.push("Póliza de la carga");
+  }
+  if (!present(draft.unitOfMeasure ?? order?.cargoUnit)) {
+    missing.push("Unidad de medida");
   }
 
   const sender = mergeInherited(draft.sender, order?.sender);
@@ -416,13 +434,19 @@ export function consignmentMissingFields(
   const remissions = draft.remissions ?? [];
   const remissionsComplete =
     remissions.length > 0 &&
-    remissions.every((line) => present(line.quantity) && present(line.description) && present(line.weightTons));
+    remissions.every((line) => present(line.remissionNumber) && present(line.quantity) && present(line.packagingClass) && present(line.description) && present(line.weightTons));
 
-  if (!remissionsComplete && !(present(order?.cargoDescription) && present(order?.weightTons))) {
-    missing.push("Remisiones con cantidad, descripción y peso");
+  if (!remissionsComplete) {
+    missing.push("Remisiones con número, cantidad, clase de bultos, descripción y peso");
   }
 
   return missing;
+}
+
+function validAgreedHours(value: string | undefined): boolean {
+  if (!present(value)) return false;
+  const parsed = Number(value!.trim().replace(",", "."));
+  return Number.isFinite(parsed) && parsed >= 0 && parsed < 24;
 }
 
 export function manifestMissingFields(draft: ManifestDraft | null | undefined): string[] {
@@ -491,6 +515,40 @@ export function effectiveConsignment(
     natureOfCargo: draft.natureOfCargo ?? order?.natureOfCargo,
     remissions: inheritedRemissions
   };
+}
+
+export function compactConsignmentOverrides(
+  candidate: ConsignmentDraft,
+  order: LoadingOrderDraft | null | undefined
+): ConsignmentDraft {
+  const compact: ConsignmentDraft = {
+    ...candidate,
+    expeditionDate: changedValue(candidate.expeditionDate, order?.expeditionDate),
+    agencyCode: changedValue(candidate.agencyCode, order?.agencyCode),
+    sender: compactRecord(candidate.sender, order?.sender),
+    recipient: compactRecord(candidate.recipient, order?.recipient),
+    loading: compactRecord(candidate.loading, order?.loading),
+    unloading: compactRecord(candidate.unloading, order?.unloading),
+    unitOfMeasure: changedValue(candidate.unitOfMeasure, order?.cargoUnit),
+    packagingCode: changedValue(candidate.packagingCode, order?.packagingCode),
+    merchandiseCode: changedValue(candidate.merchandiseCode, order?.merchandiseCode),
+    natureOfCargo: changedValue(candidate.natureOfCargo, order?.natureOfCargo)
+  };
+  return definedRecord(compact);
+}
+
+function changedValue<T>(candidate: T | undefined, inherited: T | undefined): T | undefined {
+  return candidate === inherited ? undefined : candidate;
+}
+
+function compactRecord<T extends Record<string, unknown>>(candidate: T | undefined, inherited: T | undefined): T | undefined {
+  if (!candidate) return undefined;
+  const entries = Object.entries(candidate).filter(([key, entry]) => entry !== undefined && entry !== inherited?.[key]);
+  return entries.length > 0 ? Object.fromEntries(entries) as T : undefined;
+}
+
+function definedRecord<T extends Record<string, unknown>>(record: T): T {
+  return Object.fromEntries(Object.entries(record).filter(([, entry]) => entry !== undefined)) as T;
 }
 
 export type EditableStage = "orden_cargue" | "remesa" | "manifiesto" | "asignacion";

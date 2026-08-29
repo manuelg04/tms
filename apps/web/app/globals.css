@@ -3772,6 +3772,9 @@ button {
 .checkbox-field .checkbox-control { display: flex; align-items: center; gap: 9px; min-height: 38px; }
 .checkbox-field .checkbox-control input { width: 17px; height: 17px; margin: 0; }
 .checkbox-field .checkbox-control em { font-style: normal; color: var(--ink-soft); font-size: 12px; }
+.remesa-choice-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.remesa-choice-group label { display: flex; align-items: center; gap: 8px; min-height: 30px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); padding: 5px 9px; color: var(--ink-soft); font-size: 12px; font-weight: 600; }
+.remesa-choice-group input { margin: 0; }
 
 .stage-remesa-card .field-hint { grid-column: 1 / -1; margin-top: -6px; font-size: 11.5px; color: var(--ink-soft); }
 .remission-table { grid-column: 1 / -1; display: grid; gap: 8px; }
@@ -3852,6 +3855,7 @@ button {
   .form-compact .guided-section-grid,
   .form-compact .stage-remesa-card { grid-template-columns: 1fr; }
   .form-compact .span-2 { grid-column: auto; }
+  .remesa-choice-group { grid-template-columns: 1fr; }
 }
 .form-compact .date-field-trigger { min-height: 30px; border-color: var(--line); border-radius: 4px; padding: 4px 8px; }
 .form-compact .search-select-icon,

@@ -255,9 +255,13 @@ export type DemoScenario = {
   loadingAppointment: string;
   loadingAppointmentDate: string;
   loadingAppointmentTime: string;
+  loadingAgreedHours: number;
+  loadingAgreedMinutes: number;
   unloadingAppointment: string;
   unloadingAppointmentDate: string;
   unloadingAppointmentTime: string;
+  unloadingAgreedHours: number;
+  unloadingAgreedMinutes: number;
   balancePaymentDate: string;
   observations: string;
   compliance: ComplianceData;

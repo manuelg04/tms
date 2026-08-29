@@ -85,6 +85,92 @@ test("loading order is saved before optional dispatch stages", async ({ page }) 
   await expect(page.getByRole("heading", { level: 1, name: "Expediente de viaje" })).toBeVisible();
 });
 
+test("consignment creation mirrors the Avansat field contract", async ({ page }) => {
+  await page.goto("/expedientes/nuevo");
+  await fillLoadingOrder(page, `REMESA-${Date.now()}`);
+  await page.getByRole("button", { name: "Crear despacho y abrir documentos" }).click();
+  const consignmentCard = documentCard(page, "Remesas");
+  await consignmentCard.getByRole("button", { name: "Editar" }).click();
+
+  const remesaNumber = page.getByLabel("Nro. de remesa", { exact: true });
+  await expect(remesaNumber).toBeVisible();
+  await expect(remesaNumber).toHaveAttribute("readonly", "");
+  await expect(remesaNumber).toHaveValue(/^\d{5}$/);
+  await expect(page.getByLabel("De orden de cargue", { exact: true })).toBeChecked();
+  await expect(page.getByLabel("Cliente", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Nro. de orden de cargue", { exact: true })).toBeVisible();
+
+  for (const label of [
+    "Remesa municipal",
+    "Remesa terrestre de carga",
+    "Remesa contado",
+    "Remesa contraentrega"
+  ]) {
+    await expect(page.getByLabel(label, { exact: true })).toBeVisible();
+  }
+
+  for (const label of [
+    "Agencia",
+    "Origen",
+    "Destino",
+    "Tipo de remesa",
+    "Tipo consolidado",
+    "Operador GPS RNDC",
+    "Remitente",
+    "Tipo de identificación remitente",
+    "Número de identificación remitente",
+    "Dirección remitente",
+    "Teléfono remitente",
+    "Celular remitente",
+    "Latitud cargue",
+    "Longitud cargue",
+    "Horas pactadas cargue",
+    "Destinatario",
+    "Tipo de identificación destinatario",
+    "Número de identificación destinatario",
+    "Dirección destinatario",
+    "Teléfono destinatario",
+    "Celular destinatario",
+    "Latitud descargue",
+    "Longitud descargue",
+    "Horas pactadas descargue",
+    "Valor declarado mercancía",
+    "Valor remesa",
+    "Nro. manifiesto",
+    "% seguro",
+    "Tomador del seguro",
+    "Aseguradora",
+    "Nro. póliza",
+    "Unidad de medida",
+    "Mercancía",
+    "Código de empaque",
+    "Naturaleza de la carga",
+    "Grupo embalaje envase",
+    "Orden de servicio transportador",
+    "Observaciones del transportador",
+    "Observaciones generales"
+  ]) {
+    await expect(formControl(page, label)).toBeVisible();
+  }
+
+  for (const label of ["Fecha", "Cita de cargue", "Cita de descargue", "Vigencia final"]) {
+    await expect(page.getByRole("button", { name: label, exact: true })).toBeVisible();
+  }
+
+  for (const label of [
+    "Remisión 1 número",
+    "Remisión 1 cantidad",
+    "Remisión 1 clase de bultos",
+    "Remisión 1 descripción",
+    "Remisión 1 peso",
+    "Remisión 1 volumen"
+  ]) {
+    await expect(formControl(page, label)).toBeVisible();
+  }
+
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
 test("dispatch documents can be completed and emitted in separate sessions", async ({ page }) => {
   test.setTimeout(90_000);
   await page.goto("/expedientes/nuevo");
@@ -119,12 +205,21 @@ test("dispatch documents can be completed and emitted in separate sessions", asy
 
   const consignmentCard = documentCard(page, "Remesas");
   await consignmentCard.getByRole("button", { name: "Editar" }).click();
-  await page.getByLabel("Valor declarado").fill("5000000");
-  await expect(page.getByLabel("Valor declarado")).toHaveValue("5.000.000");
-  await page.getByLabel("Número de póliza").fill("POL-ASYNC-1");
-  await pickDate(page, "Vencimiento de póliza", "Mañana");
+  const remesaNumber = await page.getByLabel("Nro. de remesa", { exact: true }).inputValue();
+  await formControl(page, "Valor declarado mercancía").fill("5000000");
+  await expect(formControl(page, "Valor declarado mercancía")).toHaveValue("5.000.000");
+  await formControl(page, "Valor remesa").fill("400000");
+  await formControl(page, "Nro. póliza").fill("POL-ASYNC-1");
+  await pickDate(page, "Vigencia final", "Mañana");
   await pickOption(page, "Aseguradora", "seguros", /./);
+  await formControl(page, "Remisión 1 número").fill("REM-ASYNC-1");
+  await formControl(page, "Remisión 1 cantidad").fill("1");
+  await formControl(page, "Unidad de medida").fill("TN");
   await page.getByRole("button", { name: "Guardar cambios" }).click();
+  await page.goto(detailUrl);
+  await documentCard(page, "Remesas").getByRole("button", { name: "Editar" }).click();
+  await expect(page.getByLabel("Nro. de remesa", { exact: true })).toHaveValue(remesaNumber);
+  await expect(formControl(page, "Valor remesa")).toHaveValue("400.000");
 
   const manifestCard = documentCard(page, "Manifiesto");
   await manifestCard.getByRole("button", { name: "Editar" }).click();
@@ -293,6 +388,11 @@ async function fillLoadingOrder(page: Page, suffix: string) {
 
 function documentCard(page: Page, title: string) {
   return page.locator(".document-hub-card").filter({ has: page.getByRole("heading", { name: title, exact: true }) });
+}
+
+function formControl(page: Page, label: string) {
+  const name = new RegExp(`^${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?: \\$)?$`);
+  return page.getByRole("textbox", { name }).or(page.getByRole("combobox", { name })).or(page.getByRole("spinbutton", { name })).first();
 }
 
 function readPassword(): string {

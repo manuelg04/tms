@@ -1176,6 +1176,19 @@ export default defineSchema({
     updatedAt: v.number()
   }).index("by_organization_agency_and_type", ["organizationId", "agencyCode", "documentType"]),
 
+  loadingOrderReservations: defineTable({
+    organizationId: v.id("organizations"),
+    token: v.string(),
+    number: v.string(),
+    status: v.union(v.literal("reserved"), v.literal("consumed")),
+    expedienteId: v.optional(v.id("expedientes")),
+    reservedBy: v.id("users"),
+    reservedAt: v.number(),
+    consumedAt: v.optional(v.number())
+  })
+    .index("by_organization_and_token", ["organizationId", "token"])
+    .index("by_organization_and_number", ["organizationId", "number"]),
+
   rndcRequestKeys: defineTable({
     organizationId: v.id("organizations"),
     requestKey: v.string(),

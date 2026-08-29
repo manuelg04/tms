@@ -38,6 +38,7 @@ import type * as model_documentPdf from "../model/documentPdf.js";
 import type * as model_draftValidators from "../model/draftValidators.js";
 import type * as model_emissionPlan from "../model/emissionPlan.js";
 import type * as model_fulfillmentWorkflow from "../model/fulfillmentWorkflow.js";
+import type * as model_loadingOrderReservation from "../model/loadingOrderReservation.js";
 import type * as model_masterData from "../model/masterData.js";
 import type * as model_officialDocumentIdentity from "../model/officialDocumentIdentity.js";
 import type * as model_operationIntent from "../model/operationIntent.js";
@@ -89,6 +90,7 @@ declare const fullApi: ApiFromModules<{
   "model/draftValidators": typeof model_draftValidators;
   "model/emissionPlan": typeof model_emissionPlan;
   "model/fulfillmentWorkflow": typeof model_fulfillmentWorkflow;
+  "model/loadingOrderReservation": typeof model_loadingOrderReservation;
   "model/masterData": typeof model_masterData;
   "model/officialDocumentIdentity": typeof model_officialDocumentIdentity;
   "model/operationIntent": typeof model_operationIntent;

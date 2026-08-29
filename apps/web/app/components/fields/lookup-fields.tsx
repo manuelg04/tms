@@ -6,11 +6,11 @@ import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { SearchSelect } from "./search-select";
 
-export type PartyPick = { _id: Id<"thirdParties">; document: string; documentType: string; name: string; city?: string; cityCode?: string; phone?: string; siteCount?: number };
+export type PartyPick = { _id: Id<"thirdParties">; document: string; documentType: string; name: string; address?: string; city?: string; cityCode?: string; phone?: string; siteCount?: number };
 export type SitePick = { _id: Id<"thirdPartySites">; siteCode: string; siteName: string; address?: string; city?: string; cityCode?: string };
 export type DivisionPick = { code: string; name: string; isMunicipality: boolean; municipalityName: string; departmentName: string };
 export type DriverPick = { _id: Id<"drivers">; document: string; name?: string; phone?: string; licenseCategory?: string; licenseExpiresAt?: string };
-export type VehiclePick = { _id: Id<"vehicles">; plate: string; make?: string; line?: string; modelYear?: string; configuration?: string; status?: string };
+export type VehiclePick = { _id: Id<"vehicles">; plate: string; make?: string; line?: string; modelYear?: string; configuration?: string; status?: string; drivers?: DriverPick[] };
 export type TrailerPick = { _id: Id<"trailers">; plate: string; trailerType?: string; configuration?: string; status: string };
 export type VehicleLinePick = { makeCode: string; makeName?: string; lineCode: string; lineName?: string; grossWeightKg: number };
 export type BodyTypePick = { code: string; description: string };

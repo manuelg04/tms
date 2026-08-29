@@ -21,6 +21,7 @@ import {
   type LoadingOrderDraft
 } from "./model/dispatchWorkflow";
 import { initialDocumentLifecycle, type OfficialDocumentState } from "./model/documentLifecycle";
+import { formatLoadingOrderNumber, normalizeLoadingOrderReservationToken, resolveLoadingOrderReservation } from "./model/loadingOrderReservation";
 import {
   consignmentDraftValidator,
   fulfillmentDraftValidator,
@@ -54,16 +55,71 @@ const emissionScopeValidator = v.union(
 
 const consecutiveDefaults: Record<string, { prefix: string; padding: number }> = {
   expediente: { prefix: "DSP-", padding: 6 },
-  orden_cargue: { prefix: "", padding: 7 },
+  orden_cargue: { prefix: "", padding: 9 },
   remesa: { prefix: "", padding: 5 },
   viaje: { prefix: "", padding: 7 },
   manifiesto: { prefix: "", padding: 7 }
 };
 
+export const reserveLoadingOrderNumber = mutation({
+  args: { actorToken: v.optional(v.string()), token: v.string() },
+  returns: v.object({ reservationId: v.id("loadingOrderReservations"), number: v.string() }),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
+    const token = normalizeLoadingOrderReservationToken(args.token);
+    const existing = await ctx.db
+      .query("loadingOrderReservations")
+      .withIndex("by_organization_and_token", (q) => q.eq("organizationId", actor.organizationId).eq("token", token))
+      .unique();
+
+    if (existing) {
+      resolveLoadingOrderReservation(existing, {
+        organizationId: actor.organizationId,
+        actorId: actor._id,
+        token
+      });
+      return { reservationId: existing._id, number: existing.number };
+    }
+
+    const now = Date.now();
+    const number = formatLoadingOrderNumber(await claimConsecutive(ctx, actor.organizationId, "", "orden_cargue", now));
+    const numberOwner = await ctx.db
+      .query("loadingOrderReservations")
+      .withIndex("by_organization_and_number", (q) => q.eq("organizationId", actor.organizationId).eq("number", number))
+      .unique();
+
+    if (numberOwner) {
+      throw new ConvexError({ code: "CONFLICT", message: `El consecutivo ${number} ya está reservado` });
+    }
+
+    const reservationId = await ctx.db.insert("loadingOrderReservations", {
+      organizationId: actor.organizationId,
+      token,
+      number,
+      status: "reserved",
+      reservedBy: actor._id,
+      reservedAt: now
+    });
+    await appendAudit(ctx, {
+      organizationId: actor.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "loading_order.number_reserved",
+      entityType: "loading_order_reservation",
+      entityId: reservationId,
+      detailsJson: JSON.stringify({ number }),
+      createdAt: now
+    });
+    return { reservationId, number };
+  }
+});
+
 export const createDraft = mutation({
   args: {
     actorToken: v.optional(v.string()),
     serviceOrderId: v.id("serviceOrders"),
+    orderReservationId: v.id("loadingOrderReservations"),
+    orderReservationToken: v.string(),
     agencyCode: v.optional(v.string()),
     notes: v.optional(v.string())
   },
@@ -71,9 +127,32 @@ export const createDraft = mutation({
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
     const order = await ctx.db.get("serviceOrders", args.serviceOrderId);
+    const reservation = await ctx.db.get("loadingOrderReservations", args.orderReservationId);
 
     if (!order || order.organizationId !== actor.organizationId) {
       throw new ConvexError({ code: "NOT_FOUND", message: "Orden de servicio no encontrada" });
+    }
+    if (!reservation) {
+      throw new ConvexError({ code: "NOT_FOUND", message: "Reserva de consecutivo no encontrada" });
+    }
+
+    let reservationState;
+    try {
+      reservationState = resolveLoadingOrderReservation(reservation, {
+        organizationId: actor.organizationId,
+        actorId: actor._id,
+        token: args.orderReservationToken
+      });
+    } catch (error) {
+      throw new ConvexError({ code: "FORBIDDEN", message: error instanceof Error ? error.message : String(error) });
+    }
+
+    if (reservationState.kind === "consumed") {
+      const existing = await ctx.db.get(reservationState.expedienteId as Id<"expedientes">);
+      if (!existing || existing.organizationId !== actor.organizationId) {
+        throw new ConvexError({ code: "INTEGRITY_ERROR", message: "El despacho de la reserva no está disponible" });
+      }
+      return { expedienteId: existing._id, code: existing.code };
     }
 
     const [customer, loadingLocation, unloadingLocation] = await Promise.all([
@@ -94,6 +173,7 @@ export const createDraft = mutation({
     }
 
     const loadingOrderDraft: LoadingOrderDraft & { customerId?: Id<"customers"> } = {
+      orderNumber: reservationState.number,
       agencyCode: agencyCode || undefined,
       customerId: order.customerId,
       customerReference: order.customerReference,
@@ -143,6 +223,7 @@ export const createDraft = mutation({
       tripId,
       code,
       status: "draft",
+      cargoNumber: reservationState.number,
       notes: args.notes,
       agencyCode: agencyCode || undefined,
       searchText: normalizeSearchText([
@@ -167,6 +248,11 @@ export const createDraft = mutation({
       title: "Despacho creado en borrador",
       occurredAt: now,
       actorId: actor._id
+    });
+    await ctx.db.patch(reservation._id, {
+      status: "consumed",
+      expedienteId,
+      consumedAt: now
     });
     await appendAudit(ctx, {
       organizationId: actor.organizationId,

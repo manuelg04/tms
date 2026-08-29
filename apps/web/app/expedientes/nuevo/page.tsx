@@ -2,85 +2,109 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { DateField } from "../../components/fields/date-field";
 import { MoneyField } from "../../components/fields/money-field";
-import { CargoNatureField, IdTypeField, MunicipalityField, PackagingField, PartyField, SiteField, type PartyPick, type SitePick } from "../../components/fields/lookup-fields";
-import { VehicleAssignmentPicker, type VehicleAssignmentValue } from "../components/vehicle-assignment-picker";
-import { requiredAssignmentIds, requiredDriverFreight } from "../components/vehicle-assignment-state";
+import { IdTypeField, MunicipalityField, PackagingField, PartyField, VehicleField, type PartyPick, type VehiclePick } from "../../components/fields/lookup-fields";
+import { requiredDriverFreight } from "../components/vehicle-assignment-state";
 
 type BaseState = {
-  customer: PartyPick | null;
-  customerCode: string;
-  customerName: string;
-  customerIdType: string;
-  customerId: string;
-  customerPhone: string;
-  customerCellphone: string;
-  senderSite: SitePick | null;
+  client: PartyPick | null;
+  clientName: string;
+  clientDocument: string;
+  clientIdType: string;
+  sender: PartyPick | null;
+  senderName: string;
+  senderIdType: string;
+  senderId: string;
+  senderAddress: string;
+  senderCity: string;
+  senderMunicipality: string;
+  senderPhone: string;
+  senderCellphone: string;
   senderSiteCode: string;
-  originName: string;
-  originAddress: string;
-  originCity: string;
-  originMunicipality: string;
-  destinationName: string;
-  destinationAddress: string;
-  destinationCity: string;
-  destinationMunicipality: string;
   recipient: PartyPick | null;
   recipientName: string;
   recipientIdType: string;
   recipientId: string;
+  recipientAddress: string;
+  recipientCity: string;
+  recipientMunicipality: string;
   recipientPhone: string;
   recipientCellphone: string;
-  recipientSite: SitePick | null;
   recipientSiteCode: string;
+  vehicle: VehiclePick | null;
   packagingCode: string;
   packagingDescription: string;
 };
 
 const EMPTY_STATE: BaseState = {
-  customer: null, customerCode: "", customerName: "", customerIdType: "N", customerId: "", customerPhone: "", customerCellphone: "",
-  senderSite: null, senderSiteCode: "", originName: "", originAddress: "", originCity: "", originMunicipality: "",
-  destinationName: "", destinationAddress: "", destinationCity: "", destinationMunicipality: "",
-  recipient: null, recipientName: "", recipientIdType: "N", recipientId: "", recipientPhone: "", recipientCellphone: "", recipientSite: null, recipientSiteCode: "",
-  packagingCode: "", packagingDescription: ""
-};
-
-type Template = {
-  code: string;
-  customerCode: string;
-  order: NonNullable<Detail["expediente"]["loadingOrderDraft"]>;
+  client: null,
+  clientName: "",
+  clientDocument: "",
+  clientIdType: "N",
+  sender: null,
+  senderName: "",
+  senderIdType: "N",
+  senderId: "",
+  senderAddress: "",
+  senderCity: "",
+  senderMunicipality: "",
+  senderPhone: "",
+  senderCellphone: "",
+  senderSiteCode: "",
+  recipient: null,
+  recipientName: "",
+  recipientIdType: "N",
+  recipientId: "",
+  recipientAddress: "",
+  recipientCity: "",
+  recipientMunicipality: "",
+  recipientPhone: "",
+  recipientCellphone: "",
+  recipientSiteCode: "",
+  vehicle: null,
+  packagingCode: "",
+  packagingDescription: ""
 };
 
 type Detail = NonNullable<typeof api.expedientes.detail._returnType>;
+
+type Template = {
+  code: string;
+  customerName: string;
+  order: NonNullable<Detail["expediente"]["loadingOrderDraft"]>;
+};
+
+type Reservation = {
+  reservationId: Id<"loadingOrderReservations">;
+  number: string;
+};
 
 function templateState(template: Template | null): BaseState {
   if (!template) return EMPTY_STATE;
   const order = template.order;
   return {
     ...EMPTY_STATE,
-    customerCode: template.customerCode,
-    customerName: order.sender?.name ?? "",
-    customerIdType: order.sender?.identificationType ?? "N",
-    customerId: order.sender?.identificationNumber ?? "",
-    customerPhone: order.sender?.phone ?? "",
-    customerCellphone: order.sender?.cellphone ?? "",
+    clientName: template.customerName,
+    senderName: order.sender?.name ?? "",
+    senderIdType: order.sender?.identificationType ?? "N",
+    senderId: order.sender?.identificationNumber ?? "",
+    senderAddress: order.sender?.address ?? order.loading?.address ?? "",
+    senderCity: order.sender?.cityName ?? order.loading?.cityName ?? "",
+    senderMunicipality: order.sender?.municipalityCode ?? order.loading?.municipalityCode ?? "",
+    senderPhone: order.sender?.phone ?? "",
+    senderCellphone: order.sender?.cellphone ?? "",
     senderSiteCode: order.sender?.siteCode ?? "",
-    originName: order.loading?.siteName ?? "",
-    originAddress: order.loading?.address ?? "",
-    originCity: order.loading?.cityName ?? "",
-    originMunicipality: order.loading?.municipalityCode ?? order.sender?.municipalityCode ?? "",
-    destinationName: order.unloading?.siteName ?? "",
-    destinationAddress: order.unloading?.address ?? "",
-    destinationCity: order.unloading?.cityName ?? "",
-    destinationMunicipality: order.unloading?.municipalityCode ?? order.recipient?.municipalityCode ?? "",
     recipientName: order.recipient?.name ?? "",
     recipientIdType: order.recipient?.identificationType ?? "N",
     recipientId: order.recipient?.identificationNumber ?? "",
+    recipientAddress: order.recipient?.address ?? order.unloading?.address ?? "",
+    recipientCity: order.recipient?.cityName ?? order.unloading?.cityName ?? "",
+    recipientMunicipality: order.recipient?.municipalityCode ?? order.unloading?.municipalityCode ?? "",
     recipientPhone: order.recipient?.phone ?? "",
     recipientCellphone: order.recipient?.cellphone ?? "",
     recipientSiteCode: order.recipient?.siteCode ?? "",
@@ -98,7 +122,7 @@ function NuevoDespachoLoader() {
   const source = useQuery(api.expedientes.detail, sourceId ? { expedienteId: sourceId as Id<"expedientes"> } : "skip");
   if (sourceId && source === undefined) return <div className="skeleton">Copiando datos del despacho anterior…</div>;
   const template: Template | null = sourceId && source?.expediente.loadingOrderDraft
-    ? { code: source.expediente.code, customerCode: source.customer.code, order: source.expediente.loadingOrderDraft }
+    ? { code: source.expediente.code, customerName: source.customer.name, order: source.expediente.loadingOrderDraft }
     : null;
   return <NuevoDespachoForm key={sourceId ?? "nuevo"} sourceId={sourceId} template={template} />;
 }
@@ -107,13 +131,18 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const me = useQuery(api.access.me, {});
+  const organizationId = me?.organizationId;
   const [error, setError] = useState("");
+  const [reservationError, setReservationError] = useState("");
+  const [reservationAttempt, setReservationAttempt] = useState(0);
+  const [reservation, setReservation] = useState<Reservation | null>(null);
+  const [reservationToken] = useState(() => `loading-order-${crypto.randomUUID()}`);
   const [savingAction, setSavingAction] = useState<"draft" | "open" | null>(null);
   const [state, setState] = useState<BaseState>(() => templateState(template));
-  const [assignment, setAssignment] = useState<VehicleAssignmentValue>({ vehicle: null, driver: null });
   const copied = template?.order;
   const update = (patch: Partial<BaseState>) => setState((current) => ({ ...current, ...patch }));
   const today = new Date().toISOString().slice(0, 10);
+  const reserveLoadingOrderNumber = useMutation(api.dispatches.reserveLoadingOrderNumber);
   const upsertCustomer = useMutation(api.masterData.upsertCustomer);
   const upsertLocation = useMutation(api.masterData.upsertCustomerLocation);
   const upsertOrder = useMutation(api.masterData.upsertServiceOrder);
@@ -121,9 +150,29 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
   const saveLoadingOrder = useMutation(api.dispatches.saveLoadingOrderDraft);
   const saveAssignment = useMutation(api.dispatches.saveAssignmentDraft);
 
+  useEffect(() => {
+    if (!organizationId) return;
+    let active = true;
+    setReservationError("");
+    void reserveLoadingOrderNumber({ token: reservationToken })
+      .then((result) => {
+        if (active) setReservation(result);
+      })
+      .catch((cause: unknown) => {
+        if (active) setReservationError(readError(cause));
+      });
+    return () => {
+      active = false;
+    };
+  }, [organizationId, reservationAttempt, reservationToken, reserveLoadingOrderNumber]);
+
   async function saveBase(action: "draft" | "open") {
     if (!me || !formRef.current) {
       setError("La sesión todavía no está conectada al espacio de trabajo.");
+      return;
+    }
+    if (!reservation) {
+      setError("Espera a que se reserve el consecutivo de la orden.");
       return;
     }
 
@@ -132,57 +181,61 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
     const data = new FormData(formRef.current);
 
     try {
-      const assignmentIds = requiredAssignmentIds(assignment);
-      const customerCode = requiredText(data, "customerCode");
+      if (!state.vehicle) throw new Error("Selecciona una placa existente en maestros.");
+      const senderId = requiredText(data, "senderId");
+      const clientDocument = optionalText(data, "clientDocument") ?? senderId;
+      const clientIdType = optionalText(data, "clientIdType") ?? requiredText(data, "senderIdType");
       const customerId = await upsertCustomer({
         organizationId: me.organizationId,
-        code: customerCode,
-        name: requiredText(data, "customerName"),
-        identificationType: optionalText(data, "customerIdType"),
-        identificationNumber: requiredText(data, "customerId"),
-        phone: optionalText(data, "customerPhone"),
+        code: clientDocument,
+        name: requiredText(data, "clientName"),
+        identificationType: clientIdType,
+        identificationNumber: clientDocument,
+        phone: optionalText(data, "senderPhone"),
         status: "active"
       });
-      const loadingLocationId = await upsertLocation({
-        customerId,
-        code: `${customerCode}-ORI`,
-        name: requiredText(data, "originName"),
-        kind: "loading",
-        address: requiredText(data, "originAddress"),
-        city: requiredText(data, "originCity"),
-        municipalityCode: optionalText(data, "originMunicipality"),
-        status: "active"
-      });
-      const unloadingLocationId = await upsertLocation({
-        customerId,
-        code: `${customerCode}-DES`,
-        name: requiredText(data, "destinationName"),
-        kind: "unloading",
-        address: requiredText(data, "destinationAddress"),
-        city: requiredText(data, "destinationCity"),
-        municipalityCode: optionalText(data, "destinationMunicipality"),
-        status: "active"
-      });
+      const [loadingLocationId, unloadingLocationId] = await Promise.all([
+        upsertLocation({
+          customerId,
+          code: `${clientDocument}-${senderId}-ORI`,
+          name: requiredText(data, "senderName"),
+          kind: "loading",
+          address: requiredText(data, "senderAddress"),
+          city: requiredText(data, "senderCity"),
+          municipalityCode: requiredText(data, "senderMunicipality"),
+          status: "active"
+        }),
+        upsertLocation({
+          customerId,
+          code: `${clientDocument}-${requiredText(data, "recipientId")}-DES`,
+          name: requiredText(data, "recipientName"),
+          kind: "unloading",
+          address: requiredText(data, "recipientAddress"),
+          city: requiredText(data, "recipientCity"),
+          municipalityCode: requiredText(data, "recipientMunicipality"),
+          status: "active"
+        })
+      ]);
       const serviceOrderId = await upsertOrder({
         organizationId: me.organizationId,
-        code: requiredText(data, "serviceOrderCode"),
+        code: reservation.number,
         customerId,
         loadingLocationId,
         unloadingLocationId,
         status: "confirmed",
-        customerReference: optionalText(data, "customerReference"),
         cargoDescription: requiredText(data, "cargoDescription"),
         cargoQuantity: optionalNumber(data, "cargoQuantity"),
-        cargoUnit: optionalText(data, "cargoUnit"),
         cargoWeightKg: money(requiredText(data, "weightTons")) * 1000,
         agreedRate: 0,
         currency: "COP",
-        scheduledLoadingAt: dateTime(data, "loadingAppointment"),
-        scheduledUnloadingAt: dateTime(data, "unloadingAppointment"),
+        scheduledLoadingAt: loadingDateTime(data, "minLoadingDate", false),
+        scheduledUnloadingAt: loadingDateTime(data, "maxLoadingDate", true),
         notes: optionalText(data, "orderObservations")
       });
       const created = await createDraft({
         serviceOrderId,
+        orderReservationId: reservation.reservationId,
+        orderReservationToken: reservationToken,
         agencyCode: optionalText(data, "agencyCode"),
         notes: optionalText(data, "orderObservations")
       });
@@ -191,7 +244,7 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
           expedienteId: created.expedienteId,
           draft: loadingOrderDraft(data, customerId)
         }),
-        saveAssignment({ expedienteId: created.expedienteId, ...assignmentIds })
+        saveAssignment({ expedienteId: created.expedienteId, vehicleId: state.vehicle._id, driverId: state.vehicle.drivers?.length === 1 ? state.vehicle.drivers[0]._id : undefined })
       ]);
 
       router.push(action === "open" ? `/expedientes/${created.expedienteId}?stage=orden_cargue#centro-documental` : `/expedientes/${created.expedienteId}`);
@@ -207,150 +260,126 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
     <form className="guided-dispatch-form base-dispatch-form form-compact" onSubmit={(event) => event.preventDefault()} ref={formRef}>
       <section className="base-dispatch-intro">
         <div>
-          <span className="eyebrow">Nuevo despacho</span>
-          <h2>{template ? `Copia de ${template.code}` : "Datos base del despacho"}</h2>
-          <p>Busca cliente, destinatario y sedes en el RNDC; identificación, direcciones y municipios se completan solos.</p>
+          <span className="eyebrow">Nueva orden de cargue</span>
+          <h2>{template ? `Copia de ${template.code}` : "Datos de la orden de cargue"}</h2>
+          <p>La misma información operativa de Avansat, con búsquedas en los maestros del TMS.</p>
         </div>
         <div className="base-dispatch-outcome"><strong>Al guardar</strong><span>Se abre el centro documental del despacho</span></div>
       </section>
 
-      {template ? <div className="operation-notice ok" role="status"><span />Datos copiados de <Link href={`/expedientes/${sourceId}`}>{template.code}</Link>: revisa citas, peso, sellos y orden de servicio antes de guardar. Nada se crea hasta que guardes.</div> : null}
-      <div className="base-document-path" aria-label="Documentos que se completan después"><span className="active">1. Datos base</span><span>Orden de cargue</span><span>Remesas</span><span>Vehículo y conductor</span><span>Manifiesto</span><span>Cumplidos</span></div>
+      {template ? <div className="operation-notice ok" role="status"><span />Datos copiados de <Link href={`/expedientes/${sourceId}`}>{template.code}</Link>: revisa fechas, peso y observaciones antes de guardar. Nada se crea hasta que guardes.</div> : null}
+      <div className="base-document-path" aria-label="Documentos que se completan después"><span className="active">1. Orden de cargue</span><span>Remesas</span><span>Vehículo y conductor</span><span>Manifiesto</span><span>Cumplidos</span></div>
 
       <div className="guided-form-stage">
         <section aria-labelledby="loading-order-title">
-          <StageHeading id="loading-order-title" title="Orden de cargue" text="Registra los datos básicos, el cliente que remite y la sede desde donde sale la carga." />
+          <StageHeading id="loading-order-title" title="Orden de cargue" text="Completa los campos operativos que usa Avansat para insertar la orden." />
           <div className="stage-form-fields">
             <div className="field-group-note"><strong>Datos básicos</strong></div>
             <DateField label="Fecha" name="expeditionDate" required value={today} />
-            <Field label="Nro. de orden de cargue" name="orderNumberPreview" placeholder="Automático" readOnly />
+            <Field label="Nro. de orden de cargue" name="orderNumber" placeholder={reservationError ? "No disponible" : "Reservando…"} readOnly value={reservation?.number ?? ""} />
             <Field defaultValue={copied?.agencyCode} label="Agencia responsable" name="agencyCode" placeholder="Principal" />
-            <label className="form-field checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked name="generatesConsignment" type="checkbox" /><em>Crear la remesa desde esta orden</em></span></label>
-            <Field className="span-2" label="Orden de servicio" name="serviceOrderCode" placeholder="OS-2026-001" required />
-            <Field className="span-2" defaultValue={copied?.customerReference} label="Referencia del cliente" name="customerReference" placeholder="Pedido o contrato" />
+            <label className="form-field checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked={copied?.generatesConsignment ?? true} name="generatesConsignment" type="checkbox" /><em>Crear la remesa desde esta orden</em></span></label>
+            <PartyField
+              className="span-2"
+              label="Cliente"
+              onClear={() => update({ client: null, clientName: "", clientDocument: "", clientIdType: "N" })}
+              onSelect={(party) => update({ client: party, clientName: party.name, clientDocument: party.document, clientIdType: party.documentType })}
+              onType={(name) => update({ client: null, clientName: name, clientDocument: "", clientIdType: "N" })}
+              required
+              selected={state.client ?? (state.clientName && state.clientDocument ? { name: state.clientName, document: state.clientDocument, documentType: state.clientIdType } : null)}
+              typedName={state.client ? undefined : state.clientName}
+            />
+            <input name="clientName" type="hidden" value={state.clientName} />
+            <input name="clientDocument" type="hidden" value={state.clientDocument} />
+            <input name="clientIdType" type="hidden" value={state.clientIdType} />
+
             <div className="field-group-note"><strong>Datos del remitente</strong></div>
             <PartyField
               className="span-2"
-              label="Cliente o razón social"
-              onClear={() => update({ customer: null, customerName: "", customerIdType: "N", customerId: "", customerPhone: "", customerCellphone: "", senderSite: null, senderSiteCode: "", originName: "", originAddress: "", originCity: "", originMunicipality: "" })}
-              onSelect={(party) => update({ customer: party, customerName: party.name, customerIdType: party.documentType, customerId: party.document, customerPhone: party.phone ?? "", customerCode: state.customerCode || party.document, senderSite: null, senderSiteCode: "", originName: "", originAddress: "", originCity: "", originMunicipality: "" })}
-              onType={(name) => update({ customer: null, customerName: name })}
+              label="Nombre del remitente"
+              onClear={() => update({ sender: null, senderName: "", senderIdType: "N", senderId: "", senderAddress: "", senderCity: "", senderMunicipality: "", senderPhone: "", senderCellphone: "", senderSiteCode: "" })}
+              onSelect={(party) => update({ sender: party, senderName: party.name, senderIdType: party.documentType, senderId: party.document, senderAddress: party.address ?? state.senderAddress, senderCity: party.city ?? state.senderCity, senderMunicipality: party.cityCode ?? state.senderMunicipality, senderPhone: party.phone ?? state.senderPhone, senderSiteCode: "" })}
+              onType={(name) => update({ sender: null, senderName: name })}
               required
               role="sender"
-              selected={state.customer ?? (state.customerName && state.customerId ? { name: state.customerName, document: state.customerId, documentType: state.customerIdType } : null)}
-              typedName={state.customer ? undefined : state.customerName}
+              selected={state.sender ?? (state.senderName && state.senderId ? { name: state.senderName, document: state.senderId, documentType: state.senderIdType } : null)}
+              typedName={state.sender ? undefined : state.senderName}
             />
-            <IdTypeField label="Tipo de identificación" name="customerIdType" onChange={(value) => update({ customerIdType: value })} required value={state.customerIdType} />
-            <Field label="Identificación del cliente" name="customerId" onChange={(event) => update({ customerId: event.target.value })} required value={state.customerId} />
-            <Field label="Código del cliente" name="customerCode" onChange={(event) => update({ customerCode: event.target.value })} placeholder="Se toma del documento" required value={state.customerCode} />
-            <Field label="Teléfono remitente" name="customerPhone" onChange={(event) => update({ customerPhone: event.target.value })} required type="tel" value={state.customerPhone} />
-            <Field label="Celular remitente" name="customerCellphone" onChange={(event) => update({ customerCellphone: event.target.value })} type="tel" value={state.customerCellphone} />
-            <input name="customerName" type="hidden" value={state.customerName} />
-            <SiteField
-              className="span-2"
-              label="Sede RNDC remitente"
-              onClear={() => update({ senderSite: null, senderSiteCode: "" })}
-              onManual={(code) => update({ senderSite: null, senderSiteCode: code })}
-              onSelect={(site) => update({ senderSite: site, senderSiteCode: site.siteCode, originName: site.siteName, originAddress: site.address ?? state.originAddress, originCity: site.city ?? state.originCity, originMunicipality: site.cityCode ?? state.originMunicipality })}
-              required
-              selectedCode={state.senderSiteCode || undefined}
-              selectedName={state.senderSite?.siteName}
-              thirdPartyId={state.customer?._id}
-            />
+            <IdTypeField label="Tipo de identificación remitente" name="senderIdType" onChange={(value) => update({ senderIdType: value })} required value={state.senderIdType} />
+            <Field label="Número de identificación remitente" name="senderId" onChange={(event) => update({ senderId: event.target.value })} required value={state.senderId} />
+            <Field className="span-2" label="Dirección remitente" name="senderAddress" onChange={(event) => update({ senderAddress: event.target.value })} required value={state.senderAddress} />
+            <MunicipalityField code={state.senderMunicipality || undefined} label="Ciudad remitente" name="senderMunicipality" onClear={() => update({ senderMunicipality: "", senderCity: "" })} onSelect={(division) => update({ senderMunicipality: division.code, senderCity: division.isMunicipality ? division.name : division.municipalityName })} required />
+            <Field label="Teléfono remitente" name="senderPhone" onChange={(event) => update({ senderPhone: event.target.value })} required type="tel" value={state.senderPhone} />
+            <Field label="Celular remitente" name="senderCellphone" onChange={(event) => update({ senderCellphone: event.target.value })} type="tel" value={state.senderCellphone} />
+            <input name="senderName" type="hidden" value={state.senderName} />
+            <input name="senderCity" type="hidden" value={state.senderCity} />
             <input name="senderSiteCode" type="hidden" value={state.senderSiteCode} />
-          </div>
-          <div className="route-guided-grid">
-            <fieldset>
-              <legend>Cargue</legend>
-              <Field className="span-2" label="Lugar" name="originName" onChange={(event) => update({ originName: event.target.value })} required value={state.originName} />
-              <MunicipalityField code={state.originMunicipality || undefined} label="Municipio" name="originMunicipality" onClear={() => update({ originMunicipality: "" })} onSelect={(division) => update({ originMunicipality: division.code, originCity: division.isMunicipality ? division.name : division.municipalityName })} required />
-              <DateField label="Cita de cargue" name="loadingAppointment" required withTime />
-              <Field className="span-2" label="Dirección" name="originAddress" onChange={(event) => update({ originAddress: event.target.value })} required value={state.originAddress} />
-              <input name="originCity" type="hidden" value={state.originCity} />
-            </fieldset>
-            <span className="route-connector" aria-hidden>→</span>
-            <fieldset>
-              <legend>Descargue</legend>
-              <Field className="span-2" label="Lugar" name="destinationName" onChange={(event) => update({ destinationName: event.target.value })} required value={state.destinationName} />
-              <MunicipalityField code={state.destinationMunicipality || undefined} label="Municipio" name="destinationMunicipality" onClear={() => update({ destinationMunicipality: "" })} onSelect={(division) => update({ destinationMunicipality: division.code, destinationCity: division.isMunicipality ? division.name : division.municipalityName })} required />
-              <DateField label="Cita de descargue" name="unloadingAppointment" required withTime />
-              <Field className="span-2" label="Dirección" name="destinationAddress" onChange={(event) => update({ destinationAddress: event.target.value })} required value={state.destinationAddress} />
-              <input name="destinationCity" type="hidden" value={state.destinationCity} />
-            </fieldset>
-          </div>
-        </section>
 
-        <section aria-labelledby="cargo-title">
-          <StageHeading id="cargo-title" number="02" title="Destinatario y mercancía" text="Quién recibe la carga, en qué sede, y qué se transporta." />
-          <div className="stage-form-fields">
             <div className="field-group-note"><strong>Datos del destinatario</strong></div>
             <PartyField
               className="span-2"
-              label="Destinatario"
-              onClear={() => update({ recipient: null, recipientName: "", recipientIdType: "N", recipientId: "", recipientPhone: "", recipientCellphone: "", recipientSite: null, recipientSiteCode: "" })}
-              onSelect={(party) => update({ recipient: party, recipientName: party.name, recipientIdType: party.documentType, recipientId: party.document, recipientPhone: party.phone ?? "", recipientSite: null, recipientSiteCode: "" })}
+              label="Nombre del destinatario"
+              onClear={() => update({ recipient: null, recipientName: "", recipientIdType: "N", recipientId: "", recipientAddress: "", recipientCity: "", recipientMunicipality: "", recipientPhone: "", recipientCellphone: "", recipientSiteCode: "" })}
+              onSelect={(party) => update({ recipient: party, recipientName: party.name, recipientIdType: party.documentType, recipientId: party.document, recipientAddress: party.address ?? state.recipientAddress, recipientCity: party.city ?? state.recipientCity, recipientMunicipality: party.cityCode ?? state.recipientMunicipality, recipientPhone: party.phone ?? state.recipientPhone, recipientSiteCode: "" })}
               onType={(name) => update({ recipient: null, recipientName: name })}
               required
               role="recipient"
               selected={state.recipient ?? (state.recipientName && state.recipientId ? { name: state.recipientName, document: state.recipientId, documentType: state.recipientIdType } : null)}
               typedName={state.recipient ? undefined : state.recipientName}
             />
-            <IdTypeField label="Tipo de identificación" name="recipientIdType" onChange={(value) => update({ recipientIdType: value })} required value={state.recipientIdType} />
-            <Field label="Identificación destinatario" name="recipientId" onChange={(event) => update({ recipientId: event.target.value })} required value={state.recipientId} />
-            <input name="recipientName" type="hidden" value={state.recipientName} />
+            <IdTypeField label="Tipo de identificación destinatario" name="recipientIdType" onChange={(value) => update({ recipientIdType: value })} required value={state.recipientIdType} />
+            <Field label="Número de identificación destinatario" name="recipientId" onChange={(event) => update({ recipientId: event.target.value })} required value={state.recipientId} />
+            <Field className="span-2" label="Dirección destinatario" name="recipientAddress" onChange={(event) => update({ recipientAddress: event.target.value })} required value={state.recipientAddress} />
+            <MunicipalityField code={state.recipientMunicipality || undefined} label="Ciudad destinatario" name="recipientMunicipality" onClear={() => update({ recipientMunicipality: "", recipientCity: "" })} onSelect={(division) => update({ recipientMunicipality: division.code, recipientCity: division.isMunicipality ? division.name : division.municipalityName })} required />
             <Field label="Teléfono destinatario" name="recipientPhone" onChange={(event) => update({ recipientPhone: event.target.value })} required type="tel" value={state.recipientPhone} />
             <Field label="Celular destinatario" name="recipientCellphone" onChange={(event) => update({ recipientCellphone: event.target.value })} type="tel" value={state.recipientCellphone} />
-            <SiteField
-              className="span-2"
-              label="Sede RNDC destinatario"
-              onClear={() => update({ recipientSite: null, recipientSiteCode: "" })}
-              onManual={(code) => update({ recipientSite: null, recipientSiteCode: code })}
-              onSelect={(site) => update({ recipientSite: site, recipientSiteCode: site.siteCode, destinationName: state.destinationName || site.siteName, destinationAddress: state.destinationAddress || (site.address ?? ""), destinationCity: state.destinationCity || (site.city ?? ""), destinationMunicipality: state.destinationMunicipality || (site.cityCode ?? "") })}
-              required
-              selectedCode={state.recipientSiteCode || undefined}
-              selectedName={state.recipientSite?.siteName}
-              thirdPartyId={state.recipient?._id}
-            />
+            <input name="recipientName" type="hidden" value={state.recipientName} />
+            <input name="recipientCity" type="hidden" value={state.recipientCity} />
             <input name="recipientSiteCode" type="hidden" value={state.recipientSiteCode} />
+
             <div className="field-group-note"><strong>Datos del vehículo</strong></div>
-            <VehicleAssignmentPicker onChange={setAssignment} value={assignment} />
+            <VehicleField label="Placa" onClear={() => update({ vehicle: null })} onSelect={(vehicle) => update({ vehicle })} required selected={state.vehicle} />
             <MoneyField label="Flete conductor" name="driverFreight" required value={copied?.driverFreight} />
-            <span className="field-hint span-2">La asignación quedará guardada en el despacho y podrás corregirla después, antes de emitir documentos.</span>
+
             <div className="field-group-note"><strong>Datos de la mercancía</strong></div>
-            <Field className="span-2" defaultValue={copied?.cargoDescription} label="Mercancía" name="cargoDescription" required />
-            <Field defaultValue={copied?.merchandiseCode} label="Código de mercancía" name="merchandiseCode" required />
-            <Field defaultValue={copied?.cargoQuantity} label="Cantidad" name="cargoQuantity" type="number" />
-            <Field defaultValue={copied?.cargoUnit} label="Unidad" name="cargoUnit" placeholder="kg, unidades, galones" />
-            <Field defaultValue={copied?.weightTons} label="Peso total (TN)" min="0" name="weightTons" required step="0.001" type="number" />
-            <Field defaultValue={copied?.volumeM3} label="Volumen m³" min="0" name="volumeM3" step="0.01" type="number" />
+            <Field defaultValue={copied?.weightTons} label="Peso (TN)" min="0" name="weightTons" required step="0.001" type="number" />
+            <Field defaultValue={copied?.volumeM3} label="Volumen (m³)" min="0" name="volumeM3" step="0.01" type="number" />
+            <Field defaultValue={copied?.cargoQuantity} label="Cantidad" min="0" name="cargoQuantity" type="number" />
+            <Field defaultValue={copied?.cargoDescription} label="Mercancía" name="cargoDescription" required />
             <PackagingField code={state.packagingCode || undefined} description={state.packagingDescription} label="Tipo de empaque" name="packagingCode" onClear={() => update({ packagingCode: "", packagingDescription: "" })} onSelect={(option) => update({ packagingCode: option.code, packagingDescription: option.description })} required />
-            <CargoNatureField name="natureOfCargo" required value={copied?.natureOfCargo} />
+            <Field defaultValue={copied?.optionalCargoField} label="Campo opcional" name="optionalCargoField" />
+            <input defaultValue={copied?.cargoUnit} name="cargoUnit" type="hidden" />
+            <input defaultValue={copied?.merchandiseCode} name="merchandiseCode" type="hidden" />
+            <input defaultValue={copied?.natureOfCargo} name="natureOfCargo" type="hidden" />
+
             <div className="field-group-note"><strong>Observaciones especiales</strong></div>
-            <label className="form-field"><span>Sellos y/o precintos</span><textarea name="sealNumbers" rows={3} /></label>
+            <label className="form-field"><span>Sellos y/o precintos</span><textarea defaultValue={copied?.sealNumbers} name="sealNumbers" rows={3} /></label>
             <label className="form-field"><span>Condiciones de cargue</span><textarea defaultValue={copied?.loadingConditions} name="loadingConditions" rows={3} /></label>
             <label className="form-field"><span>Embalaje especial</span><textarea defaultValue={copied?.specialPackaging} name="specialPackaging" rows={3} /></label>
-            <label className="form-field span-2"><span>Observaciones</span><textarea defaultValue={copied?.observations} name="orderObservations" rows={3} /></label>
+            <label className="form-field"><span>Observaciones</span><textarea defaultValue={copied?.observations} name="orderObservations" rows={3} /></label>
+
             <div className="field-group-note"><strong>Fechas de cargue</strong></div>
-            <DateField label="Fecha mínima" name="minLoadingDate" required value={today} />
-            <DateField label="Fecha máxima" name="maxLoadingDate" required value={today} />
+            <DateField label="Fecha mínima" name="minLoadingDate" required value={copied?.minLoadingDate ?? today} />
+            <DateField label="Fecha máxima" name="maxLoadingDate" required value={copied?.maxLoadingDate ?? today} />
           </div>
         </section>
       </div>
 
+      {reservationError ? <div className="form-error" role="alert">{reservationError} <button className="link-button" onClick={() => setReservationAttempt((current) => current + 1)} type="button">Reintentar consecutivo</button></div> : null}
       {error ? <div className="form-error" role="alert" tabIndex={-1}>{error}</div> : null}
       <div className="guided-action-bar base-action-bar">
         <span>Los demás documentos quedarán disponibles como borradores independientes.</span>
         <div>
-          <button className="ghost-button" disabled={saving || !me} onClick={() => void saveBase("draft")} type="button">{savingAction === "draft" ? "Guardando…" : "Guardar borrador"}</button>
-          <button className="primary-action" disabled={saving || !me} onClick={() => void saveBase("open")} type="button">{savingAction === "open" ? "Creando…" : "Crear despacho y abrir documentos"}</button>
+          <button className="ghost-button" disabled={saving || !me || !reservation} onClick={() => void saveBase("draft")} type="button">{savingAction === "draft" ? "Guardando…" : "Guardar borrador"}</button>
+          <button className="primary-action" disabled={saving || !me || !reservation} onClick={() => void saveBase("open")} type="button">{savingAction === "open" ? "Creando…" : "Crear despacho y abrir documentos"}</button>
         </div>
       </div>
     </form>
   );
 }
 
-function StageHeading({ id, number = "01", text, title }: { id: string; number?: string; text: string; title: string }) {
-  return <div className="guided-stage-heading"><span>{number}</span><div><h3 id={id}>{title}</h3><p>{text}</p></div></div>;
+function StageHeading({ id, text, title }: { id: string; text: string; title: string }) {
+  return <div className="guided-stage-heading"><span>01</span><div><h3 id={id}>{title}</h3><p>{text}</p></div></div>;
 }
 
 function Field({ className = "", label, name, ...props }: { className?: string; label: string; name: string } & React.InputHTMLAttributes<HTMLInputElement>) {
@@ -358,50 +387,53 @@ function Field({ className = "", label, name, ...props }: { className?: string; 
 }
 
 function loadingOrderDraft(data: FormData, customerId: Id<"customers">) {
+  const loadingAppointment = loadingDateTime(data, "minLoadingDate", false);
+  const unloadingAppointment = loadingDateTime(data, "maxLoadingDate", true);
   return {
+    orderNumber: requiredText(data, "orderNumber"),
     expeditionDate: requiredText(data, "expeditionDate"),
     agencyCode: optionalText(data, "agencyCode"),
     customerId,
-    customerReference: optionalText(data, "customerReference"),
-    sender: {
-      name: requiredText(data, "customerName"),
-      identificationType: requiredText(data, "customerIdType"),
-      identificationNumber: requiredText(data, "customerId"),
-      siteCode: requiredText(data, "senderSiteCode"),
-      municipalityCode: requiredText(data, "originMunicipality"),
-      address: requiredText(data, "originAddress"),
-      cityName: requiredText(data, "originCity"),
-      phone: requiredText(data, "customerPhone"),
-      cellphone: optionalText(data, "customerCellphone")
-    },
-    recipient: {
+    sender: compact({
+      name: requiredText(data, "senderName"),
+      identificationType: requiredText(data, "senderIdType"),
+      identificationNumber: requiredText(data, "senderId"),
+      siteCode: optionalText(data, "senderSiteCode"),
+      municipalityCode: requiredText(data, "senderMunicipality"),
+      address: requiredText(data, "senderAddress"),
+      cityName: requiredText(data, "senderCity"),
+      phone: requiredText(data, "senderPhone"),
+      cellphone: optionalText(data, "senderCellphone")
+    }),
+    recipient: compact({
       name: requiredText(data, "recipientName"),
       identificationType: requiredText(data, "recipientIdType"),
       identificationNumber: requiredText(data, "recipientId"),
-      siteCode: requiredText(data, "recipientSiteCode"),
-      municipalityCode: requiredText(data, "destinationMunicipality"),
-      address: requiredText(data, "destinationAddress"),
-      cityName: requiredText(data, "destinationCity"),
+      siteCode: optionalText(data, "recipientSiteCode"),
+      municipalityCode: requiredText(data, "recipientMunicipality"),
+      address: requiredText(data, "recipientAddress"),
+      cityName: requiredText(data, "recipientCity"),
       phone: requiredText(data, "recipientPhone"),
       cellphone: optionalText(data, "recipientCellphone")
-    },
+    }),
     loading: {
-      siteName: requiredText(data, "originName"),
-      address: requiredText(data, "originAddress"),
-      cityName: requiredText(data, "originCity"),
-      municipalityCode: optionalText(data, "originMunicipality"),
-      appointmentAt: requiredDateTime(data, "loadingAppointment")
+      siteName: requiredText(data, "senderName"),
+      address: requiredText(data, "senderAddress"),
+      cityName: requiredText(data, "senderCity"),
+      municipalityCode: requiredText(data, "senderMunicipality"),
+      appointmentAt: loadingAppointment
     },
     unloading: {
-      siteName: requiredText(data, "destinationName"),
-      address: requiredText(data, "destinationAddress"),
-      cityName: requiredText(data, "destinationCity"),
-      municipalityCode: optionalText(data, "destinationMunicipality"),
-      appointmentAt: requiredDateTime(data, "unloadingAppointment")
+      siteName: requiredText(data, "recipientName"),
+      address: requiredText(data, "recipientAddress"),
+      cityName: requiredText(data, "recipientCity"),
+      municipalityCode: requiredText(data, "recipientMunicipality"),
+      appointmentAt: unloadingAppointment
     },
     cargoDescription: requiredText(data, "cargoDescription"),
     cargoQuantity: optionalText(data, "cargoQuantity"),
     cargoUnit: optionalText(data, "cargoUnit"),
+    optionalCargoField: optionalText(data, "optionalCargoField"),
     weightTons: requiredText(data, "weightTons"),
     volumeM3: optionalText(data, "volumeM3"),
     packagingCode: requiredText(data, "packagingCode"),
@@ -416,6 +448,10 @@ function loadingOrderDraft(data: FormData, customerId: Id<"customers">) {
     maxLoadingDate: loadingWindowEnd(data),
     generatesConsignment: data.get("generatesConsignment") === "on"
   };
+}
+
+function compact<T extends Record<string, unknown>>(value: T): T {
+  return Object.fromEntries(Object.entries(value).filter(([, entry]) => entry !== undefined)) as T;
 }
 
 function loadingWindowEnd(data: FormData): string {
@@ -446,15 +482,11 @@ function money(value: string): number {
   return Number.isFinite(number) ? number : 0;
 }
 
-function dateTime(data: FormData, key: string): number | undefined {
-  const value = optionalText(data, key);
-  return value ? new Date(value).getTime() : undefined;
-}
-
-function requiredDateTime(data: FormData, key: string): number {
-  const value = dateTime(data, key);
-  if (!value || !Number.isFinite(value)) throw new Error(`Completa ${fieldLabel(key)}.`);
-  return value;
+function loadingDateTime(data: FormData, key: string, endOfDay: boolean): number {
+  const value = requiredText(data, key);
+  const timestamp = new Date(`${value}T${endOfDay ? "23:59:00" : "00:00:00"}-05:00`).getTime();
+  if (!Number.isFinite(timestamp)) throw new Error(`Completa ${fieldLabel(key)}.`);
+  return timestamp;
 }
 
 function fieldLabel(key: string): string {

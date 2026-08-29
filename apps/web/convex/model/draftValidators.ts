@@ -40,6 +40,7 @@ export const loadingOrderDraftValidator = v.object({
   cargoDescription: v.optional(v.string()),
   cargoQuantity: v.optional(v.string()),
   cargoUnit: v.optional(v.string()),
+  optionalCargoField: v.optional(v.string()),
   weightTons: v.optional(v.string()),
   volumeM3: v.optional(v.string()),
   packagingCode: v.optional(v.string()),

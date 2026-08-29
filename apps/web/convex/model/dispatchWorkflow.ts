@@ -223,6 +223,7 @@ export type LoadingOrderDraft = {
   cargoDescription?: string;
   cargoQuantity?: string;
   cargoUnit?: string;
+  optionalCargoField?: string;
   weightTons?: string;
   volumeM3?: string;
   packagingCode?: string;

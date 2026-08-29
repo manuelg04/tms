@@ -7,6 +7,52 @@ test.beforeEach(async ({ page }) => {
   await login(page);
 });
 
+test("loading order creation mirrors the Avansat field contract", async ({ page }) => {
+  await page.goto("/expedientes/nuevo");
+
+  const orderNumber = page.getByLabel("Nro. de orden de cargue", { exact: true });
+  await expect(orderNumber).toBeVisible();
+  await expect(orderNumber).toHaveAttribute("readonly", "");
+  await expect(orderNumber).toHaveValue(/^\d{9}$/);
+  await expect(page.getByLabel("Orden de servicio", { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel("Referencia del cliente", { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel("Sede RNDC remitente", { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel("Sede RNDC destinatario", { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel("Código de mercancía", { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel("Naturaleza de la carga", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("combobox", { name: "Conductor", exact: true })).toHaveCount(0);
+
+  for (const label of [
+    "Cliente",
+    "Nombre del remitente",
+    "Ciudad remitente",
+    "Nombre del destinatario",
+    "Ciudad destinatario",
+    "Placa",
+    "Tipo de empaque"
+  ]) {
+    await expect(page.getByRole("combobox", { name: label, exact: true })).toBeVisible();
+  }
+
+  for (const label of [
+    "Dirección remitente",
+    "Dirección destinatario",
+    "Peso (TN)",
+    "Volumen (m³)",
+    "Cantidad",
+    "Mercancía",
+    "Campo opcional"
+  ]) {
+    await expect(page.getByLabel(label, { exact: true })).toBeVisible();
+  }
+
+  await expect(page.getByLabel(/^Flete conductor/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Fecha mínima", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Fecha máxima", exact: true })).toBeVisible();
+
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
 test("dispatch queue shows stage RNDC status and one next action without horizontal overflow", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Despachos", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Listado de despachos" })).toBeVisible();
@@ -20,13 +66,14 @@ test("dispatch queue shows stage RNDC status and one next action without horizon
 test("base creation hands the operator to the document hub", async ({ page }) => {
   await page.goto("/expedientes/nuevo");
   await fillLoadingOrder(page, `GUIDED-${Date.now()}`);
+  const orderNumber = await page.getByLabel("Nro. de orden de cargue", { exact: true }).inputValue();
   await expect(page.locator("#loading-order-title")).toBeVisible();
-  await expect(page.getByText("CONDUCTOR DEMO", { exact: true })).toBeVisible();
   await expect(page.getByText("Paso 1 de 5")).toHaveCount(0);
   await page.getByRole("button", { name: "Crear despacho y abrir documentos" }).click();
   await expect(page).toHaveURL(/\/expedientes\/[^/?]+\?stage=orden_cargue/);
   await expect(page.getByRole("region", { name: "Documentos del despacho" })).toBeVisible();
   await expect(documentCard(page, "Vehículo y conductor").getByText("Completado")).toBeVisible();
+  await expect(page.getByLabel("Resumen del despacho").getByText(orderNumber, { exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 
@@ -50,6 +97,10 @@ test("dispatch documents can be completed and emitted in separate sessions", asy
   await expect(assignmentCard.getByText("Completado")).toBeVisible();
 
   const orderCard = documentCard(page, "Orden de cargue");
+  await page.getByLabel("Sede RNDC remitente").fill("1");
+  await page.getByLabel("Sede RNDC destinatario").fill("1");
+  await page.getByLabel("Código de mercancía").fill("005229");
+  await page.getByRole("button", { name: "Guardar cambios" }).click();
   await expect(orderCard.getByRole("button", { name: "Emitir a RNDC" })).toBeEnabled();
   await orderCard.getByRole("button", { name: "Emitir a RNDC" }).click();
   await expect(orderCard.locator(".status-badge")).toContainText("Autorizado", { timeout: 20_000 });
@@ -221,32 +272,23 @@ async function pickDate(page: Page, label: string, quick: "Hoy" | "Mañana", wit
 }
 
 async function fillLoadingOrder(page: Page, suffix: string) {
-  await page.getByLabel("Orden de servicio").fill(`OS-${suffix}`);
-  await page.getByRole("combobox", { name: "Cliente o razón social", exact: true }).fill(`Cliente ${suffix}`);
-  await page.getByLabel("Código del cliente").fill(`CLI-${suffix}`);
-  await page.getByLabel("Identificación del cliente").fill(`900${suffix.replace(/\D/g, "").slice(-6)}`);
+  const digits = suffix.replace(/\D/g, "").slice(-6).padStart(6, "0");
+  await page.getByRole("combobox", { name: "Cliente", exact: true }).fill(`Cliente ${suffix}`);
+  await page.getByRole("combobox", { name: "Nombre del remitente", exact: true }).fill(`Remitente ${suffix}`);
+  await page.getByLabel("Número de identificación remitente").fill(`900${digits}`);
+  await page.getByLabel("Dirección remitente").fill("Calle 10 # 20-30");
+  await pickOption(page, "Ciudad remitente", "Bogota", /Bogota/i);
   await page.getByLabel("Teléfono remitente").fill("6015551234");
-  await page.getByLabel("Sede RNDC remitente").fill("1");
-  const loading = page.getByRole("group", { name: "Cargue", exact: true });
-  await loading.getByLabel("Lugar").fill("Bodega Bogotá");
-  await pickOption(page, "Municipio", "Bogota", /Bogota/i, loading);
-  await loading.getByLabel("Dirección").fill("Calle 10 # 20-30");
-  await pickDate(page, "Cita de cargue", "Mañana", true);
-  const unloading = page.getByRole("group", { name: "Descargue", exact: true });
-  await unloading.getByLabel("Lugar").fill("Centro Medellín");
-  await pickOption(page, "Municipio", "Medellin", /Medellin/i, unloading);
-  await unloading.getByLabel("Dirección").fill("Carrera 40 # 50-60");
-  await pickDate(page, "Cita de descargue", "Mañana", true);
-  await page.getByRole("combobox", { name: "Destinatario", exact: true }).fill(`Destinatario ${suffix}`);
-  await page.getByLabel("Identificación destinatario", { exact: true }).fill("901234567");
+  await page.getByRole("combobox", { name: "Nombre del destinatario", exact: true }).fill(`Destinatario ${suffix}`);
+  await page.getByLabel("Número de identificación destinatario", { exact: true }).fill(`901${digits}`);
+  await page.getByLabel("Dirección destinatario").fill("Carrera 40 # 50-60");
+  await pickOption(page, "Ciudad destinatario", "Medellin", /Medellin/i);
   await page.getByLabel("Teléfono destinatario").fill("6045559876");
-  await page.getByLabel("Sede RNDC destinatario").fill("1");
-  await pickOption(page, "Placa del vehículo", "DEM001", /DEM001/);
-  await page.getByLabel("Flete conductor").fill("2500000");
+  await pickOption(page, "Placa", "DEM001", /DEM001/);
+  await page.getByLabel(/^Flete conductor/).fill("2500000");
   await page.getByLabel("Mercancía", { exact: true }).fill("Carga seca");
-  await page.getByLabel("Peso total (TN)").fill("12.5");
+  await page.getByLabel("Peso (TN)").fill("12.5");
   await pickOption(page, "Tipo de empaque", "paquete", /paquete/i);
-  await page.getByLabel("Código de mercancía").fill("005229");
 }
 
 function documentCard(page: Page, title: string) {

@@ -2,6 +2,7 @@ import type { OfficialDocumentState } from "./documentLifecycle";
 import {
   emissionDependencyBlockers,
   emissionScopeTargets,
+  normalizeManifestType,
   type ConsignmentDraft,
   type DispatchWorkflowVariant,
   type EmissionScope,
@@ -391,7 +392,7 @@ function buildManifestPayload(
     workflowVariant,
     remesaNumber: remesaNumbers[0],
     manifestRemesas: remesaNumbers.length > 0 ? consignments.map((item) => consignmentSummary(item)) : undefined,
-    manifestType: manifest.manifestType,
+    manifestType: normalizeManifestType(manifest.manifestType) ?? manifest.manifestType,
     sourceManifestNumber: manifest.sourceManifestNumber,
     expeditionDate: requireField(manifest.issueDate, "expeditionDate", missing),
     balancePaymentDate: requireField(manifest.paymentDate ?? manifest.estimatedDeliveryDate, "balancePaymentDate", missing),

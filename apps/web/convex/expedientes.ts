@@ -1170,7 +1170,7 @@ export async function toListRow(ctx: Pick<QueryCtx, "db">, expediente: Doc<"expe
     assignment: { vehicleAssigned: Boolean(expediente.vehicleId), driverAssigned: Boolean(expediente.driverId) },
     manifest: expediente.manifestDraft
       ? {
-          missingFields: manifestMissingFields(expediente.manifestDraft),
+          missingFields: manifestMissingFields(expediente.manifestDraft, remesas.length),
           officialState: officialState(manifestDocument),
           fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
         }

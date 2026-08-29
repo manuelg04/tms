@@ -54,7 +54,7 @@ const manifestSnapshot = {
   issueDate: "2026-07-10",
   estimatedDeliveryDate: "2026-07-14",
   operationScope: "intermunicipal" as const,
-  manifestType: "GENERAL",
+  manifestType: "G",
   freightTotal: "3500000",
   advance: "1500000",
   withholdingIca: "0",

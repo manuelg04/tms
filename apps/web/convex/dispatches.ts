@@ -987,7 +987,7 @@ async function prepareForEmissionHandler(
     }
   }
   if (targets.manifest) {
-    blockers.push(...manifestMissingFields(expediente.manifestDraft));
+    blockers.push(...manifestMissingFields(expediente.manifestDraft, remesas.length));
   }
   if (targets.assignment && !scopeDocumentsAuthorized && assignmentData === undefined) {
     if (!expediente.driverId) {
@@ -1457,7 +1457,7 @@ async function buildProjection(
     assignment: { vehicleAssigned: !!expediente.vehicleId, driverAssigned: !!expediente.driverId },
     manifest: expediente.manifestDraft
       ? {
-          missingFields: manifestMissingFields(expediente.manifestDraft),
+          missingFields: manifestMissingFields(expediente.manifestDraft, remesas.length),
           officialState: manifestState,
           fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
         }

@@ -456,7 +456,7 @@ function renderStage(input: {
   if (input.selectedStage === "orden_cargue") return <LoadingOrderForm draft={detail.expediente.loadingOrderDraft ?? {}} onSubmit={input.saveOrder} readOnly={input.orderReadOnly} />;
   if (input.selectedStage === "remesas") return <ConsignmentsForm context={{ customerName: detail.customer.name, loadingOrderNumber: detail.expediente.cargoNumber ?? detail.expediente.loadingOrderDraft?.orderNumber, manifestNumber: detail.expediente.manifestNumber ?? detail.expediente.manifestDraft?.manifestNumber, serviceOrderCode: detail.serviceOrder.code }} onSubmit={input.saveRemesas} order={detail.expediente.loadingOrderDraft ?? {}} readOnly={!input.isEditable} remesas={detail.remesas} />;
   if (input.selectedStage === "vehiculo_conductor") return <AssignmentForm currentDriverDocument={detail.driver?.document} currentVehiclePlate={detail.vehicle?.plate} onSubmit={input.saveFleet} readOnly={!input.isEditable} />;
-  if (input.selectedStage === "manifiesto") return <ManifestForm context={{ agencyCode: detail.expediente.agencyCode, originCity: detail.remesas[0]?.draft?.loading?.cityName ?? detail.loadingLocation.city, destinationCity: detail.remesas[0]?.draft?.unloading?.cityName ?? detail.unloadingLocation.city, vehicle: detail.vehicle, trailer: detail.trailer, driver: detail.driver, secondDriver: detail.secondDriver }} draft={detail.expediente.manifestDraft ?? {}} onSubmit={input.saveManifestStage} readOnly={input.manifestReadOnly} />;
+  if (input.selectedStage === "manifiesto") return <ManifestForm context={{ agencyCode: detail.expediente.agencyCode, consignmentCount: detail.remesas.length, originCity: detail.remesas[0]?.draft?.loading?.cityName ?? detail.loadingLocation.city, destinationCity: detail.remesas[0]?.draft?.unloading?.cityName ?? detail.unloadingLocation.city, vehicle: detail.vehicle, trailer: detail.trailer, driver: detail.driver, secondDriver: detail.secondDriver }} draft={detail.expediente.manifestDraft ?? {}} onSubmit={input.saveManifestStage} readOnly={input.manifestReadOnly} />;
   if (input.selectedStage === "envio_rndc") return <ReviewStage mode="PRUEBA" summary={[
     { label: "Orden de cargue", value: detail.expediente.loadingOrderDraft?.orderNumber ?? "Se asignará al enviar" },
     { label: "Remesas", value: `${detail.remesas.length} preparadas`, warning: detail.remesas.length === 0 },
@@ -499,7 +499,7 @@ function buildDocumentHubItems(input: {
     ...emissionDependencyBlockers("remesas", dependencyInput)
   ]);
   const manifestBlockers = isOfficial(manifestState) ? [] : unique([
-    ...manifestMissingFields(detail.expediente.manifestDraft),
+    ...manifestMissingFields(detail.expediente.manifestDraft, detail.remesas.length),
     ...assignmentBlockers,
     ...emissionDependencyBlockers("manifiesto", dependencyInput)
   ]);

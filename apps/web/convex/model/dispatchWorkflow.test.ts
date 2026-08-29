@@ -10,6 +10,7 @@ import {
   emissionScopeTargets,
   loadingOrderMissingFields,
   manifestMissingFields,
+  normalizeManifestType,
   type DispatchProjection,
   type LoadingOrderDraft
 } from "./dispatchWorkflow";
@@ -397,6 +398,23 @@ test("a manifest draft lists missing settlement fields", () => {
   assert.ok(missing.includes("Responsable de pago"));
   assert.ok(!missing.includes("Fecha de expedición"));
   assert.ok(!missing.includes("Flete total"));
+});
+
+test("a multi-stop manifest requires at least two consignments", () => {
+  const draft = { issueDate: "2026-07-10", estimatedDeliveryDate: "2026-07-12", operationScope: "intermunicipal" as const, manifestType: "M", freightTotal: "3500000", paymentResponsible: "Cliente" };
+
+  assert.ok(manifestMissingFields(draft, 1).includes("Un manifiesto Multiparada requiere al menos dos remesas"));
+  assert.deepEqual(manifestMissingFields(draft, 2), []);
+  assert.deepEqual(manifestMissingFields({ ...draft, manifestType: "G" }, 1), []);
+  assert.deepEqual(manifestMissingFields({ ...draft, manifestType: "General" }, 1), []);
+  assert.ok(manifestMissingFields({ ...draft, manifestType: "Z" }, 3).some((item) => item.startsWith("Tipo de manifiesto válido")));
+});
+
+test("legacy manifest type labels normalize to RNDC codes", () => {
+  assert.equal(normalizeManifestType("General"), "G");
+  assert.equal(normalizeManifestType("multiparada"), "M");
+  assert.equal(normalizeManifestType("w"), "W");
+  assert.equal(normalizeManifestType("Otro"), undefined);
 });
 
 test("editing the loading order is rejected once its cargo information left draft", () => {

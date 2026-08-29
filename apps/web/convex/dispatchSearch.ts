@@ -186,7 +186,7 @@ export const seedVolumeBatch = mutation({
           issueDate: day(fixture.updatedAt),
           estimatedDeliveryDate: day(fixture.updatedAt + 86_400_000),
           operationScope: "intermunicipal",
-          manifestType: "General",
+          manifestType: "G",
           agencyCode: "VOL",
           originCityName: fixture.originCity,
           destinationCityName: fixture.destinationCity,

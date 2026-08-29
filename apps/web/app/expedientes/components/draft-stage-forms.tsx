@@ -8,7 +8,7 @@ import { DateField } from "../../components/fields/date-field";
 import { CargoNatureField, IdTypeField, InsurerField, MunicipalityField, PackagingField, PartyField, SiteField, formatDocument, type PartyPick } from "../../components/fields/lookup-fields";
 import { MoneyField, formatThousands } from "../../components/fields/money-field";
 import { VehicleAssignmentPicker, type VehicleAssignmentValue } from "./vehicle-assignment-picker";
-import { effectiveConsignment } from "../../../convex/model/dispatchWorkflow";
+import { MANIFEST_TYPE_OPTIONS, effectiveConsignment, normalizeManifestType } from "../../../convex/model/dispatchWorkflow";
 
 type LoadingOrder = {
   expeditionDate?: string;
@@ -110,6 +110,7 @@ type Manifest = {
 
 type ManifestContext = {
   agencyCode?: string;
+  consignmentCount: number;
   originCity?: string;
   destinationCity?: string;
   vehicle?: { plate: string; make?: string; line?: string; lineName?: string; modelYear?: string; configuration?: string; configurationLabel?: string; capacityTn?: string; ownerName?: string; ownerDocument?: string; possessorName?: string; possessorDocument?: string } | null;
@@ -442,7 +443,8 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <DateField label="Fecha estimada de entrega" name="estimatedDeliveryDate" required value={draft.estimatedDeliveryDate} />
         <Field label="Nro. de manifiesto" name="manifestNumberPreview" placeholder="Automático" readOnly value={draft.manifestNumber} />
         <Field label="Agencia" name="agencyPreview" placeholder="—" readOnly value={context.agencyCode} />
-        <Field label="Tipo de manifiesto" name="manifestType" required value={draft.manifestType} />
+        <label className="form-field"><span>Tipo de manifiesto<em aria-hidden="true"> *</em></span><select defaultValue={normalizeManifestType(draft.manifestType) ?? "G"} name="manifestType" required>{MANIFEST_TYPE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
+        {context.consignmentCount < 2 ? <div className="field-hint span-2">Multiparada solo aplica cuando el manifiesto agrupa dos o más remesas (una por cada entrega del recorrido).</div> : null}
         <Field label="Nro. de contrato" name="contractNumber" placeholder="Opcional" value={draft.contractNumber} />
         <Field label="Origen" name="originPreview" placeholder="—" readOnly value={context.originCity} />
         <Field label="Destino" name="destinationPreview" placeholder="—" readOnly value={context.destinationCity} />

@@ -449,7 +449,30 @@ function validAgreedHours(value: string | undefined): boolean {
   return Number.isFinite(parsed) && parsed >= 0 && parsed < 24;
 }
 
-export function manifestMissingFields(draft: ManifestDraft | null | undefined): string[] {
+export const MANIFEST_TYPE_OPTIONS = [
+  { value: "G", label: "General" },
+  { value: "M", label: "Multiparada" },
+  { value: "I", label: "Viaje de ida y regreso" },
+  { value: "D", label: "Varios viajes en el día" },
+  { value: "U", label: "Viaje municipal o urbano" },
+  { value: "V", label: "Varios viajes urbanos en el día" },
+  { value: "W", label: "Viaje vacío" }
+] as const;
+
+export type ManifestTypeCode = (typeof MANIFEST_TYPE_OPTIONS)[number]["value"];
+
+export const MULTI_STOP_MANIFEST_TYPE: ManifestTypeCode = "M";
+
+export function normalizeManifestType(value: string | undefined): ManifestTypeCode | undefined {
+  if (!present(value)) return undefined;
+  const raw = value!.trim();
+  const byCode = MANIFEST_TYPE_OPTIONS.find((option) => option.value === raw.toUpperCase());
+  if (byCode) return byCode.value;
+  const byLabel = MANIFEST_TYPE_OPTIONS.find((option) => option.label.localeCompare(raw, "es", { sensitivity: "base" }) === 0);
+  return byLabel?.value;
+}
+
+export function manifestMissingFields(draft: ManifestDraft | null | undefined, consignmentCount?: number): string[] {
   const missing: string[] = [];
 
   if (!draft) {
@@ -467,6 +490,13 @@ export function manifestMissingFields(draft: ManifestDraft | null | undefined): 
   }
   if (!present(draft.manifestType)) {
     missing.push("Tipo de manifiesto");
+  } else {
+    const manifestType = normalizeManifestType(draft.manifestType);
+    if (!manifestType) {
+      missing.push("Tipo de manifiesto válido (General, Multiparada, Viaje vacío...)");
+    } else if (manifestType === MULTI_STOP_MANIFEST_TYPE && consignmentCount !== undefined && consignmentCount < 2) {
+      missing.push("Un manifiesto Multiparada requiere al menos dos remesas");
+    }
   }
   if (!present(draft.freightTotal)) {
     missing.push("Flete total");

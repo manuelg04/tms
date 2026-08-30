@@ -56,7 +56,7 @@ export async function POST(
 
   const manifest = detail.documents.find((document) => document.kind === "manifiesto");
 
-  if (!manifest || manifest.officialState !== "authorized") {
+  if (!manifest || (manifest.officialState !== "authorized" && manifest.officialState !== "fulfilled")) {
     return jsonResponse({ error: "El manifiesto debe estar autorizado antes del cumplido" }, 409);
   }
 
@@ -65,7 +65,7 @@ export async function POST(
     document: detail.documents.find((document) => document._id === remesa.documentId)
   }));
 
-  if (consignmentDocuments.some(({ document }) => !document || document.officialState !== "authorized")) {
+  if (consignmentDocuments.some(({ document }) => !document || (document.officialState !== "authorized" && document.officialState !== "fulfilled"))) {
     return jsonResponse({ error: "Todas las remesas deben estar autorizadas antes del cumplido" }, 409);
   }
 

@@ -895,10 +895,10 @@ function buildBlankScenario(config: RndcConfig): DemoScenario {
       nit: config.companyNit,
       dv: config.companyDv,
       rndcNit: config.companyRndcNit,
-      name: "",
-      address: "",
-      phone: "",
-      cityName: ""
+      name: "TRANSPORTES MTM SERVICIOS TERCERIZADOS SAS",
+      address: "CALLE 16 Nº 24 - 35 EDIFICIO MAQROLL OFI 401 BR SAN FRANCISCO",
+      phone: "6076040133",
+      cityName: "BUCARAMANGA - Santander"
     },
     driver: person(),
     vehicleOwner: person(),

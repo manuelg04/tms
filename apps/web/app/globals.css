@@ -1761,6 +1761,9 @@ button {
 .final-delivery-row { display: grid; grid-template-columns: minmax(200px, .6fr) 1fr; gap: 10px; margin-top: 12px; border: 1px solid var(--plate-border); border-radius: var(--radius); background: var(--plate-soft); padding: 13px; }
 .fulfillment-card.complete { background: var(--surface-alt); }
 .fulfillment-quantities { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.fulfillment-times { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.fulfillment-times .field-group-note { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 10px; }
+.fulfillment-times .field-group-note small { color: var(--ink-soft); }
 .fulfillment-card > p { grid-column: 1 / -1; margin: 0; color: var(--ink-soft); }
 .fulfillment-card > .form-field { grid-column: 1 / -1; }
 .manifest-fulfillment-card { display: grid; grid-template-columns: 240px 1fr; gap: 12px; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
@@ -1924,6 +1927,7 @@ button {
   .dispatch-side-context { grid-template-columns: 1fr; }
   .dispatch-side-context > a { grid-column: auto; }
   .fulfillment-quantities { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fulfillment-times { grid-template-columns: 1fr; }
   .history-document { grid-template-columns: 34px minmax(0, 1fr); }
   .document-state-text { grid-column: 2; }
   .advanced-actions-heading { flex-direction: column; gap: 10px; }

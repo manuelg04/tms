@@ -2,7 +2,8 @@ import { ConvexHttpClient } from "convex/browser";
 import type { FunctionReturnType } from "convex/server";
 import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
-import { buildFulfillmentPlan } from "../../../../../../convex/model/fulfillmentWorkflow";
+import { bogotaDateTimeParts, buildFulfillmentPlan, deriveOperationTimes } from "../../../../../../convex/model/fulfillmentWorkflow";
+import { effectiveConsignment, type ConsignmentDraft, type LoadingOrderDraft } from "../../../../../../convex/model/dispatchWorkflow";
 import { getAuthSettings, createConvexToken, jsonResponse } from "../../../../../lib/auth-server";
 import { authorizeGatewayRequest } from "../../../../../lib/rndc-gateway";
 import { POST as runRndcAction } from "../../../actions/[action]/route";
@@ -51,12 +52,6 @@ export async function POST(
 
   if (!detail) {
     return jsonResponse({ error: "Despacho no encontrado" }, 404);
-  }
-
-  const logisticsBlocker = validateSavedLogistics(detail);
-
-  if (logisticsBlocker) {
-    return jsonResponse({ error: logisticsBlocker, nextAction: "registrar_tiempos" }, 409);
   }
 
   const manifest = detail.documents.find((document) => document.kind === "manifiesto");
@@ -203,22 +198,46 @@ async function executeStep(
   return { outcome: "rejected", status: response.status >= 400 ? response.status : 422, error };
 }
 
-function validateSavedLogistics(detail: Detail): string | null {
-  const times = detail.expediente.logisticsTimes;
-  const complete = (site: typeof times extends undefined ? never : NonNullable<typeof times>["origin"]) =>
-    Boolean(site?.arrival && site.entry && site.start && site.end && site.exit);
-
-  if (!complete(times?.origin) || !complete(times?.destination) || !times?.finalDelivery) {
-    return "Registra los cinco tiempos de origen, los cinco de destino y la entrega final antes del cumplido";
-  }
-
-  return null;
+function operationTimesPayload(detail: Detail, remesa: Detail["remesas"][number]): Record<string, string> {
+  const effective = effectiveConsignment((remesa.draft ?? {}) as ConsignmentDraft, (detail.expediente.loadingOrderDraft ?? null) as LoadingOrderDraft | null);
+  const loadingAt = detail.serviceOrder.scheduledLoadingAt ?? detail.expediente.createdAt;
+  const times = deriveOperationTimes(
+    {
+      loadingAppointmentAt: effective.loading?.appointmentAt,
+      loadingAgreedHours: effective.loading?.agreedHours,
+      unloadingAppointmentAt: effective.unloading?.appointmentAt,
+      unloadingAgreedHours: effective.unloading?.agreedHours
+    },
+    remesa.fulfillmentDraft,
+    { loadingAt, unloadingAt: detail.serviceOrder.scheduledUnloadingAt ?? loadingAt }
+  );
+  const loadingArrival = bogotaDateTimeParts(times.loadingArrivalAt);
+  const loadingEntry = bogotaDateTimeParts(times.loadingEntryAt);
+  const loadingExit = bogotaDateTimeParts(times.loadingExitAt);
+  const unloadingArrival = bogotaDateTimeParts(times.unloadingArrivalAt);
+  const unloadingEntry = bogotaDateTimeParts(times.unloadingEntryAt);
+  const unloadingExit = bogotaDateTimeParts(times.unloadingExitAt);
+  return {
+    loadingArrivalDate: loadingArrival.date,
+    loadingArrivalTime: loadingArrival.time,
+    loadingEntryDate: loadingEntry.date,
+    loadingEntryTime: loadingEntry.time,
+    loadingExitDate: loadingExit.date,
+    loadingExitTime: loadingExit.time,
+    unloadingArrivalDate: unloadingArrival.date,
+    unloadingArrivalTime: unloadingArrival.time,
+    unloadingEntryDate: unloadingEntry.date,
+    unloadingEntryTime: unloadingEntry.time,
+    unloadingExitDate: unloadingExit.date,
+    unloadingExitTime: unloadingExit.time
+  };
 }
 
 function consignmentPayload(detail: Detail, remesa: Detail["remesas"][number]): Record<string, unknown> {
   return {
     ...basePayload(detail, remesa),
     compliance: {
+      ...operationTimesPayload(detail, remesa),
       remesaType: remesa.fulfillmentDraft?.suspended ? "S" : "C",
       loadedQuantityKg: Number(remesa.fulfillmentDraft?.deliveredQuantity ?? "0"),
       missingQuantityKg: Number(remesa.fulfillmentDraft?.missingQuantity ?? "0"),

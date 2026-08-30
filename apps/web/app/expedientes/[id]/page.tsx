@@ -11,6 +11,7 @@ import { dispatchPrimaryAction } from "../../../convex/model/dispatchPresentatio
 import {
   compactConsignmentOverrides,
   consignmentMissingFields,
+  effectiveConsignment,
   emissionDependencyBlockers,
   loadingOrderMissingFields,
   manifestMissingFields,
@@ -18,6 +19,7 @@ import {
   type EmissionScope
 } from "../../../convex/model/dispatchWorkflow";
 import type { OfficialDocumentState } from "../../../convex/model/documentLifecycle";
+import { deriveOperationTimes, type OperationTimes } from "../../../convex/model/fulfillmentWorkflow";
 import { useDemoUser } from "../../providers";
 import { StatusBadge } from "../status-badge";
 import { AdvancedActions, type AdvancedAction } from "../components/advanced-actions";
@@ -32,7 +34,6 @@ import {
   ManifestForm,
   ReviewStage
 } from "../components/draft-stage-forms";
-import { LogisticsTimesForm } from "../components/logistics-times-form";
 import { NextActionCard } from "../components/next-action-card";
 import { resolveDispatchEntry } from "../../lib/document-workspace";
 
@@ -66,7 +67,6 @@ export default function DespachoDetailPage() {
   const saveConsignments = useMutation(api.dispatches.saveConsignmentsDraft);
   const saveAssignment = useMutation(api.dispatches.saveAssignmentDraft);
   const saveManifest = useMutation(api.dispatches.saveManifestDraft);
-  const recordLogistics = useMutation(api.dispatches.recordLogisticsTimes);
   const recordFulfillment = useMutation(api.dispatches.recordFulfillmentDraft);
   const recordManifestFulfillment = useMutation(api.dispatches.recordManifestFulfillmentDraft);
 
@@ -126,7 +126,7 @@ export default function DespachoDetailPage() {
   });
   const canEdit = user?.role === "operator" || user?.role === "admin";
   const isEditable = ["draft", "in_progress", "ready"].includes(detail.expediente.status);
-  const formId = canEdit && selectedStage !== null && selectedStage === stageResult.stage && ["orden_cargue", "remesas", "vehiculo_conductor", "manifiesto", "cargue_descargue", "cumplido_inicial", "cumplido_final"].includes(stageResult.stage)
+  const formId = canEdit && selectedStage !== null && selectedStage === stageResult.stage && ["orden_cargue", "remesas", "vehiculo_conductor", "manifiesto", "cumplido_inicial", "cumplido_final"].includes(stageResult.stage)
     && !["reconcile", "review_rejection", "wait"].includes(primaryAction.kind)
     ? "stage-primary-form"
     : undefined;
@@ -270,18 +270,6 @@ export default function DespachoDetailPage() {
     });
   }
 
-  async function saveLogistics(data: FormData) {
-    await run(async () => {
-      await recordLogistics({
-        expedienteId,
-        origin: logisticsSite(data, "origin"),
-        destination: logisticsSite(data, "destination"),
-        finalDelivery: { occurredAt: timestamp(data, "finalDelivery"), observation: value(data, "finalDeliveryObservation") }
-      });
-      moveTo("cumplido_inicial", "Los tiempos reales quedaron registrados. Ya puedes revisar el cumplido de cada remesa.");
-    });
-  }
-
   async function fulfillRemesas(data: FormData) {
     await run(async () => {
       for (const remesa of detail.remesas.filter((row) => row.fulfillmentState !== "fulfilled")) {
@@ -294,7 +282,13 @@ export default function DespachoDetailPage() {
             surplusQuantity: value(data, `${remesa._id}_surplus`),
             returnedQuantity: value(data, `${remesa._id}_returned`),
             unit: remesa.cargoUnit ?? "kg",
-            observation: value(data, `${remesa._id}_observation`)
+            observation: value(data, `${remesa._id}_observation`),
+            loadingArrivalAt: timestamp(data, `${remesa._id}_loadingArrivalAt`),
+            loadingEntryAt: timestamp(data, `${remesa._id}_loadingEntryAt`),
+            loadingExitAt: timestamp(data, `${remesa._id}_loadingExitAt`),
+            unloadingArrivalAt: timestamp(data, `${remesa._id}_unloadingArrivalAt`),
+            unloadingEntryAt: timestamp(data, `${remesa._id}_unloadingEntryAt`),
+            unloadingExitAt: timestamp(data, `${remesa._id}_unloadingExitAt`)
           }
         });
       }
@@ -372,7 +366,6 @@ export default function DespachoDetailPage() {
     saveRemesas,
     saveFleet,
     saveManifestStage,
-    saveLogistics,
     fulfillRemesas,
     fulfillManifest
   }) : null;
@@ -448,7 +441,6 @@ function renderStage(input: {
   saveRemesas: (data: FormData) => void;
   saveFleet: (values: { driverId?: string; vehicleId?: string }) => void;
   saveManifestStage: (data: FormData) => void;
-  saveLogistics: (data: FormData) => void;
   fulfillRemesas: (data: FormData) => void;
   fulfillManifest: (data: FormData) => void;
 }) {
@@ -463,8 +455,7 @@ function renderStage(input: {
     { label: "Vehículo y conductor", value: detail.vehicle && detail.driver ? `${detail.vehicle.plate} · ${detail.driver.name ?? detail.driver.document}` : "Asignación incompleta", warning: !detail.vehicle || !detail.driver },
     { label: "Manifiesto", value: detail.expediente.manifestDraft?.manifestNumber ?? "Se asignará al enviar" }
   ]} />;
-  if (input.selectedStage === "cargue_descargue") return <LogisticsTimesForm destination={detail.expediente.logisticsTimes?.destination} finalDelivery={detail.expediente.logisticsTimes?.finalDelivery} onSubmit={input.saveLogistics} origin={detail.expediente.logisticsTimes?.origin} />;
-  if (input.selectedStage === "cumplido_inicial") return <ConsignmentFulfillmentForm onSubmit={input.fulfillRemesas} remesas={detail.remesas} />;
+  if (input.selectedStage === "cumplido_inicial") return <ConsignmentFulfillmentForm onSubmit={input.fulfillRemesas} remesas={detail.remesas.map((remesa) => ({ ...remesa, operationTimes: defaultOperationTimes(detail, remesa) }))} />;
   return <ManifestFulfillmentForm defaultDate={detail.expediente.manifestFulfillmentDraft?.documentsDeliveryDate} defaultObservation={detail.expediente.manifestFulfillmentDraft?.observation} onSubmit={input.fulfillManifest} />;
 }
 
@@ -613,9 +604,19 @@ function Summary({ label, value }: { label: string; value: string }) {
   return <div><span>{label}</span><strong>{value}</strong></div>;
 }
 
-function logisticsSite(data: FormData, prefix: "origin" | "destination") {
-  const event = (key: string) => ({ occurredAt: timestamp(data, `${prefix}_${key}`), observation: value(data, `${prefix}_${key}_observation`) });
-  return { arrival: event("arrival"), entry: event("entry"), start: event("start"), end: event("end"), exit: event("exit") };
+function defaultOperationTimes(detail: Detail, remesa: Detail["remesas"][number]): OperationTimes {
+  const effective = effectiveConsignment(remesa.draft ?? {}, detail.expediente.loadingOrderDraft ?? null);
+  const loadingAt = detail.serviceOrder.scheduledLoadingAt ?? detail.expediente.createdAt;
+  return deriveOperationTimes(
+    {
+      loadingAppointmentAt: effective.loading?.appointmentAt,
+      loadingAgreedHours: effective.loading?.agreedHours,
+      unloadingAppointmentAt: effective.unloading?.appointmentAt,
+      unloadingAgreedHours: effective.unloading?.agreedHours
+    },
+    remesa.fulfillmentDraft,
+    { loadingAt, unloadingAt: detail.serviceOrder.scheduledUnloadingAt ?? loadingAt }
+  );
 }
 
 function value(data: FormData, key: string): string | undefined {

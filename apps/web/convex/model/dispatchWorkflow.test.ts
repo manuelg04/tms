@@ -38,7 +38,6 @@ function baseProjection(overrides: Partial<DispatchProjection> = {}): DispatchPr
     assignment: { vehicleAssigned: true, driverAssigned: true },
     manifest: { missingFields: [], officialState: "draft", fulfillmentState: "not_requested" },
     cargoInfoState: "draft",
-    logistics: { originComplete: false, destinationComplete: false, finalDeliveryRecorded: false },
     ...overrides
   };
 }
@@ -113,25 +112,12 @@ test("a partially emitted sequence stays at the emission stage", () => {
   assert.equal(stage.stage, "envio_rndc");
 });
 
-test("a fully authorized dispatch moves to logistics recording", () => {
+test("a fully authorized dispatch moves straight to individual fulfillment", () => {
   const stage = deriveDispatchStage(
     baseProjection({
       cargoInfoState: "authorized",
       consignments: [{ missingFields: [], officialState: "authorized", fulfillmentState: "not_requested" }],
       manifest: { missingFields: [], officialState: "authorized", fulfillmentState: "not_requested" }
-    })
-  );
-
-  assert.equal(stage.stage, "cargue_descargue");
-});
-
-test("recorded logistics move the dispatch to individual fulfillment", () => {
-  const stage = deriveDispatchStage(
-    baseProjection({
-      cargoInfoState: "authorized",
-      consignments: [{ missingFields: [], officialState: "authorized", fulfillmentState: "not_requested" }],
-      manifest: { missingFields: [], officialState: "authorized", fulfillmentState: "not_requested" },
-      logistics: { originComplete: true, destinationComplete: true, finalDeliveryRecorded: true }
     })
   );
 
@@ -145,8 +131,7 @@ test("the final fulfillment stays blocked while any consignment is pending", () 
       { missingFields: [], officialState: "fulfilled", fulfillmentState: "fulfilled" },
       { missingFields: [], officialState: "authorized", fulfillmentState: "not_requested" }
     ],
-    manifest: { missingFields: [], officialState: "authorized", fulfillmentState: "not_requested" },
-    logistics: { originComplete: true, destinationComplete: true, finalDeliveryRecorded: true }
+    manifest: { missingFields: [], officialState: "authorized", fulfillmentState: "not_requested" }
   });
 
   assert.equal(deriveDispatchStage(projection).stage, "cumplido_inicial");
@@ -157,8 +142,7 @@ test("all consignments fulfilled enable the final fulfillment stage", () => {
   const projection = baseProjection({
     cargoInfoState: "authorized",
     consignments: [{ missingFields: [], officialState: "fulfilled", fulfillmentState: "fulfilled" }],
-    manifest: { missingFields: [], officialState: "authorized", fulfillmentState: "not_requested" },
-    logistics: { originComplete: true, destinationComplete: true, finalDeliveryRecorded: true }
+    manifest: { missingFields: [], officialState: "authorized", fulfillmentState: "not_requested" }
   });
 
   assert.equal(deriveDispatchStage(projection).stage, "cumplido_final");
@@ -170,8 +154,7 @@ test("a fulfilled manifest closes the dispatch", () => {
     baseProjection({
       cargoInfoState: "authorized",
       consignments: [{ missingFields: [], officialState: "fulfilled", fulfillmentState: "fulfilled" }],
-      manifest: { missingFields: [], officialState: "fulfilled", fulfillmentState: "fulfilled" },
-      logistics: { originComplete: true, destinationComplete: true, finalDeliveryRecorded: true }
+      manifest: { missingFields: [], officialState: "fulfilled", fulfillmentState: "fulfilled" }
     })
   );
 
@@ -185,11 +168,10 @@ test("authorized legacy documents do not send the operator back to missing draft
     consignments: [{ missingFields: ["Remesa sin borrador"], officialState: "authorized", fulfillmentState: "not_requested" }],
     assignment: { vehicleAssigned: true, driverAssigned: true },
     manifest: { missingFields: ["Manifiesto sin preparar"], officialState: "authorized", fulfillmentState: "not_requested" },
-    cargoInfoState: "authorized",
-    logistics: { originComplete: false, destinationComplete: false, finalDeliveryRecorded: false }
+    cargoInfoState: "authorized"
   });
 
-  assert.equal(stage.stage, "cargue_descargue");
+  assert.equal(stage.stage, "cumplido_inicial");
   assert.deepEqual(stage.blockers, []);
 });
 
@@ -200,11 +182,10 @@ test("a legacy authorized remesa and manifest chain does not require a missing l
     consignments: [{ missingFields: ["Remesa sin borrador"], officialState: "authorized", fulfillmentState: "not_requested" }],
     assignment: { vehicleAssigned: true, driverAssigned: true },
     manifest: { missingFields: [], officialState: "authorized", fulfillmentState: "not_requested" },
-    cargoInfoState: "draft",
-    logistics: { originComplete: false, destinationComplete: false, finalDeliveryRecorded: false }
+    cargoInfoState: "draft"
   });
 
-  assert.equal(stage.stage, "cargue_descargue");
+  assert.equal(stage.stage, "cumplido_inicial");
 });
 
 test("an annulled dispatch reports the annulled stage", () => {

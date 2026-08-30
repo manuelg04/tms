@@ -4,7 +4,6 @@ export type DispatchActionKind =
   | "continue"
   | "review"
   | "emit"
-  | "record_logistics"
   | "fulfill_consignments"
   | "fulfill_manifest"
   | "print"
@@ -35,7 +34,6 @@ export const guidedDispatchStages: Array<{ key: DispatchStage; label: string; sh
   { key: "vehiculo_conductor", label: "Vehículo y conductor", shortLabel: "Flota" },
   { key: "manifiesto", label: "Manifiesto", shortLabel: "Manifiesto" },
   { key: "envio_rndc", label: "Revisión y envío RNDC", shortLabel: "RNDC" },
-  { key: "cargue_descargue", label: "Cargue y descargue", shortLabel: "Operación" },
   { key: "cumplido_inicial", label: "Cumplido inicial", shortLabel: "Remesas" },
   { key: "cumplido_final", label: "Cumplido final", shortLabel: "Cierre" }
 ];
@@ -46,7 +44,6 @@ const stageActions: Record<DispatchStage, DispatchPrimaryAction> = {
   vehiculo_conductor: action("continue", "Asignar vehículo y conductor", "Selecciona recursos vigentes del maestro."),
   manifiesto: action("continue", "Preparar manifiesto", "Completa la operación y la liquidación del viaje."),
   envio_rndc: action("emit", "Revisar y enviar", "Valida el despacho antes de iniciar la secuencia en modo prueba."),
-  cargue_descargue: action("record_logistics", "Registrar tiempos", "Registra manualmente la operación en origen y destino."),
   cumplido_inicial: action("fulfill_consignments", "Cumplir remesas", "Confirma la entrega real de cada remesa."),
   cumplido_final: action("fulfill_manifest", "Cumplir manifiesto", "Cierra el manifiesto después de todas las remesas."),
   cumplido: action("print", "Imprimir documentos", "El despacho está cerrado y sus documentos permanecen disponibles."),

@@ -2,7 +2,7 @@ export type DocumentKind = "orden_cargue" | "remesa" | "manifiesto" | "cumplido"
 
 export type DocumentStage = "orden_cargue" | "remesas" | "manifiesto" | "cumplido_inicial";
 
-export type DispatchEntryStage = DocumentStage | "vehiculo_conductor" | "envio_rndc" | "cargue_descargue" | "cumplido_final";
+export type DispatchEntryStage = DocumentStage | "vehiculo_conductor" | "envio_rndc" | "cumplido_final";
 
 export type ProtectedDocumentAction = "correct" | "annul" | "reconcile";
 
@@ -75,7 +75,6 @@ const dispatchEntryStages = new Set<DispatchEntryStage>([
   "vehiculo_conductor",
   "manifiesto",
   "envio_rndc",
-  "cargue_descargue",
   "cumplido_inicial",
   "cumplido_final"
 ]);

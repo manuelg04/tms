@@ -40,6 +40,7 @@ import type * as model_emissionPlan from "../model/emissionPlan.js";
 import type * as model_fulfillmentWorkflow from "../model/fulfillmentWorkflow.js";
 import type * as model_loadingOrderReservation from "../model/loadingOrderReservation.js";
 import type * as model_masterData from "../model/masterData.js";
+import type * as model_masterSync from "../model/masterSync.js";
 import type * as model_officialDocumentIdentity from "../model/officialDocumentIdentity.js";
 import type * as model_operationIntent from "../model/operationIntent.js";
 import type * as model_operationState from "../model/operationState.js";
@@ -92,6 +93,7 @@ declare const fullApi: ApiFromModules<{
   "model/fulfillmentWorkflow": typeof model_fulfillmentWorkflow;
   "model/loadingOrderReservation": typeof model_loadingOrderReservation;
   "model/masterData": typeof model_masterData;
+  "model/masterSync": typeof model_masterSync;
   "model/officialDocumentIdentity": typeof model_officialDocumentIdentity;
   "model/operationIntent": typeof model_operationIntent;
   "model/operationState": typeof model_operationState;

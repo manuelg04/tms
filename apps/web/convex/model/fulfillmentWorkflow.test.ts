@@ -1,52 +1,58 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  bogotaDateTimeParts,
   buildFulfillmentPlan,
-  validateLogisticsTimeline,
+  deriveOperationTimes,
   validateFulfillmentQuantities,
-  type LogisticsTimelineInput
+  validateOperationTimes
 } from "./fulfillmentWorkflow.js";
 
-function completeTimeline(): LogisticsTimelineInput {
-  return {
-    origin: {
-      arrival: 1_000,
-      entry: 2_000,
-      start: 3_000,
-      end: 4_000,
-      exit: 5_000
-    },
-    destination: {
-      arrival: 6_000,
-      entry: 7_000,
-      start: 8_000,
-      end: 9_000,
-      exit: 10_000
-    },
-    finalDelivery: 11_000
-  };
-}
+const HOUR = 3_600_000;
 
-test("accepts five ordered origin events five ordered destination events and final delivery", () => {
-  assert.deepEqual(validateLogisticsTimeline(completeTimeline()), []);
+test("operation times default to the agreed appointments and hours", () => {
+  const times = deriveOperationTimes(
+    { loadingAppointmentAt: 100 * HOUR, loadingAgreedHours: "1.5", unloadingAppointmentAt: 110 * HOUR, unloadingAgreedHours: "2" },
+    undefined,
+    { loadingAt: 0, unloadingAt: 0 }
+  );
+
+  assert.deepEqual(times, {
+    loadingArrivalAt: 100 * HOUR,
+    loadingEntryAt: 100 * HOUR,
+    loadingExitAt: 101.5 * HOUR,
+    unloadingArrivalAt: 110 * HOUR,
+    unloadingEntryAt: 110 * HOUR,
+    unloadingExitAt: 112 * HOUR
+  });
 });
 
-test("rejects an event that occurs before the previous logistics event", () => {
-  const timeline = completeTimeline();
-  timeline.origin.start = 1_500;
+test("operation times keep operator overrides and never place unloading before loading", () => {
+  const times = deriveOperationTimes(
+    { loadingAppointmentAt: 100 * HOUR, unloadingAppointmentAt: 90 * HOUR },
+    { loadingExitAt: 103 * HOUR },
+    { loadingAt: 0, unloadingAt: 0 }
+  );
 
-  assert.deepEqual(validateLogisticsTimeline(timeline), [
-    "El inicio de cargue no puede ocurrir antes de la entrada a cargue."
-  ]);
+  assert.equal(times.loadingExitAt, 103 * HOUR);
+  assert.equal(times.unloadingArrivalAt, 103 * HOUR);
+  assert.equal(times.unloadingExitAt, 105 * HOUR);
 });
 
-test("keeps final delivery distinct from arrival at the unloading site", () => {
-  const timeline = completeTimeline();
-  timeline.finalDelivery = 5_500;
+test("operation times fall back to the service order schedule when no appointment exists", () => {
+  const times = deriveOperationTimes({}, undefined, { loadingAt: 50 * HOUR, unloadingAt: 60 * HOUR });
 
-  assert.deepEqual(validateLogisticsTimeline(timeline), [
-    "La entrega final no puede ocurrir antes de terminar la operación de descargue."
-  ]);
+  assert.equal(times.loadingArrivalAt, 50 * HOUR);
+  assert.equal(times.unloadingArrivalAt, 60 * HOUR);
+});
+
+test("operation times must follow the trip order", () => {
+  assert.deepEqual(validateOperationTimes({ loadingArrivalAt: 10, loadingEntryAt: 20, loadingExitAt: 30, unloadingArrivalAt: 40, unloadingEntryAt: 50, unloadingExitAt: 60 }), []);
+  assert.deepEqual(validateOperationTimes({ loadingExitAt: 30, unloadingArrivalAt: 20 }), ["La llegada al descargue no puede ser antes de la salida del cargue."]);
+});
+
+test("operation times format in Bogota local time", () => {
+  assert.deepEqual(bogotaDateTimeParts(Date.UTC(2026, 6, 10, 16, 2)), { date: "10/07/2026", time: "11:02" });
 });
 
 test("fulfillment plan resumes with remaining consignments before the manifest", () => {

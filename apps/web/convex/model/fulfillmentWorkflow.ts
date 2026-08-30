@@ -1,17 +1,3 @@
-export type LogisticsTimelineInput = {
-  origin: LogisticsSiteTimeline;
-  destination: LogisticsSiteTimeline;
-  finalDelivery?: number;
-};
-
-export type LogisticsSiteTimeline = {
-  arrival?: number;
-  entry?: number;
-  start?: number;
-  end?: number;
-  exit?: number;
-};
-
 export type FulfillmentPlanInput = {
   consignments: Array<{ id: string; fulfillmentState: string }>;
   manifest: { id: string; fulfillmentState: string } | null;
@@ -26,35 +12,6 @@ export type FulfillmentQuantities = {
   surplusQuantity?: string;
   returnedQuantity?: string;
 };
-
-const siteEvents: Array<{
-  key: keyof LogisticsSiteTimeline;
-  label: string;
-}> = [
-  { key: "arrival", label: "llegada" },
-  { key: "entry", label: "entrada" },
-  { key: "start", label: "inicio" },
-  { key: "end", label: "fin" },
-  { key: "exit", label: "salida" }
-];
-
-export function validateLogisticsTimeline(input: LogisticsTimelineInput): string[] {
-  const errors = [
-    ...validateSite("cargue", input.origin),
-    ...validateSite("descargue", input.destination)
-  ];
-  const destinationExit = input.destination.exit;
-
-  if (
-    input.finalDelivery !== undefined
-    && destinationExit !== undefined
-    && input.finalDelivery < destinationExit
-  ) {
-    errors.push("La entrega final no puede ocurrir antes de terminar la operación de descargue.");
-  }
-
-  return errors;
-}
 
 export function buildFulfillmentPlan(input: FulfillmentPlanInput): FulfillmentPlanStep[] {
   if (!input.manifest || (input.consignments.length === 0 && !input.allowEmptyManifest)) {
@@ -106,19 +63,73 @@ export function validateFulfillmentQuantities(input: FulfillmentQuantities): str
   });
 }
 
-function validateSite(siteLabel: string, site: LogisticsSiteTimeline): string[] {
+
+export type OperationTimes = {
+  loadingArrivalAt: number;
+  loadingEntryAt: number;
+  loadingExitAt: number;
+  unloadingArrivalAt: number;
+  unloadingEntryAt: number;
+  unloadingExitAt: number;
+};
+
+export type OperationTimesDraft = Partial<OperationTimes>;
+
+export type OperationTimesSource = {
+  loadingAppointmentAt?: number;
+  loadingAgreedHours?: string;
+  unloadingAppointmentAt?: number;
+  unloadingAgreedHours?: string;
+};
+
+const HOUR_MS = 3_600_000;
+
+function agreedHoursMs(value: string | undefined, fallbackHours: number): number {
+  const text = (value ?? "").trim().replace(",", ".");
+  const parsed = text === "" ? Number.NaN : Number(text);
+  return (Number.isFinite(parsed) && parsed >= 0 ? parsed : fallbackHours) * HOUR_MS;
+}
+
+export function deriveOperationTimes(source: OperationTimesSource, draft: OperationTimesDraft | undefined, fallback: { loadingAt: number; unloadingAt: number }): OperationTimes {
+  const loadingBase = source.loadingAppointmentAt ?? fallback.loadingAt;
+  const loadingArrivalAt = draft?.loadingArrivalAt ?? loadingBase;
+  const loadingEntryAt = draft?.loadingEntryAt ?? Math.max(loadingArrivalAt, loadingBase);
+  const loadingExitAt = draft?.loadingExitAt ?? loadingEntryAt + agreedHoursMs(source.loadingAgreedHours, 1);
+  const unloadingBase = Math.max(source.unloadingAppointmentAt ?? fallback.unloadingAt, loadingExitAt);
+  const unloadingArrivalAt = draft?.unloadingArrivalAt ?? unloadingBase;
+  const unloadingEntryAt = draft?.unloadingEntryAt ?? Math.max(unloadingArrivalAt, unloadingBase);
+  const unloadingExitAt = draft?.unloadingExitAt ?? unloadingEntryAt + agreedHoursMs(source.unloadingAgreedHours, 2);
+  return { loadingArrivalAt, loadingEntryAt, loadingExitAt, unloadingArrivalAt, unloadingEntryAt, unloadingExitAt };
+}
+
+export function validateOperationTimes(times: OperationTimesDraft): string[] {
   const errors: string[] = [];
-
-  for (let index = 1; index < siteEvents.length; index += 1) {
-    const previous = siteEvents[index - 1];
-    const current = siteEvents[index];
-    const previousValue = site[previous.key];
-    const currentValue = site[current.key];
-
-    if (currentValue !== undefined && previousValue !== undefined && currentValue < previousValue) {
-      errors.push(`El ${current.label} de ${siteLabel} no puede ocurrir antes de la ${previous.label} a ${siteLabel}.`);
-    }
+  const ordered: Array<[keyof OperationTimes, keyof OperationTimes, string]> = [
+    ["loadingArrivalAt", "loadingEntryAt", "La entrada al cargue no puede ser antes de la llegada."],
+    ["loadingEntryAt", "loadingExitAt", "La salida del cargue no puede ser antes de la entrada."],
+    ["loadingExitAt", "unloadingArrivalAt", "La llegada al descargue no puede ser antes de la salida del cargue."],
+    ["unloadingArrivalAt", "unloadingEntryAt", "La entrada al descargue no puede ser antes de la llegada."],
+    ["unloadingEntryAt", "unloadingExitAt", "La salida del descargue no puede ser antes de la entrada."]
+  ];
+  for (const [before, after, message] of ordered) {
+    const left = times[before];
+    const right = times[after];
+    if (left !== undefined && right !== undefined && right < left) errors.push(message);
   }
-
   return errors;
+}
+
+export function bogotaDateTimeParts(value: number): { date: string; time: string } {
+  const parts = new Intl.DateTimeFormat("es-CO", {
+    timeZone: "America/Bogota",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  }).formatToParts(new Date(value));
+  const pick = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+  const hour = pick("hour") === "24" ? "00" : pick("hour");
+  return { date: `${pick("day")}/${pick("month")}/${pick("year")}`, time: `${hour}:${pick("minute")}` };
 }

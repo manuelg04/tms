@@ -255,7 +255,6 @@ const dispatchStageValidator = v.union(
   v.literal("vehiculo_conductor"),
   v.literal("manifiesto"),
   v.literal("envio_rndc"),
-  v.literal("cargue_descargue"),
   v.literal("cumplido_inicial"),
   v.literal("cumplido_final"),
   v.literal("cumplido"),
@@ -1153,9 +1152,6 @@ export async function toListRow(ctx: Pick<QueryCtx, "db">, expediente: Doc<"expe
   const orderDocument = latestDocument("orden_cargue");
   const manifestDocument = latestDocument("manifiesto");
   const orderDraft = (expediente.loadingOrderDraft ?? null) as LoadingOrderDraft | null;
-  const logistics = expediente.logisticsTimes;
-  const siteComplete = (site: typeof logistics extends undefined ? never : NonNullable<typeof logistics>["origin"]) =>
-    Boolean(site?.arrival && site.entry && site.start && site.end && site.exit);
   const projection: DispatchProjection = {
     annulled: expediente.status === "cancelled",
     workflowVariant: expediente.workflowVariant,
@@ -1175,12 +1171,7 @@ export async function toListRow(ctx: Pick<QueryCtx, "db">, expediente: Doc<"expe
           fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
         }
       : manifestDocument ? { missingFields: [], officialState: officialState(manifestDocument), fulfillmentState: manifestDocument.fulfillmentState ?? "not_requested" } : null,
-    cargoInfoState: officialState(orderDocument),
-    logistics: {
-      originComplete: siteComplete(logistics?.origin),
-      destinationComplete: siteComplete(logistics?.destination),
-      finalDeliveryRecorded: Boolean(logistics?.finalDelivery)
-    }
+    cargoInfoState: officialState(orderDocument)
   };
   const stageResult = deriveDispatchStage(projection);
   const hasUncertainOperation = operations.some((operation) => operation.status === "uncertain" || operation.status === "reconciling");

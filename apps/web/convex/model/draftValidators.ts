@@ -159,7 +159,13 @@ export const fulfillmentDraftValidator = v.object({
   unit: v.optional(v.string()),
   observation: v.optional(v.string()),
   suspended: v.optional(v.boolean()),
-  reasonCode: v.optional(v.string())
+  reasonCode: v.optional(v.string()),
+  loadingArrivalAt: v.optional(v.number()),
+  loadingEntryAt: v.optional(v.number()),
+  loadingExitAt: v.optional(v.number()),
+  unloadingArrivalAt: v.optional(v.number()),
+  unloadingEntryAt: v.optional(v.number()),
+  unloadingExitAt: v.optional(v.number())
 });
 
 export const manifestFulfillmentDraftValidator = v.object({

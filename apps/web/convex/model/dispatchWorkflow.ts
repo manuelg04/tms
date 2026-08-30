@@ -82,7 +82,6 @@ export type DispatchStage =
   | "vehiculo_conductor"
   | "manifiesto"
   | "envio_rndc"
-  | "cargue_descargue"
   | "cumplido_inicial"
   | "cumplido_final"
   | "cumplido"
@@ -102,7 +101,6 @@ export type DispatchProjection = {
   assignment: { vehicleAssigned: boolean; driverAssigned: boolean };
   manifest: { missingFields: string[]; officialState: OfficialDocumentState; fulfillmentState: FulfillmentState } | null;
   cargoInfoState: OfficialDocumentState;
-  logistics: { originComplete: boolean; destinationComplete: boolean; finalDeliveryRecorded: boolean };
 };
 
 export type DispatchStageResult = {
@@ -158,14 +156,6 @@ export function deriveDispatchStage(projection: DispatchProjection): DispatchSta
 
   if (officialStates.some((state) => state === "draft" || state === "pending")) {
     return { stage: "envio_rndc", blockers: [] };
-  }
-
-  if (
-    !projection.logistics.originComplete ||
-    !projection.logistics.destinationComplete ||
-    !projection.logistics.finalDeliveryRecorded
-  ) {
-    return { stage: "cargue_descargue", blockers: [] };
   }
 
   if (projection.workflowVariant !== "empty_manifest" && !canFulfillManifest(projection.consignments)) {

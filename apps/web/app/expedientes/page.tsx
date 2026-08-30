@@ -256,7 +256,7 @@ function rowState(row: Row): RowState {
   if (row.expediente.status === "completed" || row.stage === "cumplido_final" && row.blockers.length === 0) return { label: "Cerrado", tone: "done" };
   if (row.rndcStatus === "En proceso") return { label: "Enviando a RNDC", tone: "wait" };
   if (row.stage === "envio_rndc") return { label: "Por enviar", tone: "wait", detail: row.blockers[0] };
-  if (["cargue_descargue", "cumplido_inicial", "cumplido_final"].includes(row.stage)) return { label: "En ruta", tone: "ok", detail: stageShortLabel(row.stage) };
+  if (["cumplido_inicial", "cumplido_final"].includes(row.stage)) return { label: "En ruta", tone: "ok", detail: stageShortLabel(row.stage) };
   if (row.expediente.status === "in_progress") return { label: "Documentos en curso", tone: "wait", detail: `Falta: ${stageShortLabel(row.stage).toLocaleLowerCase("es")}` };
   return { label: "Borrador", tone: "muted", detail: `Falta: ${stageShortLabel(row.stage).toLocaleLowerCase("es")}` };
 }

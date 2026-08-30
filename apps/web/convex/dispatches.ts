@@ -30,7 +30,7 @@ import {
   manifestDraftValidator,
   manifestFulfillmentDraftValidator
 } from "./model/draftValidators";
-import { validateFulfillmentQuantities, validateLogisticsTimeline } from "./model/fulfillmentWorkflow";
+import { validateFulfillmentQuantities, validateOperationTimes } from "./model/fulfillmentWorkflow";
 import { normalizeSearchText } from "./model/dispatchSearch";
 import { refreshDispatchSearchText } from "./model/dispatchSearchProjection";
 import { masterSyncSummary } from "./model/masterSync";
@@ -41,7 +41,6 @@ const stageValidator = v.union(
   v.literal("vehiculo_conductor"),
   v.literal("manifiesto"),
   v.literal("envio_rndc"),
-  v.literal("cargue_descargue"),
   v.literal("cumplido_inicial"),
   v.literal("cumplido_final"),
   v.literal("cumplido"),
@@ -637,97 +636,6 @@ export const saveManifestDraft = mutation({
   }
 });
 
-const logisticsEventInputValidator = v.object({
-  occurredAt: v.number(),
-  observation: v.optional(v.string())
-});
-
-const logisticsSiteInputValidator = v.object({
-  arrival: v.optional(logisticsEventInputValidator),
-  entry: v.optional(logisticsEventInputValidator),
-  start: v.optional(logisticsEventInputValidator),
-  end: v.optional(logisticsEventInputValidator),
-  exit: v.optional(logisticsEventInputValidator)
-});
-
-export const recordLogisticsTimes = mutation({
-  args: {
-    actorToken: v.optional(v.string()),
-    expedienteId: v.id("expedientes"),
-    origin: logisticsSiteInputValidator,
-    destination: logisticsSiteInputValidator,
-    finalDelivery: v.optional(logisticsEventInputValidator)
-  },
-  returns: v.null(),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
-    const expediente = await requireExpediente(ctx, args.expedienteId);
-    requireSameOrganization(actor, expediente.organizationId);
-    const errors = validateLogisticsTimeline({
-      origin: eventTimestamps(args.origin),
-      destination: eventTimestamps(args.destination),
-      finalDelivery: args.finalDelivery?.occurredAt
-    });
-
-    if (errors.length > 0) {
-      throw new ConvexError({ code: "VALIDATION", message: errors[0], data: { errors } });
-    }
-
-    const remesas = await ctx.db
-      .query("expedienteRemesas")
-      .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
-      .collect();
-    const stage = deriveDispatchStage(await buildProjection(ctx, expediente, remesas));
-
-    if (!["cargue_descargue", "cumplido_inicial"].includes(stage.stage)) {
-      throw new ConvexError({ code: "INVALID_STATE", message: "Los tiempos sólo se registran después de autorizar el despacho y antes de cumplirlo" });
-    }
-
-    const now = Date.now();
-    const toRecord = (event: { occurredAt: number; observation?: string } | undefined) => event
-      ? { ...event, recordedAt: now, recordedBy: actor._id }
-      : undefined;
-    const site = (value: typeof args.origin) => ({
-      arrival: toRecord(value.arrival),
-      entry: toRecord(value.entry),
-      start: toRecord(value.start),
-      end: toRecord(value.end),
-      exit: toRecord(value.exit)
-    });
-    const logisticsTimes = {
-      origin: site(args.origin),
-      destination: site(args.destination),
-      finalDelivery: toRecord(args.finalDelivery)
-    };
-    await ctx.db.patch("expedientes", expediente._id, {
-      logisticsTimes,
-      status: "in_progress",
-      startedAt: expediente.startedAt ?? now,
-      updatedBy: actor._id,
-      updatedAt: now
-    });
-    await ctx.db.insert("expedienteEvents", {
-      organizationId: expediente.organizationId,
-      expedienteId: expediente._id,
-      eventType: "logistics_times_recorded",
-      title: "Tiempos de cargue y descargue actualizados",
-      occurredAt: now,
-      actorId: actor._id
-    });
-    await appendAudit(ctx, {
-      organizationId: expediente.organizationId,
-      actorType: "user",
-      actorId: actor._id,
-      action: "dispatch.logistics_times_recorded",
-      entityType: "expediente",
-      entityId: expediente._id,
-      createdAt: now
-    });
-    await refreshDispatchSearchText(ctx, expediente._id);
-    return null;
-  }
-});
-
 export const recordFulfillmentDraft = mutation({
   args: {
     actorToken: v.optional(v.string()),
@@ -752,7 +660,7 @@ export const recordFulfillmentDraft = mutation({
       throw new ConvexError({ code: "INVALID_STATE", message: "Sólo una remesa autorizada y pendiente puede preparar su cumplido" });
     }
 
-    const errors = validateFulfillmentQuantities(args.draft);
+    const errors = [...validateFulfillmentQuantities(args.draft), ...validateOperationTimes(args.draft)];
 
     if (errors.length > 0) {
       throw new ConvexError({ code: "VALIDATION", message: errors[0], data: { errors } });
@@ -1523,9 +1431,6 @@ async function buildProjection(
   const manifestDocument = manifestDocuments
     .filter((document) => document.kind === "manifiesto")
     .sort((a, b) => b.updatedAt - a.updatedAt)[0];
-  const logistics = expediente.logisticsTimes;
-  const siteComplete = (site: typeof logistics extends undefined ? never : NonNullable<typeof logistics>["origin"]) =>
-    !!site && !!site.arrival && !!site.entry && !!site.start && !!site.end && !!site.exit;
 
   return {
     annulled: expediente.status === "cancelled",
@@ -1546,12 +1451,7 @@ async function buildProjection(
           fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
         }
       : manifestDocument ? { missingFields: [], officialState: manifestState, fulfillmentState: manifestDocument.fulfillmentState ?? "not_requested" } : null,
-    cargoInfoState,
-    logistics: {
-      originComplete: siteComplete(logistics?.origin),
-      destinationComplete: siteComplete(logistics?.destination),
-      finalDeliveryRecorded: !!logistics?.finalDelivery
-    }
+    cargoInfoState
   };
 }
 

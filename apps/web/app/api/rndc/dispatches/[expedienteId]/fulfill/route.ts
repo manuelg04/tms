@@ -263,6 +263,11 @@ function manifestPayload(detail: Detail, preparedBy: string): Record<string, unk
     })),
     compliance: {
       manifestType: "C",
+      additionalLoadHoursValue: 0,
+      additionalUnloadHoursValue: 0,
+      additionalFreightValue: 0,
+      freightDiscountValue: 0,
+      overAdvanceValue: 0,
       documentsDeliveryDate: slashDate(detail.expediente.manifestFulfillmentDraft?.documentsDeliveryDate)
         ?? formatDate(Date.now()),
       observations: detail.expediente.manifestFulfillmentDraft?.observation

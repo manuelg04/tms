@@ -239,7 +239,9 @@ function consignmentPayload(detail: Detail, remesa: Detail["remesas"][number], p
     compliance: {
       ...operationTimesPayload(detail, remesa),
       remesaType: remesa.fulfillmentDraft?.suspended ? "S" : "C",
+      unitCode: 1,
       loadedQuantityKg: Number(remesa.fulfillmentDraft?.deliveredQuantity ?? "0"),
+      deliveredQuantityKg: Number(remesa.fulfillmentDraft?.deliveredQuantity ?? "0"),
       missingQuantityKg: Number(remesa.fulfillmentDraft?.missingQuantity ?? "0"),
       surplusQuantityKg: Number(remesa.fulfillmentDraft?.surplusQuantity ?? "0"),
       returnedQuantityKg: Number(remesa.fulfillmentDraft?.returnedQuantity ?? "0"),

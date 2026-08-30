@@ -213,7 +213,7 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
         <MunicipalityField code={loading.municipalityCode || undefined} label="Municipio de cargue" name="loadingMunicipality" onClear={() => setLoading({ ...loading, municipalityCode: "" })} onSelect={(division) => setLoading({ ...loading, municipalityCode: division.code, cityName: division.isMunicipality ? division.name : division.municipalityName })} required />
         <DateField label="Cita de cargue" name="loadingAppointment" required value={dateTimeValue(draft.loading?.appointmentAt)} withTime />
         <Field className="span-2" label="Dirección de cargue" name="loadingAddress" onChange={(event) => setLoading({ ...loading, address: event.target.value })} required value={loading.address} />
-        <Field label="Ciudad de cargue" name="loadingCity" onChange={(event) => setLoading({ ...loading, cityName: event.target.value })} required value={loading.cityName} />
+        <input name="loadingCity" type="hidden" value={loading.cityName ?? ""} />
 
         <div className="field-group-note"><strong>Destinatario y descargue</strong></div>
         <PartyBlock label="Destinatario" onChange={setRecipient} onSite={(site) => setUnloading((current) => ({ siteName: current.siteName || site.siteName, address: current.address || (site.address ?? ""), cityName: current.cityName || (site.city ?? ""), municipalityCode: current.municipalityCode || (site.cityCode ?? "") }))} role="recipient" siteLabel="Sede RNDC destinatario" state={recipient} />
@@ -223,7 +223,7 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
         <MunicipalityField code={unloading.municipalityCode || undefined} label="Municipio de descargue" name="unloadingMunicipality" onClear={() => setUnloading({ ...unloading, municipalityCode: "" })} onSelect={(division) => setUnloading({ ...unloading, municipalityCode: division.code, cityName: division.isMunicipality ? division.name : division.municipalityName })} required />
         <DateField label="Cita de descargue" name="unloadingAppointment" required value={dateTimeValue(draft.unloading?.appointmentAt)} withTime />
         <Field className="span-2" label="Dirección de descargue" name="unloadingAddress" onChange={(event) => setUnloading({ ...unloading, address: event.target.value })} required value={unloading.address} />
-        <Field label="Ciudad de descargue" name="unloadingCity" onChange={(event) => setUnloading({ ...unloading, cityName: event.target.value })} required value={unloading.cityName} />
+        <input name="unloadingCity" type="hidden" value={unloading.cityName ?? ""} />
 
         <div className="field-group-note"><strong>Datos del vehículo</strong></div>
         <MoneyField label="Flete conductor" name="driverFreight" value={draft.driverFreight} />

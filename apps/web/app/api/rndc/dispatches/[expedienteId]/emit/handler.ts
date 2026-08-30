@@ -288,7 +288,7 @@ async function executeStep(
     expedienteRemesaId: step.remesaId,
     requestKey: `emit-${expedienteId}-${step.key}`,
     businessKey: `emit:${expedienteId}:${step.key}`,
-    payload: step.payload,
+    payload: { ...step.payload, preparedBy: preparerName(request) },
     simulateTimeout: body.simulateTimeoutAt === step.key
   };
   const headers = new Headers(request.headers);
@@ -527,4 +527,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isEmissionScope(value: unknown): value is EmissionScope {
   return value === "orden" || value === "remesas" || value === "manifiesto" || value === "todo";
+}
+
+function preparerName(request: Request): string | undefined {
+  const session = authorizeGatewayRequest(request, "submit_rndc");
+  return session instanceof Response ? undefined : session.name;
 }

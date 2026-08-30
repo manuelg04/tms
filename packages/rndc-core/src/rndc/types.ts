@@ -113,6 +113,7 @@ export type CompanyParty = {
   cityCode: string;
   latitude: string;
   longitude: string;
+  phone?: string;
 };
 
 export type VehicleData = {
@@ -132,6 +133,7 @@ export type VehicleData = {
   soatNumber: string;
   soatExpirationDate: string;
   insurerNit: string;
+  insurerName?: string;
 };
 
 export type CargoData = {
@@ -144,6 +146,8 @@ export type CargoData = {
   natureCode: string;
   quantityKg: number;
   declaredValue: number;
+  quantity?: number;
+  volumeM3?: number;
 };
 
 export type CargoPolicyData = {
@@ -264,11 +268,13 @@ export type DemoScenario = {
   unloadingAgreedMinutes: number;
   balancePaymentDate: string;
   observations: string;
+  seals?: string;
+  preparedBy?: string;
   compliance: ComplianceData;
 };
 
 export type GeneratedDocument = {
-  kind: "loading-order" | "remesa" | "manifest";
+  kind: "loading-order" | "remesa" | "manifest" | "manifest-fulfillment";
   number: string;
   path: string;
   urlPath: string;

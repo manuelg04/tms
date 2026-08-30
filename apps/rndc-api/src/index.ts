@@ -2,7 +2,7 @@ import express from "express";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildDriverMessages, buildDriverVehicleMessages, buildFailureResponse, buildPartyMessages, buildVehicleMessages, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildLoadingOrderMessages, buildManifestIssueMessages, buildManifestMessages, buildMtmReferenceScenario, buildRemesaMessages, buildTripMessages, generateLoadingOrderDocument, generateManifestDocument, generateRemesaDocument, loadConfig, RndcClient, runDemoFlow } from "@tms/rndc-core";
+import { buildDriverMessages, buildDriverVehicleMessages, buildFailureResponse, buildPartyMessages, buildVehicleMessages, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildLoadingOrderMessages, buildManifestIssueMessages, buildManifestMessages, buildMtmReferenceScenario, buildRemesaMessages, buildTripMessages, generateLoadingOrderDocument, generateManifestDocument, generateManifestFulfillmentDocument, generateRemesaDocument, loadConfig, RndcClient, runDemoFlow } from "@tms/rndc-core";
 import type { CargoData, CompanyParty, ComplianceData, DemoScenario, GeneratedDocument, MoneyData, PersonData, RndcConfig, RndcFlowResult, RndcFlowStep, RndcMessageRequest, RndcMessageResponse, VehicleData } from "@tms/rndc-core";
 import { syncOperationToConvex } from "./convexSync.js";
 import type { ConvexSyncStatus } from "./convexSync.js";
@@ -785,12 +785,16 @@ async function sendFormMessage(client: RndcClient, config: RndcConfig, request: 
 }
 
 async function buildOperationDocuments(operation: FormOperation, scenario: DemoScenario, steps: SavedFormStep[], config: RndcConfig): Promise<GeneratedDocument[]> {
-  if (operation === "fulfill-remesa" || operation === "fulfill-manifest") {
+  if (operation === "fulfill-remesa") {
     return [];
   }
 
+  if (operation === "fulfill-manifest") {
+    return [await generateManifestFulfillmentDocument(scenario, config.pdfDir, config.mode)];
+  }
+
   if (operation === "loading-order") {
-    return [await generateLoadingOrderDocument(scenario, steps[0]?.radicado ?? "PENDIENTE", config.pdfDir)];
+    return [await generateLoadingOrderDocument(scenario, steps[0]?.radicado ?? "PENDIENTE", config.pdfDir, config.mode)];
   }
 
   if (operation === "remesa") {
@@ -841,6 +845,8 @@ function buildScenarioFromForm(config: RndcConfig, payload: unknown, allowRefere
   scenario.loadingAppointment = appointment(scenario.loadingAppointmentDate, scenario.loadingAppointmentTime);
   scenario.unloadingAppointment = appointment(scenario.unloadingAppointmentDate, scenario.unloadingAppointmentTime);
   scenario.observations = readString(record, "observations", scenario.observations);
+  scenario.seals = readOptionalString(record, "seals", scenario.seals);
+  scenario.preparedBy = readOptionalString(record, "preparedBy", scenario.preparedBy);
 
   applyPerson(scenario.driver, child(record, "driver"));
   applyPerson(scenario.vehicleOwner, child(record, "vehicleOwner"));
@@ -1045,6 +1051,7 @@ function applyParty(target: CompanyParty, record: Record<string, unknown>): void
   target.cityCode = readString(record, "cityCode", target.cityCode);
   target.latitude = readString(record, "latitude", target.latitude);
   target.longitude = readString(record, "longitude", target.longitude);
+  target.phone = readOptionalString(record, "phone", target.phone);
 }
 
 function applyVehicle(target: VehicleData, record: Record<string, unknown>): void {
@@ -1064,6 +1071,7 @@ function applyVehicle(target: VehicleData, record: Record<string, unknown>): voi
   target.soatNumber = readString(record, "soatNumber", target.soatNumber);
   target.soatExpirationDate = readDate(record, "soatExpirationDate", target.soatExpirationDate);
   target.insurerNit = readString(record, "insurerNit", target.insurerNit);
+  target.insurerName = readOptionalString(record, "insurerName", target.insurerName);
 }
 
 function applyCargo(target: CargoData, record: Record<string, unknown>): void {
@@ -1076,6 +1084,8 @@ function applyCargo(target: CargoData, record: Record<string, unknown>): void {
   target.natureCode = readString(record, "natureCode", target.natureCode);
   target.quantityKg = readNumber(record, "quantityKg", target.quantityKg);
   target.declaredValue = readNumber(record, "declaredValue", target.declaredValue);
+  target.quantity = optionalNumberValue(record, "quantity") ?? target.quantity;
+  target.volumeM3 = optionalNumberValue(record, "volumeM3") ?? target.volumeM3;
 }
 
 function applyCargoPolicy(target: DemoScenario["cargoPolicy"], record: Record<string, unknown>): void {

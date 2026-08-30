@@ -152,7 +152,7 @@ const serviceOrderDetailValidator = v.object({
 });
 
 const partyValidator = v.union(
-  v.object({ _id: v.id("drivers"), document: v.string(), name: v.optional(v.string()) }),
+  v.object({ _id: v.id("drivers"), document: v.string(), name: v.optional(v.string()), phone: v.optional(v.string()) }),
   v.null()
 );
 
@@ -998,7 +998,7 @@ export const detail = query({
         address: unloadingLocation.address,
         city: unloadingLocation.city
       },
-      driver: driver ? { _id: driver._id, document: driver.document, name: driver.name } : null,
+      driver: driver ? { _id: driver._id, document: driver.document, name: driver.name, phone: driver.cellphone ?? driver.phone1 } : null,
       secondDriver: secondDriver ? { _id: secondDriver._id, document: secondDriver.document, name: secondDriver.name } : null,
       vehicle: vehicle
         ? {

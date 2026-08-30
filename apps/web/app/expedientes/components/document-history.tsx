@@ -1,3 +1,4 @@
+import { selectDocumentPdfArtifact, selectFulfillmentPdfArtifact } from "../../../convex/model/documentPdf";
 type DocumentRow = { _id: string; kind: string; number?: string; rndcRadicado?: string; status: string; officialState?: string; fulfillmentState?: string; updatedAt: number };
 type EventRow = { _id: string; title: string; details?: string; occurredAt: number };
 type DeliveryRow = { _id: string; kind: string; capturedAt: number; artifact: { fileName: string; size: number } };
@@ -10,11 +11,13 @@ export function DocumentHistory({ deliveryEvidence, documents, events, technical
         <div>
           <h4>Documentos</h4>
           {documents.length === 0 ? <p className="inline-empty">Los documentos aparecerán a medida que avance el despacho.</p> : documents.map((document) => {
-            const pdf = technicalEvidence.filter((artifact) => artifact.kind === "pdf" && artifact.documentId === document._id).sort((left, right) => right.createdAt - left.createdAt)[0];
+            const pdf = selectDocumentPdfArtifact(technicalEvidence, document._id);
+            const fulfillmentPdf = selectFulfillmentPdfArtifact(technicalEvidence, document._id);
             return <article className="history-document" key={document._id}>
               <span className="history-file-icon">DOC</span>
               <div><small>{document.kind.replaceAll("_", " ")}</small><strong>{document.number ?? "Número pendiente"}</strong><span>{document.rndcRadicado ? `Radicado ${document.rndcRadicado}` : "Sin radicado"}</span></div>
               {pdf ? <a className="pdf-link" href={`/api/evidence/${pdf._id}`}>PDF</a> : null}
+              {fulfillmentPdf ? <a className="pdf-link" href={`/api/evidence/${fulfillmentPdf._id}`}>Cumplido</a> : null}
               <span className="document-state-text">{documentState(document)}</span>
             </article>
           })}

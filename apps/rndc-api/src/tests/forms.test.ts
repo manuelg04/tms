@@ -765,7 +765,7 @@ test("posts fulfill remesa and fulfill manifest forms in dry run mode", async ()
   assert.deepEqual((manifestBody.steps as { name: string; procesoId: number }[]).map((step) => [step.name, step.procesoId]), [
     ["fulfill-manifest", 6]
   ]);
-  assert.deepEqual(manifestBody.documents, []);
+  assert.deepEqual((manifestBody.documents as { kind: string }[]).map((document) => document.kind), ["manifest-fulfillment"]);
 });
 
 test("blocks incomplete live-mode forms before validation or RNDC contact", async () => {

@@ -126,7 +126,7 @@ async function loadingOrder(): Promise<void> {
   const runDirectory = join(config.outputDir, `${new Date().toISOString().replaceAll(":", "-")}-${scenario.seed}-loading-order`);
   const result = await sendMessageSet(config, buildLoadingOrderMessages(scenario), runDirectory, "loading-order");
   const first = result.responses[0];
-  const documents = result.ok && first ? [await generateLoadingOrderDocument(scenario, first.radicado ?? "PENDIENTE", config.pdfDir)] : [];
+  const documents = result.ok && first ? [await generateLoadingOrderDocument(scenario, first.radicado ?? "PENDIENTE", config.pdfDir, config.mode)] : [];
   console.log(JSON.stringify({ ...result, documents }, null, 2));
   process.exit(result.ok ? 0 : 1);
 }

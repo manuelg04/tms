@@ -88,7 +88,7 @@ export function buildOperationRecord(result: SyncableResult, scenario: DemoScena
     documents.push({
       kind: plan.kind,
       number: result.numbers[plan.numberKey],
-      urlPath: generated?.urlPath,
+      urlPath: plan.stepName.startsWith("fulfill") ? undefined : generated?.urlPath,
       radicado: issueStep?.radicado
     });
   }

@@ -123,7 +123,7 @@ export async function POST(
       documentId: step.id,
       remesaId: remesaRow?._id,
       businessKey: `${action}:${step.id}`,
-      payload: isManifest ? manifestPayload(detail) : consignmentPayload(detail, remesaRow!)
+      payload: isManifest ? manifestPayload(detail, authorization.name) : consignmentPayload(detail, remesaRow!, authorization.name)
     });
     steps.push({ kind: step.kind, documentId: step.id, outcome: result.outcome, error: result.error });
 
@@ -233,9 +233,9 @@ function operationTimesPayload(detail: Detail, remesa: Detail["remesas"][number]
   };
 }
 
-function consignmentPayload(detail: Detail, remesa: Detail["remesas"][number]): Record<string, unknown> {
+function consignmentPayload(detail: Detail, remesa: Detail["remesas"][number], preparedBy: string): Record<string, unknown> {
   return {
-    ...basePayload(detail, remesa),
+    ...basePayload(detail, remesa, preparedBy),
     compliance: {
       ...operationTimesPayload(detail, remesa),
       remesaType: remesa.fulfillmentDraft?.suspended ? "S" : "C",
@@ -249,9 +249,16 @@ function consignmentPayload(detail: Detail, remesa: Detail["remesas"][number]): 
   };
 }
 
-function manifestPayload(detail: Detail): Record<string, unknown> {
+function manifestPayload(detail: Detail, preparedBy: string): Record<string, unknown> {
   return {
-    ...basePayload(detail, detail.remesas[0]),
+    ...basePayload(detail, detail.remesas[0], preparedBy),
+    manifestRemesas: detail.remesas.map((remesa) => ({
+      number: remesa.number,
+      quantityKg: remesa.cargoWeightKg,
+      productName: remesa.cargoDescription,
+      senderName: detail.customer.name,
+      recipientName: remesa.consigneeName ?? detail.customer.name
+    })),
     compliance: {
       manifestType: "C",
       documentsDeliveryDate: slashDate(detail.expediente.manifestFulfillmentDraft?.documentsDeliveryDate)
@@ -261,7 +268,7 @@ function manifestPayload(detail: Detail): Record<string, unknown> {
   };
 }
 
-function basePayload(detail: Detail, remesa: Detail["remesas"][number] | undefined): Record<string, unknown> {
+function basePayload(detail: Detail, remesa: Detail["remesas"][number] | undefined, preparedBy?: string): Record<string, unknown> {
   const loadingDate = detail.serviceOrder.scheduledLoadingAt ?? detail.expediente.createdAt;
   const unloadingDate = detail.serviceOrder.scheduledUnloadingAt ?? loadingDate;
   return {
@@ -276,8 +283,12 @@ function basePayload(detail: Detail, remesa: Detail["remesas"][number] | undefin
     unloadingAppointmentDate: formatDate(unloadingDate),
     unloadingAppointmentTime: formatTime(unloadingDate),
     balancePaymentDate: formatDate(Date.now()),
-    driver: { id: detail.driver?.document, fullName: detail.driver?.name },
-    vehicle: { plate: detail.vehicle?.plate, trailerPlate: detail.trailer?.plate, brand: detail.vehicle?.make },
+    driver: { id: detail.driver?.document, fullName: detail.driver?.name, phone: detail.driver?.phone },
+    vehicle: { plate: detail.vehicle?.plate, trailerPlate: detail.trailer?.plate, brand: detail.vehicle?.make, modelYear: detail.vehicle?.modelYear },
+    vehicleHolder: {
+      id: detail.vehicle?.possessorDocument ?? detail.vehicle?.ownerDocument,
+      fullName: detail.vehicle?.possessorName ?? detail.vehicle?.ownerName
+    },
     sender: { name: detail.customer.name, cityName: detail.loadingLocation.city, address: detail.loadingLocation.address },
     recipient: { name: remesa?.consigneeName ?? detail.customer.name, cityName: detail.unloadingLocation.city, address: detail.unloadingLocation.address },
     cargo: {
@@ -286,7 +297,8 @@ function basePayload(detail: Detail, remesa: Detail["remesas"][number] | undefin
       quantityKg: remesa?.cargoWeightKg ?? detail.serviceOrder.cargoWeightKg
     },
     money: { freightValue: detail.serviceOrder.agreedRate, advanceValue: 0 },
-    fopat: { operationType: detail.loadingLocation.city === detail.unloadingLocation.city ? "municipal" : "intermunicipal" }
+    fopat: { operationType: detail.loadingLocation.city === detail.unloadingLocation.city ? "municipal" : "intermunicipal" },
+    preparedBy
   };
 }
 

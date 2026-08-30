@@ -16,7 +16,7 @@ export function buildDemoScenario(config: RndcConfig): DemoScenario {
       dv: config.companyDv,
       rndcNit: config.companyRndcNit,
       name: "TRANSPORTES MTM SAS",
-      address: "CALLE 16 No 24 - 35 EDIFICIO MAQROLL OFI 401",
+      address: "CALLE 16 Nº 24 - 35 EDIFICIO MAQROLL OFI 401 BR SAN FRANCISCO",
       phone: "6076040133",
       cityName: "BUCARAMANGA - Santander"
     },
@@ -165,7 +165,7 @@ export function buildMtmProductionScenario(config: RndcConfig): DemoScenario {
       dv: config.companyDv,
       rndcNit: config.companyRndcNit,
       name: "TRANSPORTES MTM SERVICIOS TERCERIZADOS SAS",
-      address: "CALLE 16 No 24 - 35 EDIFICIO MAQROLL OFI 401",
+      address: "CALLE 16 Nº 24 - 35 EDIFICIO MAQROLL OFI 401 BR SAN FRANCISCO",
       phone: "6076040133",
       cityName: "BUCARAMANGA - Santander"
     },
@@ -314,7 +314,7 @@ export function buildMtmReferenceScenario(config: RndcConfig): DemoScenario {
       dv: config.companyDv,
       rndcNit: config.companyRndcNit,
       name: "TRANSPORTES MTM SERVICIOS TERCERIZADOS SAS",
-      address: "CALLE 16 No 24 - 35 EDIFICIO MAQROLL OFI 401",
+      address: "CALLE 16 Nº 24 - 35 EDIFICIO MAQROLL OFI 401 BR SAN FRANCISCO",
       phone: "6076040133",
       cityName: "BUCARAMANGA - Santander"
     },

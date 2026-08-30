@@ -387,7 +387,7 @@ test("prepares multiple remesa rows and acceptance text for the manifest PDF", (
   }]), "Conductor C 80387330 - 09/07/2026 14:30 - Celular 3103040052");
   assert.match(documentFooterText("dry-run"), /MODO PRUEBA/);
   assert.doesNotMatch(documentFooterText("live"), /demo|prueba/i);
-  assert.deepEqual(loadingOrderBranding, { systemName: "MTM TMS", agencyName: "MTM" });
+  assert.deepEqual(loadingOrderBranding, { systemName: "S.@.T. BASICO", agencyName: "DIEGO MANTILLA" });
 });
 
 test("sanitizes official document numbers before using them in PDF file names", () => {

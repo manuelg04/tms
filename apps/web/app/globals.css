@@ -3980,3 +3980,45 @@ button {
 
 .dispatch-hero-side { display: flex; align-items: center; gap: 10px; }
 .duplicate-link { display: inline-flex; align-items: center; min-height: 36px; padding: 6px 12px; text-decoration: none; font-size: 12.5px; white-space: nowrap; }
+
+.panel-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sync-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
+  background: var(--wait-bg);
+  color: var(--wait);
+}
+
+.sync-badge.registered {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.sync-badge.rejected {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+
+.cell-sync {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.sync-error {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 11px;
+}

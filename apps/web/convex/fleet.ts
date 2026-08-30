@@ -20,6 +20,24 @@ import {
   type TrailerMasterInput,
   type VehicleMasterInput
 } from "./model/masterData";
+import { masterSyncValidator } from "./schema";
+import {
+  buildDriverSyncPayload,
+  buildPartySyncPayloads,
+  buildVehicleSyncPayload,
+  masterSyncSummary,
+  pendingMasterSync,
+  type MasterSyncKind,
+  type MasterSyncSummary
+} from "./model/masterSync";
+
+const masterSyncKindValidator = v.union(v.literal("driver"), v.literal("vehicle"), v.literal("party"));
+const masterSyncStateValidator = v.union(v.literal("pending"), v.literal("registered"), v.literal("rejected"));
+const masterSyncSummaryValidator = v.object({
+  state: masterSyncStateValidator,
+  updatedAt: v.optional(v.number()),
+  error: v.optional(v.string())
+});
 
 const thirdPartyRoleValidator = v.union(
   v.literal("driver"),
@@ -330,6 +348,7 @@ const driverRowValidator = v.object({
   city: v.optional(v.string()),
   licenseCategory: v.optional(v.string()),
   vehicleCount: v.number(),
+  rndcSyncSummary: masterSyncSummaryValidator,
   updatedAt: v.number()
 });
 
@@ -350,6 +369,7 @@ const vehicleRowValidator = v.object({
   configuration: v.optional(v.string()),
   soatExpiresAt: v.optional(v.string()),
   driverCount: v.number(),
+  rndcSyncSummary: masterSyncSummaryValidator,
   updatedAt: v.number()
 });
 
@@ -433,6 +453,8 @@ const driverDetailValidator = v.object({
   emergencyContactPhone: v.optional(v.string()),
   workReferences: v.optional(v.array(masterWorkReferenceValidator)),
   observations: v.optional(v.string()),
+  rndcSync: v.optional(masterSyncValidator),
+  rndcSyncSummary: masterSyncSummaryValidator,
   createdAt: v.number(),
   updatedAt: v.number(),
   attachments: v.array(masterAttachmentDetailValidator),
@@ -514,6 +536,8 @@ const vehicleDetailValidator = v.object({
   gpsOperator: v.optional(v.string()),
   gpsUsername: v.optional(v.string()),
   workReferences: v.optional(v.array(masterWorkReferenceValidator)),
+  rndcSync: v.optional(masterSyncValidator),
+  rndcSyncSummary: masterSyncSummaryValidator,
   createdAt: v.number(),
   updatedAt: v.number(),
   attachments: v.array(masterAttachmentDetailValidator),
@@ -535,7 +559,7 @@ export const upsertThirdParty = mutation({
     const now = Date.now();
     const existing = await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", input.document)).unique();
     const roles = [...new Set([...(existing?.roles ?? []), ...(input.roles ?? ["other" as const])])];
-    const fields = { ...input, roles, organizationId: actor.organizationId, updatedBy: actor._id, updatedAt: now };
+    const fields = { ...input, roles, organizationId: actor.organizationId, updatedBy: actor._id, updatedAt: now, rndcSync: pendingMasterSync(now, now) };
     const id = existing
       ? (await ctx.db.patch(existing._id, fields), existing._id)
       : await ctx.db.insert("thirdParties", { ...fields, createdBy: actor._id, createdAt: now });
@@ -563,7 +587,7 @@ export const upsertDriver = mutation({
     const now = Date.now();
     const existing = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", normalized.document)).unique();
     const { phone, ...driverFields } = normalized;
-    const fields = { ...args.input, ...driverFields, organizationId: actor.organizationId, cellphone: phone, status: args.input.status ?? "active", updatedAt: now };
+    const fields = { ...args.input, ...driverFields, organizationId: actor.organizationId, cellphone: phone, status: args.input.status ?? "active", updatedAt: now, rndcSync: pendingMasterSync(now, now) };
     const id = existing
       ? (await ctx.db.patch(existing._id, fields), existing._id)
       : await ctx.db.insert("drivers", { ...fields, createdAt: now });
@@ -581,7 +605,7 @@ export const upsertVehicle = mutation({
     const input = normalizeVehicleInput(args.input);
     const now = Date.now();
     const existing = await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).eq("plate", input.plate)).unique();
-    const fields = { ...args.input, ...input, organizationId: actor.organizationId, updatedAt: now };
+    const fields = { ...args.input, ...input, organizationId: actor.organizationId, updatedAt: now, rndcSync: pendingMasterSync(now, now) };
     const vehicleId = existing
       ? (await ctx.db.patch(existing._id, fields), existing._id)
       : await ctx.db.insert("vehicles", { ...fields, createdAt: now });
@@ -664,7 +688,7 @@ export const createDriverMaster = mutation({
         partyPatch.roles = roles;
       }
       if (hasFields(partyPatch)) {
-        await ctx.db.patch(existingParty._id, { ...partyPatch, updatedBy: actor._id, updatedAt: now });
+        await ctx.db.patch(existingParty._id, { ...partyPatch, updatedBy: actor._id, updatedAt: now, rndcSync: pendingMasterSync(now, now) });
         relatedChanged = true;
       }
     } else {
@@ -683,6 +707,7 @@ export const createDriverMaster = mutation({
         cityCode: normalized.cityCode,
         roles,
         source: "manual",
+        rndcSync: pendingMasterSync(now, now),
         createdBy: actor._id,
         updatedBy: actor._id,
         createdAt: now,
@@ -701,7 +726,7 @@ export const createDriverMaster = mutation({
     if (existing) {
       const patch = enrichmentPatch(existing as unknown as Record<string, unknown>, incoming, "conductor");
       if (hasFields(patch)) {
-        await ctx.db.patch(existing._id, { ...patch, updatedAt: now });
+        await ctx.db.patch(existing._id, { ...patch, updatedAt: now, rndcSync: pendingMasterSync(now, now) });
       }
       id = existing._id;
       outcome = hasFields(patch) || relatedChanged ? "enriched" : "unchanged";
@@ -710,6 +735,7 @@ export const createDriverMaster = mutation({
         ...incoming,
         organizationId: actor.organizationId,
         status: "active",
+        rndcSync: pendingMasterSync(now, now),
         createdAt: now,
         updatedAt: now
       });
@@ -758,7 +784,7 @@ export const createThirdPartyMaster = mutation({
       const mergedRoles = [...new Set([...(existing.roles as ThirdPartyRole[]), ...roles])];
       if (!sameStringArray(existing.roles, mergedRoles)) patch.roles = mergedRoles;
       if (hasFields(patch)) {
-        await ctx.db.patch(existing._id, { ...patch, updatedBy: actor._id, updatedAt: now });
+        await ctx.db.patch(existing._id, { ...patch, updatedBy: actor._id, updatedAt: now, rndcSync: pendingMasterSync(now, now) });
         outcome = "enriched";
       } else {
         outcome = "unchanged";
@@ -770,6 +796,7 @@ export const createThirdPartyMaster = mutation({
         roles,
         organizationId: actor.organizationId,
         source: "manual",
+        rndcSync: pendingMasterSync(now, now),
         createdBy: actor._id,
         updatedBy: actor._id,
         createdAt: now,
@@ -930,7 +957,7 @@ export const createVehicleMaster = mutation({
     if (existing) {
       const patch = enrichmentPatch(existing as unknown as Record<string, unknown>, incoming, "vehiculo");
       if (hasFields(patch)) {
-        await ctx.db.patch(existing._id, { ...patch, updatedAt: now });
+        await ctx.db.patch(existing._id, { ...patch, updatedAt: now, rndcSync: pendingMasterSync(now, now) });
         outcome = "enriched";
       } else {
         outcome = partyRolesChanged ? "enriched" : "unchanged";
@@ -942,6 +969,7 @@ export const createVehicleMaster = mutation({
         organizationId: actor.organizationId,
         status: normalized.status ?? "active",
         source: "manual",
+        rndcSync: pendingMasterSync(now, now),
         createdAt: now,
         updatedAt: now
       });
@@ -1031,32 +1059,163 @@ export const listThirdParties = query({
   }
 });
 
-export const registrationBundle = query({
-  args: { driverDocument: v.string(), vehiclePlate: v.string() },
+export const masterSyncBundle = query({
+  args: { kind: masterSyncKindValidator, key: v.string() },
   returns: v.any(),
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx, undefined, ["admin", "operator"]);
-    const driver = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", args.driverDocument.trim())).unique();
-    const vehicle = await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).eq("plate", args.vehiclePlate.trim().toUpperCase())).unique();
-    if (!driver || !vehicle?.ownerDocument || !vehicle.possessorDocument) return null;
-    const [owner, possessor] = await Promise.all([
-      ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", vehicle.ownerDocument!)).unique(),
-      ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", vehicle.possessorDocument!)).unique()
-    ]);
-    if (!owner || !possessor) return null;
-    return { organizationId: actor.organizationId, driver, vehicle, owner, possessor, version: Math.max(driver.updatedAt, vehicle.updatedAt, owner.updatedAt, possessor.updatedAt) };
+    try {
+      return await loadMasterSyncBundle(ctx, actor.organizationId, args.kind, args.key);
+    } catch (error) {
+      if (error instanceof ConvexError) throw error;
+      throw new ConvexError({ code: "INCOMPLETE_MASTER", message: error instanceof Error ? error.message : "Maestro incompleto para el RNDC" });
+    }
   }
 });
+
+export const masterSyncStatus = query({
+  args: { kind: masterSyncKindValidator, key: v.string() },
+  returns: v.union(v.null(), masterSyncSummaryValidator),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
+    const key = normalizeMasterKey(args.kind, args.key);
+    if (args.kind === "driver") {
+      const driver = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", key)).unique();
+      return driver ? await driverSyncSummary(ctx, driver) : null;
+    }
+    if (args.kind === "vehicle") {
+      const vehicle = await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).eq("plate", key)).unique();
+      return vehicle ? masterSyncSummary(vehicle) : null;
+    }
+    const party = await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", key)).unique();
+    return party ? masterSyncSummary(party) : null;
+  }
+});
+
+export const recordMasterSync = mutation({
+  args: {
+    kind: masterSyncKindValidator,
+    key: v.string(),
+    state: masterSyncStateValidator,
+    version: v.number(),
+    error: v.optional(v.string()),
+    operationId: v.optional(v.string())
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin", "operator"]);
+    const now = Date.now();
+    const key = normalizeMasterKey(args.kind, args.key);
+    const record = { state: args.state, updatedAt: now, version: args.version, error: args.state === "rejected" ? args.error : undefined, operationId: args.operationId };
+    const partyByDocument = (document: string) =>
+      ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", document)).unique();
+    if (args.kind === "driver") {
+      const driver = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", key)).unique();
+      if (!driver) throw new ConvexError({ code: "NOT_FOUND", message: "El conductor no existe en maestros" });
+      await ctx.db.patch(driver._id, { rndcSync: record });
+      const mirror = await partyByDocument(key);
+      if (mirror) await ctx.db.patch(mirror._id, { rndcSync: record });
+      await appendAudit(ctx, { organizationId: actor.organizationId, actorType: "user", actorId: actor._id, action: `driver.rndc_${args.state}`, entityType: "driver", entityId: driver._id, createdAt: now });
+      return null;
+    }
+    if (args.kind === "vehicle") {
+      const vehicle = await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).eq("plate", key)).unique();
+      if (!vehicle) throw new ConvexError({ code: "NOT_FOUND", message: "El vehículo no existe en maestros" });
+      await ctx.db.patch(vehicle._id, { rndcSync: record });
+      if (args.state === "registered") {
+        for (const document of new Set([vehicle.ownerDocument, vehicle.possessorDocument].filter((value): value is string => Boolean(value)))) {
+          const party = await partyByDocument(document);
+          if (party && masterSyncSummary(party).state !== "registered") await ctx.db.patch(party._id, { rndcSync: record });
+        }
+      }
+      await appendAudit(ctx, { organizationId: actor.organizationId, actorType: "user", actorId: actor._id, action: `vehicle.rndc_${args.state}`, entityType: "vehicle", entityId: vehicle._id, createdAt: now });
+      return null;
+    }
+    const party = await partyByDocument(key);
+    if (!party) throw new ConvexError({ code: "NOT_FOUND", message: "El tercero no existe en maestros" });
+    await ctx.db.patch(party._id, { rndcSync: record });
+    const driver = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", key)).unique();
+    if (driver && !driver.rndcSync && args.state === "registered") await ctx.db.patch(driver._id, { rndcSync: record });
+    await appendAudit(ctx, { organizationId: actor.organizationId, actorType: "user", actorId: actor._id, action: `third_party.rndc_${args.state}`, entityType: "third_party", entityId: party._id, createdAt: now });
+    return null;
+  }
+});
+
+function normalizeMasterKey(kind: MasterSyncKind, key: string): string {
+  const trimmed = key.trim();
+  return kind === "vehicle" ? trimmed.toUpperCase() : trimmed;
+}
+
+export type MasterSyncBundle = {
+  organizationId: Id<"organizations">;
+  kind: MasterSyncKind;
+  key: string;
+  label: string;
+  version: number;
+  summary: MasterSyncSummary;
+  payloads: Array<{ businessKey: string; payload: Record<string, unknown> }>;
+};
+
+export async function loadMasterSyncBundle(ctx: QueryCtx, organizationId: Id<"organizations">, kind: MasterSyncKind, rawKey: string): Promise<MasterSyncBundle | null> {
+  const key = normalizeMasterKey(kind, rawKey);
+  if (kind === "driver") {
+    const driver = await ctx.db.query("drivers").withIndex("by_organization_and_document", (q) => q.eq("organizationId", organizationId).eq("document", key)).unique();
+    if (!driver) return null;
+    return {
+      organizationId,
+      kind,
+      key,
+      label: `Conductor ${driver.name ?? driver.document}`,
+      version: driver.updatedAt,
+      summary: await driverSyncSummary(ctx, driver),
+      payloads: [{ businessKey: `master:driver:${key}:${driver.updatedAt}`, payload: buildDriverSyncPayload(driver) }]
+    };
+  }
+  if (kind === "vehicle") {
+    const vehicle = await ctx.db.query("vehicles").withIndex("by_organization_and_plate", (q) => q.eq("organizationId", organizationId).eq("plate", key)).unique();
+    if (!vehicle) return null;
+    if (!vehicle.ownerDocument || !vehicle.possessorDocument) throw new Error(`El vehículo ${key} no tiene propietario y poseedor definidos`);
+    const [owner, possessor] = await Promise.all([
+      ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", organizationId).eq("document", vehicle.ownerDocument!)).unique(),
+      ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", organizationId).eq("document", vehicle.possessorDocument!)).unique()
+    ]);
+    if (!owner) throw new Error(`El propietario ${vehicle.ownerDocument} del vehículo ${key} no existe en maestros`);
+    if (!possessor) throw new Error(`El poseedor ${vehicle.possessorDocument} del vehículo ${key} no existe en maestros`);
+    const version = Math.max(vehicle.updatedAt, owner.updatedAt, possessor.updatedAt);
+    return {
+      organizationId,
+      kind,
+      key,
+      label: `Vehículo ${key}`,
+      version,
+      summary: masterSyncSummary(vehicle),
+      payloads: [{ businessKey: `master:vehicle:${key}:${version}`, payload: buildVehicleSyncPayload(vehicle, owner, possessor) }]
+    };
+  }
+  const party = await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", organizationId).eq("document", key)).unique();
+  if (!party) return null;
+  const sites = await ctx.db.query("thirdPartySites").withIndex("by_third_party", (q) => q.eq("thirdPartyId", party._id)).collect();
+  const version = Math.max(party.updatedAt, ...sites.map((site) => site.updatedAt));
+  return {
+    organizationId,
+    kind,
+    key,
+    label: `Tercero ${party.name}`,
+    version,
+    summary: masterSyncSummary(party),
+    payloads: buildPartySyncPayloads(party, sites).map((entry) => ({ businessKey: `master:party:${key}:${entry.siteCode}:${version}`, payload: entry.payload }))
+  };
+}
 
 async function upsertPartyRecord(ctx: MutationCtx, organizationId: Id<"organizations">, actorId: Id<"users">, raw: ThirdPartyInput, now: number): Promise<Id<"thirdParties">> {
   const input = normalizeThirdPartyInput(raw);
   const existing = await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", organizationId).eq("document", input.document)).unique();
   const roles = [...new Set([...(existing?.roles ?? []), ...(input.roles ?? [])])];
   if (existing) {
-    await ctx.db.patch(existing._id, { ...input, roles, updatedBy: actorId, updatedAt: now });
+    await ctx.db.patch(existing._id, { ...input, roles, updatedBy: actorId, updatedAt: now, rndcSync: pendingMasterSync(now, now) });
     return existing._id;
   }
-  return await ctx.db.insert("thirdParties", { ...input, roles, organizationId, createdBy: actorId, updatedBy: actorId, createdAt: now, updatedAt: now });
+  return await ctx.db.insert("thirdParties", { ...input, roles, organizationId, createdBy: actorId, updatedBy: actorId, createdAt: now, updatedAt: now, rndcSync: pendingMasterSync(now, now) });
 }
 
 export const upsertFleetBatch = mutation({
@@ -1221,6 +1380,7 @@ const thirdPartyRowValidator = v.object({
   roles: v.array(thirdPartyRoleValidator),
   city: v.optional(v.string()),
   siteCount: v.optional(v.number()),
+  rndcSyncSummary: masterSyncSummaryValidator,
   updatedAt: v.number()
 });
 
@@ -1311,6 +1471,7 @@ export const thirdPartiesPage = query({
         roles: party.roles,
         city: party.city,
         siteCount: party.siteCount,
+        rndcSyncSummary: masterSyncSummary(party),
         updatedAt: party.updatedAt
       }))
     };
@@ -1472,7 +1633,7 @@ export const driverDetail = query({
 
     const attachments = await readMasterAttachments(ctx, actor.organizationId, "driver", driver._id);
     const { organizationId: _organizationId, ...safeDriver } = driver;
-    return { ...safeDriver, attachments, vehicles };
+    return { ...safeDriver, attachments, vehicles, rndcSyncSummary: await driverSyncSummary(ctx, driver) };
   }
 });
 
@@ -1512,7 +1673,7 @@ export const vehicleDetail = query({
 
     const attachments = await readMasterAttachments(ctx, actor.organizationId, "vehicle", vehicle._id);
     const { organizationId: _organizationId, ...safeVehicle } = vehicle;
-    return { ...safeVehicle, attachments, drivers };
+    return { ...safeVehicle, attachments, drivers, rndcSyncSummary: masterSyncSummary(vehicle) };
   }
 });
 
@@ -1532,8 +1693,17 @@ async function toDriverRow(ctx: QueryCtx, driver: Doc<"drivers">) {
     city: driver.city,
     licenseCategory: driver.licenseCategory,
     vehicleCount: vehicles.length,
+    rndcSyncSummary: await driverSyncSummary(ctx, driver),
     updatedAt: driver.updatedAt
   };
+}
+
+async function driverSyncSummary(ctx: QueryCtx, driver: Doc<"drivers">): Promise<MasterSyncSummary> {
+  if (driver.rndcSync) return masterSyncSummary(driver);
+  const mirror = driver.organizationId
+    ? await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", driver.organizationId!).eq("document", driver.document)).unique()
+    : null;
+  return masterSyncSummary(mirror ? { rndcRegisteredAt: mirror.rndcRegisteredAt, source: mirror.source } : null);
 }
 
 async function toVehicleRow(ctx: QueryCtx, vehicle: Doc<"vehicles">) {
@@ -1558,6 +1728,7 @@ async function toVehicleRow(ctx: QueryCtx, vehicle: Doc<"vehicles">) {
     status: vehicle.status,
     configuration: vehicle.configuration,
     soatExpiresAt: vehicle.soatExpiresAt,
+    rndcSyncSummary: masterSyncSummary(vehicle),
     driverCount: drivers.length,
     updatedAt: vehicle.updatedAt
   };

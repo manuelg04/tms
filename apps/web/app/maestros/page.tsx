@@ -5,6 +5,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { formatTimestamp } from "../lib/labels";
+import { MasterSyncAction, MasterSyncBadge, type MasterSyncOutcome, type MasterSyncSummaryView } from "./components/master-sync";
 
 type Tab = "conductores" | "vehiculos" | "remolques" | "terceros";
 
@@ -28,6 +29,7 @@ type DriverRow = {
   name?: string;
   phone?: string;
   vehicleCount: number;
+  rndcSyncSummary?: MasterSyncSummaryView;
   updatedAt: number;
 };
 
@@ -43,6 +45,7 @@ type VehicleRow = {
   configuration?: string;
   soatExpiresAt?: string;
   driverCount: number;
+  rndcSyncSummary?: MasterSyncSummaryView;
   updatedAt: number;
 };
 
@@ -55,6 +58,7 @@ type ThirdPartyRow = {
   roles: ThirdPartyRole[];
   city?: string;
   siteCount?: number;
+  rndcSyncSummary?: MasterSyncSummaryView;
   updatedAt: number;
 };
 
@@ -93,6 +97,7 @@ type ThirdPartyRole = "driver" | "owner" | "possessor" | "holder" | "sender" | "
 
 type DriverDetail = {
   _id: string;
+  rndcSyncSummary?: MasterSyncSummaryView;
   document: string;
   documentType?: string;
   name?: string;
@@ -158,6 +163,7 @@ type VehicleDetail = {
   ownerDocumentType?: string;
   possessorDocumentType?: string;
   rndcRegisteredAt?: string;
+  rndcSyncSummary?: MasterSyncSummaryView;
   updatedAt: number;
   drivers: {
     driverDocument: string;
@@ -178,6 +184,9 @@ export default function MaestrosPage() {
   const [notice, setNotice] = useState<{ tone: "ok" | "bad"; text: string } | null>(null);
   const linkDriverVehicle = useMutation(api.fleet.linkDriverVehicle);
   const unlinkDriverVehicle = useMutation(api.fleet.unlinkDriverVehicle);
+  function showSyncOutcome(outcome: MasterSyncOutcome) {
+    setNotice({ tone: outcome.ok ? "ok" : "bad", text: outcome.message });
+  }
   async function runLink(action: () => Promise<null>, success: string) {
     try {
       await action();
@@ -319,6 +328,7 @@ export default function MaestrosPage() {
           onClose={() => setSelectedDocument(null)}
           onLink={(plate) => runLink(() => linkDriverVehicle({ plate, document: selectedDocument }), `Vehículo ${plate.toUpperCase()} asociado al conductor.`)}
           onUnlink={(plate) => runLink(() => unlinkDriverVehicle({ plate, document: selectedDocument }), `Vehículo ${plate} desasociado del conductor.`)}
+          onSync={showSyncOutcome}
         />
       ) : null}
 
@@ -328,6 +338,7 @@ export default function MaestrosPage() {
           onClose={() => setSelectedPlate(null)}
           onLink={(document) => runLink(() => linkDriverVehicle({ plate: selectedPlate, document }), `Conductor ${document} asociado al vehículo.`)}
           onUnlink={(document) => runLink(() => unlinkDriverVehicle({ plate: selectedPlate, document }), `Conductor ${document} desasociado del vehículo.`)}
+          onSync={showSyncOutcome}
           plate={selectedPlate}
         />
       ) : null}
@@ -354,7 +365,7 @@ export default function MaestrosPage() {
         ) : tab === "remolques" ? (
           <TrailersTable onSelect={(plate) => setSelectedTrailerPlate((current) => current === plate ? null : plate)} rows={trailers} selectedPlate={selectedTrailerPlate} />
         ) : (
-          <ThirdPartiesTable rows={thirdParties} />
+          <ThirdPartiesTable onSync={showSyncOutcome} rows={thirdParties} />
         )}
       </section>
 
@@ -390,13 +401,15 @@ function DriverDetailPanel({
   document,
   onClose,
   onLink,
-  onUnlink
+  onUnlink,
+  onSync
 }: {
   detail: DriverDetail | null | undefined;
   document: string;
   onClose: () => void;
   onLink: (plate: string) => Promise<void>;
   onUnlink: (plate: string) => Promise<void>;
+  onSync: (outcome: MasterSyncOutcome) => void;
 }) {
   const title = detail && detail.name && detail.name.trim() !== "" ? detail.name : document;
 
@@ -404,9 +417,12 @@ function DriverDetailPanel({
     <section className="panel">
       <div className="panel-head">
         <h2>{title}</h2>
-        <button className="text-button" onClick={onClose} type="button">
-          Cerrar
-        </button>
+        <div className="panel-head-actions">
+          {detail ? <MasterSyncAction keyValue={detail.document} kind="driver" onDone={onSync} summary={detail.rndcSyncSummary} /> : null}
+          <button className="text-button" onClick={onClose} type="button">
+            Cerrar
+          </button>
+        </div>
       </div>
       {detail === undefined ? (
         <div className="skeleton">Cargando detalle…</div>
@@ -437,6 +453,7 @@ function DriverDetailPanel({
                 {detail.observations}
               </ReadOnlyField>
             ) : null}
+            <ReadOnlyField label="RNDC"><MasterSyncBadge summary={detail.rndcSyncSummary} />{detail.rndcSyncSummary?.error ? <small className="sync-error">{detail.rndcSyncSummary.error}</small> : null}</ReadOnlyField>
             <ReadOnlyField label="Actualizado">{formatTimestamp(detail.updatedAt)}</ReadOnlyField>
             <ReadOnlyField label="Vehículos asociados" wide>
               <RelatedVehicles onUnlink={onUnlink} vehicles={detail.vehicles} />
@@ -454,12 +471,14 @@ function VehicleDetailPanel({
   onClose,
   onLink,
   onUnlink,
+  onSync,
   plate
 }: {
   detail: VehicleDetail | null | undefined;
   onClose: () => void;
   onLink: (document: string) => Promise<void>;
   onUnlink: (document: string) => Promise<void>;
+  onSync: (outcome: MasterSyncOutcome) => void;
   plate: string;
 }) {
   const title = detail ? detail.plate : plate;
@@ -468,9 +487,12 @@ function VehicleDetailPanel({
     <section className="panel">
       <div className="panel-head">
         <h2>{title}</h2>
-        <button className="text-button" onClick={onClose} type="button">
-          Cerrar
-        </button>
+        <div className="panel-head-actions">
+          {detail ? <MasterSyncAction keyValue={detail.plate} kind="vehicle" onDone={onSync} summary={detail.rndcSyncSummary} /> : null}
+          <button className="text-button" onClick={onClose} type="button">
+            Cerrar
+          </button>
+        </div>
       </div>
       {detail === undefined ? (
         <div className="skeleton">Cargando detalle…</div>
@@ -502,7 +524,7 @@ function VehicleDetailPanel({
                 detail.possessorPhone
               ])}
             </ReadOnlyField>
-            <ReadOnlyField label="Registrado en RNDC">{valueOrDash(detail.rndcRegisteredAt)}</ReadOnlyField>
+            <ReadOnlyField label="RNDC"><MasterSyncBadge summary={detail.rndcSyncSummary} />{detail.rndcSyncSummary?.error ? <small className="sync-error">{detail.rndcSyncSummary.error}</small> : detail.rndcRegisteredAt ? <small className="sync-error">Ingresado al RNDC el {detail.rndcRegisteredAt}</small> : null}</ReadOnlyField>
             <ReadOnlyField label="Actualizado">{formatTimestamp(detail.updatedAt)}</ReadOnlyField>
             <ReadOnlyField label="Conductores asociados" wide>
               <RelatedDrivers drivers={detail.drivers} onUnlink={onUnlink} />
@@ -573,6 +595,7 @@ function DriversTable({
             <th>Nombre</th>
             <th>Teléfono</th>
             <th>Vehículos</th>
+            <th>RNDC</th>
             <th>Actualizado</th>
           </tr>
         </thead>
@@ -590,6 +613,7 @@ function DriversTable({
               <td>{valueOrDash(row.name)}</td>
               <td>{valueOrDash(row.phone)}</td>
               <td>{row.vehicleCount}</td>
+              <td><MasterSyncBadge summary={row.rndcSyncSummary} /></td>
               <td className="cell-date">{formatTimestamp(row.updatedAt)}</td>
             </tr>
           ))}
@@ -602,6 +626,7 @@ function DriversTable({
             <span className="master-mobile-heading"><span className="radicado">{row.document}</span><small>{formatTimestamp(row.updatedAt)}</small></span>
             <strong>{valueOrDash(row.name)}</strong>
             <span>{valueOrDash(row.phone)} · {row.vehicleCount} vehículo{row.vehicleCount === 1 ? "" : "s"}</span>
+            <span><MasterSyncBadge summary={row.rndcSyncSummary} /></span>
           </button>
         ))}
       </div>
@@ -634,6 +659,7 @@ function VehiclesTable({
             <th>Propietario</th>
             <th>Poseedor</th>
             <th>Conductores</th>
+            <th>RNDC</th>
             <th>Actualizado</th>
           </tr>
         </thead>
@@ -653,6 +679,7 @@ function VehiclesTable({
               <td>{partyLabel(row.ownerName, row.ownerDocument)}</td>
               <td>{partyLabel(row.possessorName, row.possessorDocument)}</td>
               <td>{row.driverCount}</td>
+              <td><MasterSyncBadge summary={row.rndcSyncSummary} /></td>
               <td className="cell-date">{formatTimestamp(row.updatedAt)}</td>
             </tr>
           ))}
@@ -667,6 +694,7 @@ function VehiclesTable({
             <span>{vehicleKindLabel(row.vehicleKind, row.configuration)} · {vehicleStatusLabel(row.status, row.soatExpiresAt)}</span>
             <span>Poseedor: {valuesLabel([row.possessorName, row.possessorDocument])}</span>
             <span>{row.driverCount} conductor{row.driverCount === 1 ? "" : "es"}</span>
+            <span><MasterSyncBadge summary={row.rndcSyncSummary} /></span>
           </button>
         ))}
       </div>
@@ -674,7 +702,7 @@ function VehiclesTable({
   );
 }
 
-function ThirdPartiesTable({ rows }: { rows: ThirdPartyRow[] }) {
+function ThirdPartiesTable({ onSync, rows }: { onSync: (outcome: MasterSyncOutcome) => void; rows: ThirdPartyRow[] }) {
   if (rows.length === 0) {
     return <div className="empty-state">Sin registros</div>;
   }
@@ -683,12 +711,12 @@ function ThirdPartiesTable({ rows }: { rows: ThirdPartyRow[] }) {
     <>
       <div className="table-wrap master-desktop-table">
         <table className="doc-table">
-          <thead><tr><th>Identificación</th><th>Nombre</th><th>Roles</th><th>Ciudad</th><th>Sedes</th><th>Teléfono</th><th>Actualizado</th></tr></thead>
-          <tbody>{rows.map((row) => <tr key={row._id}><td><span className="radicado">{row.document}</span><small className="table-subline">{row.documentType}</small></td><td>{row.name}</td><td>{rolesLabel(row.roles)}</td><td>{valueOrDash(row.city)}</td><td>{row.siteCount ?? 1}</td><td>{valueOrDash(row.phone)}</td><td className="cell-date">{formatTimestamp(row.updatedAt)}</td></tr>)}</tbody>
+          <thead><tr><th>Identificación</th><th>Nombre</th><th>Roles</th><th>Ciudad</th><th>Sedes</th><th>Teléfono</th><th>RNDC</th><th>Actualizado</th></tr></thead>
+          <tbody>{rows.map((row) => <tr key={row._id}><td><span className="radicado">{row.document}</span><small className="table-subline">{row.documentType}</small></td><td>{row.name}</td><td>{rolesLabel(row.roles)}</td><td>{valueOrDash(row.city)}</td><td>{row.siteCount ?? 1}</td><td>{valueOrDash(row.phone)}</td><td className="cell-sync"><MasterSyncBadge summary={row.rndcSyncSummary} /><MasterSyncAction compact keyValue={row.document} kind="party" onDone={onSync} summary={row.rndcSyncSummary} /></td><td className="cell-date">{formatTimestamp(row.updatedAt)}</td></tr>)}</tbody>
         </table>
       </div>
       <div className="master-mobile-list">
-        {rows.map((row) => <article className="master-mobile-card static" key={row._id}><span className="master-mobile-heading"><span className="radicado">{row.document}</span><small>{formatTimestamp(row.updatedAt)}</small></span><strong>{row.name}</strong><span>{rolesLabel(row.roles)} · {valueOrDash(row.phone)}</span></article>)}
+        {rows.map((row) => <article className="master-mobile-card static" key={row._id}><span className="master-mobile-heading"><span className="radicado">{row.document}</span><small>{formatTimestamp(row.updatedAt)}</small></span><strong>{row.name}</strong><span>{rolesLabel(row.roles)} · {valueOrDash(row.phone)}</span><span className="cell-sync"><MasterSyncBadge summary={row.rndcSyncSummary} /><MasterSyncAction compact keyValue={row.document} kind="party" onDone={onSync} summary={row.rndcSyncSummary} /></span></article>)}
       </div>
     </>
   );

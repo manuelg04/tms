@@ -11,6 +11,7 @@ import {
 import type { OfficialDocumentState } from "../../../../../../convex/model/documentLifecycle";
 import { getAuthSettings, createConvexToken, jsonResponse } from "../../../../../lib/auth-server";
 import { authorizeGatewayRequest, safeRndcMode } from "../../../../../lib/rndc-gateway";
+import { syncMaster, type MasterSyncResult } from "../../../../../lib/rndc-master-sync";
 import { POST as runRndcAction } from "../../../actions/[action]/route";
 
 export type EmitBody = {
@@ -30,6 +31,7 @@ export type ExecutedStep = {
 
 export type EmitRuntime = {
   loadInputs: (expedienteId: Id<"expedientes">) => Promise<EmissionInputs | null>;
+  syncMasters?: (expedienteId: Id<"expedientes">, scope: EmissionScope) => Promise<MasterSyncResult[]>;
   prepareForEmission: (expedienteId: Id<"expedientes">, scope: EmissionScope) => Promise<void>;
   ensureOfficialDocuments: (
     expedienteId: Id<"expedientes">,
@@ -116,8 +118,18 @@ async function handleEmit(
 
     const client = new ConvexHttpClient(convexUrl);
     client.setAuth(createConvexToken(authorization, getAuthSettings()));
+    const serviceKey = process.env.RNDC_INGEST_KEY;
     runtime = {
       loadInputs: (id) => client.query(api.dispatches.emissionInputs, { expedienteId: id }),
+      syncMasters: async (id, requestedScope) => {
+        const requirements = await client.query(api.dispatches.masterSyncRequirements, { expedienteId: id, scope: requestedScope });
+        const results: MasterSyncResult[] = [];
+        for (const requirement of requirements) {
+          if (requirement.state === "registered") continue;
+          results.push(await syncMaster(client, serviceKey, { kind: requirement.kind, key: requirement.key }));
+        }
+        return results;
+      },
       prepareForEmission: async (id, requestedScope) => {
         await client.mutation(api.dispatches.prepareForEmission, { expedienteId: id, scope: requestedScope });
       },
@@ -131,6 +143,27 @@ async function handleEmit(
 
   if (!inputs) {
     return jsonResponse({ error: "Despacho no encontrado" }, 404);
+  }
+
+  if (runtime.syncMasters) {
+    const masterResults = await runtime.syncMasters(typedExpedienteId, scope);
+    const masterBlockers = masterResults
+      .filter((result) => result.state !== "registered")
+      .map((result) => `${result.label}: ${result.error ?? "no quedó registrado en el RNDC"}`);
+
+    if (masterBlockers.length > 0) {
+      return jsonResponse(
+        {
+          ok: false,
+          reason: "masters_not_registered",
+          error: `Hay maestros sin registrar en el RNDC; corrígelos en Maestros antes de transmitir. ${masterBlockers.join(" · ")}`,
+          blockers: masterBlockers,
+          masters: masterResults,
+          nextAction: "registrar_maestros"
+        },
+        409
+      );
+    }
   }
 
   try {

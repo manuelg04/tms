@@ -199,6 +199,14 @@ const masterWorkReference = v.object({
   merchandise: v.optional(v.string())
 });
 
+export const masterSyncValidator = v.object({
+  state: v.union(v.literal("pending"), v.literal("registered"), v.literal("rejected")),
+  updatedAt: v.number(),
+  version: v.optional(v.number()),
+  error: v.optional(v.string()),
+  operationId: v.optional(v.string())
+});
+
 export default defineSchema({
   trips: defineTable({
     organizationId: v.optional(v.id("organizations")),
@@ -315,6 +323,7 @@ export default defineSchema({
     emergencyContactPhone: v.optional(v.string()),
     workReferences: v.optional(v.array(masterWorkReference)),
     observations: v.optional(v.string()),
+    rndcSync: v.optional(masterSyncValidator),
     createdAt: v.number(),
     updatedAt: v.number()
   })
@@ -348,6 +357,7 @@ export default defineSchema({
     siteCount: v.optional(v.number()),
     rndcRegisteredAt: v.optional(v.string()),
     source: v.optional(v.string()),
+    rndcSync: v.optional(masterSyncValidator),
     roles: v.array(v.union(
       v.literal("driver"),
       v.literal("owner"),
@@ -490,6 +500,7 @@ export default defineSchema({
     gpsOperator: v.optional(v.string()),
     gpsUsername: v.optional(v.string()),
     workReferences: v.optional(v.array(masterWorkReference)),
+    rndcSync: v.optional(masterSyncValidator),
     createdAt: v.number(),
     updatedAt: v.number()
   })

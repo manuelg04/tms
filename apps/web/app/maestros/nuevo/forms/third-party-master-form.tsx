@@ -6,6 +6,7 @@ import { api } from "../../../../convex/_generated/api";
 import { MunicipalityField, type DivisionPick } from "../../../components/fields/lookup-fields";
 import { CheckboxField, ChoiceCards, MasterSection, MasterSubmitBar, SelectField, TextAreaField, TextField } from "../../components/master-form-ui";
 import { optionalText, readableError, requiredText, values } from "./master-form-utils";
+import { requestMasterSync } from "../../components/master-sync";
 
 type PersonType = "natural" | "legal";
 
@@ -55,6 +56,11 @@ export function ThirdPartyMasterForm() {
         }
       });
       setSuccess(outcomeMessage(result.outcome));
+      if (result.outcome !== "unchanged") {
+        const sync = await requestMasterSync("party", requiredText(data, "document", "N.º documento"));
+        if (sync.ok) setSuccess(`${outcomeMessage(result.outcome)} ${sync.message}`);
+        else setError(`Se guardó en el TMS, pero el RNDC no lo aceptó todavía. ${sync.message}`);
+      }
     } catch (caught) {
       setError(readableError(caught));
     } finally {

@@ -20,7 +20,7 @@ export type SyncableStep = {
 
 export type SyncableResult = {
   ok: boolean;
-  operation: "loading-order" | "remesa" | "trip" | "manifest" | "manifest-issue" | "driver-vehicle" | "fulfill-remesa" | "fulfill-manifest";
+  operation: "loading-order" | "remesa" | "trip" | "manifest" | "manifest-issue" | "driver-vehicle" | "driver" | "vehicle" | "party" | "fulfill-remesa" | "fulfill-manifest";
   mode: "dry-run" | "live";
   startedAt: string;
   finishedAt: string;
@@ -72,7 +72,10 @@ const documentPlans: Record<SyncableResult["operation"], { kind: string; numberK
   "manifest-issue": { kind: "manifiesto", numberKey: "manifest", stepName: "issue-manifest" },
   "fulfill-remesa": { kind: "remesa", numberKey: "remesa", stepName: "fulfill-remesa" },
   "fulfill-manifest": { kind: "manifiesto", numberKey: "manifest", stepName: "fulfill-manifest" },
-  "driver-vehicle": undefined
+  "driver-vehicle": undefined,
+  driver: undefined,
+  vehicle: undefined,
+  party: undefined
 };
 
 export function buildOperationRecord(result: SyncableResult, scenario: DemoScenario): OperationRecord {

@@ -2,7 +2,7 @@ import express from "express";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildDriverVehicleMessages, buildFailureResponse, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildLoadingOrderMessages, buildManifestIssueMessages, buildManifestMessages, buildMtmReferenceScenario, buildRemesaMessages, buildTripMessages, generateLoadingOrderDocument, generateManifestDocument, generateRemesaDocument, loadConfig, RndcClient, runDemoFlow } from "@tms/rndc-core";
+import { buildDriverMessages, buildDriverVehicleMessages, buildFailureResponse, buildPartyMessages, buildVehicleMessages, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildLoadingOrderMessages, buildManifestIssueMessages, buildManifestMessages, buildMtmReferenceScenario, buildRemesaMessages, buildTripMessages, generateLoadingOrderDocument, generateManifestDocument, generateRemesaDocument, loadConfig, RndcClient, runDemoFlow } from "@tms/rndc-core";
 import type { CargoData, CompanyParty, ComplianceData, DemoScenario, GeneratedDocument, MoneyData, PersonData, RndcConfig, RndcFlowResult, RndcFlowStep, RndcMessageRequest, RndcMessageResponse, VehicleData } from "@tms/rndc-core";
 import { syncOperationToConvex } from "./convexSync.js";
 import type { ConvexSyncStatus } from "./convexSync.js";
@@ -13,7 +13,7 @@ import type { RndcAppHooks, RndcLogger, RndcRuntimeSettings } from "./runtimeSec
 import { readDurableEvidenceContext, storeDurableEvidenceToConvex, validateDurableContextWithConvex } from "./durableEvidence.js";
 import type { DurableContextValidator, DurableEvidenceReport, DurableEvidenceStore } from "./durableEvidence.js";
 
-export type FormOperation = "loading-order" | "remesa" | "trip" | "manifest" | "manifest-issue" | "driver-vehicle" | "fulfill-remesa" | "fulfill-manifest";
+export type FormOperation = "loading-order" | "remesa" | "trip" | "manifest" | "manifest-issue" | "driver-vehicle" | "driver" | "vehicle" | "party" | "fulfill-remesa" | "fulfill-manifest";
 
 type FormMessage = {
   name: string;
@@ -175,6 +175,18 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}, hooks: RndcAp
     void submitForm(req, res, next, readConfig, "driver-vehicle", buildDriverVehicleMessages, evidenceStore);
   });
 
+  app.post("/rndc/forms/driver", requireOperationalReadiness, (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "driver", buildDriverMessages, evidenceStore);
+  });
+
+  app.post("/rndc/forms/vehicle", requireOperationalReadiness, (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "vehicle", buildVehicleMessages, evidenceStore);
+  });
+
+  app.post("/rndc/forms/party", requireOperationalReadiness, (req, res, next) => {
+    void submitForm(req, res, next, readConfig, "party", buildPartyMessages, evidenceStore);
+  });
+
   registerPhaseOneRoutes(app, readConfig, requireOperationalReadiness, evidenceStore);
 
   app.post("/rndc/message", createLegacyMessageMiddleware(readConfig, runtimeSettings), requireOperationalReadiness, async (req, res, next) => {
@@ -325,6 +337,18 @@ function operationDocumentNumber(operation: FormOperation, scenario: DemoScenari
 
   if (operation === "fulfill-manifest") {
     return scenario.manifestNumber;
+  }
+
+  if (operation === "driver") {
+    return scenario.driver.id;
+  }
+
+  if (operation === "vehicle") {
+    return scenario.vehicle.plate;
+  }
+
+  if (operation === "party") {
+    return `${scenario.sender.id}-${scenario.sender.siteCode}`;
   }
 
   return `${scenario.driver.id}-${scenario.vehicle.plate}`;
@@ -481,6 +505,54 @@ const requiredFormFields: Record<FormOperation, string[]> = {
     "vehicle.soatNumber",
     "vehicle.soatExpirationDate",
     "vehicle.insurerNit"
+  ],
+  driver: [
+    "driver.idType",
+    "driver.id",
+    "driver.firstName",
+    "driver.firstLastName",
+    "driver.phone",
+    "driver.address",
+    "driver.cityCode",
+    "driver.licenseCategory",
+    "driver.licenseNumber",
+    "driver.licenseExpirationDate"
+  ],
+  vehicle: [
+    "vehicleOwner.idType",
+    "vehicleOwner.id",
+    "vehicleOwner.firstName",
+    "vehicleOwner.firstLastName",
+    "vehicleOwner.phone",
+    "vehicleOwner.address",
+    "vehicleOwner.cityCode",
+    "vehicleHolder.idType",
+    "vehicleHolder.id",
+    "vehicleHolder.firstName",
+    "vehicleHolder.firstLastName",
+    "vehicleHolder.phone",
+    "vehicleHolder.address",
+    "vehicleHolder.cityCode",
+    "vehicle.plate",
+    "vehicle.rndcConfigurationCode",
+    "vehicle.rndcMakeCode",
+    "vehicle.rndcFuelCode",
+    "vehicle.rndcBodyTypeCode",
+    "vehicle.lineCode",
+    "vehicle.modelYear",
+    "vehicle.emptyWeightKg",
+    "vehicle.capacityKg",
+    "vehicle.colorCode",
+    "vehicle.soatNumber",
+    "vehicle.soatExpirationDate",
+    "vehicle.insurerNit"
+  ],
+  party: [
+    "sender.idType",
+    "sender.id",
+    "sender.name",
+    "sender.address",
+    "sender.cityCode"
   ]
 };
 
@@ -499,7 +571,10 @@ const requiredNumericFormFields: Record<FormOperation, string[]> = {
     "compliance.freightDiscountValue",
     "compliance.overAdvanceValue"
   ],
-  "driver-vehicle": ["vehicle.emptyWeightKg", "vehicle.capacityKg"]
+  "driver-vehicle": ["vehicle.emptyWeightKg", "vehicle.capacityKg"],
+  driver: [],
+  vehicle: ["vehicle.emptyWeightKg", "vehicle.capacityKg"],
+  party: []
 };
 
 function collectMissingFormFields(operation: FormOperation, payload: unknown): string[] {
@@ -1263,6 +1338,9 @@ function durableOperationTypeForRequest(req: express.Request): string | undefine
     "/rndc/forms/fulfill-remesa": "fulfill_remesa",
     "/rndc/forms/fulfill-manifest": "fulfill_manifest",
     "/rndc/forms/driver-vehicle": "upsert_vehicle",
+    "/rndc/forms/driver": "upsert_third_party",
+    "/rndc/forms/vehicle": "upsert_vehicle",
+    "/rndc/forms/party": "upsert_third_party",
     "/rndc/corrections/remesa": "correct_remesa",
     "/rndc/reconciliation": "reconcile",
     "/rndc/acceptances/query": "query_acceptance"

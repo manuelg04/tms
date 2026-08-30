@@ -220,6 +220,30 @@ export function buildDriverVehicleMessages(scenario: DemoScenario): RndcFlowMess
   ];
 }
 
+export function buildDriverMessages(scenario: DemoScenario): RndcFlowMessage[] {
+  return [
+    {
+      name: "driver",
+      title: "Crear o actualizar conductor",
+      request: createMessage(11, personVariables(scenario, scenario.driver))
+    }
+  ];
+}
+
+export function buildVehicleMessages(scenario: DemoScenario): RndcFlowMessage[] {
+  return buildDriverVehicleMessages(scenario).filter((message) => message.name !== "driver");
+}
+
+export function buildPartyMessages(scenario: DemoScenario): RndcFlowMessage[] {
+  return [
+    {
+      name: "party",
+      title: "Crear o actualizar tercero",
+      request: createMessage(11, partyVariables(scenario, scenario.sender))
+    }
+  ];
+}
+
 export function buildMtmProductionFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
   const messages = buildFlowMessages(scenario);
   const wanted = ["cargo", "trip", "remesa", "manifest"];

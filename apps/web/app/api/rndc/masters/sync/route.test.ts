@@ -1,15 +1,14 @@
-import assert from "node:assert/strict";
 import test, { afterEach, beforeEach } from "node:test";
+import assert from "node:assert/strict";
 import { createSessionToken, demoUsers } from "../../../../lib/auth.js";
 import { POST } from "./route.js";
 
 const originalEnv = { ...process.env };
-const secret = "master-route-session-secret-long-enough";
 
 beforeEach(() => {
   process.env.AUTH_MODE = "demo";
   process.env.DEMO_AUTH_PASSWORD = "unused";
-  process.env.AUTH_SESSION_SECRET = secret;
+  process.env.AUTH_SESSION_SECRET = "test-session-secret-with-enough-length-1234567890";
   process.env.AUTH_JWT_PRIVATE_KEY = "unused";
   process.env.AUTH_JWT_PUBLIC_KEY = "unused";
   process.env.AUTH_JWT_ISSUER = "http://localhost:3000";
@@ -23,30 +22,28 @@ afterEach(() => {
   process.env = { ...originalEnv };
 });
 
-test("requires an authenticated operator for master transmission", async () => {
-  const response = await POST(new Request("http://localhost/api/rndc/masters/register", { method: "POST" }));
+test("master sync rejects anonymous requests", async () => {
+  const response = await POST(new Request("http://localhost/api/rndc/masters/sync", { method: "POST", body: JSON.stringify({ kind: "driver", key: "123" }) }));
   assert.equal(response.status, 401);
 });
 
-test("accepts only persisted master identities from the browser", async () => {
-  const response = await POST(request({
-    driverDocument: "1001",
-    vehiclePlate: "STO172",
-    driver: { name: "Browser supplied" }
-  }));
-  assert.equal(response.status, 400);
+test("master sync rejects unknown kinds and extra keys", async () => {
+  const unknownKind = await POST(request({ kind: "customer", key: "123" }));
+  assert.equal(unknownKind.status, 400);
+  const extraKeys = await POST(request({ kind: "driver", key: "123", payload: {} }));
+  assert.equal(extraKeys.status, 400);
 });
 
-test("fails closed before transmission when durable storage is unavailable", async () => {
-  const response = await POST(request({ driverDocument: "1001", vehiclePlate: "STO172" }));
+test("master sync requires durable storage configuration", async () => {
+  const response = await POST(request({ kind: "vehicle", key: "abc123" }));
   assert.equal(response.status, 503);
 });
 
-function request(body: Record<string, unknown>) {
+function request(body: unknown): Request {
   const user = demoUsers.find((candidate) => candidate.role === "operator");
   if (!user) throw new Error("Demo operator missing");
-  const token = createSessionToken(user, secret, Date.now(), 3600);
-  return new Request("http://localhost/api/rndc/masters/register", {
+  const token = createSessionToken(user, process.env.AUTH_SESSION_SECRET!, Date.now(), 3600);
+  return new Request("http://localhost/api/rndc/masters/sync", {
     method: "POST",
     headers: { "Content-Type": "application/json", cookie: `tms_session=${encodeURIComponent(token)}` },
     body: JSON.stringify(body)

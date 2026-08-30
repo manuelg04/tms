@@ -143,6 +143,43 @@ test("rejects an unknown emission scope before loading dispatch data", async () 
   assert.equal(loaded, false);
 });
 
+test("blocks emission when a required master could not be registered in RNDC", async () => {
+  const preparedScopes: string[] = [];
+  const runtime = emissionRuntime(fullInputs(), preparedScopes, []);
+  const response = await handleEmitWithRuntime(
+    emitRequest("exp-1", { scope: "todo" }),
+    emitContext("exp-1"),
+    {
+      ...runtime,
+      syncMasters: async () => [
+        { kind: "driver", key: "80756632", label: "Conductor JUAN PEREZ", state: "registered", skipped: false, operationIds: ["op-1"] },
+        { kind: "vehicle", key: "SWM776", label: "Vehículo SWM776", state: "rejected", skipped: false, error: "teléfono del propietario es obligatorio", operationIds: [] }
+      ]
+    }
+  );
+  const body = await response.json() as { reason: string; blockers: string[] };
+
+  assert.equal(response.status, 409);
+  assert.equal(body.reason, "masters_not_registered");
+  assert.deepEqual(body.blockers, ["Vehículo SWM776: teléfono del propietario es obligatorio"]);
+  assert.deepEqual(preparedScopes, []);
+});
+
+test("continues the emission when every required master is registered", async () => {
+  const preparedScopes: string[] = [];
+  const executedActions: string[] = [];
+  const runtime = emissionRuntime(fullInputs(), preparedScopes, executedActions);
+  const response = await handleEmitWithRuntime(
+    emitRequest("exp-1", { scope: "todo" }),
+    emitContext("exp-1"),
+    { ...runtime, syncMasters: async () => [{ kind: "driver", key: "80756632", label: "Conductor", state: "registered", skipped: true, operationIds: [] }] }
+  );
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(preparedScopes, ["todo"]);
+  assert.ok(executedActions.length > 0);
+});
+
 function emissionRuntime(
   inputs: ReturnType<typeof fullInputs>,
   preparedScopes: string[],

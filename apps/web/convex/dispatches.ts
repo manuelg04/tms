@@ -18,7 +18,8 @@ import {
   type ConsignmentDraft,
   type DispatchProjection,
   type EmissionScope,
-  type LoadingOrderDraft
+  type LoadingOrderDraft,
+  type PartyDraft
 } from "./model/dispatchWorkflow";
 import { initialDocumentLifecycle, type OfficialDocumentState } from "./model/documentLifecycle";
 import { formatLoadingOrderNumber, normalizeLoadingOrderReservationToken, resolveLoadingOrderReservation } from "./model/loadingOrderReservation";
@@ -32,6 +33,7 @@ import {
 import { validateFulfillmentQuantities, validateLogisticsTimeline } from "./model/fulfillmentWorkflow";
 import { normalizeSearchText } from "./model/dispatchSearch";
 import { refreshDispatchSearchText } from "./model/dispatchSearchProjection";
+import { masterSyncSummary } from "./model/masterSync";
 
 const stageValidator = v.union(
   v.literal("orden_cargue"),
@@ -1131,6 +1133,88 @@ function preparationDetails(
     return `Manifiesto ${manifestNumber}`;
   }
   return `${orderNumber ? `Orden ${orderNumber}, ` : ""}${consignmentNumbers.length ? `remesas ${consignmentNumbers.join(", ")}, ` : ""}manifiesto ${manifestNumber ?? ""}`;
+}
+
+const masterSyncRequirementValidator = v.object({
+  kind: v.union(v.literal("driver"), v.literal("vehicle"), v.literal("party")),
+  key: v.string(),
+  label: v.string(),
+  state: v.union(v.literal("pending"), v.literal("registered"), v.literal("rejected")),
+  error: v.optional(v.string())
+});
+
+export const masterSyncRequirements = query({
+  args: { actorToken: v.optional(v.string()), expedienteId: v.id("expedientes"), scope: emissionScopeValidator },
+  returns: v.array(masterSyncRequirementValidator),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken);
+    const expediente = await ctx.db.get("expedientes", args.expedienteId);
+    if (!expediente) return [];
+    requireSameOrganization(actor, expediente.organizationId);
+    const remesas = await ctx.db
+      .query("expedienteRemesas")
+      .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
+      .collect();
+    return await collectMasterSyncRequirements(ctx, expediente, remesas, args.scope);
+  }
+});
+
+async function collectMasterSyncRequirements(
+  ctx: QueryCtx,
+  expediente: Doc<"expedientes">,
+  remesas: Doc<"expedienteRemesas">[],
+  scope: EmissionScope
+): Promise<Array<{ kind: "driver" | "vehicle" | "party"; key: string; label: string; state: "pending" | "registered" | "rejected"; error?: string }>> {
+  const targets = emissionScopeTargets(scope, expediente.workflowVariant ?? "standard");
+  const organizationId = expediente.organizationId;
+  const orderDraft = (expediente.loadingOrderDraft ?? null) as LoadingOrderDraft | null;
+  const results: Array<{ kind: "driver" | "vehicle" | "party"; key: string; label: string; state: "pending" | "registered" | "rejected"; error?: string }> = [];
+  const seen = new Set<string>();
+  const push = (entry: { kind: "driver" | "vehicle" | "party"; key: string; label: string; state: "pending" | "registered" | "rejected"; error?: string }) => {
+    const id = `${entry.kind}:${entry.key}`;
+    if (seen.has(id)) return;
+    seen.add(id);
+    results.push(entry);
+  };
+
+  if (targets.assignment && expediente.driverId) {
+    const driver = await ctx.db.get("drivers", expediente.driverId);
+    if (driver) {
+      const mirror = await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", organizationId).eq("document", driver.document)).unique();
+      const summary = driver.rndcSync ? masterSyncSummary(driver) : masterSyncSummary(mirror ? { rndcRegisteredAt: mirror.rndcRegisteredAt, source: mirror.source } : null);
+      push({ kind: "driver", key: driver.document, label: `Conductor ${driver.name ?? driver.document}`, state: summary.state, error: summary.error });
+    }
+  }
+  if (targets.assignment && expediente.vehicleId) {
+    const vehicle = await ctx.db.get("vehicles", expediente.vehicleId);
+    if (vehicle) {
+      const summary = masterSyncSummary(vehicle);
+      push({ kind: "vehicle", key: vehicle.plate, label: `Vehículo ${vehicle.plate}`, state: summary.state, error: summary.error });
+    }
+  }
+  if (targets.order || targets.consignments) {
+    const parties: Array<PartyDraft | undefined> = [];
+    if (targets.order) parties.push(orderDraft?.sender, orderDraft?.recipient);
+    if (targets.consignments) {
+      for (const remesa of remesas) {
+        if (isAuthorizedState(remesa.officialState)) continue;
+        const effective = effectiveConsignment((remesa.draft ?? {}) as ConsignmentDraft, orderDraft);
+        parties.push(effective.sender, effective.recipient);
+      }
+    }
+    for (const party of parties) {
+      const document = party?.identificationNumber?.trim();
+      if (!document || seen.has(`party:${document}`)) continue;
+      const row = await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", organizationId).eq("document", document)).unique();
+      if (!row) {
+        push({ kind: "party", key: document, label: `Tercero ${party?.name ?? document}`, state: "rejected", error: `El tercero ${party?.name ?? document} no existe en maestros` });
+        continue;
+      }
+      const summary = masterSyncSummary(row);
+      push({ kind: "party", key: document, label: `Tercero ${row.name}`, state: summary.state, error: summary.error });
+    }
+  }
+  return results;
 }
 
 export const emissionInputs = query({

@@ -7,6 +7,7 @@ import { BodyTypeField, DriverField, InsurerField, PartyField, TrailerField, Veh
 import { CheckboxField, MasterPhotoPicker, MasterSection, MasterSubmitBar, SelectField, TextAreaField, TextField } from "../../components/master-form-ui";
 import { checked, discardUploadedMasterPhotos, optionalText, readableError, requiredText, uploadMasterPhoto, type UploadedVehiclePhoto } from "./master-form-utils";
 import { readWorkReferences, WorkReferencesFields } from "./work-references-fields";
+import { requestMasterSync } from "../../components/master-sync";
 
 type PhotoSlot = "front" | "left" | "right" | "rear";
 
@@ -109,6 +110,11 @@ export function VehicleMasterForm() {
       const result = await createVehicle({ input, photos: uploadedPhotos.length > 0 ? uploadedPhotos : undefined });
       uploadedPhotos.length = 0;
       setSuccess(outcomeMessage(result.outcome));
+      if (result.outcome !== "unchanged") {
+        const sync = await requestMasterSync("vehicle", input.plate);
+        if (sync.ok) setSuccess(`${outcomeMessage(result.outcome)} ${sync.message}`);
+        else setError(`Se guardó en el TMS, pero el RNDC no lo aceptó todavía. ${sync.message}`);
+      }
     } catch (caught) {
       await discardUploadedMasterPhotos(discardUploads, uploadedPhotos);
       setError(readableError(caught));

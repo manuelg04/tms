@@ -925,3 +925,45 @@ function durableHeaders(mode: "dry-run" | "live", operationId: string, operation
     "X-Correlation-Id": operationId
   };
 }
+
+test("registers a driver, a vehicle and a party as standalone master operations", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-masters-"));
+  const app = createRndcApp({ outputDir: join(base, "runs"), pdfDir: join(base, "pdfs"), mode: "dry-run" });
+  const durable = { "X-TMS-Expected-Mode": "dry-run" };
+  const driver = { idType: "C", id: "80756632", firstName: "JUAN", firstLastName: "PEREZ", phone: "3001234567", address: "CALLE 1", cityCode: "11001000", licenseCategory: "C2", licenseNumber: "80756632", licenseExpirationDate: "01/01/2027" };
+  const owner = { idType: "N", id: "900123456", firstName: "TRANSPORTES SA", firstLastName: "TRANSPORTES SA", phone: "6011234567", address: "CRA 2", cityCode: "11001000" };
+
+  const driverResponse = await requestJson(app, "/rndc/forms/driver", { method: "POST", headers: durable, body: { driver } });
+  assert.equal(driverResponse.status, 200, JSON.stringify(driverResponse.body));
+  assert.deepEqual((driverResponse.body.steps as { name: string; procesoId: number }[]).map((step) => [step.name, step.procesoId]), [["driver", 11]]);
+
+  const driverXml = await readFile((driverResponse.body.steps as { requestPath: string }[])[0].requestPath, "utf8");
+  assert.match(driverXml, /<NUMIDTERCERO>80756632<\/NUMIDTERCERO>/);
+  assert.match(driverXml, /<NUMLICENCIACONDUCCION>80756632<\/NUMLICENCIACONDUCCION>/);
+
+  const vehicleResponse = await requestJson(app, "/rndc/forms/vehicle", {
+    method: "POST",
+    headers: durable,
+    body: {
+      vehicleOwner: owner,
+      vehicleHolder: owner,
+      vehicle: { plate: "SWM776", rndcConfigurationCode: "3", rndcMakeCode: "123", rndcFuelCode: "1", rndcBodyTypeCode: "4", lineCode: "555", modelYear: 2018, emptyWeightKg: 8500, capacityKg: 17000, colorCode: "12", soatNumber: "SOAT1", soatExpirationDate: "01/01/2027", insurerNit: "860002400" }
+    }
+  });
+  assert.equal(vehicleResponse.status, 200, JSON.stringify(vehicleResponse.body));
+  assert.deepEqual((vehicleResponse.body.steps as { name: string; procesoId: number }[]).map((step) => [step.name, step.procesoId]), [["owner", 11], ["vehicle", 12]]);
+  const vehicleXml = await readFile((vehicleResponse.body.steps as { requestPath: string }[])[1].requestPath, "utf8");
+  assert.match(vehicleXml, /<NUMPLACA>SWM776<\/NUMPLACA>/);
+  assert.match(vehicleXml, /<PESOVEHICULOVACIO>8500<\/PESOVEHICULOVACIO>/);
+
+  const partyResponse = await requestJson(app, "/rndc/forms/party", {
+    method: "POST",
+    headers: durable,
+    body: { sender: { idType: "N", id: "890100756", name: "ITALCOL S.A", siteCode: "1", siteName: "PLANTA", address: "VIA 40", cityCode: "08001000" } }
+  });
+  assert.equal(partyResponse.status, 200, JSON.stringify(partyResponse.body));
+  assert.deepEqual((partyResponse.body.steps as { name: string; procesoId: number }[]).map((step) => [step.name, step.procesoId]), [["party", 11]]);
+  const partyXml = await readFile((partyResponse.body.steps as { requestPath: string }[])[0].requestPath, "utf8");
+  assert.match(partyXml, /<NUMIDTERCERO>890100756<\/NUMIDTERCERO>/);
+  assert.match(partyXml, /<CODSEDETERCERO>1<\/CODSEDETERCERO>/);
+});

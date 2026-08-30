@@ -7,6 +7,7 @@ import { MunicipalityField, type DivisionPick } from "../../../components/fields
 import { CheckboxField, MasterPhotoPicker, MasterSection, MasterSubmitBar, SelectField, TextAreaField, TextField } from "../../components/master-form-ui";
 import { checked, discardUploadedMasterPhotos, optionalText, readableError, requiredText, uploadMasterPhoto, type UploadedMasterPhoto } from "./master-form-utils";
 import { readWorkReferences, WorkReferencesFields } from "./work-references-fields";
+import { requestMasterSync } from "../../components/master-sync";
 
 export function DriverMasterForm() {
   const createDriver = useMutation(api.fleet.createDriverMaster);
@@ -72,6 +73,11 @@ export function DriverMasterForm() {
       const result = await createDriver({ input, photo: uploadedPhoto });
       uploadedPhoto = undefined;
       setSuccess(outcomeMessage(result.outcome));
+      if (result.outcome !== "unchanged") {
+        const sync = await requestMasterSync("driver", input.document);
+        if (sync.ok) setSuccess(`${outcomeMessage(result.outcome)} ${sync.message}`);
+        else setError(`Se guardó en el TMS, pero el RNDC no lo aceptó todavía. ${sync.message}`);
+      }
     } catch (caught) {
       await discardUploadedMasterPhotos(discardUploads, uploadedPhoto ? [uploadedPhoto] : []);
       setError(readableError(caught));

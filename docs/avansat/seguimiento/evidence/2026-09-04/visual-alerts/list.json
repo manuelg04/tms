@@ -1,0 +1,170 @@
+{
+  "capturedAt": "2026-09-04T23:36:15.997Z",
+  "controls": [
+    {
+      "name": "volver",
+      "onclick": "javascript:history.go(-1)",
+      "type": "button",
+      "value": "volver"
+    }
+  ],
+  "rows": [
+    [
+      {
+        "background": "rgb(245, 245, 245)",
+        "bg": null,
+        "style": null,
+        "text": "Codigo Alarma"
+      },
+      {
+        "background": "rgb(245, 245, 245)",
+        "bg": null,
+        "style": null,
+        "text": "Nombre"
+      },
+      {
+        "background": "rgb(245, 245, 245)",
+        "bg": null,
+        "style": null,
+        "text": "Tiempo de Alarma"
+      },
+      {
+        "background": "rgb(245, 245, 245)",
+        "bg": null,
+        "style": null,
+        "text": "Color"
+      }
+    ],
+    [
+      {
+        "background": "rgb(248, 248, 248)",
+        "bg": null,
+        "style": null,
+        "text": "5"
+      },
+      {
+        "background": "rgb(248, 248, 248)",
+        "bg": null,
+        "style": null,
+        "text": "Salida"
+      },
+      {
+        "background": "rgb(248, 248, 248)",
+        "bg": null,
+        "style": null,
+        "text": "1"
+      },
+      {
+        "background": "rgba(0, 0, 0, 0)",
+        "bg": null,
+        "style": "font-size: 8pt;color: #000000;background-color: 33FF99",
+        "text": ""
+      }
+    ],
+    [
+      {
+        "background": "rgb(255, 255, 255)",
+        "bg": null,
+        "style": null,
+        "text": "1"
+      },
+      {
+        "background": "rgb(255, 255, 255)",
+        "bg": null,
+        "style": null,
+        "text": "Amarillo"
+      },
+      {
+        "background": "rgb(255, 255, 255)",
+        "bg": null,
+        "style": null,
+        "text": "30"
+      },
+      {
+        "background": "rgba(0, 0, 0, 0)",
+        "bg": null,
+        "style": "font-size: 8pt;color: #000000;background-color: FFFF00",
+        "text": ""
+      }
+    ],
+    [
+      {
+        "background": "rgb(248, 248, 248)",
+        "bg": null,
+        "style": null,
+        "text": "3"
+      },
+      {
+        "background": "rgb(248, 248, 248)",
+        "bg": null,
+        "style": null,
+        "text": "Naranja"
+      },
+      {
+        "background": "rgb(248, 248, 248)",
+        "bg": null,
+        "style": null,
+        "text": "60"
+      },
+      {
+        "background": "rgba(0, 0, 0, 0)",
+        "bg": null,
+        "style": "font-size: 8pt;color: #000000;background-color: FF6600",
+        "text": ""
+      }
+    ],
+    [
+      {
+        "background": "rgb(255, 255, 255)",
+        "bg": null,
+        "style": null,
+        "text": "2"
+      },
+      {
+        "background": "rgb(255, 255, 255)",
+        "bg": null,
+        "style": null,
+        "text": "Rojo"
+      },
+      {
+        "background": "rgb(255, 255, 255)",
+        "bg": null,
+        "style": null,
+        "text": "90"
+      },
+      {
+        "background": "rgba(0, 0, 0, 0)",
+        "bg": null,
+        "style": "font-size: 8pt;color: #000000;background-color: FF0000",
+        "text": ""
+      }
+    ],
+    [
+      {
+        "background": "rgb(248, 248, 248)",
+        "bg": null,
+        "style": null,
+        "text": "4"
+      },
+      {
+        "background": "rgb(248, 248, 248)",
+        "bg": null,
+        "style": null,
+        "text": "Violeta"
+      },
+      {
+        "background": "rgb(248, 248, 248)",
+        "bg": null,
+        "style": null,
+        "text": "120"
+      },
+      {
+        "background": "rgba(0, 0, 0, 0)",
+        "bg": null,
+        "style": "font-size: 8pt;color: #000000;background-color: 9933FF",
+        "text": ""
+      }
+    ]
+  ],
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?window=central&cod_servic=3215"
+}

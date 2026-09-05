@@ -1,0 +1,358 @@
+{
+  "fields": [
+    {
+      "label": "Ingresar Clientes/Transportadoras como Ináctivas(S/N):",
+      "name": "estper",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Ingresar Conductores como Ináctivos(S/N):",
+      "name": "estcon",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Ingresar Vehículos como Ináctivos(S/N):",
+      "name": "estveh",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Ingresar Terceros como Ináctivos(S/N):",
+      "name": "estter",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Asignar Por Defecto la Agencia Principal en la Creación del Despacho(S/N):",
+      "name": "agepag",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Ingresar Fecha de Nacimiento del conductor(S/N):",
+      "name": "fecNacimi",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Estado Mercancía en Remesas:",
+      "name": "estamerca",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Solicitud de Seguros(S/N):",
+      "name": "ind_solseg",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Restringir Plan de Ruta y Salida Importar Completo:",
+      "name": "ind_manifi",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Activar Llegada Automatica en Importar Completo (S/N):",
+      "name": "ind_lleimc",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Manifiestos con remesas de múltiples orígenes:",
+      "name": "ind_mulori",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Validar Vehiculos frente al RNA:",
+      "name": "ind_envrna",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Habilitar domicilios extranjeros:",
+      "name": "ind_ciuext",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Calculo de Retefuente A Partir del Valor $:",
+      "name": "minret",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Meses Conductores:",
+      "name": "inh_conduc",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Meses Vehículos:",
+      "name": "inh_vehicu",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Aplicar Rangos(s/n):",
+      "name": "ind_manran",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Rango Inicial:",
+      "name": "raniniman",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Rango Actual:",
+      "name": "ranactman",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Rango Final:",
+      "name": "ranfinman",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Transmitir información de Despachos Finalizados y Calificaciones a la RIT (S/N):",
+      "name": "ind_calcon",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Activar Interfaz:",
+      "name": "ind_intmin",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Usuario:",
+      "name": "usr_intmin",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Constraseña:",
+      "name": "clv_intmin",
+      "readonly": false,
+      "type": "password"
+    },
+    {
+      "label": "Código de Empresa:",
+      "name": "cod_minis",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Listar manifiestos para radicar cumplido RNDC sin cumplir en Avansat:",
+      "name": "ind_mincum",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Servidor RNDC:",
+      "name": "urlmin",
+      "options": [
+        "Inactivar Interfaz",
+        "RNDC ws1",
+        "RNDC ws2"
+      ],
+      "readonly": false,
+      "type": "select-one"
+    },
+    {
+      "label": "Usuario:",
+      "name": "usr_mintra",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Constraseña:",
+      "name": "clv_mintra",
+      "readonly": false,
+      "type": "password"
+    },
+    {
+      "label": "Usuario FE:",
+      "name": "usr_mintra_fe",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Constraseña FE:",
+      "name": "clv_mintra_fe",
+      "readonly": false,
+      "type": "password"
+    },
+    {
+      "label": "Usuario Monitor:",
+      "name": "usr_minmon",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Constraseña Monitor:",
+      "name": "clv_minmon",
+      "readonly": false,
+      "type": "password"
+    },
+    {
+      "label": "Cumplido inicial por Integrador GPS:",
+      "name": "ind_cumini",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Documentos a Nivel Nacional(S/N):",
+      "name": "docniv",
+      "readonly": false,
+      "type": "checkbox"
+    },
+    {
+      "label": "Valor Multa por Puesto de Control:",
+      "name": "multa",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Rango Inicial:",
+      "name": "ran_iniord",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Rango Actual:",
+      "name": "ran_actord",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Rango Final:",
+      "name": "ran_finord",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Manual:",
+      "name": "ind_manord",
+      "readonly": false,
+      "type": "radio"
+    },
+    {
+      "label": "Automatico:",
+      "name": "ind_manord",
+      "readonly": false,
+      "type": "radio"
+    },
+    {
+      "label": "Rango Inicial:",
+      "name": "ran_inirem",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Rango Actual:",
+      "name": "ran_actrem",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Rango Final:",
+      "name": "ran_finrem",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Manual:",
+      "name": "ind_manrem",
+      "readonly": false,
+      "type": "radio"
+    },
+    {
+      "label": "Automatico:",
+      "name": "ind_manrem",
+      "readonly": false,
+      "type": "radio"
+    },
+    {
+      "label": "Rango Inicial:",
+      "name": "ran_iniman",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Rango Actual:",
+      "name": "ran_actman",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Rango Final:",
+      "name": "ran_finman",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "% Maximo de Anticipo:",
+      "name": "val_porant",
+      "readonly": false,
+      "type": "text"
+    },
+    {
+      "label": "Manual:",
+      "name": "ind_manman",
+      "readonly": false,
+      "type": "radio"
+    },
+    {
+      "label": "Automatico:",
+      "name": "ind_manman",
+      "readonly": false,
+      "type": "radio"
+    },
+    {
+      "label": "Observaciones Plan de Ruta:",
+      "name": "obs_planru",
+      "readonly": false,
+      "type": "textarea"
+    },
+    {
+      "label": "Observaciones Manifiestos:",
+      "name": "obs_manifi",
+      "readonly": false,
+      "type": "textarea"
+    },
+    {
+      "label": "Observaciones Orden de Carga:",
+      "name": "obs_ordenc",
+      "readonly": false,
+      "type": "textarea"
+    },
+    {
+      "label": "Observaciones Remesas:",
+      "name": "obs_remesa",
+      "readonly": false,
+      "type": "textarea"
+    },
+    {
+      "label": "",
+      "name": "",
+      "readonly": false,
+      "type": "button"
+    },
+    {
+      "label": "",
+      "name": "",
+      "readonly": false,
+      "type": "button"
+    }
+  ],
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?window=central&cod_servic=3191"
+}

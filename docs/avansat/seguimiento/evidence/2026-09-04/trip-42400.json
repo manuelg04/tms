@@ -1,0 +1,346 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42400&opcion=2&codpc=10181&pc=CIMITARRA. (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CIMITARRA. (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42400&opcion=2&codpc=10135&pc=LA LIZAMA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA LIZAMA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42400&opcion=2&codpc=10016&pc=SAN ALBERTO (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN ALBERTO (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42400&opcion=2&codpc=156&pc=AGUACHICA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "AGUACHICA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42400&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42400&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42400",
+        "Origen",
+        "CIMITARRA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043379",
+        "Destino",
+        "AGUACHICA (Cesa)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "EDGAR ANDRES",
+        "Ruta",
+        "3386 - CIMITARRA (Sant) - 68190000 - AGUACHICA (Cesa) - 20011000 VIA CESAR"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "PATINO JUAN DAVID",
+        "Fecha Salida",
+        "15:02 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "18:22 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-04 15:01:54"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "XIE638"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "INTERNATIONAL",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "9400",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "ROJO BLANCO",
+        "Modelo",
+        "2006"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CIMITARRA",
+        "",
+        "15:16 04-09-2026",
+        "15Min(s)",
+        "Retrasado",
+        "15:17 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAMPO 23",
+        "",
+        "17:07 04-09-2026",
+        "111Min(s)",
+        "Retrasado",
+        "17:08 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CIMITARRA. (Virtual)",
+        "15:22 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LIZAMA (Virtual) (Virtual)",
+        "15:32 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBERTO (Virtual) (Virtual)",
+        "15:42 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "15:52 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "16:42 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "18:22 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAMPO 23",
+        "Retrasado",
+        "VEH EN RUTA EN VIA CAMPO 23 SIN NOVEDAD",
+        "17:07 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CIMITARRA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE ACABA DE SALIR DE CARGAR\nSIN NOVEDAD",
+        "15:16 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42400&opcion=1"
+}

@@ -1,0 +1,527 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42385&opcion=2&codpc=10171&pc=TULUA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "TULUA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42385&opcion=2&codpc=11018&pc=BUGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BUGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42385&opcion=2&codpc=13626&pc=YOTOCO_1 (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "YOTOCO_1 (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42385&opcion=2&codpc=11611&pc=YUMBO (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "YUMBO (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42385&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42385",
+        "Origen",
+        "TOCANCIPA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043364",
+        "Destino",
+        "YUMBO (Vall)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "ALVARO MEDELLIN",
+        "Ruta",
+        "86905 - TOCANCIPA (Cund) - Col - 25817000 - YUMBO (Vall) - Col - 76892000 VIA YOTOCO 27>>"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "ROA ELIECER",
+        "Fecha Salida",
+        "16:17 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "05:22 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 16:17:18"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "JVK464"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "FOTON",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "BJ4259SMFKB-C1",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "ROJO",
+        "Modelo",
+        "2022"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "",
+        "16:20 03-09-2026",
+        "3Min(s)",
+        "Retrasado",
+        "16:20 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MOSQUERA",
+        "",
+        "18:53 03-09-2026",
+        "154Min(s)",
+        "Retrasado",
+        "18:54 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE CHUSACA",
+        "",
+        "19:49 03-09-2026",
+        "56Min(s)",
+        "Retrasado",
+        "19:51 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE CHUSACA",
+        "",
+        "19:51 03-09-2026",
+        "0Min(s)",
+        "Retrasado",
+        "19:52 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUSAGASUGA",
+        "",
+        "21:21 03-09-2026",
+        "89Min(s)",
+        "Retrasado",
+        "21:21 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "",
+        "23:55 03-09-2026",
+        "154Min(s)",
+        "Retrasado",
+        "23:55 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "",
+        "03:49 04-09-2026",
+        "235Min(s)",
+        "Retrasado",
+        "03:50 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA TEBAIDA",
+        "",
+        "06:52 04-09-2026",
+        "181Min(s)",
+        "Retrasado",
+        "06:52 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "",
+        "09:50 04-09-2026",
+        "178Min(s)",
+        "Retrasado",
+        "09:51 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "",
+        "14:01 04-09-2026",
+        "250Min(s)",
+        "Retrasado",
+        "14:01 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "",
+        "16:32 04-09-2026",
+        "151Min(s)",
+        "Retrasado",
+        "16:33 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TULUA (Virtual)",
+        "02:27 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUGA (Virtual)",
+        "03:07 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YOTOCO_1 (Virtual)",
+        "03:32 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO (Virtual) (Virtual)",
+        "04:52 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "05:22 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "Retrasado",
+        "VEH ESTACIONADO EN BODEGA D1 EN YUMBO - PEND ENTREGA",
+        "16:32 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA ENFRENTE DE\nD1 EN YUMBO QUE HASTA LAS 3:30PM NO LE RECIBEN PAPELES\nPARA DESCARGAR",
+        "14:01 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA EN YUMBO EN\nEL D1 QUE VA A PASAR PAPELES HABER QUE LE DICEN YA\nQUE TIENE LA CITA A LAS 3:00PM",
+        "09:50 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA TEBAIDA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA LA TEBAIDA SIN NOVEDAD",
+        "06:52 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "Retrasado",
+        "VEH EN RUTA PASO CAJAMARCA CEL/ ESTA EN RUTA SIN NOVEDAD\nCONFIRMA UBICACION",
+        "03:49 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "Retrasado",
+        "VEH EN RUTA PASO IBAGUE SIN NOVEDAD",
+        "23:55 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUSAGASUGA",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE FUSAGASUGA SIN NOVEDAD",
+        "21:21 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE CHUSACA",
+        "Retrasado",
+        "VEH ESTACIONADO EN MONTALLANTAS EL PROGRESO DE ALTO ROSA\nDELANTE DEL PEAJE CHUSACA CEL/ MANIFIESTA ESTA GRADUANDO\nFRENOS Y CUADRANDO UNA LLANTA QUE SE LE DESPEGO.",
+        "19:51 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE CHUSACA",
+        "Retrasado",
+        "VEH ESTACIONADO EN MONTALLANTAS EL PROGRESO DE ALTO\nROSA DELANTE DEL PEAJE CHUSACA CEL/ MANIFIESTA ESTA\nGRADUANDO FRENOS Y CUADRANDO UNA LLANTA QUE SE LE\nDESPEGO.",
+        "19:49 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MOSQUERA",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE MOSQUERA CEL/ MANIFIESTA YA\nCARGO E INICIA RUTA SIN NOVEDAD, LE DA PAREJO",
+        "18:53 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "Retrasado",
+        "VEH EN RUTA ENTRANDO A BOGOTA SIN NOVEDAD",
+        "16:20 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42385&opcion=1"
+}

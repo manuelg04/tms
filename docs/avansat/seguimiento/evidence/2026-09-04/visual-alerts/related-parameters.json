@@ -1,0 +1,48 @@
+{
+  "capturedAt": "2026-09-04T23:41:09.587Z",
+  "fields": [
+    {
+      "label": "Restringir Plan de Ruta y Salida Importar Completo:",
+      "name": "ind_manifi",
+      "type": "checkbox",
+      "value": false
+    },
+    {
+      "label": "Activar Llegada Automatica en Importar Completo (S/N):",
+      "name": "ind_lleimc",
+      "type": "checkbox",
+      "value": false
+    },
+    {
+      "label": "Transmitir información de Despachos Finalizados y Calificaciones a la RIT (S/N):",
+      "name": "ind_calcon",
+      "type": "checkbox",
+      "value": true
+    },
+    {
+      "label": "Listar manifiestos para radicar cumplido RNDC sin cumplir en Avansat:",
+      "name": "ind_mincum",
+      "type": "checkbox",
+      "value": false
+    },
+    {
+      "label": "Cumplido inicial por Integrador GPS:",
+      "name": "ind_cumini",
+      "type": "checkbox",
+      "value": false
+    },
+    {
+      "label": "Valor Multa por Puesto de Control:",
+      "name": "multa",
+      "type": "text",
+      "value": "50000"
+    },
+    {
+      "label": "Observaciones Plan de Ruta:",
+      "name": "obs_planru",
+      "type": "textarea",
+      "value": "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [contact omitted] - [contact omitted]. "
+    }
+  ],
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?window=central&cod_servic=3191"
+}

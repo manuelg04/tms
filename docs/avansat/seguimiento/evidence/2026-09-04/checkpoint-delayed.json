@@ -1,0 +1,289 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "fecID",
+      "maxLength": -1,
+      "name": "fec",
+      "readOnly": true,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "2026-09-04"
+    },
+    {
+      "disabled": false,
+      "id": "horID",
+      "maxLength": -1,
+      "name": "hor",
+      "readOnly": true,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "18:24"
+    },
+    {
+      "disabled": false,
+      "id": "novedadID",
+      "maxLength": 50,
+      "name": "noved",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "3-RETRASADO(GA)(ST)"
+    },
+    {
+      "disabled": false,
+      "id": "date",
+      "maxLength": -1,
+      "name": "date",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "2026-09-04"
+    },
+    {
+      "disabled": false,
+      "id": "hora",
+      "maxLength": -1,
+      "name": "hora",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "18:24"
+    },
+    {
+      "disabled": false,
+      "id": "sitID",
+      "maxLength": -1,
+      "name": "sit",
+      "options": [
+        {
+          "label": "Antes",
+          "selected": true,
+          "value": "A"
+        },
+        {
+          "label": "Sitio",
+          "selected": false,
+          "value": "S"
+        }
+      ],
+      "readOnly": false,
+      "required": false,
+      "tag": "SELECT",
+      "type": null,
+      "value": "A"
+    },
+    {
+      "disabled": false,
+      "id": "sitioID",
+      "maxLength": 50,
+      "name": "sitio",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "obsID",
+      "maxLength": -1,
+      "name": "obs",
+      "readOnly": false,
+      "required": false,
+      "tag": "TEXTAREA",
+      "type": null,
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": "Aceptar",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Aceptar"
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": "Borrar",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Borrar"
+    }
+  ],
+  "links": [],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42389",
+        "Origen",
+        "SANTA MARTA (Magd)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043368",
+        "Destino",
+        "GIRON (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "NICOLL TATIANA",
+        "Ruta",
+        "992 - SANTA MARTA (Magd) - 47001000 - GIRON (Sant) - 68307000 VIA FUNDACION"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "NARANJO CRISTIAN FERNEY",
+        "Fecha Salida",
+        "18:44 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "04:59 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 18:44:37"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "VKJ982"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "CHEVROLET",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "SUPER BRIGADIER 169",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AMARILLO",
+        "Modelo",
+        "2000"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "FUNDACION (Virtual)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Asignación del Sitio de Seguimiento y Novedad"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Fecha",
+        "Hora",
+        "Novedad",
+        "Tiempo Fecha/Hora",
+        "Antes/Sitio",
+        "Sitio",
+        "Observacion"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "",
+        "",
+        "",
+        "",
+        "Antes\nSitio",
+        "",
+        "Queda(n) 500 Caracter(es) para Escribir"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php"
+}

@@ -1,0 +1,425 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42373&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42373",
+        "Origen",
+        "TOCANCIPA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043350",
+        "Destino",
+        "YUMBO (Vall)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "86905 - TOCANCIPA (Cund) - Col - 25817000 - YUMBO (Vall) - Col - 76892000 VIA YOTOCO 27>>"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "SANCHEZ CARLOS EDUARDO",
+        "Fecha Salida",
+        "14:17 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "15:49 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 12:16:48"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "STR779"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "INTERNATIONAL",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "9400",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "BLANCO",
+        "Modelo",
+        "2011"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SOACHA",
+        "",
+        "14:36 03-09-2026",
+        "20Min(s)",
+        "Retrasado",
+        "14:37 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUSAGASUGA",
+        "",
+        "16:28 03-09-2026",
+        "111Min(s)",
+        "Retrasado",
+        "16:29 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "",
+        "19:06 03-09-2026",
+        "157Min(s)",
+        "Retrasado",
+        "19:06 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "",
+        "21:36 03-09-2026",
+        "150Min(s)",
+        "Retrasado",
+        "21:37 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CALARCA",
+        "",
+        "00:00 04-09-2026",
+        "144Min(s)",
+        "Retrasado",
+        "00:01 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE DE MEDIACANOA",
+        "",
+        "04:08 04-09-2026",
+        "248Min(s)",
+        "Retrasado",
+        "04:09 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "",
+        "06:55 04-09-2026",
+        "166Min(s)",
+        "Retrasado",
+        "06:55 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "",
+        "09:54 04-09-2026",
+        "179Min(s)",
+        "Retrasado",
+        "09:54 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "",
+        "14:17 04-09-2026",
+        "263Min(s)",
+        "Retrasado",
+        "14:17 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "03:22 04-09-2026",
+        "15:49 04-09-2026",
+        "91Min(s)",
+        "Ok",
+        "15:49 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA",
+        "Ok",
+        "YA CUMPLIO",
+        "15:49 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA DESCARGO PENDIENTE DE\nQUE ENVIE FOTO DE LOS CUMPLIDOS",
+        "14:17 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA YA D1 QUE LO\nACABAN DE PASAR A MUELLE A DESCARGAR",
+        "09:54 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO",
+        "Retrasado",
+        "VEH EN YUMBO EN PUNTO DE ENTREGA PEND DESCARGUE",
+        "06:55 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE DE MEDIACANOA",
+        "Retrasado",
+        "VEH EN EL PEAJE DE MEDIACANOA EN VIA VIJES PEND REINICIO\nDE RUTA",
+        "04:08 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CALARCA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA CALARCA SIN NOVEDAD",
+        "00:00 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "Retrasado",
+        "VEH ESTACIONADO EN VIA CAJAMARCA CEL/ MANIFIESTA ESTA\nEN EL TRANCON DEL SECTOR ESPERANDO QUE DEN PASO",
+        "21:36 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "Retrasado",
+        "VEH EN RUTA SALIENDO DE IBAGUE SIN NOVEDAD",
+        "19:06 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUSAGASUGA",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE FUSAGASUGA SIN NOVEDAD",
+        "16:28 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SOACHA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCUENTRA\nEN TRANSITO POR LAS AFUERAS DE SOACHA SIN NOVEDAD\nSE LE INFORMA LO DE LA CITA DE DESCARGUE",
+        "14:36 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42373&opcion=1"
+}

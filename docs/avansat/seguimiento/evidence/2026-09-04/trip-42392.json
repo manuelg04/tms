@@ -1,0 +1,645 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10576&pc=GRANADA (CUND) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GRANADA (CUND) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10539&pc=SILVANIA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SILVANIA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10626&pc=FUSAGASUGA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "FUSAGASUGA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10159&pc=MELGAR (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "MELGAR (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10160&pc=GIRARDOT (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GIRARDOT (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10161&pc=ESPINAL (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ESPINAL (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=11961&pc=CHICORAL. (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CHICORAL. (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10786&pc=GUALANDAY (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GUALANDAY (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10163&pc=IBAGUE (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "IBAGUE (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10788&pc=MARTINICA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "MARTINICA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10845&pc=COELLO (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "COELLO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=11025&pc=CAJAMARCA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CAJAMARCA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10165&pc=ALTO DE LA LINEA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ALTO DE LA LINEA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10359&pc=LA TEBAIDA (Quindio) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA TEBAIDA (Quindio) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10870&pc=LA PAILA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA PAILA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10169&pc=LA URIBE (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA URIBE (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10171&pc=TULUA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "TULUA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=11018&pc=BUGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BUGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=13626&pc=YOTOCO_1 (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "YOTOCO_1 (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=11611&pc=YUMBO (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "YUMBO (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42392&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42392",
+        "Origen",
+        "TOCANCIPA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043371",
+        "Destino",
+        "YUMBO (Vall)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "86905 - TOCANCIPA (Cund) - Col - 25817000 - YUMBO (Vall) - Col - 76892000 VIA YOTOCO 27>>"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "JAIMES DIEGO HERNANDO",
+        "Fecha Salida",
+        "09:25 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "91506112",
+        "Fecha Planeada Llegada",
+        "22:30 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-04 09:24:29"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "TDX574"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "ROJO",
+        "Modelo",
+        "2013"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "",
+        "09:42 04-09-2026",
+        "17Min(s)",
+        "Retrasado",
+        "09:42 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SOACHA",
+        "",
+        "13:29 04-09-2026",
+        "227Min(s)",
+        "Retrasado",
+        "13:29 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUSAGASUGA",
+        "",
+        "15:34 04-09-2026",
+        "125Min(s)",
+        "Retrasado",
+        "15:35 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MELGAR",
+        "",
+        "17:30 04-09-2026",
+        "115Min(s)",
+        "Retrasado",
+        "17:30 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GRANADA (CUND) (Virtual)",
+        "10:50 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SILVANIA (Virtual) (Virtual)",
+        "11:15 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUSAGASUGA (Virtual) (Virtual)",
+        "11:35 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MELGAR (Virtual) (Virtual)",
+        "12:25 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRARDOT (Virtual) (Virtual)",
+        "12:58 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ESPINAL (Virtual) (Virtual)",
+        "13:33 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHICORAL. (Virtual)",
+        "13:55 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUALANDAY (Virtual)",
+        "14:30 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE (Virtual)",
+        "14:55 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MARTINICA (Virtual)",
+        "15:18 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "COELLO (Virtual)",
+        "15:25 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA (Virtual) (Virtual)",
+        "16:03 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ALTO DE LA LINEA (Virtual) (Virtual)",
+        "16:53 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA TEBAIDA (Quindio) (Virtual)",
+        "17:55 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA PAILA (Virtual) (Virtual)",
+        "18:35 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA URIBE (Virtual) (Virtual)",
+        "18:55 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TULUA (Virtual)",
+        "19:35 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUGA (Virtual)",
+        "20:15 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YOTOCO_1 (Virtual)",
+        "20:40 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "YUMBO (Virtual) (Virtual)",
+        "22:00 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "22:30 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MELGAR",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE MELGAR SIN NOVEDAD",
+        "17:30 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUSAGASUGA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR FUSAGASUGA SIN\nNOVEDAD",
+        "15:34 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SOACHA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR SOACHA SIN NOVEDAD",
+        "13:29 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA EN CAPRI TOCANCIPA\nEN PROCESO DE CARGUE",
+        "09:42 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42392&opcion=1"
+}

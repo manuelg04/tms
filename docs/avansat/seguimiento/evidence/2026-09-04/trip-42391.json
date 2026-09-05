@@ -1,0 +1,407 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42391&opcion=2&codpc=10159&pc=MELGAR (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "MELGAR (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42391&opcion=2&codpc=10160&pc=GIRARDOT (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GIRARDOT (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42391&opcion=2&codpc=10161&pc=ESPINAL (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ESPINAL (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42391&opcion=2&codpc=11961&pc=CHICORAL. (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CHICORAL. (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42391&opcion=2&codpc=10162&pc=GUALANDAY (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GUALANDAY (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42391&opcion=2&codpc=10163&pc=IBAGUE (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "IBAGUE (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42391&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42391",
+        "Origen",
+        "BOGOTA, D.C. (Bogo)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043370",
+        "Destino",
+        "IBAGUE (Toli)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "SEBASTIAN BLANCO",
+        "Ruta",
+        "37868 - BOGOTA (Bogo) - Col - 11001000 - IBAGUE (Toli) - Col - 73001000 VIA ESPINAL (5< COOT"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "VILLAMIL ALVARO",
+        "Fecha Salida",
+        "08:13 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "14220344",
+        "Fecha Planeada Llegada",
+        "14:13 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-04 07:56:24"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SUK037"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "CHEVROLET",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "SUPER BRIGADIER",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "ROJO",
+        "Modelo",
+        "1994"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOQUERON",
+        "",
+        "08:18 04-09-2026",
+        "7Min(s)",
+        "Retrasado",
+        "08:20 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUALANDAY",
+        "",
+        "10:45 04-09-2026",
+        "145Min(s)",
+        "Retrasado",
+        "10:45 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "",
+        "13:27 04-09-2026",
+        "162Min(s)",
+        "Retrasado",
+        "13:28 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "",
+        "16:17 04-09-2026",
+        "168Min(s)",
+        "Retrasado",
+        "16:17 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MELGAR (Virtual) (Virtual)",
+        "11:13 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRARDOT (Virtual) (Virtual)",
+        "11:46 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ESPINAL (Virtual) (Virtual)",
+        "12:21 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHICORAL. (Virtual)",
+        "12:43 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUALANDAY (Virtual)",
+        "12:58 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE (Virtual)",
+        "13:43 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "14:13 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA ESTACIONADO EN POSTOBON IBAGUE\n- ÉND ENTREGA",
+        "16:17 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA ESTACIONADO EN POSTOBON IBAGUE\nPENDINETE CONFIRMAR DESCARGUE CEL/SISTEMA CORREO DE\nVOZ",
+        "13:27 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUALANDAY",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR GUALANDAY SIN\nNOVEDAD",
+        "10:45 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOQUERON",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCUENTRA\nEN TRANSITO POR BOQUERON SIN NOVEDAD PIDE COLABORACION\nCON LA PLANILLA QUE NO SE LA HA PASADO EL DESCPACHADOR",
+        "08:18 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42391&opcion=1"
+}

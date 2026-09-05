@@ -1,0 +1,8431 @@
+{
+  "capturedAt": "2026-09-04T23:55:14.472Z",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php",
+  "declaredCount": 1404,
+  "records": [
+    {
+      "code": "10117",
+      "name": "ALTO DEL TRIGO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12691",
+      "name": "BUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10362",
+      "name": "BUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10172",
+      "name": "BUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11492",
+      "name": "CACERES (Virtual",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11603",
+      "name": "CALARCA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13356",
+      "name": "CARTAGENA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10333",
+      "name": "CARTAGO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13336",
+      "name": "DON MATIAS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11635",
+      "name": "EL CARMEN DE BOLIVAR (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13391",
+      "name": "EL CARMEN DE BOLIVAR (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10313",
+      "name": "EL PLAYON (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10997",
+      "name": "EL VIAJANO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13351",
+      "name": "LA DORADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10267",
+      "name": "LA DORADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11255",
+      "name": "LA DORADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13368",
+      "name": "LA MATA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10987",
+      "name": "MARINILLA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10262",
+      "name": "PUERTO BERRIO (virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11664",
+      "name": "PUERTO BOGOTA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11890",
+      "name": "TANGUA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "172",
+      "name": "ABREGO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10022",
+      "name": "ABREGO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10129",
+      "name": "ACACIAS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10435",
+      "name": "ACACIAS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13828",
+      "name": "ACEVEDO(VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10057",
+      "name": "AGUACHICA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "156",
+      "name": "AGUACHICA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "31",
+      "name": "AGUACHICA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "30",
+      "name": "AGUACHICA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "173",
+      "name": "AGUACHICA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10824",
+      "name": "AGUACHICA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10077",
+      "name": "AGUACHICA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10018",
+      "name": "AGUACHICA (CESAR)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11465",
+      "name": "AGUAS BLANCAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10614",
+      "name": "AGUAS BLANCAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11267",
+      "name": "AGUAS CLARAS (Virual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "100",
+      "name": "AGUAZUL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12920",
+      "name": "AGUAZUL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10142",
+      "name": "AGUAZUL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13506",
+      "name": "AGUAZUL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "95",
+      "name": "AGUSTIN CODAZZI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11421",
+      "name": "AGUSTIN CODAZZI (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10567",
+      "name": "AGUSTIN CODAZZI (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "203",
+      "name": "AIPE",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10298",
+      "name": "AIPE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12906",
+      "name": "AIPE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10585",
+      "name": "AIPE (HUILA)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10633",
+      "name": "AIPE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "188",
+      "name": "ALBAN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "194",
+      "name": "ALBAN",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10120",
+      "name": "ALBAN (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11139",
+      "name": "ALBAN (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "97",
+      "name": "ALBANIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10569",
+      "name": "ALBANIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10332",
+      "name": "ALCALA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13814",
+      "name": "ALPUJARRA(VIRTUAL)",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12911",
+      "name": "ALTAMIRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10713",
+      "name": "ALTAMIRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11789",
+      "name": "ALTAMIRA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11929",
+      "name": "ALTO DE PESCADERO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13342",
+      "name": "ALTO DE BOQUERON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10165",
+      "name": "ALTO DE LA LINEA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11862",
+      "name": "ALTO DE LA LINEA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11432",
+      "name": "ALTO DE LA MONA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11261",
+      "name": "ALTO DE LETRAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13346",
+      "name": "ALTO DE LETRAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11090",
+      "name": "ALTO DE MATASANOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12286",
+      "name": "ALTO DE TRIGO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10197",
+      "name": "ALTO DEL PESCADERO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10972",
+      "name": "ALTO DEL TRIGO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13742",
+      "name": "ALTO DEL VINO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11238",
+      "name": "ALTO DELTRIGO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10291",
+      "name": "ALVARADO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13844",
+      "name": "ALVARADO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11119",
+      "name": "ALVARADO VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13797",
+      "name": "AMAGA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11347",
+      "name": "AMBALEMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13782",
+      "name": "ANAPOIMA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13702",
+      "name": "ANDALUCIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11020",
+      "name": "ANDALUCIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10170",
+      "name": "ANDALUCIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10360",
+      "name": "ANDALUCIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11208",
+      "name": "ANDALUCIA (VALLE)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13600",
+      "name": "ANDALUCIA DESTINO SEGURO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12712",
+      "name": "ANTIOQUIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13217",
+      "name": "ANTIOQUIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12720",
+      "name": "APARTADO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "150",
+      "name": "APARTADO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12187",
+      "name": "APARTADO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10735",
+      "name": "APARTADO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10029",
+      "name": "ARACATACA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10618",
+      "name": "ARACATACA (MAGD)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10683",
+      "name": "ARACATACA VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "80",
+      "name": "ARATOCA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10437",
+      "name": "ARATOCA (Sant)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10198",
+      "name": "ARATOCA (Sant)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12871",
+      "name": "ARATOCA (Sant)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10374",
+      "name": "ARATOCA (Sant)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10150",
+      "name": "ARAUCA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12178",
+      "name": "ARBOLETES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10941",
+      "name": "ARCABUCO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10212",
+      "name": "ARCABUCO (BOY)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12662",
+      "name": "ARIGUANI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10829",
+      "name": "ARJONA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12346",
+      "name": "ARJONA (Bolivar)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "9",
+      "name": "ARMENIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10330",
+      "name": "ARMENIA (Quindio)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11594",
+      "name": "ARMERO (Guayabal)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10325",
+      "name": "ARMERO (GUAYABAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11595",
+      "name": "ARMERO (Guayabal)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13634",
+      "name": "ARMERO (GUAYABAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10652",
+      "name": "ARMERO (GUAYABAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11015",
+      "name": "ARMERO (Guayabal)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12509",
+      "name": "ARMERO (GUAYABAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10288",
+      "name": "ARMERO (Guayabal)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11032",
+      "name": "ARMERO (GUAYABAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12649",
+      "name": "ARROYO DE PIEDRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11845",
+      "name": "ASTREA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13809",
+      "name": "ATACO (VIRTUAL)",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10397",
+      "name": "AYACHUCO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13370",
+      "name": "AYACUCHO (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10807",
+      "name": "BARANOA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "54",
+      "name": "BARBOSA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12934",
+      "name": "BARBOSA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13671",
+      "name": "BARBOSA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10795",
+      "name": "BARBOSA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10640",
+      "name": "BARBOSA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13498",
+      "name": "BARBOSA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "133",
+      "name": "BARBOSA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10521",
+      "name": "BARBOSA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13439",
+      "name": "BARBOSA (ANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10470",
+      "name": "BARBOSA (Anti)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10722",
+      "name": "BARBOSA (Sant)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13384",
+      "name": "BARBOSA (Sant)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10369",
+      "name": "BARBOSA (Sant)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13254",
+      "name": "BARBOSA (Sant)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10214",
+      "name": "BARBOSA (Sant)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10259",
+      "name": "BARRABCABERMEJA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "90",
+      "name": "BARRACAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10305",
+      "name": "BARRANCA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10756",
+      "name": "BARRANCA DE UPIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12947",
+      "name": "BARRANCA DE UPIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12922",
+      "name": "BARRANCA DE UPIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "67",
+      "name": "BARRANCABERMEJA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10002",
+      "name": "BARRANCABERMEJA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12248",
+      "name": "BARRANCABERMEJA (SANTANDER)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "159",
+      "name": "BARRANCAS",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11298",
+      "name": "BARRANCAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "74",
+      "name": "BARRANQUILLA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13015",
+      "name": "BARRANQUILLA Â®",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12214",
+      "name": "BARRANQUILLA Â®",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10606",
+      "name": "BARRANQUILLA Â®",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11185",
+      "name": "BARRANQUILLA Â®",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10091",
+      "name": "BARRANQUILLA Â®",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10089",
+      "name": "BARRANQUILLA Â®",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12966",
+      "name": "BARRANQUILLA Â®",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10688",
+      "name": "BARRANQUILLA Â®",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12645",
+      "name": "BARRAQUILLA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "130",
+      "name": "BAYUNCA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10810",
+      "name": "BAYUNCA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11107",
+      "name": "BAYUNCA (virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "142",
+      "name": "BECERRIL",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11293",
+      "name": "BECERRIL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11420",
+      "name": "BECERRIL (CESAR)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "93",
+      "name": "BELLO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10726",
+      "name": "BELLO (Bello)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12537",
+      "name": "BELTRAN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10036",
+      "name": "BERLIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "57",
+      "name": "BERLIN",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10445",
+      "name": "BERLIN (SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10741",
+      "name": "BERLIN (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13447",
+      "name": "BESOTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "195",
+      "name": "BITUIMA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10811",
+      "name": "BODEGA CLIENTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10043",
+      "name": "BODEGA CLIENTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12335",
+      "name": "BODEGA CARGUE CLIENTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12265",
+      "name": "BODEGA CLIENTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10019",
+      "name": "BODEGA CLIENTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11000",
+      "name": "BODEGA CLIENTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10136",
+      "name": "BODEGA CLIENTE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12294",
+      "name": "BODEGA CLIENTE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10258",
+      "name": "BODEGA CLIENTE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12579",
+      "name": "BODEGA CLIENTE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13076",
+      "name": "BODEGA DEL CLIENTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10000",
+      "name": "BODEGA DEL CLIENTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "61",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11370",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "14",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13258",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10918",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12250",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13517",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13078",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13185",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13533",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12291",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10540",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10123",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10476",
+      "name": "BOGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11853",
+      "name": "BOQUERON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "46",
+      "name": "BOSCONIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "176",
+      "name": "BOSCONIA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10061",
+      "name": "BOSCONIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10096",
+      "name": "BOSCONIA (CESAR)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13394",
+      "name": "BOSCONIA VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10249",
+      "name": "BOSCONIA-LOMA COLORADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13791",
+      "name": "BOYACA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10474",
+      "name": "BRICEÃ‘O",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10424",
+      "name": "BRICEÃ‘O (CUND)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11792",
+      "name": "BRUCELAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10301",
+      "name": "BUCARAMAGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "47",
+      "name": "BUCARAMANGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13488",
+      "name": "BUCARAMANGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10737",
+      "name": "BUCARAMANGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10643",
+      "name": "BUCARAMANGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10033",
+      "name": "BUCARAMANGA (Sant)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12045",
+      "name": "BUENAVENTURA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13058",
+      "name": "BUENAVENTURA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10849",
+      "name": "BUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11018",
+      "name": "BUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10",
+      "name": "BUGA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10873",
+      "name": "BUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11210",
+      "name": "BUGA (VALLE)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11867",
+      "name": "BUGA LA GRANDE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13648",
+      "name": "BURITICA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12261",
+      "name": "CACERES (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "190",
+      "name": "CACHIPAY",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10164",
+      "name": "CAJAMARCA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11121",
+      "name": "CAJAMARCA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11025",
+      "name": "CAJAMARCA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11202",
+      "name": "CAJAMARCA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12406",
+      "name": "CAJICA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10505",
+      "name": "CALAMAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13032",
+      "name": "CALAMAR (Cas)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10166",
+      "name": "CALAMAR (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10869",
+      "name": "CALARCA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12479",
+      "name": "CALARCA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11204",
+      "name": "CALARCA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13599",
+      "name": "CALARCA DESTINO SEGURO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13820",
+      "name": "CALDAS",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11873",
+      "name": "CALI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11975",
+      "name": "CALI (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10874",
+      "name": "CALI (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13827",
+      "name": "CALOTO(VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11346",
+      "name": "CAMBAO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10657",
+      "name": "CAMPO 23",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13101",
+      "name": "CAMPO 23",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10821",
+      "name": "CAMPO 23",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10459",
+      "name": "CAMPO 23",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10004",
+      "name": "CAMPO 23",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10260",
+      "name": "CAMPO 23",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11469",
+      "name": "CAMPO 23",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10003",
+      "name": "CAMPO 23 (Sant)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10709",
+      "name": "CAMPO ALEGRE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10587",
+      "name": "CAMPO ALEGRE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11737",
+      "name": "CAMPO ALEGRE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10174",
+      "name": "CANDELARIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11066",
+      "name": "CANTAGALLO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12713",
+      "name": "CAÃ‘AS GORDA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10730",
+      "name": "CAÃ‘AS GORDAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13461",
+      "name": "CAPARRAPI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "131",
+      "name": "CAPITANEJO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12942",
+      "name": "CAQUEZA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10125",
+      "name": "CAQUEZA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12875",
+      "name": "CAQUEZA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10612",
+      "name": "CARACOLI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13837",
+      "name": "CAREPA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13832",
+      "name": "CAREPA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12719",
+      "name": "CAREPA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10066",
+      "name": "CARMEN DE BOLIVAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10234",
+      "name": "CARMEN DE BOLIVAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13358",
+      "name": "CARMEN DE BOLIVAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11679",
+      "name": "CARMEN DE BOLIVAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13540",
+      "name": "CARMEN DE BOLIVAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13114",
+      "name": "CARMEN DE BOLIVAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10830",
+      "name": "CARRETO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11910",
+      "name": "CARTAGENA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13645",
+      "name": "CARTAGENA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "41",
+      "name": "CARTAGENA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12344",
+      "name": "CARTAGENA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13575",
+      "name": "CARTAGENA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10070",
+      "name": "CARTAGENA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13803",
+      "name": "CARTAGENA NARIÃ‘O",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11323",
+      "name": "CARTAGENITA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "81",
+      "name": "CARTAGO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12044",
+      "name": "CASA GALLEGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13801",
+      "name": "CASABE",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11540",
+      "name": "CASACARA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10131",
+      "name": "CASTILLA LA NUEVA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12262",
+      "name": "CAUCASIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "117",
+      "name": "CAUCASIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10994",
+      "name": "CAUCASIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11096",
+      "name": "CAUCASIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11494",
+      "name": "CAUCASIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12717",
+      "name": "CAUCHERA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10133",
+      "name": "CENTRO DE DISTRIBUCIÃ“N",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12015",
+      "name": "CERETE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11685",
+      "name": "CERETE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11454",
+      "name": "CERETE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11226",
+      "name": "CHACHAGUI (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10859",
+      "name": "CHACHAGUI (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13807",
+      "name": "CHARTA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12489",
+      "name": "CHIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11341",
+      "name": "CHIA.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10843",
+      "name": "CHICORAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11197",
+      "name": "CHICORAL (TOL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11961",
+      "name": "CHICORAL.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10734",
+      "name": "CHIGORODO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "105",
+      "name": "CHIGORODO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13082",
+      "name": "CHINAUTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10781",
+      "name": "CHINAUTA.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11315",
+      "name": "CHINCHINA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13799",
+      "name": "CHINCHINA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "179",
+      "name": "CHINU",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12617",
+      "name": "CHINU (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10753",
+      "name": "CHIPAQUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10124",
+      "name": "CHIPAQUE.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10368",
+      "name": "CHIQUINQUIRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "204",
+      "name": "CHIQUINQUIRA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13812",
+      "name": "CHIQUINQUIRA (VIRTUAL)",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12269",
+      "name": "CHIRIGUANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "122",
+      "name": "CHIRUGUANA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13195",
+      "name": "CHITAGA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13790",
+      "name": "CHIVOR",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13789",
+      "name": "CHOACHI",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13788",
+      "name": "CHOACHI",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10208",
+      "name": "CHOCONTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10619",
+      "name": "CIENAGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10030",
+      "name": "CIENAGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "73",
+      "name": "CIENAGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "62",
+      "name": "CIENAGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "48",
+      "name": "CIENAGA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10684",
+      "name": "CIENAGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12354",
+      "name": "CIENAGA DE ORO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13774",
+      "name": "CIENAGA DE ORO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12174",
+      "name": "CIENAGA DE ORO (Virrtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10217",
+      "name": "CIMITARRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "135",
+      "name": "CIMITARRA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "154",
+      "name": "CIMITARRA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "143",
+      "name": "CIMITARRA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10181",
+      "name": "CIMITARRA.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12094",
+      "name": "CIRCASIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10009",
+      "name": "CISNEROS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13390",
+      "name": "CLEMENCIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "109",
+      "name": "COCORNA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "17",
+      "name": "COCORNA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10692",
+      "name": "COCORNA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10845",
+      "name": "COELLO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12564",
+      "name": "COGUA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10639",
+      "name": "COGUA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10426",
+      "name": "COGUA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10546",
+      "name": "COGUA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12514",
+      "name": "COGUA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10661",
+      "name": "CONCEPCION",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12786",
+      "name": "CONDAGUA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10399",
+      "name": "CONVENCION",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10725",
+      "name": "COPACABANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "111",
+      "name": "COPACABANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10617",
+      "name": "COPEY",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11666",
+      "name": "CORAN (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10596",
+      "name": "CORDOBA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12833",
+      "name": "CORDOBA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13776",
+      "name": "CORINTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11864",
+      "name": "COROZAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11690",
+      "name": "COROZAL (sucre) GPS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11527",
+      "name": "COROZAL (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11425",
+      "name": "COTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "196",
+      "name": "COTA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11637",
+      "name": "COVEÃ‘AS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13758",
+      "name": "CUATRO VIENTOS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10026",
+      "name": "CUATRO VIENTOS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10060",
+      "name": "CUATRO VIIENTOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10082",
+      "name": "CUATROVIENTOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11456",
+      "name": "CUCUNUBA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "129",
+      "name": "CUCUTA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10042",
+      "name": "CUCUTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10020",
+      "name": "CUCUTA VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10138",
+      "name": "CUMARAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13174",
+      "name": "CUMBAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13784",
+      "name": "CUPIAGUA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13833",
+      "name": "CURITI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13060",
+      "name": "CURITI (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10025",
+      "name": "CURUMANI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "140",
+      "name": "CURUMANI",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "175",
+      "name": "CURUMANI",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "44",
+      "name": "CURUMANI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "185",
+      "name": "CURUMANI",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11417",
+      "name": "CURUMANI (CESAR)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12220",
+      "name": "CURUMANI (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11463",
+      "name": "CURUMANI - VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13396",
+      "name": "CURUMANI VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10732",
+      "name": "DABEIBA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12549",
+      "name": "DAGOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12180",
+      "name": "DAMAQUIEL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10954",
+      "name": "DESCARGUE TERMINADO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12360",
+      "name": "DESTINATARIO VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10031",
+      "name": "DIBULLA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13818",
+      "name": "DOLORES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10593",
+      "name": "DON JUANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12440",
+      "name": "DON MATIAS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10040",
+      "name": "DONJUANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10069",
+      "name": "DOÃ‘A CLEME (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10827",
+      "name": "DOÃ‘A CLEME (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12254",
+      "name": "DORADAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10281",
+      "name": "DORADAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10979",
+      "name": "DORADAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10265",
+      "name": "DORADAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13667",
+      "name": "DOSQUEBRADAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13825",
+      "name": "DOSQUEBRADAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10665",
+      "name": "DUITAMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "85",
+      "name": "DUITAMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11936",
+      "name": "EL AMARILLO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13839",
+      "name": "EL BAGRE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10878",
+      "name": "EL BORDO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11884",
+      "name": "EL BORDO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11223",
+      "name": "EL BORDO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10856",
+      "name": "EL BORDO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11844",
+      "name": "EL BURRO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "118",
+      "name": "EL BURRO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13761",
+      "name": "EL CARMEN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "35",
+      "name": "EL CARMEN DE BOLIVAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12689",
+      "name": "EL CERRITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10095",
+      "name": "EL COPEY",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "123",
+      "name": "EL COPEY",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10027",
+      "name": "EL COPEY",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10610",
+      "name": "EL COPEY",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10051",
+      "name": "EL COPEY",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10084",
+      "name": "EL COPEY (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10188",
+      "name": "EL COPEY (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12895",
+      "name": "EL COPEY (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13759",
+      "name": "EL COPEY (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11179",
+      "name": "EL COPEY (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11070",
+      "name": "EL CORZO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10122",
+      "name": "EL CORZO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12233",
+      "name": "EL CORZO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10968",
+      "name": "EL CORZO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11343",
+      "name": "EL CORZO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13756",
+      "name": "EL CRUCE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10062",
+      "name": "EL DIFICIL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13573",
+      "name": "EL DIFICIL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13543",
+      "name": "EL DIFICIL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11677",
+      "name": "EL DIFICIL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12106",
+      "name": "EL DIFICIL (Magdalena medio)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10231",
+      "name": "EL DIFICIL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13393",
+      "name": "EL DIFICIL VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "115",
+      "name": "EL DOCE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11094",
+      "name": "EL DOCE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12258",
+      "name": "EL HATILLO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11163",
+      "name": "EL HATILLO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10010",
+      "name": "EL HATILLO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10723",
+      "name": "EL HATILLO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11095",
+      "name": "EL JARDIN.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "125",
+      "name": "EL PAUJIL",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10444",
+      "name": "EL PICACHO (SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10035",
+      "name": "EL PICACHO.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10064",
+      "name": "EL PLATO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10901",
+      "name": "EL PLAYON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13089",
+      "name": "EL PLAYON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "27",
+      "name": "EL PLAYON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10046",
+      "name": "EL PLAYON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11459",
+      "name": "EL PLAYON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11410",
+      "name": "EL PLAYON (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10240",
+      "name": "EL PLAYON (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10144",
+      "name": "EL PRETEXTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11331",
+      "name": "EL PURNIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10284",
+      "name": "EL PURNIO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11148",
+      "name": "EL PURNIO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "124",
+      "name": "EL ROSAL",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11428",
+      "name": "EL ROSAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13740",
+      "name": "EL ROSAL (Cund)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10308",
+      "name": "EL SOCORRO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10858",
+      "name": "EL TABLON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11225",
+      "name": "EL TABLON (PASTO)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10105",
+      "name": "EL TALADRO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13371",
+      "name": "EL TARRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12184",
+      "name": "EL TOTUMO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11338",
+      "name": "EL VELEÃ‘O",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10109",
+      "name": "EL VELEÃ‘O (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "197",
+      "name": "EL VINO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12348",
+      "name": "EL VISO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10236",
+      "name": "EL VISO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13798",
+      "name": "EL ZULIA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11498",
+      "name": "EL ZULIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13775",
+      "name": "EL ZULIA (VIRTUAL)",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13829",
+      "name": "ENVIGADO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10294",
+      "name": "ESPINAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "59",
+      "name": "ESPINAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "7",
+      "name": "ESPINAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10581",
+      "name": "ESPINAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11856",
+      "name": "ESPINAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10161",
+      "name": "ESPINAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11885",
+      "name": "ESTRECHO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "186",
+      "name": "FACATATIVA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11373",
+      "name": "FACATATIVA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10121",
+      "name": "FACATATIVA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11140",
+      "name": "FACATATIVA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11558",
+      "name": "FILANDIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10784",
+      "name": "FLANDES (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10714",
+      "name": "FLORENCIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10590",
+      "name": "FLORENCIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10195",
+      "name": "FLORIDABLANCA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "181",
+      "name": "FLORIDABLANCA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11297",
+      "name": "FONSECA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "184",
+      "name": "FORTUL",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11311",
+      "name": "FRESNO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13241",
+      "name": "FRESNO (TOLIMA)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11259",
+      "name": "FRESNO.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10094",
+      "name": "FUNDACION",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "76",
+      "name": "FUNDACION",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10028",
+      "name": "FUNDACION (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11342",
+      "name": "FUNZA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10158",
+      "name": "FUSAGASUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10538",
+      "name": "FUSAGASUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11851",
+      "name": "FUSAGASUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12402",
+      "name": "FUSAGASUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "60",
+      "name": "FUSAGASUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10578",
+      "name": "FUSAGASUGA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10626",
+      "name": "FUSAGASUGA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13766",
+      "name": "GACHANCIPA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10806",
+      "name": "GALAPA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10645",
+      "name": "GALAPA (ATL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13841",
+      "name": "GALILEA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11042",
+      "name": "GAMARRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "128",
+      "name": "GAMARRA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13793",
+      "name": "GAMBOTE",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12852",
+      "name": "GARZON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "212",
+      "name": "GARZON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10637",
+      "name": "GARZON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10589",
+      "name": "GARZON (HUILA)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12883",
+      "name": "GARZON (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10711",
+      "name": "GIGANTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10588",
+      "name": "GIGANTE (HUILA)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10636",
+      "name": "GIGANTE.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13823",
+      "name": "GINEBRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13565",
+      "name": "GIRARDOT",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11855",
+      "name": "GIRARDOT",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10536",
+      "name": "GIRARDOT",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10580",
+      "name": "GIRARDOT (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10783",
+      "name": "GIRARDOT (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10160",
+      "name": "GIRARDOT (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10724",
+      "name": "GIRARDOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11088",
+      "name": "GIRARDOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "18",
+      "name": "GIRARDOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10989",
+      "name": "GIRARDOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13095",
+      "name": "GIRARDOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11368",
+      "name": "GIRARDOTA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10814",
+      "name": "GIRARDOTA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "24",
+      "name": "GIRON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "166",
+      "name": "GIRON",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10480",
+      "name": "GIRON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11265",
+      "name": "GIRON VITUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13190",
+      "name": "GIRON LLAMADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12926",
+      "name": "GRAMALOTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10624",
+      "name": "GRANADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10156",
+      "name": "GRANADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11899",
+      "name": "GRANADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12768",
+      "name": "GRANADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12023",
+      "name": "GRANADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10863",
+      "name": "GRANADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10576",
+      "name": "GRANADA (CUND)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13316",
+      "name": "GRANADA (META)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13595",
+      "name": "GRANADA DESTINO SEGURO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13779",
+      "name": "GRANADA(META)",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "214",
+      "name": "GUACA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "205",
+      "name": "GUACA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10850",
+      "name": "GUACARI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12140",
+      "name": "GUACHETA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13792",
+      "name": "GUADALAJARA DE BUGA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13843",
+      "name": "GUADALAJARA DE BUGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "132",
+      "name": "GUADUAS",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10116",
+      "name": "GUADUAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11135",
+      "name": "GUADUAS (CUND)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12302",
+      "name": "GUADUAS VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11134",
+      "name": "GUADUERO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10173",
+      "name": "GUAICARI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10162",
+      "name": "GUALANDAY",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11199",
+      "name": "GUALANDAY",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10786",
+      "name": "GUALANDAY",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10130",
+      "name": "GUAMAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11834",
+      "name": "GUAMAL (meta)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10295",
+      "name": "GUAMO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "202",
+      "name": "GUAMO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10582",
+      "name": "GUAMO (Tol)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10630",
+      "name": "GUAMO.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12065",
+      "name": "GUARINICITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10285",
+      "name": "GUARINOCITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11086",
+      "name": "GUARNE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "200",
+      "name": "GUARNE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11249",
+      "name": "GUARNE (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12561",
+      "name": "GUAYABAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10039",
+      "name": "GUAYABALES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10383",
+      "name": "GUAYABALES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10126",
+      "name": "GUAYABETAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10448",
+      "name": "GUAYABETALES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10491",
+      "name": "HATILLO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10147",
+      "name": "HATO DE COROZAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11617",
+      "name": "HATO NUEVO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11548",
+      "name": "HATO NUEVO (GUAJIRA)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10710",
+      "name": "HOBO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10635",
+      "name": "HOBO.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "6",
+      "name": "HONDA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "201",
+      "name": "HONDA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10908",
+      "name": "HONDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11309",
+      "name": "HONDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13486",
+      "name": "HONDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11277",
+      "name": "HONDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10270",
+      "name": "HONDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10654",
+      "name": "HONDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10696",
+      "name": "HONDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11078",
+      "name": "HONDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11034",
+      "name": "HONDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13240",
+      "name": "HONDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11013",
+      "name": "HONDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "5",
+      "name": "IBAGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10163",
+      "name": "IBAGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "145",
+      "name": "IBAGUE",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11859",
+      "name": "IBAGUE LLAMADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13319",
+      "name": "IBAGUE (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12557",
+      "name": "IBAGUE-VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13815",
+      "name": "ICONONZO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13810",
+      "name": "IMUES(VIRTUAL)",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10012",
+      "name": "ITAGUI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12388",
+      "name": "JAMUNDI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11215",
+      "name": "JAMUNDI (VALLE)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12535",
+      "name": "JERUSALEN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13308",
+      "name": "JUANCHITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13826",
+      "name": "JUNIN (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10454",
+      "name": "LA DORADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10642",
+      "name": "LA ALEMANA. KM 11 VIA PIEDECUESTA, PARADOR LA ALEM",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11495",
+      "name": "LA APARTADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10475",
+      "name": "LA CARO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10573",
+      "name": "LA CARO (CUND)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13780",
+      "name": "LA CARO(CUNDIMARCA)",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10034",
+      "name": "LA CORCOBA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10443",
+      "name": "LA CORCOBA (SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10384",
+      "name": "LA DONJUANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "15",
+      "name": "LA DORADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "4",
+      "name": "LA DORADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10694",
+      "name": "LA DORADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13066",
+      "name": "LA DORADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11307",
+      "name": "LA DORADA (CAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10413",
+      "name": "LA ESPERANZA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10818",
+      "name": "LA FLORESTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13118",
+      "name": "LA FLORIDA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11005",
+      "name": "LA FORTUNA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13800",
+      "name": "LA FORTUNA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12271",
+      "name": "LA GLORIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13806",
+      "name": "LA GUARIPA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "106",
+      "name": "LA JAGUA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11538",
+      "name": "LA JAGUA DE IBERICO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "157",
+      "name": "LA JAGUA DE IBIRICO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "141",
+      "name": "LA JAGUA DE IBIRICO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10565",
+      "name": "LA JAGUA DE IBIRICO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11419",
+      "name": "LA JAGUA DE IBIRICO (CESAR)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11544",
+      "name": "LA JAGUA DEL PILAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10037",
+      "name": "LA LAGUNA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10446",
+      "name": "LA LAGUNA (N SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11387",
+      "name": "LA LIZAMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13452",
+      "name": "LA LIZAMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "72",
+      "name": "LA LIZAMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10717",
+      "name": "LA LIZAMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10182",
+      "name": "LA LIZAMA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10135",
+      "name": "LA LIZAMA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10186",
+      "name": "LA LOMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "45",
+      "name": "LA LOMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11464",
+      "name": "LA LOMA CESAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13395",
+      "name": "LA LOMA VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11200",
+      "name": "LA MARTINICA (TOL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10244",
+      "name": "LA MATA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11414",
+      "name": "LA MATA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10078",
+      "name": "LA MATA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10168",
+      "name": "LA PAILA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11206",
+      "name": "LA PAILA (VALLE)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10870",
+      "name": "LA PAILA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11295",
+      "name": "LA PAZ",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "50",
+      "name": "LA PAZ",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11543",
+      "name": "LA PAZ (CESAR)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11422",
+      "name": "LA PAZ (CESAR)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13781",
+      "name": "LA PINTADA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10984",
+      "name": "LA PIÃ‘UELA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13846",
+      "name": "LA PLATA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10934",
+      "name": "LA PLATA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10482",
+      "name": "LA RENTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13639",
+      "name": "LA RENTA (Stdr)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11123",
+      "name": "LA TEBAIDA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10167",
+      "name": "LA TEBAIDA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10359",
+      "name": "LA TEBAIDA (Quindio)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11205",
+      "name": "LA TEBAIDA (QUINDIO)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12334",
+      "name": "LA UNION (nariÃ±o)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11866",
+      "name": "LA URIBE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11021",
+      "name": "LA URIBE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11207",
+      "name": "LA URIBE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10169",
+      "name": "LA URIBE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10398",
+      "name": "LA VEGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "198",
+      "name": "LA VEGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13244",
+      "name": "LA VIRGINIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11098",
+      "name": "LA YE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12665",
+      "name": "LA YE DE CIENAGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10904",
+      "name": "LA YE FUNDACION",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10487",
+      "name": "LAFLORESTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10216",
+      "name": "LANDAZURI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12728",
+      "name": "LAS ACACIAS (Nort)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12372",
+      "name": "LAS AVISPAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11198",
+      "name": "LAS AVISPAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10787",
+      "name": "LAS AVISPAS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10149",
+      "name": "LAS CRUCES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11547",
+      "name": "LAS MERCEDES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11701",
+      "name": "LAS VEGAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "193",
+      "name": "LEBRIJA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11266",
+      "name": "LEBRIJA (SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11004",
+      "name": "LEBRIJA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10421",
+      "name": "LEBRIJA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12018",
+      "name": "LENGUAZAQUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "107",
+      "name": "LERIDA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10289",
+      "name": "LERIDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11016",
+      "name": "LERIDA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10106",
+      "name": "LIZAMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13783",
+      "name": "LLANOS DE CUIBA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11228",
+      "name": "LLEGADA A DESCARGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10943",
+      "name": "LLEGADA AL CARGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10914",
+      "name": "Llegada de Sitio de Descargue",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11894",
+      "name": "LLORENTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "82",
+      "name": "LOBO GUERRERO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13429",
+      "name": "LOBO GUERRERO (virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13057",
+      "name": "LOBO GUERRERO (virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10511",
+      "name": "LOMA COLORADA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13022",
+      "name": "LOMA COLORADA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12648",
+      "name": "LOMA DE ARENA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12351",
+      "name": "LORICA (Cord)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10670",
+      "name": "LOS CUROS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "213",
+      "name": "LOS CUROS",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10338",
+      "name": "LOS CUROS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11747",
+      "name": "LOS CUROS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10439",
+      "name": "LOS CUROS (SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10375",
+      "name": "LOS CUROS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10449",
+      "name": "LOS PATIOS (N SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10385",
+      "name": "LOS PATIOS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10515",
+      "name": "LUGAR DE ENTREGA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12361",
+      "name": "LUGAR DE ENTREGA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11358",
+      "name": "Lugar Entrega",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10013",
+      "name": "LUGAR ENTREGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10809",
+      "name": "LURUACO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11709",
+      "name": "LURUACO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10967",
+      "name": "MADRID",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11142",
+      "name": "MADRID (CUND)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12697",
+      "name": "MADRID VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13048",
+      "name": "MAHATES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11619",
+      "name": "MAICAO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "98",
+      "name": "MAICAO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11618",
+      "name": "MAICAO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10999",
+      "name": "MAJAGUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "216",
+      "name": "MALAGA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13197",
+      "name": "MALAGA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11510",
+      "name": "MALAGANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10507",
+      "name": "MALAMBO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "149",
+      "name": "MANAURE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13852",
+      "name": "MANAURE",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10570",
+      "name": "MANAURE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13345",
+      "name": "MANIZALES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "83",
+      "name": "MANIZALES",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11314",
+      "name": "MANIZALES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13092",
+      "name": "MANIZALES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11262",
+      "name": "MANIZALES (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13664",
+      "name": "MANIZALEZ",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12347",
+      "name": "MARIA LA BAJA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10613",
+      "name": "MARIANGOLA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12599",
+      "name": "MARINILLA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "110",
+      "name": "MARINILLA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11248",
+      "name": "MARINILLA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12256",
+      "name": "MARINILLA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "108",
+      "name": "MARIQUITA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "88",
+      "name": "MARIQUITA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10287",
+      "name": "MARIQUITA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10451",
+      "name": "MARIQUITA (TOL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13834",
+      "name": "MARTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10788",
+      "name": "MARTINICA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10813",
+      "name": "MEDELLIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "199",
+      "name": "MEDELLIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13698",
+      "name": "MEDELLIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11486",
+      "name": "MEDELLIN (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10011",
+      "name": "MEDELLIN (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13472",
+      "name": "MEDIA CANOA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12577",
+      "name": "MEDIA CANOA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13427",
+      "name": "MEDIA CANOA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12831",
+      "name": "MEDIACANOA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13306",
+      "name": "MEDIACANOA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11211",
+      "name": "MEDIACANOA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10537",
+      "name": "MELGAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11854",
+      "name": "MELGAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10579",
+      "name": "MELGAR (TOL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10782",
+      "name": "MELGAR (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10159",
+      "name": "MELGAR (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10686",
+      "name": "MINGUEO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13597",
+      "name": "MOBIL COLOMBIA DESTINO SEGURO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11794",
+      "name": "MOCOA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10857",
+      "name": "MOJARRAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11224",
+      "name": "MOJARRAS (CAU)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10178",
+      "name": "MONDOMO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11218",
+      "name": "MONDORNO (CAU)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10768",
+      "name": "MONIQUIRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "162",
+      "name": "MONIQUIRA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10213",
+      "name": "MONIQUIRA (BOY)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10942",
+      "name": "MONIQUIRA.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12309",
+      "name": "MONTELORO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12858",
+      "name": "MONTEREY",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13641",
+      "name": "MONTERIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "23",
+      "name": "MONTERIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11099",
+      "name": "MONTERIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12353",
+      "name": "MONTERIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12921",
+      "name": "MONTERREY (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10141",
+      "name": "MONTERREY (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13816",
+      "name": "MORALES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11371",
+      "name": "MOSQUERA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11143",
+      "name": "MOSQUERA (CUN)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12182",
+      "name": "MULATOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13220",
+      "name": "MUTATA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12716",
+      "name": "MUTATA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "104",
+      "name": "MUTATA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10733",
+      "name": "MUTATA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10297",
+      "name": "NATAGAIMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10584",
+      "name": "NATAGAIMA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10632",
+      "name": "NATAGAIMA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13051",
+      "name": "NATAGAIMA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12183",
+      "name": "NECOCLI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13838",
+      "name": "NECOCLI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13831",
+      "name": "NECOCLI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12907",
+      "name": "NEIVA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10586",
+      "name": "NEIVA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10299",
+      "name": "NEIVA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "66",
+      "name": "NEIVA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11908",
+      "name": "NEIVA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11942",
+      "name": "NOBSA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13822",
+      "name": "NOROSI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13819",
+      "name": "NOROSI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13112",
+      "name": "NUEVA GRANADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11504",
+      "name": "NUEVA GRANADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10063",
+      "name": "NUEVA GRANADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13361",
+      "name": "NUEVA GRANADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "160",
+      "name": "NUEVO COLON",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10316",
+      "name": "OCAÃ‘A",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "70",
+      "name": "OCAÃ‘A",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10660",
+      "name": "OCAÃ‘A (N SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10023",
+      "name": "OCAÃ‘A VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "65",
+      "name": "OIBA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12145",
+      "name": "OIBA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12764",
+      "name": "OIBA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10307",
+      "name": "OIBA (SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10202",
+      "name": "OIBA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13785",
+      "name": "OROCUE",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11526",
+      "name": "OVEJAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11636",
+      "name": "OVEJAS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11260",
+      "name": "PADUA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "167",
+      "name": "PAILITAS",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10410",
+      "name": "PAILITAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "139",
+      "name": "PAILITAS",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10677",
+      "name": "PAILITAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10803",
+      "name": "PAILITAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "43",
+      "name": "PAILITAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10048",
+      "name": "PAILITAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13752",
+      "name": "PAILITAS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10058",
+      "name": "PAILITAS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10666",
+      "name": "PAIPA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12496",
+      "name": "PAIPA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10952",
+      "name": "PAIPA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "101",
+      "name": "PAJARITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10751",
+      "name": "PAJARITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "86",
+      "name": "PAJARITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13443",
+      "name": "PALERMO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12644",
+      "name": "PALERMO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11723",
+      "name": "PALMAR DE VARELA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11061",
+      "name": "PALMIRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12675",
+      "name": "PALOMINO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "182",
+      "name": "PAMPLONA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "58",
+      "name": "PAMPLONA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10038",
+      "name": "PAMPLONA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10447",
+      "name": "PAMPLONA (N SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10139",
+      "name": "PARATEBUENO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11882",
+      "name": "PARRAGA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12",
+      "name": "PASTO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11889",
+      "name": "PASTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10860",
+      "name": "PASTO(Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13772",
+      "name": "PATIA- CAUCA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13230",
+      "name": "PATIOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10041",
+      "name": "PATIOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10146",
+      "name": "PAZ DE ARIPORO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10663",
+      "name": "PAZ DE RIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11852",
+      "name": "PEAJE DE CHINAUTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11849",
+      "name": "PEAJE DE CHUSACA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11412",
+      "name": "PEAJE MORRISON O SAN MARTIN (CESAR)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11416",
+      "name": "PEAJE PAILITAS (CESAR)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12643",
+      "name": "PEAJE TAZAJERA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11891",
+      "name": "PEDREGAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "42",
+      "name": "PELAYA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "174",
+      "name": "PELAYA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10411",
+      "name": "PELAYA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "168",
+      "name": "PELAYA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "138",
+      "name": "PELAYA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11940",
+      "name": "PELAYA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11555",
+      "name": "PELAYA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11174",
+      "name": "PELAYA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10024",
+      "name": "PELAYA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10562",
+      "name": "PELAYA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11557",
+      "name": "PEREIRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11317",
+      "name": "PEREIRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "146",
+      "name": "PEREIRA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12916",
+      "name": "PEREIRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13189",
+      "name": "PESCADERO VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10310",
+      "name": "PIEDECUESTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "165",
+      "name": "PIEDECUESTA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12421",
+      "name": "PIEDECUESTA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10440",
+      "name": "PIEDECUESTA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10196",
+      "name": "PIEDECUESTA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11883",
+      "name": "PIEDRA SENTADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10179",
+      "name": "PIENDAMO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11878",
+      "name": "PIENDAMO VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11219",
+      "name": "PIENDAMO (CAUCA)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12849",
+      "name": "PILTALITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11926",
+      "name": "PINCHOTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10758",
+      "name": "PIPIRAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10127",
+      "name": "PIPIRAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11742",
+      "name": "PITALITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "211",
+      "name": "PITALITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13786",
+      "name": "PIVIJAY",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "22",
+      "name": "PLANETA RICA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12263",
+      "name": "PLANETA RICA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11097",
+      "name": "PLANETA RICA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10995",
+      "name": "PLANETA RICA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "34",
+      "name": "PLATO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "177",
+      "name": "PLATO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10232",
+      "name": "PLATO VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10502",
+      "name": "PLATO(Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10251",
+      "name": "PLATO(Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11678",
+      "name": "PLATO(Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10506",
+      "name": "PONEDERA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12801",
+      "name": "POPAYAN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11",
+      "name": "POPAYAN",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11879",
+      "name": "POPAYAN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10180",
+      "name": "POPAYAN (Cauca)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13657",
+      "name": "PORCE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10145",
+      "name": "PORE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13836",
+      "name": "PORTUGAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13196",
+      "name": "PRESIDENTE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "33",
+      "name": "PUEBLO NUEVO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11676",
+      "name": "PUEBLO NUEVO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12264",
+      "name": "PUEBLO NUEVO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10836",
+      "name": "PUEBLO NUEVO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12642",
+      "name": "PUEBLO VIEJIO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11103",
+      "name": "PUEBLO VIEJIO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11708",
+      "name": "PUEBLO VIEJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11254",
+      "name": "PUENTE BOYACA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13739",
+      "name": "PUENTE DE PIEDRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12142",
+      "name": "PUENTE NACIONAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10550",
+      "name": "PUENTE NACIONAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "64",
+      "name": "PUENTE NACIONAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10430",
+      "name": "PUENTE NACIONAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12412",
+      "name": "PUENTE NACIONAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13651",
+      "name": "PUENTE PUEMAREJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11184",
+      "name": "PUENTE PUMAREJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12874",
+      "name": "PUENTE QUETAME",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12751",
+      "name": "PUENTE SEVILLA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10461",
+      "name": "PUENTE SOGAMOSO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12043",
+      "name": "PUENTE TIERRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10264",
+      "name": "PUERTO BOYACA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10455",
+      "name": "PUERTO BOYACA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13636",
+      "name": "PUERTO BOYACA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10113",
+      "name": "PUERTO BOYACA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10261",
+      "name": "PUERTO ARAUJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11491",
+      "name": "PUERTO VALDIVIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "2",
+      "name": "PUERTO ARAUJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13179",
+      "name": "PUERTO ARAUJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10006",
+      "name": "PUERTO ARAUJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10820",
+      "name": "PUERTO ARAUJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10218",
+      "name": "PUERTO ARAUJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10108",
+      "name": "PUERTO ARAUJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10005",
+      "name": "PUERTO ARAUJO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12789",
+      "name": "PUERTO ASIS (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "116",
+      "name": "PUERTO BELGICA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10993",
+      "name": "PUERTO BÃ‰LGICA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10008",
+      "name": "PUERTO BERRIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13354",
+      "name": "PUERTO BERRIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "68",
+      "name": "PUERTO BERRIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13733",
+      "name": "PUERTO BERRIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10007",
+      "name": "PUERTO BERRIO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11077",
+      "name": "PUERTO BOGOTA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "134",
+      "name": "PUERTO BOYACA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11011",
+      "name": "PUERTO BOYACA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "144",
+      "name": "PUERTO BOYACA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "3",
+      "name": "PUERTO BOYACA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12788",
+      "name": "PUERTO CAICEDO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12646",
+      "name": "PUERTO COLOMBIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10761",
+      "name": "PUERTO GAITAN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11999",
+      "name": "PUERTO LIBERTADOR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10115",
+      "name": "PUERTO LIBRE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "191",
+      "name": "PUERTO LIBRE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10760",
+      "name": "PUERTO LOPEZ (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11009",
+      "name": "PUERTO OLAYA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13685",
+      "name": "PUERTO PARRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "137",
+      "name": "PUERTO PARRA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "187",
+      "name": "PUERTO SALGAR",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11150",
+      "name": "PUERTO SALGAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11133",
+      "name": "PUERTO SALGAR (CUND)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11012",
+      "name": "PUERTO SALGAR - VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10112",
+      "name": "PUERTO SERVIEZ",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12244",
+      "name": "PUERTO SERVIEZ (BOY)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10175",
+      "name": "PUERTO TEJADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11874",
+      "name": "PUERTO TEJADA VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "16",
+      "name": "PUERTO TRIUNFO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10114",
+      "name": "PUERTO TRIUNFO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13771",
+      "name": "Puerto Triunfo",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "52",
+      "name": "PUERTO WILCHES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10055",
+      "name": "PUERTO WILCHES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10001",
+      "name": "PUERTO WILCHES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "51",
+      "name": "PUERTO WILCHES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10015",
+      "name": "PUERTO WILCHES (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10268",
+      "name": "PURNIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10331",
+      "name": "QUIMBAYA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12945",
+      "name": "RESTREPO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10883",
+      "name": "RICAURTE (Cundina)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11893",
+      "name": "Ricaurte (Valle)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12308",
+      "name": "RIO CLARO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10980",
+      "name": "RIO COCORNA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12531",
+      "name": "RIO DE ORO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10266",
+      "name": "RIO NEGRITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10977",
+      "name": "RIO NEGRITO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10045",
+      "name": "RIO NEGRO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11409",
+      "name": "RIO NEGRO (SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10981",
+      "name": "RIO SAMANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13851",
+      "name": "RIO VIEJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12138",
+      "name": "RIOHACHA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11917",
+      "name": "RIOHACHA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12150",
+      "name": "RION NEGRO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10282",
+      "name": "RIONEGRITO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "26",
+      "name": "RIONEGRO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10312",
+      "name": "RIONEGRO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13090",
+      "name": "RIONEGRO (Santander)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10855",
+      "name": "ROSAS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11222",
+      "name": "ROSAS (CAUCA)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10762",
+      "name": "RUBIALES (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11268",
+      "name": "SABANA DE TORRES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "32",
+      "name": "SABANA DE TORRES",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10303",
+      "name": "SABANA DE TORRES (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11155",
+      "name": "SABANAGRANDE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10808",
+      "name": "SABANALARGA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13016",
+      "name": "SABANALARGA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11167",
+      "name": "SABANETA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "153",
+      "name": "SABOYA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "94",
+      "name": "SAHAGUN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13796",
+      "name": "SAHAGUN",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12172",
+      "name": "SAHAGUN (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11682",
+      "name": "SAHAGUN (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12927",
+      "name": "SALAZAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "8",
+      "name": "SALDAÃ‘A",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10705",
+      "name": "SALDAÃ‘A",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10583",
+      "name": "SALDAÃ‘A (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10296",
+      "name": "SALDAÃ‘A (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11187",
+      "name": "SALIDA DE CARGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10915",
+      "name": "Salida del Sitio de Descargue",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10945",
+      "name": "Saliendo del cargue",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13773",
+      "name": "SAMACA (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12356",
+      "name": "SAMPUES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12171",
+      "name": "SAMPUES (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11537",
+      "name": "SAN ROQUE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13821",
+      "name": "SAN AGUSTIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11286",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10823",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12732",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10800",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10964",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10056",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10257",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13183",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12395",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "28",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10104",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13689",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "71",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11579",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12274",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11460",
+      "name": "SAN ALBERTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10222",
+      "name": "SAN ALBERTO (CESAR)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10016",
+      "name": "SAN ALBERTO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10075",
+      "name": "SAN ALBERTO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "215",
+      "name": "SAN ANDRES",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13813",
+      "name": "SAN ANTERITO(VIRTUAL)",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13848",
+      "name": "SAN BERNARDO DE BATA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13850",
+      "name": "SAN BERNARDO DE BATA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "170",
+      "name": "SAN CARLOS",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13805",
+      "name": "SAN CARLOS DE GUAROA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10132",
+      "name": "SAN CARLOS DE GUAROA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13777",
+      "name": "SAN CAYETANO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "38",
+      "name": "SAN CAYETANO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "37",
+      "name": "SAN CAYETANO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11542",
+      "name": "SAN DIEGO (CESAR)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13802",
+      "name": "SAN FELIPE",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10983",
+      "name": "SAN FRANCISCO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "148",
+      "name": "SAN FRANCISCO DE QUIBDO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "1",
+      "name": "SAN GIL",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13388",
+      "name": "SAN GIL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12147",
+      "name": "SAN GIL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "164",
+      "name": "SAN GIL",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10600",
+      "name": "SAN GIL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "53",
+      "name": "SAN GIL",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "79",
+      "name": "SAN GIL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12870",
+      "name": "SAN GIL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13404",
+      "name": "SAN GIL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10436",
+      "name": "SAN GIL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10199",
+      "name": "SAN GIL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "87",
+      "name": "SAN JACINTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10832",
+      "name": "SAN JACINTO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10728",
+      "name": "SAN JERONIMO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12681",
+      "name": "SAN JOSE DE ISNOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11365",
+      "name": "SAN JOSE DE NUS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13137",
+      "name": "SAN JOSE DE PARE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13824",
+      "name": "SAN JOSE DEL GUAVIARE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10488",
+      "name": "SAN JOSE DEL NUS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10568",
+      "name": "SAN JUAN DE CESAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12639",
+      "name": "SAN JUAN DE BETULIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12165",
+      "name": "SAN JUAN DE NEPOMUCENO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10067",
+      "name": "SAN JUAN DE NEPOMUCENO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10831",
+      "name": "SAN JUAN DE NEPOMUCENO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10235",
+      "name": "SAN JUAN DE NEPOMUCENO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10504",
+      "name": "SAN JUAN DE NEPOMUCENO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12179",
+      "name": "SAN JUAN DE URABA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11793",
+      "name": "SAN JUAN DE VILLALOBOS.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12678",
+      "name": "SAN JUAN DEL CESAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "36",
+      "name": "SAN JUAN NEPOMUCENO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "77",
+      "name": "SAN JUAN NEPOMUCENO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13003",
+      "name": "SAN JUAN NEPOMUCENO (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11083",
+      "name": "SAN LUIS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10982",
+      "name": "SAN LUIS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13845",
+      "name": "SAN LUIS DE PALENQUE",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12451",
+      "name": "SAN MARCOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10998",
+      "name": "SAN MARCOS ( Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "29",
+      "name": "SAN MARTIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13750",
+      "name": "SAN MARTIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "169",
+      "name": "SAN MARTIN",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12394",
+      "name": "SAN MARTIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12153",
+      "name": "SAN MARTIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11671",
+      "name": "SAN MARTIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10801",
+      "name": "SAN MARTIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11461",
+      "name": "SAN MARTIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10412",
+      "name": "SAN MARTIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "25",
+      "name": "SAN MARTIN",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10047",
+      "name": "SAN MARTIN (meta)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10674",
+      "name": "SAN MARTIN(Ces)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10017",
+      "name": "SAN MARTIN(Ces)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13794",
+      "name": "SAN ONOFRE",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13643",
+      "name": "SAN ONOFRE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12349",
+      "name": "SAN ONOFRE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12621",
+      "name": "SAN ONOFRE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10463",
+      "name": "SAN PABLO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11471",
+      "name": "SAN PEDRO DE LA PAZ",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10457",
+      "name": "SAN PEDRO DE LA PAZ",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10111",
+      "name": "SAN PEDRO DE LA PAZ (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13847",
+      "name": "SAN RAFAEL DE LEBRIJA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10302",
+      "name": "SAN RAFAEL VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10185",
+      "name": "SAN ROQUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12157",
+      "name": "SAN ROQUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10408",
+      "name": "SAN ROQUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13364",
+      "name": "SAN ROQUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13075",
+      "name": "SAN ROQUE (Antioquia)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11418",
+      "name": "SAN ROQUE (Cesar)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10252",
+      "name": "SAN SEBASTIAN DE BUENAVISTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13835",
+      "name": "SAN VICENTE DE CHUCURI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12762",
+      "name": "SANGIL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12193",
+      "name": "SANTA ANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13663",
+      "name": "SANTA BARBARA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13",
+      "name": "SANTA CATALINA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10729",
+      "name": "SANTA FE DE ANTIOQUIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13787",
+      "name": "SANTA FE DE ANTIQUIA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12177",
+      "name": "SANTA LUCIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12847",
+      "name": "SANTA MARÃA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13808",
+      "name": "SANTA MARIA BOYACA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "120",
+      "name": "SANTA MARTA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10685",
+      "name": "SANTA MARTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11652",
+      "name": "SANTA MARTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10053",
+      "name": "SANTA MARTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10402",
+      "name": "SANTA MARTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10192",
+      "name": "SANTA MARTA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12666",
+      "name": "SANTA MARTA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10620",
+      "name": "SANTA MARTA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13026",
+      "name": "SANTA ROSA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11316",
+      "name": "SANTA ROSA DE CABAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13343",
+      "name": "SANTA ROSA DE CABAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13666",
+      "name": "SANTA ROSA DE CABAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "112",
+      "name": "SANTA ROSA DE OSOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "19",
+      "name": "SANTA ROSA DE OSOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13337",
+      "name": "SANTA ROSA DE OSOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11091",
+      "name": "SANTA ROSA DE OSOS(VIrtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11488",
+      "name": "SANTA ROSA DE OSOS(VIrtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10664",
+      "name": "SANTA ROSA DE VITERBO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "127",
+      "name": "SANTA ROSA DEL SUR",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10990",
+      "name": "SANTA ROSAS DE OSOS",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12647",
+      "name": "SANTA VERONICA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "121",
+      "name": "SANTAMARTA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13136",
+      "name": "SANTANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12144",
+      "name": "SANTANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10345",
+      "name": "SANTANA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10641",
+      "name": "SANTANA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10432",
+      "name": "SANTANA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11876",
+      "name": "SANTANDER DE QUILICHAO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10177",
+      "name": "SANTANDER DE QUILICHAO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10852",
+      "name": "SANTANDER DE QUILICHAO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13273",
+      "name": "SANTANDER DE QUILICHAO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11217",
+      "name": "SANTANDER DE QUILICHAO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10875",
+      "name": "SANTANDER DE QUILICHAO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13233",
+      "name": "SANTIAGO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13778",
+      "name": "SANTIAGO DE TOLU",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12399",
+      "name": "SANTO DOMINGO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11483",
+      "name": "SANTUARIO (Antioquia)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10691",
+      "name": "SANTUARIO (Risaralda)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13849",
+      "name": "SARAVENA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12925",
+      "name": "SARDIANATA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10021",
+      "name": "SARDIANATA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "75",
+      "name": "SARDINATA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12225",
+      "name": "SARDINATA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "171",
+      "name": "SARDINTARA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "189",
+      "name": "SASAIMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10273",
+      "name": "SASAIMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11138",
+      "name": "SASAIMA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10119",
+      "name": "SASAIMA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13840",
+      "name": "SEGOVIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10773",
+      "name": "SESQUILE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13767",
+      "name": "SESQUILE (cund)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "114",
+      "name": "SEVILLA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10087",
+      "name": "SEVILLA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11954",
+      "name": "SIBATE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12228",
+      "name": "SIBERIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11426",
+      "name": "SIBERIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10157",
+      "name": "SILVANIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10539",
+      "name": "SILVANIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10577",
+      "name": "SILVANIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "136",
+      "name": "SIMACOTA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "155",
+      "name": "SIMACOTA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "152",
+      "name": "SIMIJACA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "126",
+      "name": "SIMITI",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11043",
+      "name": "SIMITI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13795",
+      "name": "SINCELEJO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11689",
+      "name": "SINCELEJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "178",
+      "name": "SINCELEJO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "99",
+      "name": "SINCELEJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11528",
+      "name": "SINCELEJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12992",
+      "name": "SINCELEJO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11681",
+      "name": "SINCELEJO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "39",
+      "name": "SINCERIN",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11466",
+      "name": "SITIO DE CARGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13180",
+      "name": "SITIO DE CARGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13734",
+      "name": "SITIO DE CARGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10300",
+      "name": "SITIO DE CARGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10203",
+      "name": "SITIO DE CARGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10401",
+      "name": "SITIO DE CARGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10477",
+      "name": "SITIO DE CARGUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10014",
+      "name": "SITIO DE CARGUE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10151",
+      "name": "SITIO DE CARGUE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10902",
+      "name": "SITIO DE CARGUE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10789",
+      "name": "SITIO DE CARGUE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10155",
+      "name": "SOACHA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "206",
+      "name": "SOCHA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10201",
+      "name": "SOCORRO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10434",
+      "name": "SOCORRO (SANT)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13188",
+      "name": "SOCORRO VIRTUAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12498",
+      "name": "SOGAMOSO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "102",
+      "name": "SOGAMOSO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13068",
+      "name": "SOGAMOSO (BOY)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10749",
+      "name": "SOGAMOSO (VIRTUAL)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10646",
+      "name": "SOLEDAD",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13591",
+      "name": "SOLEDAD.",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10206",
+      "name": "SOPO (CUND)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "163",
+      "name": "SUAITA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10919",
+      "name": "SUBIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12410",
+      "name": "SUSA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12408",
+      "name": "SUTATAUSA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13173",
+      "name": "TABLON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "147",
+      "name": "TADO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13207",
+      "name": "TALALAMEQUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13727",
+      "name": "TAMALAMEQUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "180",
+      "name": "TAME",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10148",
+      "name": "TAME",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "21",
+      "name": "TARAZA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12342",
+      "name": "TARAZA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12859",
+      "name": "TAURAMENA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10366",
+      "name": "TAUSA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10427",
+      "name": "TAUSA (CUND)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10933",
+      "name": "TESALIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "209",
+      "name": "TIBU",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10400",
+      "name": "TIBU",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13817",
+      "name": "TIMANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11790",
+      "name": "TIMANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12329",
+      "name": "TIMANA (HLA)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11880",
+      "name": "TIMBIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13170",
+      "name": "TIMBIO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11221",
+      "name": "TIMBIO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12534",
+      "name": "TOCAIMA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "207",
+      "name": "TOCANCIPA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11654",
+      "name": "TOCANCIPA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10153",
+      "name": "TOCANCIPA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10207",
+      "name": "TOCANCIPA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10862",
+      "name": "TOCANCIPA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11755",
+      "name": "TOLEDO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "183",
+      "name": "TOLEDO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12350",
+      "name": "TOLU VIEJO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13804",
+      "name": "TOLU VIEJO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12620",
+      "name": "TOLU VIEJO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12862",
+      "name": "TOQUILLA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13592",
+      "name": "TUBARA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11182",
+      "name": "TUCURINCA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10171",
+      "name": "TULUA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "89",
+      "name": "TULUA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "210",
+      "name": "TULUA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11209",
+      "name": "TULUA (VALLE)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10884",
+      "name": "TUMACO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10211",
+      "name": "TUNJA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "161",
+      "name": "TUNJA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "84",
+      "name": "TUNJA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11892",
+      "name": "TUQUERRES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10882",
+      "name": "TUQUERRES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10068",
+      "name": "TURBACO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "78",
+      "name": "TURBACO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "40",
+      "name": "TURBANA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "151",
+      "name": "TURBO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12721",
+      "name": "TURBO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12186",
+      "name": "TURBO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10472",
+      "name": "UBAQUE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "63",
+      "name": "UBATE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10604",
+      "name": "UBATE",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "55",
+      "name": "UBATE",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12409",
+      "name": "UBATE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10428",
+      "name": "UBATE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10367",
+      "name": "UBATE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13407",
+      "name": "UBATE (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10566",
+      "name": "URAMITA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "103",
+      "name": "URAMITA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10731",
+      "name": "URAMITA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11620",
+      "name": "URIBIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11296",
+      "name": "URUMITA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10743",
+      "name": "VADO REAL",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "13339",
+      "name": "VALDIVIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10992",
+      "name": "VALDIVIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11093",
+      "name": "VALDIVIA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13131",
+      "name": "VALLEDUPAR",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10615",
+      "name": "VALLEDUPAR (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11915",
+      "name": "VALLEDUPAR (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10215",
+      "name": "VELEZ",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10290",
+      "name": "VENADILLO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "91",
+      "name": "VENADILLO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10210",
+      "name": "VENTA QUEMADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13770",
+      "name": "VENTAQUEMADA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10939",
+      "name": "VENTAQUEMADA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12981",
+      "name": "VENTAQUEMADA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13604",
+      "name": "VERSALLES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11345",
+      "name": "VIANI",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11871",
+      "name": "VIJES",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12854",
+      "name": "VILAVICENCIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12983",
+      "name": "VILLA DE LEYVA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "192",
+      "name": "VILLA NUEVA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10209",
+      "name": "VILLA PINZON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11875",
+      "name": "VILLA RICA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10176",
+      "name": "VILLA RICA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "158",
+      "name": "VILLANUEVA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "96",
+      "name": "VILLANUEVA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10140",
+      "name": "VILLANUEVA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "49",
+      "name": "VILLANUEVA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11545",
+      "name": "VILLANUEVA (guajira)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "208",
+      "name": "VILLAPINZON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10938",
+      "name": "VILLAPINZON",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12389",
+      "name": "VILLARICA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11216",
+      "name": "VILLARICA (CAU)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10759",
+      "name": "VILLAVICENCIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "92",
+      "name": "VILLAVICENCIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12944",
+      "name": "VILLAVICENCIO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10128",
+      "name": "VILLAVICENCIO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12747",
+      "name": "VILLETA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "119",
+      "name": "VILLETA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "11074",
+      "name": "VILLETA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11661",
+      "name": "VILLETA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12287",
+      "name": "VILLETA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11376",
+      "name": "VILLETA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "69",
+      "name": "VILLETA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11137",
+      "name": "VILLETA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11477",
+      "name": "VILLETA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10118",
+      "name": "VILLETA (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13811",
+      "name": "VILLETA (VIRTUAL)",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12401",
+      "name": "VIOTA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "113",
+      "name": "YARUMAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "20",
+      "name": "YARUMAL",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "12339",
+      "name": "YARUMAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11092",
+      "name": "YARUMAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10991",
+      "name": "YARUMAL (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "217",
+      "name": "YOLOMBO",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10143",
+      "name": "YOPAL",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11610",
+      "name": "YOTOCO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11212",
+      "name": "YOTOCO (VALLE)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13626",
+      "name": "YOTOCO_1",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12386",
+      "name": "YUMBO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11611",
+      "name": "YUMBO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "11213",
+      "name": "YUMBO (Virtual)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10065",
+      "name": "ZAMBRANO",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12181",
+      "name": "ZAPATA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "13842",
+      "name": "ZARAGOZA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "10365",
+      "name": "ZIPAQUIRA",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "56",
+      "name": "ZIPAQUIRA",
+      "kind": "Fisico",
+      "status": "Activo"
+    },
+    {
+      "code": "10425",
+      "name": "ZIPAQUIRA (CUND)",
+      "kind": "Virtual",
+      "status": "Activo"
+    },
+    {
+      "code": "12224",
+      "name": "ZULIA",
+      "kind": "Virtual",
+      "status": "Activo"
+    }
+  ]
+}

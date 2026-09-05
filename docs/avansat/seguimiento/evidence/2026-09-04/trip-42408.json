@@ -1,0 +1,528 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10401&pc=SITIO DE CARGUE (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SITIO DE CARGUE (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=74&pc=BARRANQUILLA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BARRANQUILLA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10030&pc=CIENAGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CIENAGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10029&pc=ARACATACA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ARACATACA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10028&pc=FUNDACION (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "FUNDACION (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10095&pc=EL COPEY (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "EL COPEY (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10082&pc=CUATROVIENTOS (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CUATROVIENTOS (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10408&pc=SAN ROQUE (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN ROQUE (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10025&pc=CURUMANI (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CURUMANI (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10410&pc=PAILITAS (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PAILITAS (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10411&pc=PELAYA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PELAYA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10412&pc=SAN MARTIN (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN MARTIN (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10413&pc=LA ESPERANZA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA ESPERANZA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10313&pc= EL PLAYON (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "EL PLAYON (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10312&pc=RIONEGRO (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "RIONEGRO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=166&pc=GIRON&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GIRON"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42408&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42408",
+        "Origen",
+        "BARRANQUILLA (Atla)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043387",
+        "Destino",
+        "GIRON (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "NICOLL TATIANA",
+        "Ruta",
+        "803 - BARRANQUILLA (Atla) - 8001000 - GIRON (Sant) - 68307000 VIA SAN ALBERTO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "ROJAS EDSON STIVEN",
+        "Fecha Salida",
+        "17:40 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "22:00 05-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-04 17:14:34"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "VXI661"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "INTERNATIONAL",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "9400",
+        "Carrocería",
+        "S.R.S"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "ROJO",
+        "Modelo",
+        "2007"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SIN UBICACION",
+        "",
+        "17:47 04-09-2026",
+        "7Min(s)",
+        "Retrasado",
+        "17:47 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SITIO DE CARGUE (Virtual)",
+        "17:50 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA (Virtual)",
+        "18:20 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CIENAGA (Virtual)",
+        "19:50 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ARACATACA (Virtual)",
+        "21:20 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUNDACION (Virtual) (Virtual)",
+        "22:50 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL COPEY (Virtual)",
+        "00:20 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUATROVIENTOS (Virtual)",
+        "03:20 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ROQUE (Virtual)",
+        "04:50 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CURUMANI (Virtual)",
+        "06:20 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAILITAS (Virtual)",
+        "07:50 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PELAYA (Virtual)",
+        "09:20 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN MARTIN (Virtual)",
+        "12:20 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA ESPERANZA (Virtual)",
+        "15:20 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL PLAYON (Virtual) (Virtual)",
+        "16:50 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RIONEGRO (Virtual)",
+        "18:20 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRON",
+        "21:20 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "21:50 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "22:00 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SIN UBICACION",
+        "Retrasado",
+        "GPS/NO INGRESA CEL/ MANIFIESTA CARGA EL DIA DE MAÑANA\nSABADO, ESTA ESPERANDO QUE LE ENVIEN LA ORDEN DE CARGUE",
+        "17:47 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42408&opcion=1"
+}

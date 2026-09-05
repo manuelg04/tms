@@ -1,0 +1,478 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    }
+  ],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42396&opcion=2&codpc=165&pc=PIEDECUESTA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PIEDECUESTA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42396&opcion=2&codpc=10301&pc=BUCARAMAGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BUCARAMAGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42396&opcion=2&codpc=57&pc=BERLIN&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BERLIN"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42396&opcion=2&codpc=182&pc=PAMPLONA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PAMPLONA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42396&opcion=2&codpc=10384&pc=LA DONJUANA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA DONJUANA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42396&opcion=2&codpc=10449&pc=LOS PATIOS (N SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LOS PATIOS (N SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42396&opcion=2&codpc=129&pc=CUCUTA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CUCUTA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42396&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    },
+    {
+      "href": "http://www.openstreetmap.org/copyright",
+      "target": null,
+      "text": "OpenStreetMap"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42396",
+        "Origen",
+        "PIEDECUESTA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043375",
+        "Destino",
+        "CUCUTA (Nort)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "JORGE",
+        "Ruta",
+        "3685 - PIEDECUESTA (Sant) - 68547000 - CUCUTA (Nort) - 54001000 VIA AUTOPISTA BGA-PAMPLONA-CUCUTA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "MELGAREJO JHON FREDY",
+        "Fecha Salida",
+        "15:03 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "6612863",
+        "Fecha Planeada Llegada",
+        "06:03 05-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-04 10:43:42"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SJQ168"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "BLANCO VERDE",
+        "Modelo",
+        "2007"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BERLIN",
+        "",
+        "15:20 04-09-2026",
+        "17Min(s)",
+        "Retrasado",
+        "15:20 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1634 M DE BERLIN (TONA, SANTANDER).",
+        "",
+        "15:27 04-09-2026",
+        "6Min(s)",
+        "GPS",
+        "15:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1481 M DE EL DEGRADO (SILOS, NORTE DE SANTANDER).",
+        "",
+        "16:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "16:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MUTISCUA",
+        "",
+        "17:09 04-09-2026",
+        "43Min(s)",
+        "Retrasado",
+        "17:10 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 5398 M DE DIVIDIVI (MUTISCUA, NORTE DE SANTANDER).",
+        "",
+        "17:27 04-09-2026",
+        "16Min(s)",
+        "GPS",
+        "17:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "18:23 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMAGA (Virtual)",
+        "20:03 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BERLIN",
+        "21:43 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA",
+        "23:23 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DONJUANA (Virtual)",
+        "01:03 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS PATIOS (N SANT) (Virtual)",
+        "02:43 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "04:23 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "06:03 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Ver recorrido del vehículo"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "+\n−\ni"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MUTISCUA",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE MUTISCUA SIN NOVEDAD",
+        "17:09 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BERLIN",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCUENTRA\nEN TRANSITO LLEGANDO A BERLIN SIN NOVEDAD",
+        "15:20 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42396&opcion=1"
+}

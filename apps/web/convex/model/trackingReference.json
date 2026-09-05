@@ -1,0 +1,2214 @@
+{
+  "incidents": [
+    {
+      "code": "20072",
+      "name": "A cargo Empresa",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "7",
+      "name": "Alimentacion",
+      "generatesAlert": true,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20131",
+      "name": "ALIMENTACION",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "10",
+      "name": "Bloqueo de Via",
+      "generatesAlert": true,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20109",
+      "name": "Bodega FIN DESCARGUE CON NOVEDAD",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20129",
+      "name": "Bodega FIN DESCARGUE SIN NOVEDAD",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20107",
+      "name": "Bodega INICIA CARGUE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20081",
+      "name": "Bodega Inicia DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20125",
+      "name": "Bodega PENDIENTE CARGUE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20130",
+      "name": "Bodega PENDIENTE DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20102",
+      "name": "Bodega Proceso CARGUE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20103",
+      "name": "Bodega Proceso DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20079",
+      "name": "BODEGA PROCESO DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20080",
+      "name": "CAMBIO  DE RUTA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20095",
+      "name": "Cambio Cabezote",
+      "generatesAlert": true,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20085",
+      "name": "Cambio de CONDUCTOR",
+      "generatesAlert": true,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "17",
+      "name": "Cambio de Ruta",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20101",
+      "name": "CAMBIO DE RUTA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9997",
+      "name": "CAMBIO DE RUTA",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20127",
+      "name": "Cambio GPS",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20073",
+      "name": "CARGADO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20076",
+      "name": "CELULAR SIN SEÑAL",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20096",
+      "name": "CLIENTE CAMBIA CELULAR CONDUCTOR",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "1003",
+      "name": "Comentario",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "20088",
+      "name": "COMENTARIO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20133",
+      "name": "COMPARENDO SOBREPESO",
+      "generatesAlert": true,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20082",
+      "name": "Conductor Cambia CELULAR",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20069",
+      "name": "Continua NO Comunicación",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20112",
+      "name": "DATO GPS",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20123",
+      "name": "DESCARGANDO(ST)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20132",
+      "name": "DESVIO DE RUTA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20094",
+      "name": "EAL (REPORTE TELEFONICO)",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20115",
+      "name": "EN ESPERA DE CARGUE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20074",
+      "name": "EN ESPERA DE DOCUMENTOS",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20110",
+      "name": "ENTURNO PARA DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20114",
+      "name": "FIN PERNOCTACION",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20113",
+      "name": "GPS (MA)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "13",
+      "name": "Hurto",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20120",
+      "name": "INCUMPLIMIENTO PROCEDIMIENTO EAL",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20077",
+      "name": "Información Especial",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20068",
+      "name": "Inicia Pernoctación Extensa",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20121",
+      "name": "INICIA TRAYECTO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20135",
+      "name": "INICIO DE RUTA (ST)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20136",
+      "name": "INICIO RUTA",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9261",
+      "name": "INT GPS -  ENTRADA CARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9176",
+      "name": "INT GPS - ACELERACION BRUSCA",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9265",
+      "name": "INT GPS - APROXIMACION A  DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9172",
+      "name": "INT GPS - APROXIMACION A ZONA DE CARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9110",
+      "name": "INT GPS - BOTON DE PANICO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "9275",
+      "name": "INT GPS - DESTINATARIO NO GEORREFERENCIADO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9264",
+      "name": "INT GPS - ENTRADA AL CLIENTE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9208",
+      "name": "INT GPS - EQUIPO APAGADO ",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "9226",
+      "name": "INT GPS - ERROR DATOS EN INTEGRADOR",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "9273",
+      "name": "INT GPS - ERROR DE INTEGRAGRACION (CLAVE Y/O USUARIO INCORRECTO)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "9116",
+      "name": "INT GPS - EXCESO DE VELOCIDAD",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9111",
+      "name": "INT GPS - FINALIZACION BOTON DE PANICO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9130",
+      "name": "INT GPS - FINALIZACION DE ITINERARIO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9177",
+      "name": "INT GPS - FRENADA BRUSCA ",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9129",
+      "name": "INT GPS - INICIO DE ITINERARIO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9260",
+      "name": "INT GPS - LLEGADA A LA PLANTA ",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9263",
+      "name": "INT GPS - LLEGADA AL CLIENTE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9274",
+      "name": "INT GPS - OPERADOR GPS NO HOMOLOGADO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9266",
+      "name": "INT GPS - PASO POR OAL",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9267",
+      "name": "INT GPS - PASO POR PEAJE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9183",
+      "name": "INT GPS - POR  DEFINIR",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9117",
+      "name": "INT GPS - POR DEFINIR",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9268",
+      "name": "INT GPS - REPORTA INICIO  DE RUTA",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9173",
+      "name": "INT GPS - SALIDA DE CARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9262",
+      "name": "INT GPS - SALIDA DE PLANTA",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9271",
+      "name": "INT GPS - SALIDA DE ZONA DE DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9270",
+      "name": "INT GPS - SEGUIMIENTO A LA CITA DE CARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9269",
+      "name": "INT GPS - SEGUIMIENTO A LA CITA DE DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9169",
+      "name": "INT GPS - SIN SENAL DISPOSITIVO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9160",
+      "name": "INT GPS - SOLICITUD DE UBICACIÃ“N",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9114",
+      "name": "INT GPS - VEHICULO APAGADO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9113",
+      "name": "INT GPS - VEHICULO ENCENDIDO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9225",
+      "name": "INT GPS - VH ENCENDIDO POR MAS TIEMPO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9272",
+      "name": "INT GPS - VIAJE SIN OPERADOR GPS",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "9145",
+      "name": "INT GPS -REPORTA DESVIÃ“ DE RUTA",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20090",
+      "name": "L&T - NO COMUNICACION ",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9027",
+      "name": "NC - CONDUCTOR REPORTA FIN  DE CARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9026",
+      "name": "NC - CONDUCTOR REPORTA INGRESO A CARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9023",
+      "name": "NC - CONDUCTOR REPORTA INICIO DE CARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9021",
+      "name": "NC - CONDUCTOR REPORTA LLEGADA A CARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9024",
+      "name": "NC - CONDUCTOR REPORTA SALIDA DE CARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9020",
+      "name": "NCD - CONDUCTOR REPORTA CUMPLIDO DE REMISIÃ“N (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20124",
+      "name": "NCD / OK.CUMPLIMIENTO DE CITA DE DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20104",
+      "name": "ND / LUGAR DE ENTREGA ENTURNADO PARA DESCARGAR",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20116",
+      "name": "ND / OK - VEHICULO DESCARGA SIN NOVEDAD ",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20014",
+      "name": "NEC / CANCELACIÃ“N DE VIAJE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20016",
+      "name": "NEC / DAÃ‘O EN VEHICULO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20019",
+      "name": "NEC / DEMORA EN CARGUE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20020",
+      "name": "NEC / MAYOR CANTIDAD DE CLIENTES A LO CONTRATADO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20015",
+      "name": "NEC / NO COMUNICACIÃ“N",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20018",
+      "name": "NEC / PENDIENTE CONSIGNACION ANTICIPO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20017",
+      "name": "NEC / SIN AUTORIZACIÃ“N DE INGRESO A PLANTA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20058",
+      "name": "NEC / SOLICITUD PAGO STAND BY",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9030",
+      "name": "NED - CONDUCTOR REPORTA FIN  DE DESCARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9028",
+      "name": "NED - CONDUCTOR REPORTA INGRESO A DESCARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9029",
+      "name": "NED - CONDUCTOR REPORTA INICIO DE DESCARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9011",
+      "name": "NED - CONDUCTOR REPORTA LLEGADA A DESCARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9013",
+      "name": "NED - CONDUCTOR REPORTA SALIDA DE DESCARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9017",
+      "name": "NED - REPORTA DESCARGUE CON AVERIA (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9015",
+      "name": "NED - REPORTA DESCARGUE CON DEVOLUCION (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9016",
+      "name": "NED - REPORTA DESCARGUE CON FALTANTE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9014",
+      "name": "NED - REPORTA DESCARGUE SIN NOVEDAD (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9012",
+      "name": "NED - REPORTA NOVEDAD EN DESCARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9018",
+      "name": "NED - REPORTA OTRA (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "20056",
+      "name": "NED / COMPARENDO ZONA AMARILLA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20046",
+      "name": "NED / DEMORA EN RECIBO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20061",
+      "name": "NED / DEVOLUCION POR ESTIBAS VACIASÂ ",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20045",
+      "name": "NED / DEVOLUCION-INCONSISTENCIAS EN LAS FACTURAS VS FISICO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20042",
+      "name": "NED / DEVOLUCION-INCUMPLIMIENTO FECHA Y/O HORA DE ENTREGA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20044",
+      "name": "NED / DEVOLUCION-MERCANCIA POR IMPERFECTOS DE FABRICA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20043",
+      "name": "NED / DEVOLUCION-MERCANCIA POR ROTURA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20047",
+      "name": "NED / DEVOLUCION-NOVEDAD EN EMPAQUE Y/O EMBALAJE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20048",
+      "name": "NED / DEVOLUCION-PEDIDO NO SOLICITADO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20049",
+      "name": "NED / DEVOLUCION-POR NOVEDAD EN RECIBO EN EL CLIENTE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20050",
+      "name": "NED / FACTURA FUERA DE ALIANZA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20063",
+      "name": "NED / FALTA DE CORREO DE AUTORIZACION DE RECIBO DE MERCANCIAÂ ",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20051",
+      "name": "NED / MAYOR VALOR EN DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20060",
+      "name": "NED / MERCANCIA EN PLATAFORMA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20052",
+      "name": "NED / NO RECIBO-ORDEN DE COMPRA VENCIDAS",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20053",
+      "name": "NED / NOVEDAD EN DOCUMENTOS",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20059",
+      "name": "NED / PAGO STAND BY ( SOBRECOSTOS PENDIENTES) ",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20062",
+      "name": "NED / RETORNO DE DEVOLUCIONÂ ",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20054",
+      "name": "NED / VALIDAR DIRECCION DE ENTREGA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20055",
+      "name": "NED / ZONA DE DIFICIL ACCESO PARA EL DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9004",
+      "name": "NEP - REPORTA NOVEDAD EN CARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9005",
+      "name": "NER - REPORTA ACCIDENTE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9009",
+      "name": "NER - REPORTA HURTO (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9010",
+      "name": "NER - REPORTA OTRA (MOVIL) ",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9007",
+      "name": "NER - REPORTA TRANCON (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9006",
+      "name": "NER - REPORTA VARADA (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "20039",
+      "name": "NER / ACCIDENTE EN RUTA - CHOQUE BAJO IMPACTO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20024",
+      "name": "NER / ACCIDENTE EN RUTA - NOVEDAD ALTO IMPACTO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20037",
+      "name": "NER / ACCIDENTE EN RUTA - NOVEDAD ALTO IMPACTO FATAL",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20034",
+      "name": "NER / CALAMIDAD DOMESTICA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20036",
+      "name": "NER / COMPARENDO DOCUMENTOS",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20022",
+      "name": "NER / COMPARENDO SOBREPESO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20027",
+      "name": "NER / HURTO-SAQUEO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20033",
+      "name": "NER / INCUMPLIMIENTO PLAN DE VIAJE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20025",
+      "name": "NER / INFRACCIONES AL CODIGO NACIONAL DE TRANSITO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20040",
+      "name": "NER / INSPECCION ANTINARCOTICOS",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20026",
+      "name": "NER / NO COMUNICACION (GC)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20038",
+      "name": "NER / PENDIENTE CONSIGNACION ANTICIPO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20021",
+      "name": "NER / PROBLEMAS EN LA VIA - EXTERNA PARO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20035",
+      "name": "NER / PROBLEMAS EN LA VIA ALTO IMPACTO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20031",
+      "name": "NER / PROBLEMAS EN LA VIA BAJO IMPACTO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20032",
+      "name": "NER / PUESTOS DE CONTROL POR ORGANISMOS DEL ESTADO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20041",
+      "name": "NER / REPROGRAMACION DE CITA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20023",
+      "name": "NER / VARADO ALTO IMPACTO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20028",
+      "name": "NER / VARADO BAJO IMPACTO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20029",
+      "name": "NER / VEHICULO EN OPERATIVO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9000",
+      "name": "NICC - REPORTA ACCIDENTE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9022",
+      "name": "NICC - REPORTA LLEGADA AL CARGUE (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9003",
+      "name": "NICC - REPORTA OTRA (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9002",
+      "name": "NICC - REPORTA TRANCON (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9001",
+      "name": "NICC - REPORTA VARADA (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "20008",
+      "name": "NICC / CALAMIDAD DOMESTICA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20013",
+      "name": "NICC / COLISIÃ“N",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20012",
+      "name": "NICC / DEMORA ENTREGA DE CONTENEDOR",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20007",
+      "name": "NICC / DESCARGANDO VIAJE ANTERIOR",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20011",
+      "name": "NICC / IMPREVISTOS EN LA VIA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20057",
+      "name": "NICC / INCIDENTES APP CONTRATACION",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20006",
+      "name": "NICC / INCONSISTENCIAS EN LA CONTRATACIÃ“N",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20001",
+      "name": "NICC / NO COMUNICACIÃ“N",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20004",
+      "name": "NICC / PLANILLANDO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20005",
+      "name": "NICC / SIN JUSTIFICACION DEL CONDUCTOR",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20003",
+      "name": "NICC / TRANSPORTADOR SIN SEGURIDAD SOCIAL AL DÃA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20002",
+      "name": "NICC / VEHÃCULO CONFIRMADO SIN 3 HORAS DE ANTICIPACIÃ“N",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20009",
+      "name": "NICC / VEHÃCULO EN MANTENIMIENTO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20010",
+      "name": "NICC / VEHICULO BLOQUEADO EN PARQUEADERO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20000",
+      "name": "NICC / VEHICULO Y CONDUCTOR NO CUMPLEN CON LAS CONDICIONES PARA EL CARGUE",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20065",
+      "name": "No comunicación",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "1000",
+      "name": "No Comunicacion",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "20093",
+      "name": "NO COMUNICACION L&T",
+      "generatesAlert": true,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20071",
+      "name": "NOTIFICACION A LA TRANSPORTADORA",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20117",
+      "name": "NOVEDAD EN DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "2",
+      "name": "Ok",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20098",
+      "name": "OK > (EAL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20128",
+      "name": "OK EAL SIN NOVEDAD (CORREO)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "10058",
+      "name": "Ok Vehiculo sin novedad",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20089",
+      "name": "OK-No Despacho en Limpio",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20067",
+      "name": "OK-novedad especial",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20122",
+      "name": "Parado por ACCIDENTE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "5",
+      "name": "Parqueadero",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "6",
+      "name": "Pernoctacion",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "1004",
+      "name": "Pernoctacion",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "16",
+      "name": "Pinchada",
+      "generatesAlert": true,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "8",
+      "name": "Reinicio",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9025",
+      "name": "REINICIO RUTA (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "9103",
+      "name": "REPORTA FIN DE CARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9108",
+      "name": "REPORTA FIN DE DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9101",
+      "name": "REPORTA INGRESO A CARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9106",
+      "name": "REPORTA INGRESO A DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9102",
+      "name": "REPORTA INICIO DE CARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9107",
+      "name": "REPORTA INICIO DE DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9100",
+      "name": "REPORTA LLEGADA AL CARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9105",
+      "name": "REPORTA LLEGADA AL DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9008",
+      "name": "REPORTA PERNOCTACIÃ“N (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20119",
+      "name": "REPORTA PUESTO DE CONTROL",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9104",
+      "name": "REPORTA SALIDA DEL CARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9109",
+      "name": "REPORTA SALIDA DEL DESCARGUE",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": true
+    },
+    {
+      "code": "9019",
+      "name": "REPORTA UBICACION SIN NOVEDAD (MOVIL)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20105",
+      "name": "REPORTA VARADA",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20091",
+      "name": "RESTRICCION VEHICULAR",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "11",
+      "name": "Reten Dian",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "14",
+      "name": "Reten Militar",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "15",
+      "name": "Reten Policia Carreteras",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "3",
+      "name": "Retrasado",
+      "generatesAlert": true,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": true
+    },
+    {
+      "code": "20064",
+      "name": "RETRASADO (GA) (ST)",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "12",
+      "name": "Saqueo",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "10031",
+      "name": "SEGUIMIENTO EN RUTA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20030",
+      "name": "SEGUIMIENTO EN RUTA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20070",
+      "name": "TIEMPO ADICIONAL",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "1002",
+      "name": "Tiempo de Llegada P/C",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20066",
+      "name": "Tiempo Llegada P/C",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20087",
+      "name": "Ubicacion por GPS",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20078",
+      "name": "UBICACION SATELITAL",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9",
+      "name": "Varada",
+      "generatesAlert": true,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "1001",
+      "name": "Varado",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20099",
+      "name": "VEHICULO ACCIDENTADO",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20092",
+      "name": "VEHICULO CARGANDO ",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "10003",
+      "name": "VEHÍCULO CONFIRMADO CON DATOS ERRADOS",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": true,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20106",
+      "name": "VEHICULO DEMORA EN SALIDA",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20111",
+      "name": "VEHICULO DEMORA EN SALIDA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20084",
+      "name": "Vehiculo en OPERATIVO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20108",
+      "name": "Vehiculo en PARQUEADERO CARGADO",
+      "generatesAlert": true,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20100",
+      "name": "Vehiculo en TRANCON",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20118",
+      "name": "Vehiculo HURTADO",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20126",
+      "name": "Vehiculo OPERATIVO PREVENTIVO",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20075",
+      "name": "Vehiculo PENDIENTE POR REPORTE",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20083",
+      "name": "VEHICULO REPORTA  FALLA MECANICA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "10059",
+      "name": "Vehiculo SAQUEADO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20134",
+      "name": "Vehiculo TRANSBORDA",
+      "generatesAlert": false,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "20086",
+      "name": "Vehiculo VARADO",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "20097",
+      "name": "VIAJE NO REALIZADO",
+      "generatesAlert": true,
+      "requestsTime": false,
+      "special": true,
+      "maintainsAlarm": true,
+      "selectable": false
+    },
+    {
+      "code": "4",
+      "name": "Volcamiento",
+      "generatesAlert": true,
+      "requestsTime": true,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "1",
+      "name": "Tiempo Llegada P/C",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9998",
+      "name": "Robo (Mintra)",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    },
+    {
+      "code": "9999",
+      "name": "Inicia PERNOCTACION",
+      "generatesAlert": false,
+      "requestsTime": false,
+      "special": false,
+      "maintainsAlarm": false,
+      "selectable": false
+    }
+  ],
+  "alarms": [
+    {
+      "code": "5",
+      "name": "Salida",
+      "minutes": 1,
+      "color": "33FF99"
+    },
+    {
+      "code": "1",
+      "name": "Amarillo",
+      "minutes": 30,
+      "color": "FFFF00"
+    },
+    {
+      "code": "3",
+      "name": "Naranja",
+      "minutes": 60,
+      "color": "FF6600"
+    },
+    {
+      "code": "2",
+      "name": "Rojo",
+      "minutes": 90,
+      "color": "FF0000"
+    },
+    {
+      "code": "4",
+      "name": "Violeta",
+      "minutes": 120,
+      "color": "9933FF"
+    }
+  ]
+}

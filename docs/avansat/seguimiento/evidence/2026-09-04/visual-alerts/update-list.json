@@ -1,0 +1,118 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": "volver",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "volver"
+    }
+  ],
+  "links": [
+    {
+      "href": "index.php?cod_servic=3216&window=central&alarma=5&opcion=1 ",
+      "target": "centralFrame",
+      "text": "5"
+    },
+    {
+      "href": "index.php?cod_servic=3216&window=central&alarma=1&opcion=1 ",
+      "target": "centralFrame",
+      "text": "1"
+    },
+    {
+      "href": "index.php?cod_servic=3216&window=central&alarma=3&opcion=1 ",
+      "target": "centralFrame",
+      "text": "3"
+    },
+    {
+      "href": "index.php?cod_servic=3216&window=central&alarma=2&opcion=1 ",
+      "target": "centralFrame",
+      "text": "2"
+    },
+    {
+      "href": "index.php?cod_servic=3216&window=central&alarma=4&opcion=1 ",
+      "target": "centralFrame",
+      "text": "4"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Configuracion > Alertas Visuales > Actualizar"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Listar Alarmas"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Se Encontraron 5 Alarmas"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Codigo Alarma",
+        "Nombre",
+        "Tiempo de Alarma"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "5",
+        "Salida",
+        "1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "1",
+        "Amarillo",
+        "30"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "3",
+        "Naranja",
+        "60"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "2",
+        "Rojo",
+        "90"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "4",
+        "Violeta",
+        "120"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Configuracion > Alertas Visuales > Actualizar"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?window=central&cod_servic=3216"
+}

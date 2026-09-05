@@ -1,0 +1,72 @@
+{
+  "before": [
+    {
+      "disabled": false,
+      "maxLength": 10,
+      "name": "nom_ala",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "PRUEBA"
+    },
+    {
+      "disabled": false,
+      "maxLength": 3,
+      "name": "tiempo",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "25"
+    },
+    {
+      "disabled": false,
+      "maxLength": 7,
+      "name": "color",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "FF0000"
+    }
+  ],
+  "after": [
+    {
+      "disabled": false,
+      "maxLength": 10,
+      "name": "nom_ala",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "maxLength": 3,
+      "name": "tiempo",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "maxLength": 7,
+      "name": "color",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": ""
+    }
+  ]
+}

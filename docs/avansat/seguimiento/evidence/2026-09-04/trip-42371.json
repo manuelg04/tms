@@ -1,0 +1,757 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42371&opcion=2&codpc=166&pc=GIRON&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GIRON"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42371&opcion=2&codpc=10515&pc=LUGAR DE ENTREGA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR DE ENTREGA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42371&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42371",
+        "Origen",
+        "SANTA MARTA (Magd)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043344",
+        "Destino",
+        "GIRON (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "NICOLL TATIANA",
+        "Ruta",
+        "992 - SANTA MARTA (Magd) - 47001000 - GIRON (Sant) - 68307000 VIA FUNDACION"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "OVALLOS HANNER LEONARDO",
+        "Fecha Salida",
+        "08:40 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "18:55 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 08:40:38"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "UYA326"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "INTERNATIONAL",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "9400",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "VINO TINTO",
+        "Modelo",
+        "2006"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SANTA MARTA",
+        "",
+        "09:02 03-09-2026",
+        "22Min(s)",
+        "Retrasado",
+        "09:02 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RIOFRIO",
+        "",
+        "12:19 03-09-2026",
+        "197Min(s)",
+        "Ok",
+        "12:20 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUCURINCA",
+        "",
+        "13:09 03-09-2026",
+        "49Min(s)",
+        "Ok",
+        "13:10 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CARACOLICITO",
+        "",
+        "14:22 03-09-2026",
+        "73Min(s)",
+        "Ok",
+        "14:23 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSCONIA",
+        "",
+        "15:17 03-09-2026",
+        "54Min(s)",
+        "Retrasado",
+        "15:17 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE LA LOMA",
+        "",
+        "16:15 03-09-2026",
+        "57Min(s)",
+        "Ok",
+        "16:15 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LOMA",
+        "",
+        "16:59 03-09-2026",
+        "44Min(s)",
+        "Ok",
+        "16:59 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA AURORA",
+        "",
+        "17:47 03-09-2026",
+        "47Min(s)",
+        "Ok",
+        "17:47 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CURUMANI",
+        "",
+        "18:29 03-09-2026",
+        "41Min(s)",
+        "Ok",
+        "18:29 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAILITAS",
+        "",
+        "19:27 03-09-2026",
+        "58Min(s)",
+        "Ok",
+        "19:27 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA FLORESTA",
+        "",
+        "20:00 03-09-2026",
+        "33Min(s)",
+        "Ok",
+        "20:00 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "NOREAN",
+        "",
+        "20:48 03-09-2026",
+        "49Min(s)",
+        "Ok",
+        "20:50 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "NOREAN",
+        "",
+        "20:51 03-09-2026",
+        "1Min(s)",
+        "Ok",
+        "20:51 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN MARTIN",
+        "",
+        "21:50 03-09-2026",
+        "59Min(s)",
+        "Ok",
+        "21:51 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBERTO",
+        "",
+        "23:39 03-09-2026",
+        "108Min(s)",
+        "Retrasado",
+        "23:39 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBERTO",
+        "",
+        "03:37 04-09-2026",
+        "238Min(s)",
+        "Retrasado",
+        "03:37 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA ESPERANZA",
+        "",
+        "06:02 04-09-2026",
+        "144Min(s)",
+        "Ok",
+        "06:02 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BETANIA",
+        "",
+        "06:40 04-09-2026",
+        "37Min(s)",
+        "Ok",
+        "06:40 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL PLAYON",
+        "",
+        "07:39 04-09-2026",
+        "59Min(s)",
+        "Ok",
+        "07:39 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "08:37 04-09-2026",
+        "57Min(s)",
+        "Ok",
+        "08:37 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRON",
+        "",
+        "09:46 04-09-2026",
+        "69Min(s)",
+        "Retrasado",
+        "09:47 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRON",
+        "",
+        "13:21 04-09-2026",
+        "215Min(s)",
+        "Retrasado",
+        "13:22 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRON",
+        "",
+        "15:14 04-09-2026",
+        "112Min(s)",
+        "Retrasado",
+        "15:15 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRON",
+        "18:30 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR DE ENTREGA (Virtual) (Virtual)",
+        "18:35 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "18:55 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRON",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA DESCARGO PENDIENTE DE\nQUE ENVIE FOTO DE LOS CUMPLIDOS",
+        "15:14 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRON",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN ITALCOL PENDIENTE\nCONFIRMAR DESCARGUE CEL/NO CONTESTA",
+        "13:21 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRON",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN ITALCOL\nESPERANDO A QUE SEA LA HORA DE LA CITA DE DESCARGUE\nYA QUE ES A LAS 11:00AM",
+        "09:46 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Ok",
+        "VEHICULO SE ENCUENTRA EN TRANSITO LLEGANDO A BUCARAMANGA\nSIN NOVEDAD",
+        "08:37 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL PLAYON",
+        "Ok",
+        "VEH EN RUTA PASO EL PLAYON SIN NOVEDAD",
+        "07:39 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BETANIA",
+        "Ok",
+        "VEH EN RUTA EN VIA BETANIA SIN NOVEDAD",
+        "06:40 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA ESPERANZA",
+        "Ok",
+        "VEH EN RUTA PASO LA ESPERANZA CEL/ ESTA EN RUTA SIN\nNOVEDAD CONFIRMA UBICACION",
+        "06:02 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBERTO",
+        "Retrasado",
+        "VEH EN EDS DAGOLA DELANTE DE SAN ALBERTO PEND REINICIO DE\nRUTA WP/ PEND RESP",
+        "03:37 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBERTO",
+        "Retrasado",
+        "VEH EN EDS DAGOLA DELANTE DE SAN ALBERTO PEND REINICIO\nDE RUTA WP/ PEND RESP",
+        "23:39 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN MARTIN",
+        "Ok",
+        "VEH EN RUTA POR SAN MARTIN SIN NOVEDAD",
+        "21:50 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "NOREAN",
+        "Ok",
+        "VEH EN RUTA EN VIA NOREAN CEL/MANIFIESTA TODO OK\nSIN NOVEDAD, CONFIRMA UBICACION",
+        "20:51 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "NOREAN",
+        "Ok",
+        "VEH EN RUTA EN VIA NOREAN CEL/CONTESTA PERO SE CAE\nLA LLAMADA POR LA SEÑAL - PEND RTA WPP",
+        "20:48 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA FLORESTA",
+        "Ok",
+        "VEH EN RUTA DELANTE DE LA FLORESTA SIN NOVEDAD",
+        "20:00 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAILITAS",
+        "Ok",
+        "VEH EN RUTA POR PAILITAS SIN NOVEDAD",
+        "19:27 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CURUMANI",
+        "Ok",
+        "VEH EN RUTA EN VIA CURUMANI SIN NOVEDAD",
+        "18:29 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA AURORA",
+        "Ok",
+        "VEH EN RUTA EN VIA LA AURORA SIN NOVEDAD",
+        "17:47 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LOMA",
+        "Ok",
+        "VEH ESTACIONADO EN LA LOMA CEL/ MANIFIESTA ESTA ECHANDOLE\nAIRE A LAS LLANTAS PARA CONTINUAR RUTA",
+        "16:59 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE LA LOMA",
+        "Ok",
+        "VEH EN RUTA POR EL PEAJE LA LOMA SIN NOVEDAD",
+        "16:15 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSCONIA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA EN TRANSITO\nPOR BOSCONIA SIN NOVEDAD",
+        "15:17 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CARACOLICITO",
+        "Ok",
+        "VEHICULO SE ENCEUNTRA EN TRANSITO POR CARACOLICITO\nSIN NOVEDAD",
+        "14:22 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUCURINCA",
+        "Ok",
+        "VEHICULO SE ENCEUNTRA EN RUTA POR TUCURINCA TODO OK\nSIN NOVEDAD",
+        "13:09 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RIOFRIO",
+        "Ok",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCEUNTRA\nEN TRANSITO POR RIOFRIO SIN NOVEDAD",
+        "12:19 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SANTA MARTA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE DIRIGE AL PUERTO A CARGAR\nYA QUE TIENE CITA DE CARGUE A LAS 9:40AM",
+        "09:02 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42371&opcion=1"
+}

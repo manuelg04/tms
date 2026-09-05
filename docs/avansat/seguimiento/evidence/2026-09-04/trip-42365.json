@@ -1,0 +1,681 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42365&opcion=2&codpc=27&pc=EL PLAYON  (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "EL PLAYON (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42365&opcion=2&codpc=28&pc=SAN ALBERTO  (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN ALBERTO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42365&opcion=2&codpc=156&pc=AGUACHICA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "AGUACHICA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42365&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42365&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42365",
+        "Origen",
+        "PAMPLONA (Nort)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043337",
+        "Destino",
+        "AGUACHICA (Cesa)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "WILSON",
+        "Ruta",
+        "3610 - PAMPLONA (Nort) - 54518000 - AGUACHICA (Cesa) - 20011000 VIA CESAR"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "ARIZA ANDERSON",
+        "Fecha Salida",
+        "16:07 02-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "22:47 02-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-02 16:07:18"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "TLX937"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800B",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "BLANCO",
+        "Modelo",
+        "2013"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA",
+        "",
+        "16:10 02-09-2026",
+        "4Min(s)",
+        "Retrasado",
+        "16:11 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS PATIOS",
+        "",
+        "19:00 02-09-2026",
+        "170Min(s)",
+        "Retrasado",
+        "19:01 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL ZULIA",
+        "",
+        "21:59 02-09-2026",
+        "177Min(s)",
+        "Pernoctacion",
+        "21:59 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL ZULIA",
+        "",
+        "00:53 03-09-2026",
+        "175Min(s)",
+        "Pernoctacion",
+        "00:54 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL ZULIA",
+        "",
+        "04:52 03-09-2026",
+        "237Min(s)",
+        "Retrasado",
+        "04:52 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL LIBANO",
+        "",
+        "08:43 03-09-2026",
+        "231Min(s)",
+        "Retrasado",
+        "08:44 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BALSAMINA",
+        "",
+        "10:48 03-09-2026",
+        "124Min(s)",
+        "Retrasado",
+        "10:48 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA CURVA",
+        "",
+        "13:02 03-09-2026",
+        "133Min(s)",
+        "Retrasado",
+        "13:02 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ABREGO",
+        "",
+        "15:16 03-09-2026",
+        "134Min(s)",
+        "Retrasado",
+        "15:17 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "OCAÑA",
+        "",
+        "16:36 03-09-2026",
+        "80Min(s)",
+        "Retrasado",
+        "16:37 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "19:15 03-09-2026",
+        "159Min(s)",
+        "Pernoctacion",
+        "19:16 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO MOSQUITO",
+        "",
+        "20:55 03-09-2026",
+        "99Min(s)",
+        "Retrasado",
+        "20:56 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "23:41 03-09-2026",
+        "165Min(s)",
+        "Retrasado",
+        "23:42 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "04:05 04-09-2026",
+        "263Min(s)",
+        "Retrasado",
+        "04:05 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "07:09 04-09-2026",
+        "183Min(s)",
+        "Retrasado",
+        "07:09 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "10:55 04-09-2026",
+        "225Min(s)",
+        "Retrasado",
+        "10:55 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "14:22 04-09-2026",
+        "207Min(s)",
+        "Retrasado",
+        "14:22 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "17:25 04-09-2026",
+        "182Min(s)",
+        "Retrasado",
+        "17:25 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL PLAYON (Virtual)",
+        "17:27 02-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBERTO (Virtual)",
+        "17:37 02-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "17:47 02-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "21:57 02-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "22:47 02-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN PATIO BUTURAMA\nEN AGUACHICA - PEND ENTREGA",
+        "17:25 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN PATIO BUTURAMA PENDINETE CONFIRMAR\nDESCARGUE CEL/NO CONTESTA PENDIENTE DE RESPUESTA POR\nWHATSAP",
+        "14:22 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN PATIO BUTURAMA PENDINETE\nCONFIRMAR DESCARGUE CEL/NO CONTESTA",
+        "10:55 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH EN PTO BUTURAMA-AGUACHICA PEND ENTREGA",
+        "07:09 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH EN PTO BUTURAMA-AGUACHICA PEND ENTREGA",
+        "04:05 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH EN PTO BUTURAMA-AGUACHICA PEND ENTREGA",
+        "23:41 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO MOSQUITO",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PUERTO MOSQUITO SIN NOVEDAD",
+        "20:55 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO DELANTE DE AGUACHICA CEL/ MANIFIESTA\nESTA HACIENDO FILA PARA ENTRAR A LA VIA QUE CONDUCE\nA PUERTO MOSQUITO - PEND REINICIO DE RUTA",
+        "19:15 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "OCAÑA",
+        "Retrasado",
+        "VEH EN RUTA SALIENDO DE OCAÑA SIN NOVEDAD",
+        "16:36 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ABREGO",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN TRANSITO\nLLEGANDO A ABREGO SIN NOVEDAD",
+        "15:16 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA CURVA",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA EN RUTA POR LA CURVA SIN NOVEDAD",
+        "13:02 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BALSAMINA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO MAS ADELANTE DE\nBALSAMINA SIN NOVEDAD",
+        "10:48 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL LIBANO",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA EN TRANSITO POR EL LIBANO SIN\nNOVEDAD",
+        "08:43 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL ZULIA",
+        "Retrasado",
+        "VEH ESTACIONADO EN EDS LOS SANCHEZ (Coomulpinor) DELANTE\nDE EL ZULIA PEND REINICIO DE RUTA",
+        "04:52 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL ZULIA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN EDS LOS SANCHEZ (Coomulpinor) DELANTE DE\nEL ZULIA CEL/ MANIFIESTA PERNOCTA AHI, REINICIA JUEVES\nEN LA MAÑANA CUANDO SE DESPIERTE",
+        "00:53 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL ZULIA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN EDS LOS SANCHEZ (Coomulpinor) DELANTE\nDE EL ZULIA CEL/ MANIFIESTA PERNOCTA AHI, REINICIA\nJUEVES EN LA MAÑANA CUANDO SE DESPIERTE",
+        "21:59 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS PATIOS",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE LOS PATIOS SIN NOVEDAD",
+        "19:00 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA",
+        "Retrasado",
+        "VEH ESTACIONADO EN PAMPLONA CEL/ MANIFIESTA YA CARGO,\nESTA ESPERANDO QUE LO ENCARPEN PARA INICIAR RUTA",
+        "16:10 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42365&opcion=1"
+}

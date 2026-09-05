@@ -1,0 +1,665 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    }
+  ],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10089&pc=BARRANQUILLA ® (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BARRANQUILLA ® (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10030&pc=CIENAGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CIENAGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10087&pc=SEVILLA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SEVILLA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10029&pc=ARACATACA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ARACATACA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10028&pc=FUNDACION (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "FUNDACION (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10084&pc=EL COPEY  (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "EL COPEY (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10061&pc=BOSCONIA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BOSCONIA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10082&pc=CUATROVIENTOS (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CUATROVIENTOS (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10025&pc=CURUMANI (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CURUMANI (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10058&pc=PAILITAS (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PAILITAS (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10024&pc=PELAYA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PELAYA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10078&pc=LA MATA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA MATA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10077&pc=AGUACHICA  (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "AGUACHICA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10017&pc=SAN MARTIN(Ces) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN MARTIN(Ces) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10257&pc=SAN ALBERTO (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN ALBERTO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10901&pc=EL PLAYON (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "EL PLAYON (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10045&pc=RIO NEGRO (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "RIO NEGRO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10033&pc=BUCARAMANGA (Sant) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BUCARAMANGA (Sant) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42397&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    },
+    {
+      "href": "http://www.openstreetmap.org/copyright",
+      "target": null,
+      "text": "OpenStreetMap"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42397",
+        "Origen",
+        "BARRANQUILLA (Atla)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043376",
+        "Destino",
+        "BUCARAMANGA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "JORGE",
+        "Ruta",
+        "47280 - BARRANQUILLA (Atla) - Col - 8001000 - BUCARAMANGA (Sant) - Col - 68001000 VIA EL COPEY...1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "ACELAS GERMAN",
+        "Fecha Salida",
+        "15:04 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "91218062",
+        "Fecha Planeada Llegada",
+        "07:12 05-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-04 11:57:25"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "XVW015"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "INTERNATIONAL",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "9400",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AZUL",
+        "Modelo",
+        "2008"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 137.17 M. DE CL 1F CON KR 38 (BARRANQUILLA, ATLANTICO).",
+        "",
+        "15:27 04-09-2026",
+        "23Min(s)",
+        "GPS",
+        "15:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "",
+        "15:25 04-09-2026",
+        "1Min(s)",
+        "Retrasado",
+        "15:28 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CL 2 CONKR 7 (BARRANQUILLA, ATLANTICO).",
+        "",
+        "16:27 04-09-2026",
+        "58Min(s)",
+        "GPS",
+        "16:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 52.44 M. DE KR 4 CON CL 2 (BARRANQUILLA, ATLANTICO).",
+        "",
+        "17:27 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "17:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "",
+        "17:48 04-09-2026",
+        "26Min(s)",
+        "Retrasado",
+        "17:53 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA ® (Virtual)",
+        "15:44 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CIENAGA (Virtual)",
+        "17:29 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SEVILLA (Virtual) (Virtual)",
+        "18:14 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ARACATACA (Virtual)",
+        "19:29 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUNDACION (Virtual) (Virtual)",
+        "19:44 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL COPEY (Virtual) (Virtual)",
+        "20:50 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSCONIA (Virtual)",
+        "21:21 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUATROVIENTOS (Virtual)",
+        "22:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CURUMANI (Virtual)",
+        "23:59 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAILITAS (Virtual) (Virtual)",
+        "00:44 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PELAYA (Virtual) (Virtual)",
+        "01:34 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA MATA (Virtual) (Virtual)",
+        "01:44 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA (Virtual) (Virtual)",
+        "02:44 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN MARTIN(Ces) (Virtual)",
+        "03:19 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBERTO (Virtual)",
+        "04:26 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL PLAYON (Virtual)",
+        "05:34 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RIO NEGRO (Virtual)",
+        "06:18 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA (Sant) (Virtual)",
+        "06:42 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "07:12 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Ver recorrido del vehículo"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "+\n−\ni"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "Retrasado",
+        "VEH ESTACIONADO EN CRA 4 CALLE 5 EN BARRANQUILLA -\nPEND CARGUE",
+        "17:48 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN PORTERIA\nA LA ESPERA DE QUE LE DEN CITA DE CARGUE",
+        "15:25 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42397&opcion=1"
+}

@@ -1,0 +1,632 @@
+{
+  "verifiedAt": "2026-09-04T23:28:30.376586+00:00",
+  "scope": "Documentation and source UI capture only",
+  "tripDetails": 49,
+  "initialTripDetails": 48,
+  "addedDuringReview": [
+    "42413"
+  ],
+  "pendingArrivals": 4,
+  "routeRows": 1211,
+  "controllerNotes": 433,
+  "maps": 9,
+  "checks": [
+    "All initial trips reconciled to a nonempty detail capture",
+    "New trip reconciled to its detail",
+    "All internal documentation links resolve",
+    "All evidence JSON parses",
+    "GPS credential rows absent from saved detail captures",
+    "Both Excel exports verified plus empty filtered export",
+    "Conditional form fields reconciled against saved captures",
+    "Screenshots visually inspected; map screenshot excludes header",
+    "Application source unchanged; no acceptance or official actions submitted"
+  ],
+  "files": [
+    {
+      "path": "arrival-form-42363.json",
+      "sha256": "cfe85f005186bec66fdc59c7692d96f6a6750865c30f69b6b27b5ada6da7d0df",
+      "bytes": 4835
+    },
+    {
+      "path": "behavior-review/arrival-board.json",
+      "sha256": "812c392e3ce64534d88b13ffffa1e07eb1abe3929a454059efc5e62cb211ae82",
+      "bytes": 57540
+    },
+    {
+      "path": "behavior-review/arrival-entry-42363.json",
+      "sha256": "6ec30fc542a961126fed6dc499e563417f7e786d9898ab856bfe8f5a61687bf0",
+      "bytes": 22978
+    },
+    {
+      "path": "behavior-review/checkpoint-catalogue.json",
+      "sha256": "58655498ec8a81887c08e83248c3dffd410d248e9d88ac24f3963ef314e3901e",
+      "bytes": 163033
+    },
+    {
+      "path": "behavior-review/incident-1004-definition.json",
+      "sha256": "fcab1edfda2695f2007e52c314ce95a73d2799ffc33eb7b2a3562db5e165d69c",
+      "bytes": 3385
+    },
+    {
+      "path": "behavior-review/incident-catalogue.json",
+      "sha256": "17d66024898ba8b2cc2598ee4cdcef5b9c7118f492f525b062d4539dac7aaa6d",
+      "bytes": 42839
+    },
+    {
+      "path": "behavior-review/incident-comparison.json",
+      "sha256": "a6c5ffeca719c57b72cf1173ebc0897f8d7a6084646363a6b47e36d945289a32",
+      "bytes": 22861
+    },
+    {
+      "path": "behavior-review/incident-definitions.json",
+      "sha256": "95320a3ad95f8858f29720cd76da265d8932d2c93091d1e993f462301ed18cc0",
+      "bytes": 185510
+    },
+    {
+      "path": "behavior-review/manual-source.json",
+      "sha256": "e18027ffaeace3b005213f1ec93306ed53f3bba6071664a261ab8ff189849f8a",
+      "bytes": 977
+    },
+    {
+      "path": "behavior-review/map-popup.json",
+      "sha256": "c4010956295b22d786ca825d457cba620bc0c32387fc2f2d186b1e7d2dc8ec62",
+      "bytes": 400
+    },
+    {
+      "path": "behavior-review/map-popup.png",
+      "sha256": "3ce837d36f98227e17c3ef60b4f8c08ab3abcde0dc9d9ec2a0f01c04870de980",
+      "bytes": 106757
+    },
+    {
+      "path": "behavior-review/report-comment-reload.json",
+      "sha256": "c831a50d679908e751711eee3e620f92cd90760263855f91956577c6c3e6d461",
+      "bytes": 6120
+    },
+    {
+      "path": "behavior-review/report-input-checks.json",
+      "sha256": "88f6ddfd46595291982065f6b742d1cad71863170ee76de576a2508315cb235a",
+      "bytes": 2391
+    },
+    {
+      "path": "behavior-review/report-meal-stop.json",
+      "sha256": "6f0f25237f3fa74548500a09573eecdaac43e2242e76cac0a5cf5e70571826af",
+      "bytes": 6016
+    },
+    {
+      "path": "behavior-review/report-reset.json",
+      "sha256": "52aa3ab9561f4bff0a3895c6e0bbdc13d7457a63e6374832dfcf1bd7919af5d6",
+      "bytes": 7083
+    },
+    {
+      "path": "behavior-review/research-session-end.json",
+      "sha256": "baa29a7e17cbeebea801ee458d004bdd9218c190905a58150379eae41748b1c5",
+      "bytes": 151
+    },
+    {
+      "path": "behavior-review/timer-board-a.json",
+      "sha256": "e6338db150529ed9fa2a6b29d8478e4dded27a53ff11340bb1bfff00ff8d7d8a",
+      "bytes": 13626
+    },
+    {
+      "path": "behavior-review/timer-board-b.json",
+      "sha256": "7fda7e1331d59db1caca676c415c6d5c1445f2a771050f08834ff60eab982650",
+      "bytes": 13625
+    },
+    {
+      "path": "behavior-review/timer-board-without-reload.json",
+      "sha256": "6375ffcb666ec82e87d3e303c7dfb6ff88628e297f085ed0a15d84d666b56aa6",
+      "bytes": 13626
+    },
+    {
+      "path": "behavior-review/timer-comparison.json",
+      "sha256": "c857e27e279b03978a258e2a2880990dcd639ce5bf9a02fb52d25a18ea4efb22",
+      "bytes": 9098
+    },
+    {
+      "path": "behavior-review/timer-passive-observation.json",
+      "sha256": "f806756aa1ccb28722e8cac1a34d16c5346f1f0ee98689e62786062d39d722e1",
+      "bytes": 15055
+    },
+    {
+      "path": "behavior-review/timer-trip-42403.json",
+      "sha256": "a4a7d1da11bd9baab9efb6a17bb49f254b002e4d1925f93352071a50ba7dc042",
+      "bytes": 14426
+    },
+    {
+      "path": "board-final.json",
+      "sha256": "f0e005d2d79b60f103ab6051d014b49c359c91af763d352d050228b803462514",
+      "bytes": 24429
+    },
+    {
+      "path": "board-tests.json",
+      "sha256": "8d879b5f51c5ef905e030b5cb2e97df935cf8cc4ede5a7b496e9b3c2503eb577",
+      "bytes": 50230
+    },
+    {
+      "path": "board.json",
+      "sha256": "c543fd6bab9f3f20a02c9c0b657f03a082dfb8a60283337464acf6b9fa9593a2",
+      "bytes": 40711
+    },
+    {
+      "path": "checkpoint-at-site.json",
+      "sha256": "c67156ba188eaa53e1e41fb2cc7cdf8c846c2023e5b3aee7a37c7efa2285890e",
+      "bytes": 5322
+    },
+    {
+      "path": "checkpoint-cleared.json",
+      "sha256": "bdfb5f27a813fde7521599d1d2706724d3e397a2980da66da5e06755aba79093",
+      "bytes": 5321
+    },
+    {
+      "path": "checkpoint-delayed.json",
+      "sha256": "5c88483ed3120d221f31c140f9fff9dfddd8b80ded13341bc7d65394fc33675a",
+      "bytes": 5328
+    },
+    {
+      "path": "checkpoint-form.json",
+      "sha256": "961c92f996e83e9a1aa285c3c5c5b48ed8e224eaf05c21c433ea9b420a27f087",
+      "bytes": 4932
+    },
+    {
+      "path": "checkpoint-ok.json",
+      "sha256": "c2c5da3268400143ceef0110e81b9bd07ccbb919c1dee46670ee2e5cd103e902",
+      "bytes": 4831
+    },
+    {
+      "path": "checkpoint-overnight.json",
+      "sha256": "826b7215a7a54551c908b2213c4b2b3ae977fc53019d854606704269a6777fa5",
+      "bytes": 5322
+    },
+    {
+      "path": "checkpoint-overnight.png",
+      "sha256": "501586525d182dd9a20a56c9d550b13026d4a028b2e936ed1b403358002e1927",
+      "bytes": 34590
+    },
+    {
+      "path": "excel-export-verification.json",
+      "sha256": "df89b23e9aa7f8d0a2fdc7a016cdb7f91f9e95d0ada493474dbc78ef047b54e7",
+      "bytes": 3566
+    },
+    {
+      "path": "gps-filter-42363.json",
+      "sha256": "d5b70629c89d707cae116b0898f63e117dfe5e995483a5647b43d6f8171015e9",
+      "bytes": 26742
+    },
+    {
+      "path": "incident-searches.json",
+      "sha256": "9be756f7f55c5ed64cf9f79d91964366137b4edc41da8972c02a8a7323ecc12a",
+      "bytes": 3844
+    },
+    {
+      "path": "location-search.json",
+      "sha256": "74f16636ed1e1b124cdde20d10b2efe0dd1c3a738322d9a70b9849462ed787da",
+      "bytes": 37
+    },
+    {
+      "path": "pending-arrivals.png",
+      "sha256": "1c13a420ef3e6150cfcae08bc86bf8383cd9c9aea2a5a4809cc48ecf205de32f",
+      "bytes": 46773
+    },
+    {
+      "path": "route-map.png",
+      "sha256": "99b4293ca2583901ce650cd3c9b302e8ca91434f8a15a7481486090b2f46c1cb",
+      "bytes": 136372
+    },
+    {
+      "path": "route-plan.png",
+      "sha256": "e302ad7197a204b9e794e655f7a95f2a60ee2f6fc61a8b3014b760718bbe2192",
+      "bytes": 151054
+    },
+    {
+      "path": "sort-dispatch.json",
+      "sha256": "b77d3cf262359fa6773026c5d3dfae01e7b7fe88c5b22c21a1511986301d1757",
+      "bytes": 685
+    },
+    {
+      "path": "source-filters-42363.json",
+      "sha256": "7a58ce0199440d033b133eb0c4c34a5e29f92a8257eafd639dafecf114289be4",
+      "bytes": 39255
+    },
+    {
+      "path": "tracking-board-top.png",
+      "sha256": "628d771353352f0d532f743880ba54231c18580257742d70bc8be4099428b571",
+      "bytes": 145799
+    },
+    {
+      "path": "tracking-board.png",
+      "sha256": "93c5c5df3a64e024264fb79f78d5343a8766f7761674ad6856948b87d0b1f467",
+      "bytes": 130507
+    },
+    {
+      "path": "trip-42293.json",
+      "sha256": "7070ddb699ee539fd3759b6887127bfd04d47074ef4f0e49ad53776a36c60853",
+      "bytes": 23592
+    },
+    {
+      "path": "trip-42328.json",
+      "sha256": "7980a5bce4099a7161d4fc6d383bf517c531c1163930237d3568f45a4727c815",
+      "bytes": 57536
+    },
+    {
+      "path": "trip-42363.json",
+      "sha256": "47cc809781f9e6b03d2bcbabc3977ce02ffe55e69ef67ae464b4d971b2c3ea96",
+      "bytes": 26670
+    },
+    {
+      "path": "trip-42364.json",
+      "sha256": "2a820059f43fee732da3097e8f91504fc50727b4f58ff744e920ffcb7c01d830",
+      "bytes": 12872
+    },
+    {
+      "path": "trip-42365.json",
+      "sha256": "ca383250491585244c4cba4724b808f5c836ae336f0b7ce6df2e805a07ffd0be",
+      "bytes": 13893
+    },
+    {
+      "path": "trip-42366.json",
+      "sha256": "3ac16b90ad23c7b212dfaf42f80120a7b4e67756dde6a8fc5a8278f33454a0a2",
+      "bytes": 26566
+    },
+    {
+      "path": "trip-42367.json",
+      "sha256": "467893042fa2f56a2ee363d26a5bcc5377cb845db270d68eaba8ae6d1cadc6eb",
+      "bytes": 15204
+    },
+    {
+      "path": "trip-42368.json",
+      "sha256": "dcdb08a167cfdae22a76f1bcbc9ee2cd9381837724a2bde3f777267044b03a4f",
+      "bytes": 11392
+    },
+    {
+      "path": "trip-42371.json",
+      "sha256": "2329d318dced9855868ad25472dc25b8dc713b84fb3e8aabbe0d8aade6742194",
+      "bytes": 14755
+    },
+    {
+      "path": "trip-42372.json",
+      "sha256": "b31f4894a1b5b9ca0325440a607d1a0da840a67c1ee5d247b7da8b5c0c22ee17",
+      "bytes": 21570
+    },
+    {
+      "path": "trip-42373.json",
+      "sha256": "f31865c5ffb86b9159861b80742aa1e46f78acd46d72eff058eab93a7676e1f7",
+      "bytes": 8262
+    },
+    {
+      "path": "trip-42374.json",
+      "sha256": "0e83675e7ac722099aa57197768639d929d2bb67f8771dabba85cc016141986d",
+      "bytes": 11527
+    },
+    {
+      "path": "trip-42376.json",
+      "sha256": "138d1e10c60d18e3db50aeccebbb4e0b1d04d09a1cb2f0efa64c7dbbe16632a6",
+      "bytes": 9257
+    },
+    {
+      "path": "trip-42377.json",
+      "sha256": "a3cde2a609cb2a3f5fb59be7fceefb282bc48a247f5893ba669c28f76f077df5",
+      "bytes": 15558
+    },
+    {
+      "path": "trip-42378.json",
+      "sha256": "775315543cd1659084e243720830450c8e8dc11d98a433dcb07372dcaac296a2",
+      "bytes": 11996
+    },
+    {
+      "path": "trip-42379.json",
+      "sha256": "ab7e29beefe39325e228c516679a142b925455b5fd07f391d3e2d68e7e929230",
+      "bytes": 11515
+    },
+    {
+      "path": "trip-42380.json",
+      "sha256": "6c71a9968a508142ff391a95079d28757db4d3581583dae19b88ddab8d42381b",
+      "bytes": 9234
+    },
+    {
+      "path": "trip-42381.json",
+      "sha256": "7ac843f5916e1c5f22e434f5364e29dae01b9ed387f0c0d92ee488a80704ac0a",
+      "bytes": 14343
+    },
+    {
+      "path": "trip-42382.json",
+      "sha256": "d05d3f8ec5d8229f4ca076ca8cd9af98b04d955ff721abc918bc9d2873b9c464",
+      "bytes": 19560
+    },
+    {
+      "path": "trip-42383.json",
+      "sha256": "6444a469f05404313f36a8f0fa167d40463525d4fdf92b5a47838a198d8b8e73",
+      "bytes": 13597
+    },
+    {
+      "path": "trip-42384.json",
+      "sha256": "a2eb84d32408383fc5b75a45fc7c6f0e5e4bf36757edd9391193319887b52b76",
+      "bytes": 8976
+    },
+    {
+      "path": "trip-42385.json",
+      "sha256": "676a1924093c5bc070c7b779ca7d052e29b78345b996335a306c94288ec490b9",
+      "bytes": 10797
+    },
+    {
+      "path": "trip-42386.json",
+      "sha256": "598e18fefab5ec2156f381d3c47e0551341933bfb29068170f2c838da3b46673",
+      "bytes": 16347
+    },
+    {
+      "path": "trip-42387.json",
+      "sha256": "a6f26115ee30103bfb1a15bc1d204fc8d4db7d754a6ffc7fee4b0a8febaa7e32",
+      "bytes": 16010
+    },
+    {
+      "path": "trip-42388.json",
+      "sha256": "1e20eb02783b802004fd1b00df4192bee6c42f1e1b0e952c78429f1038d7b053",
+      "bytes": 9310
+    },
+    {
+      "path": "trip-42389.json",
+      "sha256": "b06e2dbed87c51039793db8ebcc23344b0ffd4d53ed6f2bc2d48a6b78bda73b3",
+      "bytes": 14227
+    },
+    {
+      "path": "trip-42390.json",
+      "sha256": "1edce08f76e4e9b8d9705d1d986acbc0556c83e6d3b8b56d0cc51995b14e7214",
+      "bytes": 10316
+    },
+    {
+      "path": "trip-42391.json",
+      "sha256": "482c72204720a3f80ddfe3e938345684aa731366cc11344098518030ae275883",
+      "bytes": 8571
+    },
+    {
+      "path": "trip-42392.json",
+      "sha256": "a5dd8a3651b742f05f50b29ad37e2d44eb0355ea3572c2c852083f3d7ceaf036",
+      "bytes": 14613
+    },
+    {
+      "path": "trip-42393.json",
+      "sha256": "6d9db5d43c66bd5022a1bbb198e318adbb3960734808e55a6158dd05e4e7c8d5",
+      "bytes": 9958
+    },
+    {
+      "path": "trip-42394.json",
+      "sha256": "27c5b1a204aed632f5c94081d438ba4fd82155a004da57cdfd1971858f73f5ac",
+      "bytes": 10073
+    },
+    {
+      "path": "trip-42395.json",
+      "sha256": "a36c399fd1cc87e4fd3356b75228c7df1cfc82697d39907ed3f0076d185c130e",
+      "bytes": 11879
+    },
+    {
+      "path": "trip-42396.json",
+      "sha256": "369dd0b86578c98f4825e694cce51e3039d4ed5fcea8ac922f9c947bf24fb095",
+      "bytes": 9671
+    },
+    {
+      "path": "trip-42397.json",
+      "sha256": "41acb3f14646daee25c47952501eaedd60cc02ef1d87fe6b24ec353700ab74e1",
+      "bytes": 14817
+    },
+    {
+      "path": "trip-42398.json",
+      "sha256": "73481fdd381991bf00341d20b95d00538fd3afbc6454e86e8a7d3d8bd911e0ac",
+      "bytes": 17439
+    },
+    {
+      "path": "trip-42400.json",
+      "sha256": "a65b35833f393a70945dcfed542dfbaf2c02617c94e91ee3c87a97b6e2f5da30",
+      "bytes": 7064
+    },
+    {
+      "path": "trip-42401.json",
+      "sha256": "b6948b468b5f08f448085bf6f99f2aeb7a18b91daf80d32f0bad803473bc8d4a",
+      "bytes": 7919
+    },
+    {
+      "path": "trip-42402.json",
+      "sha256": "dae63aacecb7583f561b58d0a63ef1f725c6066158105b31e1623b56789e27a9",
+      "bytes": 7085
+    },
+    {
+      "path": "trip-42403.json",
+      "sha256": "d21c4e6584bea4db2a8481c0ecab097f30db1733738e3bf6aad288e9b3729b99",
+      "bytes": 12319
+    },
+    {
+      "path": "trip-42404.json",
+      "sha256": "73153dde596de690c5e88b3f62db96cb24c3804d432c0348f39c8da3e6165ca8",
+      "bytes": 7826
+    },
+    {
+      "path": "trip-42405.json",
+      "sha256": "6bab47a1c890d8c5194c42f4f74593a5ab7aeb418260e5f66118cfc7cfed0998",
+      "bytes": 5679
+    },
+    {
+      "path": "trip-42406.json",
+      "sha256": "5bd0e1a8eec891a7b7e96f3c08e9749d4faf512650c59dff1f778a9d36813108",
+      "bytes": 8342
+    },
+    {
+      "path": "trip-42407.json",
+      "sha256": "886c74f145ecacda727d0d68bd25f66dd218202bb88fa8ce4a75fd776523ac80",
+      "bytes": 8365
+    },
+    {
+      "path": "trip-42408.json",
+      "sha256": "3b09e8fbc23c18f51971f7b80680ecf7ecaab817f5e97b95ef9aeeef0bc521b7",
+      "bytes": 11844
+    },
+    {
+      "path": "trip-42409.json",
+      "sha256": "78bdcf08ff51e437a49046a255a7512cca73ef8b83f51350f35951661b589e65",
+      "bytes": 11836
+    },
+    {
+      "path": "trip-42410.json",
+      "sha256": "ac66118500b075c55dcc9f923d3ab0b0533153a028071b631fb6eb070c9c62e3",
+      "bytes": 11845
+    },
+    {
+      "path": "trip-42411.json",
+      "sha256": "0c6e399737b1fb089f1d86ed3f7413a98e129bd1df0f636817b7fbb2bf9d5e05",
+      "bytes": 8329
+    },
+    {
+      "path": "trip-42412.json",
+      "sha256": "b187bda8d5e0c15a5c398937e10acfb842d85e9329479434cf32c3e77f9b586c",
+      "bytes": 8401
+    },
+    {
+      "path": "trip-42413.json",
+      "sha256": "dd79b32a2124072d2c536e39e9c8891d8e54ab6a19cb98aaceab0b227b9e29fa",
+      "bytes": 7717
+    },
+    {
+      "path": "trip-review-index.json",
+      "sha256": "94d126990ec8065cec4dc34de6f63aad58a70d8ce71b926ba6143b260452fd14",
+      "bytes": 15143
+    },
+    {
+      "path": "virtual-checkpoint-form.json",
+      "sha256": "ca91a0b4657cdd42be799e24e7611637111bf5a57758b7f9c62a5db150b8d8ff",
+      "bytes": 4976
+    },
+    {
+      "path": "visual-alerts/color-picker.json",
+      "sha256": "739bffa193b2550ddffb21b43663fa8d1de1a6ed0690b7be04f42e7b26dd4f30",
+      "bytes": 24750
+    },
+    {
+      "path": "visual-alerts/color-picker.png",
+      "sha256": "4fbc32c570be61f5601f7d605336f8fcce0c76b0c9a431d605ed84bbf4b5c5cf",
+      "bytes": 15215
+    },
+    {
+      "path": "visual-alerts/color-selection-reset.json",
+      "sha256": "a63324faa858c715a6e65dab347e999243d385248fbdaa9e08772df0a5c9797a",
+      "bytes": 153
+    },
+    {
+      "path": "visual-alerts/create-reset.json",
+      "sha256": "ebbca6d51d57229745ccb2bbcd08c360518c0c1f4996ea925407d0fbc1c6285b",
+      "bytes": 1367
+    },
+    {
+      "path": "visual-alerts/create.json",
+      "sha256": "33287369531591b51ba364a7f5de90411d0e5c3c17b468c1e82e6d475f15d1c0",
+      "bytes": 2391
+    },
+    {
+      "path": "visual-alerts/create.png",
+      "sha256": "1c830100ab65b8fb14862eb75b99be342d8570bc913c1280e634e575842351a2",
+      "bytes": 38414
+    },
+    {
+      "path": "visual-alerts/delete-list.json",
+      "sha256": "5af312e33790c2c995b96e83e99e629d534ae47add26003d49c8339cecc515c4",
+      "bytes": 3084
+    },
+    {
+      "path": "visual-alerts/delete-list.png",
+      "sha256": "1c49eaef6dff4306af40966286f4c3623486c0755eed131aa239915e36887ed6",
+      "bytes": 44348
+    },
+    {
+      "path": "visual-alerts/list-final.json",
+      "sha256": "297a5c4ccec4f9876321cdd9953399967fa3175c40681fe0e49190af89e2c8f2",
+      "bytes": 3045
+    },
+    {
+      "path": "visual-alerts/list.json",
+      "sha256": "b66423af75871e22add03974877a88c03f25d68d1fc7abb169e20c57eada0474",
+      "bytes": 3676
+    },
+    {
+      "path": "visual-alerts/list.png",
+      "sha256": "71ee8ab341dfb703781b694cfe3f448e35c29d00ec8be57142419c1b7999f866",
+      "bytes": 41602
+    },
+    {
+      "path": "visual-alerts/parameter-field-index.json",
+      "sha256": "f472326ab05e2fa1dabf3b1f269f2194eeb7033516ceaeea8dc57fb9f1a7b056",
+      "bytes": 7849
+    },
+    {
+      "path": "visual-alerts/related-parameters.json",
+      "sha256": "11e76346762fa377f4df2184cd0ba36c9bba01ca2ddb86b582a4588c0b49af25",
+      "bytes": 1400
+    },
+    {
+      "path": "visual-alerts/tracking-comparison.json",
+      "sha256": "b0aca27af1da2eb7021acd955f4f165ce5f7b6b5a04c271ae29e3d70cae17f5c",
+      "bytes": 38362
+    },
+    {
+      "path": "visual-alerts/update-1.json",
+      "sha256": "a6f7fc93873fce8c046738b866ba8b16cd5dc9cada9b11ff67a4eb89f1c53581",
+      "bytes": 2434
+    },
+    {
+      "path": "visual-alerts/update-2.json",
+      "sha256": "1184eb2788001becabce8f2722f5a4a8f7722f819b08510cf473ad9bfe1a8f70",
+      "bytes": 2430
+    },
+    {
+      "path": "visual-alerts/update-3.json",
+      "sha256": "eb7ad7a8f9c15f62996a34cbaf37b37dd1d15614cd65c71db88feca65cee05d0",
+      "bytes": 2433
+    },
+    {
+      "path": "visual-alerts/update-4.json",
+      "sha256": "cb79e08aa7df712c9c9c9b37be26c0ffe3a969494dde7b039e1bc6185a89226d",
+      "bytes": 2434
+    },
+    {
+      "path": "visual-alerts/update-5.json",
+      "sha256": "cf1491fddda6259bf435874f5684cfecd8499d342ac1ce860bb511772b910a58",
+      "bytes": 3805
+    },
+    {
+      "path": "visual-alerts/update-list.json",
+      "sha256": "c1d3b0fc79cf9e22acc1cc73a99506bae4ac821069d924dd3272906b85296a34",
+      "bytes": 2180
+    },
+    {
+      "path": "visual-alerts/update-violeta.png",
+      "sha256": "63a2e79ed10a032769d32328fd8d7b83134e946f19e10ac69421fdc729bc9a71",
+      "bytes": 39480
+    },
+    {
+      "path": "visual-alerts/verification.json",
+      "sha256": "b526407c4194c6a888f5b4ea3d3e5f3d20c69c65841b419a2527266eda75d98a",
+      "bytes": 3931
+    }
+  ],
+  "visualAlertsFollowUp": {
+    "verifiedAt": "2026-09-04T23:43:55.863409+00:00",
+    "alarmCount": 5,
+    "report": "visual-alerts/verification.json"
+  },
+  "behaviorReview": {
+    "verifiedAt": "2026-09-05T00:07:50.374392+00:00",
+    "incidentListCount": 242,
+    "incidentEditorCount": 239,
+    "incidentFlagDiscrepancies": 86,
+    "checkpointCount": 1404,
+    "productionSubmissions": 0,
+    "checks": [
+      "All evidence JSON parses and documentation file links resolve",
+      "Complete incident list and available edit definitions reconciled by unique code",
+      "All 86 discrepancies isolated to Solicita Tiempos",
+      "Checkpoint count and unique codes match displayed total",
+      "Unsaved form reset read-back checked",
+      "Arrival form fields and rating choices captured without acceptance",
+      "Map popup screenshot visually inspected",
+      "PDF incident flag page rendered and visually inspected",
+      "No GPS credential rows in new saved table captures",
+      "Research tabs closed; original user tab remains",
+      "Application files and unrelated docs/demo work unchanged"
+    ]
+  }
+}

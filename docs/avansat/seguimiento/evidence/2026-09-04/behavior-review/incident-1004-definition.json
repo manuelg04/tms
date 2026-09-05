@@ -1,0 +1,175 @@
+{
+  "capturedAt": "2026-09-04T23:52:11.997Z",
+  "controls": [
+    {
+      "disabled": false,
+      "maxLength": 100,
+      "name": "nombre",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "Pernoctacion"
+    },
+    {
+      "disabled": false,
+      "maxLength": -1,
+      "name": "indala",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "value": "1"
+    },
+    {
+      "disabled": false,
+      "maxLength": -1,
+      "name": "indtiemp",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "value": "1"
+    },
+    {
+      "disabled": false,
+      "maxLength": -1,
+      "name": "nov_especi",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "value": "1"
+    },
+    {
+      "disabled": false,
+      "maxLength": -1,
+      "name": "ind_manala",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "value": "1"
+    },
+    {
+      "disabled": false,
+      "maxLength": -1,
+      "name": "Actualizar",
+      "onclick": "if(confirm('Desea Actualiza la Novedad.?')){form_item.opcion.value = 3; form_item.submit();}",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Actualizar"
+    },
+    {
+      "disabled": false,
+      "maxLength": -1,
+      "name": "Cancelar",
+      "onclick": "javascript:history.go(-3)",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Cancelar"
+    }
+  ],
+  "links": [],
+  "rows": [
+    {
+      "cells": [
+        "Tablas > Novedades > Actualizar"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Resultado de la consulta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Datos de la Novedad"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Codigo",
+        "1004"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Nombre o descripcion de la novedad:",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Genera Alerta:",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Solicita Tiempos:",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Novedad Especial:",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Mantiene Alarma:",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Tablas > Novedades > Actualizar"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=1004&opcion=2",
+  "checked": [
+    {
+      "checked": false,
+      "label": "Genera Alerta:",
+      "name": "indala"
+    },
+    {
+      "checked": true,
+      "label": "Solicita Tiempos:",
+      "name": "indtiemp"
+    },
+    {
+      "checked": true,
+      "label": "Novedad Especial:",
+      "name": "nov_especi"
+    },
+    {
+      "checked": false,
+      "label": "Mantiene Alarma:",
+      "name": "ind_manala"
+    }
+  ]
+}

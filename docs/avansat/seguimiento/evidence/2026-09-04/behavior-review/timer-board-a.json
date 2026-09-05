@@ -1,0 +1,620 @@
+{
+  "capturedAt": "2026-09-05T00:03:35.631Z",
+  "headers": [
+    {
+      "ariaLabel": "NEM: Activar ordenamiento ascendente",
+      "text": "NEM\n",
+      "title": ""
+    },
+    {
+      "ariaLabel": "NEM: Activar ordenamiento ascendente",
+      "text": "NEM\n",
+      "title": ""
+    }
+  ],
+  "meta": [
+    {
+      "content": "text/html; charset=iso-8859-1",
+      "name": "Content-Type"
+    }
+  ],
+  "pending": [
+    {
+      "dispatch": "42373",
+      "incident": "Ok",
+      "lastReport": "2026-09-04 15:49:00",
+      "site": "LUGAR ENTREGA"
+    },
+    {
+      "dispatch": "42363",
+      "incident": "Ok",
+      "lastReport": "2026-09-04 15:47:00",
+      "site": "Lugar Entrega"
+    },
+    {
+      "dispatch": "42366",
+      "incident": "Ok",
+      "lastReport": "2026-09-04 16:29:00",
+      "site": "Lugar Entrega"
+    },
+    {
+      "dispatch": "42387",
+      "incident": "Ok",
+      "lastReport": "2026-09-04 18:56:00",
+      "site": "Lugar Entrega"
+    },
+    {
+      "dispatch": "42368",
+      "incident": "Ok",
+      "lastReport": "2026-09-04 15:49:00",
+      "site": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42389",
+      "incident": "Ok",
+      "lastReport": "2026-09-04 18:39:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "EL CRUCE DE CHIRIGUANA",
+      "time": "-26"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42400",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:07:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "CAMPO 23",
+      "time": "-65"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42407",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:05:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PUERTO ARAUJO",
+      "time": "-66"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42396",
+      "incident": "GPS",
+      "lastReport": "2026-09-04 18:27:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "REPORTE GPS",
+      "time": "-70"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42382",
+      "incident": "GPS",
+      "lastReport": "2026-09-04 18:57:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "REPORTE GPS",
+      "time": "-71"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42391",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 16:17:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "IBAGUE",
+      "time": "-76"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42381",
+      "incident": "Pernoctacion",
+      "lastReport": "2026-09-04 16:27:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "CAPITANEJO",
+      "time": "-80"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42379",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:29:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "LA TEBAIDA",
+      "time": "-86"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42392",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:30:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "MELGAR",
+      "time": "-91"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42402",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:33:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "LA FORTUNA",
+      "time": "-96"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42378",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:32:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PEAJE ZAMBITO",
+      "time": "-96"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42405",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 16:46:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "TOCANCIPA",
+      "time": "-101"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42398",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:34:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "Belen",
+      "time": "-101"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42397",
+      "incident": "GPS",
+      "lastReport": "2026-09-04 18:27:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "REPORTE GPS",
+      "time": "-101"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42411",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:54:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PUERTO ARAUJO",
+      "time": "-115"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42384",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:06:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "CHIMITA",
+      "time": "-116"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42401",
+      "incident": "Pernoctacion",
+      "lastReport": "2026-09-04 15:30:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "BUCARAMANGA",
+      "time": "-116"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42412",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:55:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PUERTO ARAUJO",
+      "time": "-119"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42393",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:08:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "LENGUAZAQUE",
+      "time": "-121"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42380",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:11:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "CHIMITA",
+      "time": "-125"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42365",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:25:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "AGUACHICA",
+      "time": "-141"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42395",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:35:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "BARRANQUILLA",
+      "time": "-156"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42372",
+      "incident": "GPS",
+      "lastReport": "2026-09-04 17:48:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "REPORTE GPS",
+      "time": "-159"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42383",
+      "incident": "Pernoctacion",
+      "lastReport": "2026-09-04 17:59:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "BELLO",
+      "time": "-176"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42413",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:34:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "BOGOTA",
+      "time": "-206"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42414",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:36:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PUERTO ARAUJO",
+      "time": "-210"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42415",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:37:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "EL COPEY",
+      "time": "-214"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42416",
+      "incident": "Pernoctacion",
+      "lastReport": "2026-09-04 18:48:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "GIRON",
+      "time": "-235"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42406",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 19:00:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "CAMPO 23",
+      "time": "-240"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42403",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:50:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "EL CARMEN DE BOLIVAR",
+      "time": "-241"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42390",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:51:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "HIDROSOGAMOSO",
+      "time": "-246"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42404",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:52:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "CHIMITA",
+      "time": "-246"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42385",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:54:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "YUMBO",
+      "time": "-251"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42367",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:55:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "AGUACHICA",
+      "time": "-251"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42374",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:53:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "IBAGUE",
+      "time": "-251"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42377",
+      "incident": "Pernoctacion",
+      "lastReport": "2026-09-04 18:57:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PORTUGAL",
+      "time": "-255"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42394",
+      "incident": "Pernoctacion",
+      "lastReport": "2026-09-04 18:59:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "UBATE",
+      "time": "-261"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42409",
+      "incident": "Pernoctacion",
+      "lastReport": "2026-09-04 17:37:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "BARRANQUILLA",
+      "time": "-296"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42410",
+      "incident": "Pernoctacion",
+      "lastReport": "2026-09-04 17:44:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "BARRANQUILLA",
+      "time": "-296"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42408",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:47:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "SIN UBICACION",
+      "time": "-296"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42386",
+      "incident": "GPS",
+      "lastReport": "2026-09-04 18:57:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "REPORTE GPS",
+      "time": "-2,275"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42293",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:41:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PEND CUMPLIDO",
+      "time": "-2,275"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42388",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 17:24:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PEND CUMPLIDO",
+      "time": "-2,276"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42328",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:41:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PEND CUMPLIDO",
+      "time": "-2,276"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42376",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:41:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PEND CUMPLIDO",
+      "time": "-2,276"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42364",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:41:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PEND CUMPLIDO",
+      "time": "-2,276"
+    },
+    {
+      "color": "rgb(255, 255, 255)",
+      "dispatch": "42371",
+      "incident": "Retrasado",
+      "lastReport": "2026-09-04 18:42:00",
+      "nem": {
+        "text": "",
+        "title": ""
+      },
+      "site": "PEND CUMPLIDO",
+      "time": "-2,276"
+    }
+  ],
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?window=central&op=inicio"
+}

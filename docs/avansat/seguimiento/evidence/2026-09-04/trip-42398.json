@@ -1,0 +1,742 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10424&pc=BRICEÑO (CUND) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BRICEÑO (CUND) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10425&pc=ZIPAQUIRA (CUND) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ZIPAQUIRA (CUND) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10426&pc=COGUA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "COGUA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10427&pc=TAUSA (CUND) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "TAUSA (CUND) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10428&pc=UBATE (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "UBATE (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10368&pc=CHIQUINQUIRA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CHIQUINQUIRA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10430&pc=PUENTE NACIONAL (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PUENTE NACIONAL (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10214&pc=BARBOSA (Sant) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BARBOSA (Sant) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10432&pc=SANTANA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SANTANA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10307&pc=OIBA (SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "OIBA (SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10434&pc=SOCORRO (SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SOCORRO (SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10435&pc=ACACIAS (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ACACIAS (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10436&pc=SAN GIL (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN GIL (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10437&pc=ARATOCA (Sant) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ARATOCA (Sant) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10197&pc=ALTO DEL PESCADERO (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ALTO DEL PESCADERO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10439&pc=LOS CUROS (SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LOS CUROS (SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10440&pc=PIEDECUESTA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PIEDECUESTA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10195&pc=FLORIDABLANCA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "FLORIDABLANCA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10033&pc=BUCARAMANGA (Sant) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BUCARAMANGA (Sant) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10443&pc=LA CORCOBA (SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA CORCOBA (SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10444&pc=EL PICACHO (SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "EL PICACHO (SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10445&pc=BERLIN (SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BERLIN (SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10446&pc=LA LAGUNA (N SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA LAGUNA (N SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10447&pc=PAMPLONA (N SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PAMPLONA (N SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10448&pc=GUAYABETALES (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GUAYABETALES (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10449&pc=LOS PATIOS (N SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LOS PATIOS (N SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10042&pc=CUCUTA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CUCUTA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42398&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42398",
+        "Origen",
+        "TOCANCIPA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043377",
+        "Destino",
+        "CUCUTA (Nort)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "27700 - TOCANCIPÁ (Cund) - Col - CÚCUTA (Nort) - Col VIA PAMPLONA...1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "SILVA OLMAN OVIDIO",
+        "Fecha Salida",
+        "13:17 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "05:30 05-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-04 13:16:32"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SQM107"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "S.R.S"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "NARANJA GRIS",
+        "Modelo",
+        "2005"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHOCONTA",
+        "",
+        "13:36 04-09-2026",
+        "19Min(s)",
+        "Retrasado",
+        "13:36 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSIGA SUR",
+        "",
+        "15:43 04-09-2026",
+        "126Min(s)",
+        "Retrasado",
+        "15:43 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BELEN",
+        "",
+        "17:34 04-09-2026",
+        "110Min(s)",
+        "Retrasado",
+        "17:34 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BRICEÑO (CUND) (Virtual)",
+        "14:17 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ZIPAQUIRA (CUND) (Virtual)",
+        "14:34 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "COGUA (Virtual) (Virtual)",
+        "14:40 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TAUSA (CUND) (Virtual)",
+        "15:32 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "UBATE (Virtual) (Virtual)",
+        "16:02 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIQUINQUIRA (Virtual)",
+        "17:02 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUENTE NACIONAL (Virtual) (Virtual)",
+        "17:25 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARBOSA (Sant) (Virtual)",
+        "17:47 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SANTANA (Virtual) (Virtual)",
+        "18:25 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "OIBA (SANT) (Virtual)",
+        "19:16 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SOCORRO (SANT) (Virtual)",
+        "19:52 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ACACIAS (Virtual) (Virtual)",
+        "20:02 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN GIL (Virtual) (Virtual)",
+        "20:17 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ARATOCA (Sant) (Virtual)",
+        "20:49 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ALTO DEL PESCADERO (Virtual)",
+        "21:17 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS CUROS (SANT) (Virtual)",
+        "21:40 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA (Virtual) (Virtual)",
+        "21:55 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FLORIDABLANCA (Virtual)",
+        "22:10 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA (Sant) (Virtual)",
+        "22:17 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA CORCOBA (SANT) (Virtual)",
+        "22:47 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL PICACHO (SANT) (Virtual)",
+        "23:26 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BERLIN (SANT) (Virtual)",
+        "00:47 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LAGUNA (N SANT) (Virtual)",
+        "01:17 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA (N SANT) (Virtual)",
+        "02:02 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUAYABETALES (Virtual)",
+        "02:10 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS PATIOS (N SANT) (Virtual)",
+        "05:02 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA (Virtual)",
+        "05:10 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "05:30 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Belen",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE BELEN SIN NOVEDAD",
+        "17:34 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSIGA SUR",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR BOSIGA SUR SIN\nNOVEDAD",
+        "15:43 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHOCONTA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCUENTRA\nEN TRANSITO LLEGANDO A CHOCONTA SIN NOVEDAD",
+        "13:36 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42398&opcion=1"
+}

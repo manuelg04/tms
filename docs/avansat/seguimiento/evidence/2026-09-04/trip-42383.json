@@ -1,0 +1,629 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42383&opcion=2&codpc=10057&pc=AGUACHICA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "AGUACHICA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42383&opcion=2&codpc=12394&pc=SAN MARTIN (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN MARTIN (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42383&opcion=2&codpc=12395&pc=SAN ALBERTO (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN ALBERTO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42383&opcion=2&codpc=10459&pc=CAMPO 23  (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CAMPO 23 (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42383&opcion=2&codpc=10261&pc=PUERTO  ARAUJO (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PUERTO ARAUJO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42383&opcion=2&codpc=10262&pc= PUERTO BERRIO (virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PUERTO BERRIO (virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42383&opcion=2&codpc=12399&pc=SANTO DOMINGO (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SANTO DOMINGO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42383&opcion=2&codpc=10470&pc=BARBOSA (Anti) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BARBOSA (Anti) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42383&opcion=2&codpc=11486&pc=MEDELLIN (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "MEDELLIN (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42383&opcion=2&codpc=10726&pc=BELLO (Bello) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BELLO (Bello) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42383&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42383",
+        "Origen",
+        "LA GLORIA (Cesa)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043362",
+        "Destino",
+        "BELLO (Anti)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "WILSON",
+        "Ruta",
+        "78418 - LA GLORIA (Cesa) - Col - 20383000 - BELLO (Anti) - Col - 5088000 VIA 8> LIZAMA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "GARCIA JAVIER ANDRES",
+        "Fecha Salida",
+        "15:36 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "03:16 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 15:36:11"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SZN022"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "INTERNATIONAL",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "PROSTAR",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "BLANCO",
+        "Modelo",
+        "2012"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA MATA",
+        "",
+        "15:42 03-09-2026",
+        "6Min(s)",
+        "Retrasado",
+        "15:42 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "16:50 03-09-2026",
+        "68Min(s)",
+        "Retrasado",
+        "16:50 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBETO",
+        "",
+        "19:39 03-09-2026",
+        "169Min(s)",
+        "Retrasado",
+        "19:40 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUAS CLARAS",
+        "",
+        "21:07 03-09-2026",
+        "88Min(s)",
+        "Retrasado",
+        "21:08 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PTO ARAUJO",
+        "",
+        "23:52 03-09-2026",
+        "164Min(s)",
+        "Retrasado",
+        "23:52 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PTO BERRIO",
+        "",
+        "03:45 04-09-2026",
+        "233Min(s)",
+        "Retrasado",
+        "03:46 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN JOSE DE NUS",
+        "",
+        "06:33 04-09-2026",
+        "168Min(s)",
+        "Retrasado",
+        "06:34 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PROVIDENCIA",
+        "",
+        "08:43 04-09-2026",
+        "129Min(s)",
+        "Retrasado",
+        "08:44 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BELLO",
+        "",
+        "11:03 04-09-2026",
+        "140Min(s)",
+        "Pernoctacion",
+        "11:04 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BELLO",
+        "",
+        "15:13 04-09-2026",
+        "248Min(s)",
+        "Pernoctacion",
+        "15:13 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BELLO",
+        "",
+        "17:59 04-09-2026",
+        "166Min(s)",
+        "Pernoctacion",
+        "17:59 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA (Virtual)",
+        "17:36 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN MARTIN (Virtual)",
+        "18:16 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBERTO (Virtual)",
+        "19:16 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAMPO 23 (Virtual)",
+        "19:56 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO ARAUJO (Virtual)",
+        "20:56 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BERRIO (virtual) (Virtual)",
+        "22:16 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SANTO DOMINGO (Virtual)",
+        "23:06 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARBOSA (Anti) (Virtual)",
+        "23:56 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MEDELLIN (Virtual) (Virtual)",
+        "00:46 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BELLO (Bello) (Virtual)",
+        "01:36 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "03:16 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BELLO",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN PARQUEADERO LA FRONTER EN BELLO\n- PERNOCTANDO - PEND ENTREGA MAÑANA SABADO",
+        "17:59 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BELLO",
+        "[NOV-ESP] Pernoctacion",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA EN BELLO EN EL\nPARQUEADERO LA FRONTERA INDICA QUE PERNOCTA AHI YA\nQUE TIENE CITA DE DESCARGUE PARA EL DIA DE MAÑANA",
+        "15:13 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BELLO",
+        "[NOV-ESP] Pernoctacion",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA EN BELLO EN\nEL PARQUEADERO LA FRONTERA INDICA QUE PERNOCTA AHI\nYA QUE TIENE CITA DE DESCARGUE PARA EL DIA DE MAÑANA",
+        "11:03 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PROVIDENCIA",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA EN TRANSITO POR PROVIDENCIA\nCEL/SISTEMA CORREO DE VOZ",
+        "08:43 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "san jose de nus",
+        "Retrasado",
+        "VEH ESTACIONADO EN VIA SAN JOSE DE NUS CEL/NO CONTESTA\n- ´PEND RTA WPP",
+        "06:33 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PTO BERRIO",
+        "Retrasado",
+        "VEH EN RUTA PASO PTO BERRIO CEL/ ESTA EN RUTA SIN\nNOVEDAD CONFIRMA UBICACION",
+        "03:45 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PTO ARAUJO",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PTO ARAUJO SIN NOVEDAD",
+        "23:52 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUAS CLARAS",
+        "Retrasado",
+        "VEH EN RUTA POR AGUAS CLARAS SIN NOVEDAD",
+        "21:07 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBETO",
+        "Retrasado",
+        "VEH ESTACIONADO EN Parador La Cabaña EN SAN ALBERTO\nCEL/ MANIFIESTA ESTABA ENGRASANDO PERO YA VA A RETOMAR\nRUTA NUEVAMENTE",
+        "19:39 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE AGUACHICA SIN NOVEDAD",
+        "16:50 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA MATA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCUENTRA\nEN TRANSITO POR LA MATA SIN NOVEDAD CEL/[identifier omitted]",
+        "15:42 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42383&opcion=1"
+}

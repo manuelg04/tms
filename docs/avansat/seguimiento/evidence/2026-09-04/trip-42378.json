@@ -1,0 +1,578 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42378&opcion=2&codpc=67&pc=BARRANCABERMEJA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BARRANCABERMEJA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42378&opcion=2&codpc=10264&pc=PUERTO   BOYACA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PUERTO BOYACA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42378&opcion=2&codpc=13351&pc= LA DORADA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA DORADA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42378&opcion=2&codpc=119&pc=VILLETA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "VILLETA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42378&opcion=2&codpc=11342&pc=FUNZA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "FUNZA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42378&opcion=2&codpc=11143&pc=MOSQUERA (CUN) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "MOSQUERA (CUN) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42378&opcion=2&codpc=10515&pc=LUGAR DE ENTREGA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR DE ENTREGA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42378&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42378",
+        "Origen",
+        "LA LOMA (Cesa)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043357",
+        "Destino",
+        "MOSQUERA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "WILSON",
+        "Ruta",
+        "3139 - LA LOMA (Cesa) - 20250002 - MOSQUERA (Cund) - 25473000 VIA CUNDINAMARCA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "PEREA JULIO CESAR",
+        "Fecha Salida",
+        "13:52 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "86049206",
+        "Fecha Planeada Llegada",
+        "06:32 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 13:51:59"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "TLY163"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800B",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "BLANCO",
+        "Modelo",
+        "2013"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAILITAS",
+        "",
+        "14:08 03-09-2026",
+        "16Min(s)",
+        "Retrasado",
+        "14:08 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "16:14 03-09-2026",
+        "126Min(s)",
+        "Retrasado",
+        "16:14 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "18:40 03-09-2026",
+        "145Min(s)",
+        "Retrasado",
+        "18:40 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "21:15 03-09-2026",
+        "155Min(s)",
+        "Pernoctacion",
+        "21:16 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "00:03 04-09-2026",
+        "167Min(s)",
+        "Retrasado",
+        "00:03 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "04:10 04-09-2026",
+        "247Min(s)",
+        "Retrasado",
+        "04:11 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MORRISON",
+        "",
+        "08:46 04-09-2026",
+        "275Min(s)",
+        "Retrasado",
+        "08:46 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA GOMEZ",
+        "",
+        "11:12 04-09-2026",
+        "146Min(s)",
+        "Retrasado",
+        "11:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LIZAMA",
+        "",
+        "13:30 04-09-2026",
+        "138Min(s)",
+        "Retrasado",
+        "13:30 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL OPON",
+        "",
+        "15:39 04-09-2026",
+        "129Min(s)",
+        "Retrasado",
+        "15:40 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE ZAMBITO",
+        "",
+        "17:32 04-09-2026",
+        "112Min(s)",
+        "Retrasado",
+        "17:32 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANCABERMEJA (Virtual)",
+        "22:13 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BOYACA (Virtual)",
+        "00:30 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA (Virtual)",
+        "01:32 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "VILLETA",
+        "02:32 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUNZA (Virtual)",
+        "03:32 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MOSQUERA (CUN) (Virtual)",
+        "04:32 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR DE ENTREGA (Virtual) (Virtual)",
+        "05:32 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "06:32 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE ZAMBITO",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PEAJE ZAMBITO SIN NOVEDAD",
+        "17:32 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL OPON",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR EL OPON SIN\nNOVEDAD",
+        "15:39 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LIZAMA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR LA LIZAMA SIN\nNOVEDAD",
+        "13:30 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA GOMEZ",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA POR LA GOMEZ\nQUE ESTA LAVANDO EL VEHICULO SIN NOVEDAD",
+        "11:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MORRISON",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR MORRISON SIN\nNOVEDAD",
+        "08:46 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH EN EDS EN EL JUNCAL EN VIA AGUACHICA PERNOCTA AHI\nREINICIA VIERNES PEND REALIZAR UNOS ARREGLOS",
+        "04:10 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH EN EDS EN EL JUNCAL EN VIA AGUACHICA PERNOCTA\nAHI REINICIA VIERNES",
+        "00:03 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN RUTA DELANTE DE AGUACHICA CEL/ MANIFIESTA\nTODO PERNOCTA AHI, MAÑANA REALIZA ARREGLOS AL VEH",
+        "21:15 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE AGUACHICA CEL/ MANIFIESTA TODO\nOK SIN NOVEDAD, CONFIRMA UBICACION",
+        "18:40 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH ESTACIONADO EN CRA39 CON CALLE 6 EN AGUACHICA\nCEL/ SISTEMA CORREO DE VOZ - PEND RTA WPP",
+        "16:14 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAILITAS",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCUENTRA\nEN TRANSITO POR PAILITAS SIN NOVEDAD",
+        "14:08 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42378&opcion=1"
+}

@@ -1,0 +1,736 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=133&pc=BARBOSA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BARBOSA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=13137&pc=SAN JOSE DE PARE (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN JOSE DE PARE (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=13136&pc=SANTANA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SANTANA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=10743&pc=VADO REAL&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "VADO REAL"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=10307&pc=OIBA (SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "OIBA (SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=10434&pc=SOCORRO (SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SOCORRO (SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=57&pc=BERLIN&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BERLIN"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=164&pc=SAN GIL &ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN GIL"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=13833&pc=CURITI (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CURITI (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=10437&pc=ARATOCA (Sant) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ARATOCA (Sant) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=13189&pc=PESCADERO VIRTUAL (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PESCADERO VIRTUAL (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=213&pc=LOS CUROS&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LOS CUROS"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=165&pc=PIEDECUESTA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PIEDECUESTA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=181&pc=FLORIDABLANCA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "FLORIDABLANCA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=193&pc=LEBRIJA  (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LEBRIJA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42377&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42377",
+        "Origen",
+        "TOCANCIPA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043356",
+        "Destino",
+        "LEBRIJA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "2812 - TOCANCIPA (Cund) - 25817000 - LEBRIJA (Sant) - 68406000 VIA BARBOSA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "OSPINA CARLOS ALBERTO",
+        "Fecha Salida",
+        "13:31 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "10183218",
+        "Fecha Planeada Llegada",
+        "03:01 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 13:30:30"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SWM379"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "BLANCO VERDE GRIS",
+        "Modelo",
+        "2007"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "",
+        "13:41 03-09-2026",
+        "11Min(s)",
+        "Retrasado",
+        "13:42 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "",
+        "16:17 03-09-2026",
+        "156Min(s)",
+        "Retrasado",
+        "16:18 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MADRID",
+        "",
+        "18:52 03-09-2026",
+        "154Min(s)",
+        "Retrasado",
+        "18:52 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE JALISCO",
+        "",
+        "21:17 03-09-2026",
+        "146Min(s)",
+        "Retrasado",
+        "21:18 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ALTO EL TRIGO",
+        "",
+        "23:51 03-09-2026",
+        "153Min(s)",
+        "Retrasado",
+        "23:51 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PTO SALGAR",
+        "",
+        "03:43 04-09-2026",
+        "232Min(s)",
+        "Retrasado",
+        "03:44 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO LIBRE",
+        "",
+        "06:31 04-09-2026",
+        "167Min(s)",
+        "Retrasado",
+        "06:31 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BOYACA",
+        "",
+        "06:41 04-09-2026",
+        "9Min(s)",
+        "Retrasado",
+        "06:41 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO ARAUJO",
+        "",
+        "09:08 04-09-2026",
+        "147Min(s)",
+        "Retrasado",
+        "09:08 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA ROCEHELA",
+        "",
+        "11:17 04-09-2026",
+        "128Min(s)",
+        "Retrasado",
+        "11:17 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LIZAMA",
+        "",
+        "13:41 04-09-2026",
+        "143Min(s)",
+        "Retrasado",
+        "13:41 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA FORTUNA",
+        "",
+        "15:45 04-09-2026",
+        "124Min(s)",
+        "Pernoctacion",
+        "15:46 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARBOSA",
+        "19:31 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN JOSE DE PARE (Virtual)",
+        "20:01 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SANTANA (Virtual)",
+        "20:31 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "VADO REAL",
+        "21:01 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "OIBA (SANT) (Virtual)",
+        "21:31 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SOCORRO (SANT) (Virtual)",
+        "22:01 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BERLIN",
+        "22:31 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN GIL",
+        "23:01 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CURITI (Virtual)",
+        "23:31 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ARATOCA (Sant) (Virtual)",
+        "00:01 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PESCADERO VIRTUAL (Virtual)",
+        "00:31 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS CUROS",
+        "01:01 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "01:31 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FLORIDABLANCA",
+        "02:01 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LEBRIJA (Virtual)",
+        "02:31 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "03:01 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA FORTUNA",
+        "[NOV-ESP] Pernoctacion",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA MAS ADELANTE\nDE LA FORTUNA EN BIOMAX GUAYACAN QUE PERNOCTA AHI\nYA QUE TIENE CITA DE DESCARGUE MAÑANA A LAS 9:00AM",
+        "15:45 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LIZAMA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR LA LIZAMA SIN\nNOVEDAD",
+        "13:41 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA ROCEHELA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN TRANSITO\nPOR LA ROCHELA SIN NOVEDAD",
+        "11:17 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO ARAUJO",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA EN TRANSITO POR PUERTO ARAUJO\nSIN NOVEDAD",
+        "09:08 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BOYACA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PUERTO BOYACA CEL/CONFIRMA UBICACION\nSIN NOVEDAD",
+        "06:41 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO LIBRE",
+        "Retrasado",
+        "VEH ESTACIONADO EN PUERTO LIBRE CEL/NO CONTESTA",
+        "06:31 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PTO SALGAR",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PTO SALGAR SIN NOVEDAD",
+        "03:43 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ALTO EL TRIGO",
+        "Retrasado",
+        "VEH EN RUTA EN VIA ALTO EL TRIGO SIN NOVEDAD",
+        "23:51 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE JALISCO",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PEAJE JALISCO CEL/NO CONTESTA -\nPEND RTA WPP",
+        "21:17 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MADRID",
+        "Retrasado",
+        "VEH EN RUTA POR MADRID SIN NOVEDAD",
+        "18:52 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "Retrasado",
+        "VEH EN RUTA ENTRANDO A BOGOTA SIN NOVEDAD",
+        "16:17 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA EN TOCANCIPA\nEN CAPRI EN PROCESO DE CARGUE",
+        "13:41 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42377&opcion=1"
+}

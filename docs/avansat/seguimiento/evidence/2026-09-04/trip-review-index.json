@@ -1,0 +1,742 @@
+{
+  "reviewDate": "2026-09-04",
+  "initialCount": 48,
+  "finalCount": 49,
+  "trips": [
+    {
+      "dispatch": "42389",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 25,
+      "notes": 15,
+      "checkpointLinks": 10,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42403",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 20,
+      "notes": 1,
+      "checkpointLinks": 19,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42390",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 15,
+      "notes": 7,
+      "checkpointLinks": 8,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42404",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 10,
+      "notes": 1,
+      "checkpointLinks": 9,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42374",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 17,
+      "notes": 12,
+      "checkpointLinks": 5,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42385",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 16,
+      "notes": 11,
+      "checkpointLinks": 5,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42367",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 26,
+      "notes": 19,
+      "checkpointLinks": 7,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42387",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 36,
+      "notes": 9,
+      "checkpointLinks": 3,
+      "hasMap": true,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42377",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 28,
+      "notes": 12,
+      "checkpointLinks": 16,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42394",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 15,
+      "notes": 3,
+      "checkpointLinks": 12,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42406",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 11,
+      "notes": 1,
+      "checkpointLinks": 10,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42400",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 8,
+      "notes": 2,
+      "checkpointLinks": 6,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42407",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 11,
+      "notes": 1,
+      "checkpointLinks": 10,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42396",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 13,
+      "notes": 2,
+      "checkpointLinks": 8,
+      "hasMap": true,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42382",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 44,
+      "notes": 9,
+      "checkpointLinks": 8,
+      "hasMap": true,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42391",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 11,
+      "notes": 4,
+      "checkpointLinks": 7,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42381",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 24,
+      "notes": 15,
+      "checkpointLinks": 9,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42379",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 18,
+      "notes": 11,
+      "checkpointLinks": 7,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42392",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 25,
+      "notes": 4,
+      "checkpointLinks": 21,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42402",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 8,
+      "notes": 2,
+      "checkpointLinks": 6,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42378",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 19,
+      "notes": 11,
+      "checkpointLinks": 8,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42405",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 5,
+      "notes": 1,
+      "checkpointLinks": 4,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42398",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 31,
+      "notes": 3,
+      "checkpointLinks": 28,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42397",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 24,
+      "notes": 2,
+      "checkpointLinks": 19,
+      "hasMap": true,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42411",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 11,
+      "notes": 1,
+      "checkpointLinks": 10,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42384",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 12,
+      "notes": 10,
+      "checkpointLinks": 2,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42401",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 10,
+      "notes": 1,
+      "checkpointLinks": 9,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42412",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 11,
+      "notes": 1,
+      "checkpointLinks": 10,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42393",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 15,
+      "notes": 2,
+      "checkpointLinks": 13,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42380",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 13,
+      "notes": 10,
+      "checkpointLinks": 3,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42365",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 23,
+      "notes": 18,
+      "checkpointLinks": 5,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42395",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 19,
+      "notes": 2,
+      "checkpointLinks": 17,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42372",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 51,
+      "notes": 12,
+      "checkpointLinks": 9,
+      "hasMap": true,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42383",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 22,
+      "notes": 11,
+      "checkpointLinks": 11,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42409",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 19,
+      "notes": 1,
+      "checkpointLinks": 18,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42410",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 19,
+      "notes": 1,
+      "checkpointLinks": 18,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42408",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 19,
+      "notes": 1,
+      "checkpointLinks": 18,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42328",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 178,
+      "notes": 29,
+      "checkpointLinks": 2,
+      "hasMap": true,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42376",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 13,
+      "notes": 10,
+      "checkpointLinks": 3,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42364",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 21,
+      "notes": 18,
+      "checkpointLinks": 3,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42371",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 26,
+      "notes": 23,
+      "checkpointLinks": 3,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42293",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 41,
+      "notes": 38,
+      "checkpointLinks": 3,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42386",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 37,
+      "notes": 10,
+      "checkpointLinks": 3,
+      "hasMap": true,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42388",
+      "queue": "en_route",
+      "addedDuringReview": false,
+      "routeRows": 13,
+      "notes": 10,
+      "checkpointLinks": 3,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42373",
+      "queue": "pending_arrival",
+      "addedDuringReview": false,
+      "routeRows": 10,
+      "notes": 10,
+      "checkpointLinks": 1,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42368",
+      "queue": "pending_arrival",
+      "addedDuringReview": false,
+      "routeRows": 17,
+      "notes": 17,
+      "checkpointLinks": 1,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42366",
+      "queue": "pending_arrival",
+      "addedDuringReview": false,
+      "routeRows": 69,
+      "notes": 19,
+      "checkpointLinks": 1,
+      "hasMap": true,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42363",
+      "queue": "pending_arrival",
+      "addedDuringReview": false,
+      "routeRows": 72,
+      "notes": 20,
+      "checkpointLinks": 1,
+      "hasMap": true,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    },
+    {
+      "dispatch": "42413",
+      "queue": "en_route",
+      "addedDuringReview": true,
+      "routeRows": 10,
+      "notes": 0,
+      "checkpointLinks": 10,
+      "hasMap": false,
+      "sourceFilters": [
+        "Seguimiento",
+        "Interfaz GPS",
+        "Movil",
+        "Todas"
+      ]
+    }
+  ]
+}

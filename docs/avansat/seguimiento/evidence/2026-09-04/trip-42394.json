@@ -1,0 +1,470 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=55&pc=UBATE&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "UBATE"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=56&pc=ZIPAQUIRA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ZIPAQUIRA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=12406&pc=CAJICA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CAJICA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=12489&pc=CHIA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CHIA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=10918&pc=BOGOTA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BOGOTA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=119&pc=VILLETA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "VILLETA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=132&pc=GUADUAS&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GUADUAS"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=201&pc=HONDA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "HONDA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=10285&pc=GUARINOCITO (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GUARINOCITO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=11255&pc= LA DORADA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA DORADA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=10515&pc=LUGAR DE ENTREGA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR DE ENTREGA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42394&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42394",
+        "Origen",
+        "GUACHETA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043373",
+        "Destino",
+        "LA DORADA (Cald)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "3642 - GUACHETA (Cund) - 25317000 - LA DORADA (Cald) - 17380000 VIA CALDAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "GOMEZ MILTON GERMAN",
+        "Fecha Salida",
+        "10:06 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "00:06 05-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-04 10:06:23"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SSP997"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AZUL BLANCO",
+        "Modelo",
+        "2011"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "UBATE",
+        "",
+        "10:20 04-09-2026",
+        "16Min(s)",
+        "Retrasado",
+        "10:22 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "UBATE",
+        "",
+        "13:59 04-09-2026",
+        "218Min(s)",
+        "Retrasado",
+        "14:00 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "UBATE",
+        "",
+        "16:09 04-09-2026",
+        "128Min(s)",
+        "Pernoctacion",
+        "16:09 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "UBATE",
+        "13:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ZIPAQUIRA",
+        "14:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJICA (Virtual)",
+        "15:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIA (Virtual)",
+        "16:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA (Virtual)",
+        "17:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "VILLETA",
+        "18:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUADUAS",
+        "19:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "HONDA",
+        "20:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUARINOCITO (Virtual)",
+        "21:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA (Virtual)",
+        "22:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR DE ENTREGA (Virtual) (Virtual)",
+        "23:06 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "00:06 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "UBATE",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN TALLER MECANICO EN UBATE CEL/ MANIFIESTA\nCONTINUA CON ARREGLOS, INICIA RUTA A LAS 02:00AM",
+        "16:09 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "UBATE",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA ESTACIONADO EN UBATE PENDIENTE\nCONFIRMAR ARREGLOS E INICIO DE RUTA CEL/NO CONTESTA",
+        "13:59 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "UBATE",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA ACABAO DE CARGAR Y SE\nENCEUNTRA SALIENDO DEL PATIO DE CARGUE INFORMA QUE\nLE VA A REALIZAR UNOS ARREGLOS AL VEHICULO EN UBATE\nE INCIIA RUTA DESPUES DE LA 1PM",
+        "10:20 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42394&opcion=1"
+}

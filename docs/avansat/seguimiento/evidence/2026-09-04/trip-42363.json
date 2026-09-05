@@ -1,0 +1,1331 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    }
+  ],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42363&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    },
+    {
+      "href": "http://www.openstreetmap.org/copyright",
+      "target": null,
+      "text": "OpenStreetMap"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42363",
+        "Origen",
+        "TOCANCIPA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043335",
+        "Destino",
+        "PEREIRA (Risa)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "1195 - TOCANCIPA (Cund) - 25817000 - PEREIRA (Risa) - 66001000 VIA CAJAMARCA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "GUTIERREZ CRISTIAN CAMILO",
+        "Fecha Salida",
+        "14:17 02-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "15:47 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-02 14:17:20"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SVC821"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AZUL",
+        "Modelo",
+        "2012"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 886 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "13:47 02-09-2026",
+        "10Min(s)",
+        "GPS",
+        "14:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "",
+        "14:32 02-09-2026",
+        "5Min(s)",
+        "Retrasado",
+        "14:33 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 886 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "14:45 02-09-2026",
+        "54Min(s)",
+        "GPS",
+        "15:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "",
+        "16:20 02-09-2026",
+        "56Min(s)",
+        "Retrasado",
+        "16:23 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 902 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "16:27 02-09-2026",
+        "3Min(s)",
+        "GPS",
+        "16:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 902 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "17:27 02-09-2026",
+        "59Min(s)",
+        "GPS",
+        "17:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 902 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "18:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "18:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "",
+        "19:08 02-09-2026",
+        "41Min(s)",
+        "Retrasado",
+        "19:08 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 902 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "19:27 02-09-2026",
+        "18Min(s)",
+        "GPS",
+        "19:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 902 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "20:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "20:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 902 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "21:27 02-09-2026",
+        "59Min(s)",
+        "GPS",
+        "21:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "",
+        "22:17 02-09-2026",
+        "50Min(s)",
+        "Retrasado",
+        "22:17 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 902 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "22:27 02-09-2026",
+        "9Min(s)",
+        "GPS",
+        "22:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 902 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "23:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "23:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "",
+        "00:01 03-09-2026",
+        "34Min(s)",
+        "Retrasado",
+        "00:01 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 902 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "00:27 03-09-2026",
+        "25Min(s)",
+        "GPS",
+        "00:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 902 M DE RECTA DE TOCANCIPA (BOGOTA, CUNDINAMARCA).",
+        "",
+        "01:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "01:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1592 M DE CERVECERIA LEONA (TOCANCIPA, CUNDINAMARCA).",
+        "",
+        "02:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "02:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 99 M DE CL 93 CON AK 72 (BOGOTA, CUNDINAMARCA).",
+        "",
+        "03:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "03:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 515 M DE KR 4CON CL 26 SUR (SOACHA, CUNDINAMARCA).",
+        "",
+        "04:27 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "04:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SOACHA",
+        "",
+        "04:44 03-09-2026",
+        "17Min(s)",
+        "Retrasado",
+        "04:44 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1181 M DE P CHUSACA (SIBATE, CUNDINAMARCA).",
+        "",
+        "04:44 03-09-2026",
+        "42Min(s)",
+        "GPS",
+        "05:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1944 M DE PROXIMO A SUBIA (SILVANIA, CUNDINAMARCA).",
+        "",
+        "06:27 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "06:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUSAGASUGA",
+        "",
+        "07:05 03-09-2026",
+        "38Min(s)",
+        "Retrasado",
+        "07:05 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 285 M DE CENTRO SAN JUAN DE DIOS (FUSAGASUGA, CUNDINAMARCA).",
+        "",
+        "07:27 03-09-2026",
+        "21Min(s)",
+        "GPS",
+        "07:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 868 M DE ACOPIO TRITURADOS DEL TOLIMA (FLANDES, TOLIMA).",
+        "",
+        "08:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "08:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 849 M DE CL 142 CONKR 52 SUR (IBAGUE, TOLIMA).",
+        "",
+        "09:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "09:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "",
+        "09:35 03-09-2026",
+        "10Min(s)",
+        "Retrasado",
+        "09:37 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 774 M DE CURALITO (IBAGUE, TOLIMA).",
+        "",
+        "10:27 03-09-2026",
+        "49Min(s)",
+        "GPS",
+        "10:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 306 M DE PARADOR DALLAS (CAJAMARCA, TOLIMA).",
+        "",
+        "11:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "11:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "",
+        "11:33 03-09-2026",
+        "6Min(s)",
+        "Retrasado",
+        "11:34 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 303 M DE PARADOR DALLAS (CAJAMARCA, TOLIMA).",
+        "",
+        "12:27 03-09-2026",
+        "53Min(s)",
+        "GPS",
+        "12:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 308 M DE PARADOR DALLAS (CAJAMARCA, TOLIMA).",
+        "",
+        "13:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "13:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "",
+        "13:39 03-09-2026",
+        "12Min(s)",
+        "Retrasado",
+        "13:39 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 75 M DE SINABRIO (CAJAMARCA, TOLIMA).",
+        "",
+        "14:27 03-09-2026",
+        "47Min(s)",
+        "GPS",
+        "14:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 679 M DE 5 KILOMETROS ADELANTE DEL ALTO (CALARCA, QUINDIO).",
+        "",
+        "15:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "15:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CALARCA",
+        "",
+        "15:43 03-09-2026",
+        "16Min(s)",
+        "Retrasado",
+        "15:43 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2365 M DE UNIVERSIDAD ANTONIO NARINO (ARMENIA, QUINDIO).",
+        "",
+        "16:27 03-09-2026",
+        "43Min(s)",
+        "GPS",
+        "16:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "",
+        "16:52 03-09-2026",
+        "25Min(s)",
+        "Retrasado",
+        "16:52 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 181 M DE CL 82 CONKR 33 (PEREIRA, RISARALDA).",
+        "",
+        "17:27 03-09-2026",
+        "34Min(s)",
+        "GPS",
+        "17:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1209 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "17:54 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "18:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1209 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "18:51 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "19:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "",
+        "19:43 03-09-2026",
+        "17Min(s)",
+        "Pernoctacion",
+        "19:44 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1209 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "19:52 03-09-2026",
+        "42Min(s)",
+        "GPS",
+        "20:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1209 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "20:52 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "21:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "",
+        "21:44 03-09-2026",
+        "18Min(s)",
+        "Pernoctacion",
+        "21:45 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1209 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "21:52 03-09-2026",
+        "41Min(s)",
+        "GPS",
+        "22:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1209 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "22:52 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "23:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "",
+        "00:04 04-09-2026",
+        "37Min(s)",
+        "Pernoctacion",
+        "00:05 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1209 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "23:52 03-09-2026",
+        "22Min(s)",
+        "GPS",
+        "00:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1209 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "00:52 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "01:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1209 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "01:53 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "02:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1209 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "02:53 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "03:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "",
+        "04:12 04-09-2026",
+        "45Min(s)",
+        "Pernoctacion",
+        "04:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1884 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "04:27 04-09-2026",
+        "14Min(s)",
+        "GPS",
+        "04:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2070 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "04:44 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "05:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2179 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "06:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "06:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "",
+        "07:03 04-09-2026",
+        "37Min(s)",
+        "Retrasado",
+        "07:04 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2179 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "07:27 04-09-2026",
+        "22Min(s)",
+        "GPS",
+        "07:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2179 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "08:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "08:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2179 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "09:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "09:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "",
+        "10:16 04-09-2026",
+        "49Min(s)",
+        "Retrasado",
+        "10:16 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2226 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "10:27 04-09-2026",
+        "10Min(s)",
+        "GPS",
+        "10:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2226 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "11:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "11:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2209 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "12:27 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "12:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1181 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "13:00 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "13:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "",
+        "14:09 04-09-2026",
+        "43Min(s)",
+        "Retrasado",
+        "14:10 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1181 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "13:58 04-09-2026",
+        "16Min(s)",
+        "GPS",
+        "14:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1181 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "14:58 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "15:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1181 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "15:59 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "16:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1181 M DE HOSTAL MALABAR (PEREIRA, RISARALDA).",
+        "",
+        "16:59 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "17:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "23:37 02-09-2026",
+        "15:47 04-09-2026",
+        "-20Min(s)",
+        "Ok",
+        "15:47 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Ver recorrido del vehículo"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "+\n−\ni"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "Ok",
+        "YA CUMPLIO",
+        "15:47 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA DESCARGO PENDINETE DE\nQUE ENVIE FOTO DE LOS CUMPLIDOS",
+        "14:09 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN EL D1 PEREIRA PENDIENTE\nCONFIRMAR DESCARGUE CEL/NO CONTESTA",
+        "10:16 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "Retrasado",
+        "VEH EN KOBA PEREIRA PEND ENTREGA",
+        "07:03 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN HOTEL SANTA BARBARA EN PEREIRA -\nPERNOCTANDO - PEND ENTREGA VIERNES",
+        "04:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN HOTEL SANTA BARBARA EN PEREIRA\n- PERNOCTANDO - PEND ENTREGA VIERNES",
+        "00:04 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN HOTEL SANTA BARBARA EN PEREIRA -\nPERNOCTANDO - PEND ENTREGA VIERNES",
+        "21:44 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN HOTEL SANTA BARBARA EN PEREIRA\n- PERNOCTANDO - PEND ENTREGA VIERNES",
+        "19:43 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEREIRA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PEREIRA SIN NOVEDAD",
+        "16:52 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CALARCA",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA EN TRANSITO LLEGANDO A CALARCA\nSIN NOVEDAD",
+        "15:43 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA EN UN TRANCON\nPOR CAJAMARCA",
+        "13:39 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA POR CAJAMARCA\nDESAYUNANDO SIN NOVEDAD",
+        "11:33 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA EN TRANSITO POR IBAGUE SIN NOVEDAD",
+        "09:35 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUSAGASUGA",
+        "Retrasado",
+        "VEH EN RUTA POR FUSAGASUGA SIN NOVEDAD",
+        "07:05 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SOACHA",
+        "Retrasado",
+        "VEH EN RUTA PASO SOACHA SIN NOVEDAD",
+        "04:44 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "Retrasado",
+        "VEH ESTACIONADO EN EMBOTELLADORA CAPRI EN TOCANCIPA\n- PEND INICIO DE RUTA",
+        "00:01 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "Retrasado",
+        "VEH ESTACIONADO EN EMBOTELLADORA CAPRI EN TOCANCIPA -\nPEND INICIO DE RUTA A LA 01:00AM",
+        "22:17 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "Retrasado",
+        "VEH ESTACIONADO EN EMBOTELLADORA CAPRI EN TOCANCIPA\n- PEND INICIO DE RUTA A LA 01:00AM",
+        "19:08 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "Retrasado",
+        "VEH ESTACIONADO EN EMBOTELLADORA CAPRI EN TOCANCIPA\n- CEL/ MANIFIESTA ESTA EN PROCESO DE CARGUE, DEJA\nEL VEH EN BODEGA DEL CLIENTE E INICIA RUTA A LA 01:00AM",
+        "16:20 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA ESTACIONADO EN CAPRI EN TOCANCIPA\nPENDIENTE CONFIRMAR CARGUE CEL/SISTEMA CORREO DE VOZ",
+        "14:32 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42363&opcion=1"
+}

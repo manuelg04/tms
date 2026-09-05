@@ -1,0 +1,596 @@
+{
+  "capturedAt": "2026-09-05T00:03:08.753Z",
+  "controls": [],
+  "links": [
+    {
+      "onclick": "showNotas( \"\" )",
+      "text": "",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=1#"
+    },
+    {
+      "onclick": null,
+      "text": "BODEGA CLIENTE (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=10043&pc=BODEGA%20%20CLIENTE%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "CARTAGENA (Virtual) (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=13356&pc=%20CARTAGENA%20(Virtual)%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "ARJONA (Bolivar) (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=12346&pc=ARJONA%20(Bolivar)%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "EL CARMEN DE BOLIVAR (Virtual) (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=13391&pc=%20EL%20CARMEN%20DE%20BOLIVAR%20(Virtual)%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "PLATO",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=177&pc=PLATO&ind_virtua=0&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "EL DIFICIL (Magdalena medio) (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=12106&pc=EL%20DIFICIL%20(Magdalena%20medio)%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "BOSCONIA",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=176&pc=BOSCONIA&ind_virtua=0&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "LA LOMA (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=45&pc=LA%20LOMA%20%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "CHIRIGUANA (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=12269&pc=CHIRIGUANA%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "CURUMANI",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=185&pc=CURUMANI&ind_virtua=0&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "SAN ALBERTO (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=28&pc=SAN%20ALBERTO%20%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "PAILITAS (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=43&pc=PAILITAS%20%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "CONVENCION (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=10399&pc=CONVENCION%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "AGUACHICA (Virtual) (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=10824&pc=AGUACHICA%20%20(Virtual)%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "SAN MARTIN",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=169&pc=SAN%20MARTIN&ind_virtua=0&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "LA ESPERANZA (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=10413&pc=LA%20ESPERANZA%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "EL PLAYON (Virtual) (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=10313&pc=%20EL%20PLAYON%20(Virtual)%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "GIRON VITUAL (Virtual)",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=11265&pc=GIRON%20%20VITUAL%20(Virtual)&ind_virtua=1&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "Lugar Entrega",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=2&codpc=9999&pc=Lugar%20Entrega&ind_virtua=0&cod_transp=900773684%20&opcurban=0"
+    },
+    {
+      "onclick": null,
+      "text": "",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=1"
+    },
+    {
+      "onclick": null,
+      "text": "",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=1"
+    },
+    {
+      "onclick": null,
+      "text": "",
+      "title": "",
+      "url": ""
+    },
+    {
+      "onclick": null,
+      "text": "",
+      "title": "",
+      "url": ""
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42403",
+        "Origen",
+        "CARTAGENA DE INDIAS (Boli)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "[omitted]",
+        "Destino",
+        "GIRON (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "JORGE",
+        "Ruta",
+        "970 - CARTAGENA DE INDIAS (Boli) - [omitted] - GIRON (Sant) - [omitted] VIA EL CARMEN----SAN ALBERTO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "PORTILLA JOSE ATANAEL",
+        "Fecha Salida",
+        "16:05 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[omitted]",
+        "Fecha Planeada Llegada",
+        "04:30 05-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[omitted]",
+        "Fecha Creación",
+        "2026-09-04 16:04:29"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[omitted]",
+        "Placa",
+        "SQM101"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AZUL",
+        "Modelo",
+        "2005"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CARTAGENA",
+        "",
+        "16:10 04-09-2026",
+        "6Min(s)",
+        "Retrasado",
+        "16:11 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL CARMEN DE BOLIVAR",
+        "",
+        "18:50 04-09-2026",
+        "159Min(s)",
+        "Retrasado",
+        "18:50 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BODEGA CLIENTE (Virtual)",
+        "16:15 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CARTAGENA (Virtual) (Virtual)",
+        "16:35 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ARJONA (Bolivar) (Virtual)",
+        "17:05 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL CARMEN DE BOLIVAR (Virtual) (Virtual)",
+        "17:45 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PLATO",
+        "18:15 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL DIFICIL (Magdalena medio) (Virtual)",
+        "18:55 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSCONIA",
+        "19:35 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LOMA (Virtual)",
+        "20:05 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIRIGUANA (Virtual)",
+        "20:35 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CURUMANI",
+        "21:05 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBERTO (Virtual)",
+        "21:35 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAILITAS (Virtual)",
+        "22:05 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CONVENCION (Virtual)",
+        "22:45 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA (Virtual) (Virtual)",
+        "23:25 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN MARTIN",
+        "00:25 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA ESPERANZA (Virtual)",
+        "01:05 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL PLAYON (Virtual) (Virtual)",
+        "02:05 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRON VITUAL (Virtual)",
+        "02:45 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "04:30 05-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL CARMEN DE BOLIVAR",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE EL CARMEN DE BOLIVAR SIN NOVEDAD",
+        "18:50 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CARTAGENA",
+        "Retrasado",
+        "VEH EN RUTA SALIENDO DE CARTAGENA CEL/ MANIFIESTA\nYA CARGO E INICIA RUTA SIN NOVEDAD",
+        "16:10 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [omitted] - [omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=1"
+}

@@ -1,0 +1,683 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42381&opcion=2&codpc=182&pc=PAMPLONA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PAMPLONA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42381&opcion=2&codpc=10301&pc=BUCARAMAGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BUCARAMAGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42381&opcion=2&codpc=10261&pc=PUERTO  ARAUJO (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PUERTO ARAUJO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42381&opcion=2&codpc=10264&pc=PUERTO   BOYACA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PUERTO BOYACA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42381&opcion=2&codpc=13351&pc= LA DORADA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA DORADA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42381&opcion=2&codpc=198&pc=LA VEGA  (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA VEGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42381&opcion=2&codpc=11342&pc=FUNZA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "FUNZA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42381&opcion=2&codpc=10515&pc=LUGAR DE ENTREGA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR DE ENTREGA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42381&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42381",
+        "Origen",
+        "CAMPO DOS (Nort)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043360",
+        "Destino",
+        "FUNZA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "WILSON",
+        "Ruta",
+        "2719 - CAMPO DOS (Nort) - 54810017 - FUNZA (Cund) - 25286000 VIA RUTA DEL SOL-SECTOR 2"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "CANO JOSE EDUYN",
+        "Fecha Salida",
+        "14:17 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "91107831",
+        "Fecha Planeada Llegada",
+        "08:37 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 14:17:04"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "STA192"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "S.R.S"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "ROJO",
+        "Modelo",
+        "2013"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA PETROLEA",
+        "",
+        "14:34 03-09-2026",
+        "18Min(s)",
+        "Retrasado",
+        "14:35 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA YE DE ASTILLEROS",
+        "",
+        "16:27 03-09-2026",
+        "112Min(s)",
+        "Retrasado",
+        "16:28 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA YE DE ASTILLEROS",
+        "",
+        "17:07 03-09-2026",
+        "39Min(s)",
+        "Retrasado",
+        "17:07 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS VADOS",
+        "",
+        "19:45 03-09-2026",
+        "158Min(s)",
+        "Retrasado",
+        "19:46 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS VADOS",
+        "",
+        "19:54 03-09-2026",
+        "9Min(s)",
+        "Retrasado",
+        "19:55 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA",
+        "",
+        "21:28 03-09-2026",
+        "93Min(s)",
+        "Retrasado",
+        "21:28 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LEJIA",
+        "",
+        "23:56 03-09-2026",
+        "148Min(s)",
+        "Retrasado",
+        "23:57 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LEJIA",
+        "",
+        "03:53 04-09-2026",
+        "236Min(s)",
+        "Retrasado",
+        "03:53 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PRESIDENTE",
+        "",
+        "06:38 04-09-2026",
+        "164Min(s)",
+        "Retrasado",
+        "06:38 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CONCEPCION",
+        "",
+        "09:07 04-09-2026",
+        "148Min(s)",
+        "Retrasado",
+        "09:07 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAPITANEJO",
+        "",
+        "11:16 04-09-2026",
+        "128Min(s)",
+        "Retrasado",
+        "11:16 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAPITANEJO",
+        "",
+        "13:38 04-09-2026",
+        "142Min(s)",
+        "Retrasado",
+        "13:39 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAPITANEJO",
+        "",
+        "15:42 04-09-2026",
+        "123Min(s)",
+        "Ok",
+        "15:42 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAPITANEJO",
+        "",
+        "16:19 04-09-2026",
+        "36Min(s)",
+        "Retrasado",
+        "16:19 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAPITANEJO",
+        "",
+        "16:27 04-09-2026",
+        "8Min(s)",
+        "Pernoctacion",
+        "16:28 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA",
+        "19:17 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMAGA (Virtual)",
+        "20:57 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO ARAUJO (Virtual)",
+        "22:37 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BOYACA (Virtual)",
+        "00:17 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA (Virtual)",
+        "01:57 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA VEGA (Virtual)",
+        "03:37 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUNZA (Virtual)",
+        "05:17 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR DE ENTREGA (Virtual) (Virtual)",
+        "06:57 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "08:37 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAPITANEJO",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN Cra 4, 6 Capitanejo, CEL/MANIFIESTA\nPERNOCTA AHI DEBIDO A QUE LA CITA DE ENTREGA ES EL\nLUNES, MAÑANA AVANZA OTRO POCO",
+        "16:27 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAPITANEJO",
+        "Retrasado",
+        "VEH ESTACIONADO EN Cra 4, 6 Capitanejo, CEL/NO CONTESTA\n- PEND RTA WPP",
+        "16:19 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAPITANEJO",
+        "Ok",
+        "VEHICULO PERMANECE ESTACIONADO EN CAPITANEJO PENDIENTE\nCONFIRMAR SI PERNOCTA AHI CEL/SISTEMA CORREO DE VOZ",
+        "15:42 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAPITANEJO",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA ESTACIONADO EN CAPITANEJO PENDIENTE\nCONFIRMAR EL REINICIO DE RUTA CEL/SIN SEÑAL",
+        "13:38 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAPITANEJO",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN TRANSITO\nLLEGANDO A CAPITANEJO SIN NOVEDAD",
+        "11:16 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CONCEPCION",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR CONCEPCION SIN\nNOVEDAD",
+        "09:07 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PRESIDENTE",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PRESIDENTE SIN NOVEDAD",
+        "06:38 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LEJIA",
+        "Retrasado",
+        "VEH EN EDS LA MATILDE DELANTE DE LA LEJIA PEND REINICIO DE\nRUTA",
+        "03:53 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LEJIA",
+        "Retrasado",
+        "VEH EN EDS LA MATILDE DELANTE DE LA LEJIA PEND REINICIO\nDE RUTA",
+        "23:56 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PAMPLONA SIN NOVEDAD",
+        "21:28 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS VADOS",
+        "Retrasado",
+        "VEH ESTACIONADO EN Estación de Servicio Los Vados\nEN LOS VADOS CEL/ MANIFIESTA ESTABA COMIENDO PERO\nYA VA A RETOMAR RUTA NUEVAMENTE SIN NOVEDAD, PERNOCTA\nDELANTE DE PAMPLONA",
+        "19:54 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS VADOS",
+        "Retrasado",
+        "VEH ESTACIONADO EN LOS VADOS CEL/NO CONTESTA - PEND\nRTA WPP",
+        "19:45 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "la ye de astilleros",
+        "Retrasado",
+        "VEH EN RUTA EN VIA LA YE DE ASTILLEROS CEL/ MANIFIESTA\nYA CARGO, INICIA RUTA DE UNA VEZ",
+        "17:07 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "la ye de astilleros",
+        "Retrasado",
+        "VEH EN RUTA EN VIA LA YE DE ASTILLEROS CEL/ SIN SEÑAL\n- PEND RTA WPP",
+        "16:27 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA PETROLEA",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA EN TRANSITO POR LA PETROLEA\nPENDIENTE CONFIRMAR CARGUE CEL/SISTEMA CORREO DE VOZ",
+        "14:34 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42381&opcion=1"
+}

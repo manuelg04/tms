@@ -1,0 +1,471 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42388&opcion=2&codpc=10089&pc=BARRANQUILLA ® (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BARRANQUILLA ® (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42388&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42388&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42388",
+        "Origen",
+        "AGUACHICA (Cesa)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043367",
+        "Destino",
+        "SITIONUEVO (Magd)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "3696 - AGUACHICA (Cesa) - 20011000 - SITIONUEVO (Magd) - 47745000 VIA MAGDALENA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "VARGAS YONATHAN",
+        "Fecha Salida",
+        "18:39 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "11:19 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 18:38:41"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SSR443"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "FOTON",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "BJ4259SMFKB-C1",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "PLATEADO",
+        "Modelo",
+        "2023"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "18:42 03-09-2026",
+        "4Min(s)",
+        "Retrasado",
+        "18:43 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "20:57 03-09-2026",
+        "133Min(s)",
+        "Retrasado",
+        "20:57 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "23:44 03-09-2026",
+        "168Min(s)",
+        "Retrasado",
+        "23:45 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSCONIA",
+        "",
+        "04:02 04-09-2026",
+        "259Min(s)",
+        "Retrasado",
+        "04:04 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUCURINCA",
+        "",
+        "06:20 04-09-2026",
+        "136Min(s)",
+        "Retrasado",
+        "06:20 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "",
+        "08:23 04-09-2026",
+        "123Min(s)",
+        "Retrasado",
+        "08:23 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "",
+        "10:53 04-09-2026",
+        "149Min(s)",
+        "Retrasado",
+        "10:53 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "",
+        "14:16 04-09-2026",
+        "202Min(s)",
+        "Retrasado",
+        "14:16 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "",
+        "17:15 04-09-2026",
+        "179Min(s)",
+        "Retrasado",
+        "17:16 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEND CUMPLIDO",
+        "",
+        "17:24 04-09-2026",
+        "8Min(s)",
+        "Retrasado",
+        "17:24 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA ® (Virtual)",
+        "09:14 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "09:49 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "11:19 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEND CUMPLIDO",
+        "Retrasado",
+        "CEL/ MANIFIESTA VEH DESCARGADO SIN NOVEDAD FIN DE\nRUTA - PEND FOTO DEL CUMPLIDO",
+        "17:24 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "Retrasado",
+        "VEH ESTACIONADO EN Cl. 1f 3B 31, EN BARRANQUILLA\n- PEND ENTREGA",
+        "17:15 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN EL PUERTO\nA LA ESPERA DE QUE LO EMPIECEN A DESCARGAR",
+        "14:16 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA LE DIERON INGRESO PARA\nQUE LOS EMPIECEN A DESCARGAR",
+        "10:53 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO LLEGANDO A BARRANQUILLA\nCEL/SIN SEÑAL",
+        "08:23 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUCURINCA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA TUCURINCA SIN NOVEDAD",
+        "06:20 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSCONIA",
+        "Retrasado",
+        "CORRECCION: VEH EN RUTA EN VIA BOSCONIA SIN NOVEDAD",
+        "04:02 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH EN BUTURAMA EN AGUACHICA PEND ENTREGA",
+        "23:44 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH ESTACIONADO EN VIA AGUACHICA - PEND CARGUE",
+        "20:57 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH ESTACIONADO EN VIA AGUACHICA CEL/ MANIFIESTA ESTA\nA LA ESPERA PARA CARGAR",
+        "18:42 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42388&opcion=1"
+}

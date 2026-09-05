@@ -1,0 +1,471 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42380&opcion=2&codpc=11409&pc=RIO NEGRO (SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "RIO NEGRO (SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42380&opcion=2&codpc=166&pc=GIRON&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GIRON"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42380&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42380",
+        "Origen",
+        "CIENAGA DE ORO (Cord)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043359",
+        "Destino",
+        "BUCARAMANGA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "JORGE",
+        "Ruta",
+        "788 - CIENAGA DE ORO (Cord) - 23189000 - BUCARAMANGA (Sant) - 68001000 VIA CARTAGENA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "CAICEDO JORGE ELIECER",
+        "Fecha Salida",
+        "14:14 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "01:58 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 14:14:00"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "KUN178"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "INTERNATIONAL",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "9400",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "BLANCO",
+        "Modelo",
+        "2007"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAHAGUN",
+        "",
+        "14:28 03-09-2026",
+        "15Min(s)",
+        "Retrasado",
+        "14:29 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "OVEJAS",
+        "",
+        "16:25 03-09-2026",
+        "115Min(s)",
+        "Retrasado",
+        "16:25 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "APURE",
+        "",
+        "19:11 03-09-2026",
+        "166Min(s)",
+        "Retrasado",
+        "19:11 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSCONIA",
+        "",
+        "21:33 03-09-2026",
+        "142Min(s)",
+        "Retrasado",
+        "21:33 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ROQUE",
+        "",
+        "23:58 03-09-2026",
+        "145Min(s)",
+        "Retrasado",
+        "23:59 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL BESOTE",
+        "",
+        "03:54 04-09-2026",
+        "235Min(s)",
+        "Retrasado",
+        "03:54 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "08:11 04-09-2026",
+        "256Min(s)",
+        "Retrasado",
+        "08:11 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "10:51 04-09-2026",
+        "160Min(s)",
+        "Retrasado",
+        "10:52 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "14:14 04-09-2026",
+        "203Min(s)",
+        "Retrasado",
+        "14:15 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "",
+        "17:11 04-09-2026",
+        "177Min(s)",
+        "Retrasado",
+        "17:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RIO NEGRO (SANT) (Virtual)",
+        "01:14 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRON",
+        "01:57 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "01:58 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "Retrasado",
+        "VEH ESTACIONADO EN ALIMENTOS FINCA SAS EN CHIMITA\n- PEND ENTREGA",
+        "17:11 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE EL VEHICULO PERMANECE EN\nEL MUELLE DEL CLIENTE A LA ESPERA DE QUE LO DESCARGUEN",
+        "14:14 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA SE ENCEUNTRA EN MUELLE\nA LA ESPERA DE QUE LO EMPIECEN A DESCARGAR",
+        "10:51 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA EN TRANSITO LLEGANDO A BUCARAMANGA\nSIN NOVEDAD",
+        "08:11 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "el besote",
+        "Retrasado",
+        "VEH EN RUTA EN VIA EL BESOTE SIN NOVEDAD",
+        "03:54 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ROQUE",
+        "Retrasado",
+        "VEH EN RUTA EN VIA SAN ROQUE SIN NOVEDAD",
+        "23:58 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSCONIA",
+        "Retrasado",
+        "VEH ESTACIONADO EN BOSCONIA CEL/ MANIFIESTA ESTA MONTANDO\nUNA LLANTA EN BREVE RETOMA RUTA",
+        "21:33 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "APURE",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE APURE SIN NOVEDAD",
+        "19:11 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Ovejas",
+        "Retrasado",
+        "VEH EN RUTA POR OVEHAS SIN NOVEDAD",
+        "16:25 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAHAGUN",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCUENTRA\nEN RUTA POR SAHAGUN SIN NOVEDAD",
+        "14:28 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42380&opcion=1"
+}

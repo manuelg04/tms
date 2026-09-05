@@ -1,0 +1,799 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    }
+  ],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42387&opcion=2&codpc=10089&pc=BARRANQUILLA ® (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BARRANQUILLA ® (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42387&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42387&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    },
+    {
+      "href": "http://www.openstreetmap.org/copyright",
+      "target": null,
+      "text": "OpenStreetMap"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42387",
+        "Origen",
+        "AGUACHICA (Cesa)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043366",
+        "Destino",
+        "SITIONUEVO (Magd)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "3696 - AGUACHICA (Cesa) - 20011000 - SITIONUEVO (Magd) - 47745000 VIA MAGDALENA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "CRISTANCHO ROBINSON",
+        "Fecha Salida",
+        "18:33 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "91523965",
+        "Fecha Planeada Llegada",
+        "11:13 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 18:33:04"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SXS222"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "VOLCO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AZUL",
+        "Modelo",
+        "2012"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "18:38 03-09-2026",
+        "5Min(s)",
+        "Retrasado",
+        "18:38 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 3160 M DE VILLA SAN ANDRES (AGUACHICA, CESAR).",
+        "",
+        "18:57 03-09-2026",
+        "18Min(s)",
+        "GPS",
+        "18:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 3195 M DE VILLA SAN ANDRES (AGUACHICA, CESAR).",
+        "",
+        "19:57 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "19:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 4271 M DE KM 22ADELANTE (LA GLORIA, CESAR).",
+        "",
+        "20:57 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "20:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA MATA",
+        "",
+        "20:58 03-09-2026",
+        "1Min(s)",
+        "Retrasado",
+        "20:58 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 890 M DE R LA FLORESTA (PELAYA, CESAR).",
+        "",
+        "21:57 03-09-2026",
+        "58Min(s)",
+        "GPS",
+        "21:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2555 M DE PUESTO DE DE POLICIA (CURUMANI, CESAR).",
+        "",
+        "22:57 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "22:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LOMA",
+        "",
+        "23:47 03-09-2026",
+        "50Min(s)",
+        "Retrasado",
+        "23:47 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1197 M DE R CESAR (EL PASO, CESAR).",
+        "",
+        "23:57 03-09-2026",
+        "9Min(s)",
+        "GPS",
+        "23:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1781 M DE EL COPEY (EL COPEY, CESAR).",
+        "",
+        "00:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "00:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 402 M DE MOBIL Y EL CRUCE A LOS CERROS (ARACATACA, MAGDALENA).",
+        "",
+        "01:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "01:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 101 M DE PUENTE SEVILLA (MAGDALENA) (ZONA BANANERA, MAGDALENA).",
+        "",
+        "02:14 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "02:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN JOSE DE KENNEDY",
+        "",
+        "03:40 04-09-2026",
+        "44Min(s)",
+        "Retrasado",
+        "03:41 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 101 M DE PUENTE SEVILLA (MAGDALENA) (ZONA BANANERA, MAGDALENA).",
+        "",
+        "03:12 04-09-2026",
+        "15Min(s)",
+        "GPS",
+        "03:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 109 M DE PUENTE SEVILLA (MAGDALENA) (ZONA BANANERA, MAGDALENA).",
+        "",
+        "04:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "04:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 270 M DE TASAJERA (PUEBLOVIEJO, MAGDALENA).",
+        "",
+        "05:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "05:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TASAJERAS",
+        "",
+        "06:03 04-09-2026",
+        "6Min(s)",
+        "Retrasado",
+        "06:03 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 54 M DE PEAJE LAUREANO GOMEZ (SITIONUEVO, MAGDALENA).",
+        "",
+        "06:57 04-09-2026",
+        "53Min(s)",
+        "GPS",
+        "06:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 25 M DE PEAJE LAUREANO GOMEZ (SITIONUEVO, MAGDALENA).",
+        "",
+        "07:01 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "07:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 102 M DE KR 2 CON CL 2 (BARRANQUILLA, ATLANTICO).",
+        "",
+        "08:57 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "08:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "",
+        "09:09 04-09-2026",
+        "13Min(s)",
+        "Retrasado",
+        "09:10 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 15 M DE KR 30 CONCL 1G (BARRANQUILLA, ATLANTICO).",
+        "",
+        "09:57 04-09-2026",
+        "46Min(s)",
+        "GPS",
+        "09:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 15 M DE KR 30 CONCL 1G (BARRANQUILLA, ATLANTICO).",
+        "",
+        "10:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "10:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "",
+        "11:50 04-09-2026",
+        "53Min(s)",
+        "Retrasado",
+        "11:51 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 36 M DE CL 1F CONKR 4A (BARRANQUILLA, ATLANTICO).",
+        "",
+        "11:40 04-09-2026",
+        "6Min(s)",
+        "GPS",
+        "11:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 40 M DE CL 1F CONKR 4A (BARRANQUILLA, ATLANTICO).",
+        "",
+        "12:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "12:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 40 M DE CL 1F CONKR 4A (BARRANQUILLA, ATLANTICO).",
+        "",
+        "13:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "13:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 90 M DE KR 3B CONCL 1F (BARRANQUILLA, ATLANTICO).",
+        "",
+        "14:57 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "14:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "",
+        "15:12 04-09-2026",
+        "15Min(s)",
+        "Retrasado",
+        "15:13 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 114 M DE PEAJE LAUREANO GOMEZ (SITIONUEVO, MAGDALENA).",
+        "",
+        "15:57 04-09-2026",
+        "44Min(s)",
+        "GPS",
+        "15:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 44 M DE PEAJE LAUREANO GOMEZ (SITIONUEVO, MAGDALENA).",
+        "",
+        "16:33 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "16:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "",
+        "17:39 04-09-2026",
+        "43Min(s)",
+        "Retrasado",
+        "17:40 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 44 M DE PEAJE LAUREANO GOMEZ (SITIONUEVO, MAGDALENA).",
+        "",
+        "17:30 04-09-2026",
+        "16Min(s)",
+        "GPS",
+        "17:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA ® (Virtual)",
+        "09:08 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "09:43 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "11:13 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Ver recorrido del vehículo"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "+\n−\ni"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "Retrasado",
+        "VEH ESTACIONADO EN PARQUEADERO LOS PRIMOS EN PALERMO\nCEL/NO CONTESTA - PEND RTA WPP CONFIRMAR ENTREGA",
+        "17:39 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA EN PROCESO\nDE DESCARGUE",
+        "15:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE PERMANECE ESTACIONADO EN\nLA ZONA FRANCA QUE DESPUES DE LA 1:00PM LOS EMPIEZAN\nA DESCARGAR",
+        "11:50 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARRANQUILLA",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA ESTACIONADO POR LA ZONA FRANCA\nBARRANQUILLA PENDIENTE CONFIRMAR DESCARGUE CEL/NO\nCONTESTA",
+        "09:09 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TASAJERAS",
+        "Retrasado",
+        "VEH EN RUTA PASO TASAJERAS SIN NOVEDAD",
+        "06:03 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN JOSE DE KENNEDY",
+        "Retrasado",
+        "VEH EN PARADOR LA BODEGA EN SAN JOSE DE KENNEDY PEND\nREINICIO DE RUTA",
+        "03:40 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LOMA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA LA LOMA SIN NOVEDAD",
+        "23:47 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA MATA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA LA MATA SIN NOVEDAD",
+        "20:58 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH ESTACIONADO EN VIA AGUACHICA CEL/ NUMERO ERRADO\n- PEND DATOS",
+        "18:38 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42387&opcion=1"
+}

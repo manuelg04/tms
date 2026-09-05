@@ -1,0 +1,180 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": 10,
+      "name": "nom_ala",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "Salida"
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": 3,
+      "name": "tiempo",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "1"
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": 7,
+      "name": "color",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "33FF99"
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": "Actualizar",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Actualizar"
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": "Borrar",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Borrar"
+    }
+  ],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Cambiar Color"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Configuracion > Alertas Visuales > Actualizar"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Configuracion de Alertas Visuales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Datos Basicos de Alertas"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Nombre de Alarma:",
+        "",
+        "Tiempo de Alarma:",
+        "",
+        "Color:",
+        "",
+        "Cambiar Color",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Configuracion > Alertas Visuales > Actualizar"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3216&window=central&alarma=5&opcion=1",
+  "metadata": {
+    "controls": [
+      {
+        "name": "nom_ala",
+        "onblur": "this.className='campo_texto'",
+        "onclick": null,
+        "onkeypress": null,
+        "tag": "INPUT",
+        "text": "",
+        "type": "text"
+      },
+      {
+        "name": "tiempo",
+        "onblur": "this.className='campo_texto'",
+        "onclick": null,
+        "onkeypress": null,
+        "tag": "INPUT",
+        "text": "",
+        "type": "text"
+      },
+      {
+        "name": "color",
+        "onblur": "this.className='campo_texto'",
+        "onclick": null,
+        "onkeypress": null,
+        "tag": "INPUT",
+        "text": "",
+        "type": "text"
+      },
+      {
+        "name": null,
+        "onblur": null,
+        "onclick": "newwin=open('../satb_sta155/config/colores.php?nom=color', 'calwin', 'width=320, height=300, scollbars=false');",
+        "onkeypress": null,
+        "tag": "A",
+        "text": "Cambiar Color",
+        "type": null
+      },
+      {
+        "name": null,
+        "onblur": null,
+        "onclick": "newwin=open('../satb_sta155/config/colores.php?nom=color', 'calwin', 'width=320, height=300, scollbars=false');",
+        "onkeypress": null,
+        "tag": "A",
+        "text": "",
+        "type": null
+      },
+      {
+        "name": "Actualizar",
+        "onblur": null,
+        "onclick": "aceptar_insert() ",
+        "onkeypress": null,
+        "tag": "INPUT",
+        "text": "",
+        "type": "button"
+      },
+      {
+        "name": "Borrar",
+        "onblur": null,
+        "onclick": "ins_alert.reset()",
+        "onkeypress": null,
+        "tag": "INPUT",
+        "text": "",
+        "type": "button"
+      }
+    ],
+    "forms": [
+      {
+        "action": "index.php",
+        "method": "post"
+      }
+    ]
+  }
+}

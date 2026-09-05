@@ -1,0 +1,113 @@
+{
+  "capturedAt": "2026-09-04T23:40:01.236Z",
+  "controls": [
+    {
+      "disabled": false,
+      "maxLength": 10,
+      "name": "nom_ala",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "Violeta"
+    },
+    {
+      "disabled": false,
+      "maxLength": 3,
+      "name": "tiempo",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "120"
+    },
+    {
+      "disabled": false,
+      "maxLength": 7,
+      "name": "color",
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "9933FF"
+    },
+    {
+      "disabled": false,
+      "maxLength": -1,
+      "name": "Actualizar",
+      "onclick": "aceptar_insert() ",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Actualizar"
+    },
+    {
+      "disabled": false,
+      "maxLength": -1,
+      "name": "Borrar",
+      "onclick": "ins_alert.reset()",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Borrar"
+    }
+  ],
+  "links": [
+    {
+      "href": "#",
+      "onclick": "newwin=open('../satb_sta155/config/colores.php?nom=color', 'calwin', 'width=320, height=300, scollbars=false');",
+      "text": "Cambiar Color"
+    },
+    {
+      "href": "#",
+      "onclick": "newwin=open('../satb_sta155/config/colores.php?nom=color', 'calwin', 'width=320, height=300, scollbars=false');",
+      "text": ""
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Configuracion > Alertas Visuales > Actualizar"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Configuracion de Alertas Visuales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Datos Basicos de Alertas"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Nombre de Alarma:",
+        "",
+        "Tiempo de Alarma:",
+        "",
+        "Color:",
+        "",
+        "Cambiar Color",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Configuracion > Alertas Visuales > Actualizar"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3216&window=central&alarma=4&opcion=1"
+}

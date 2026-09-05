@@ -1,0 +1,38 @@
+{
+  "capturedAt": "2026-09-04T23:50:11.922Z",
+  "page": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?window=central&cod_servic=10606",
+  "href": "https://oet-avansatb.intrared.net/ap/satb_sta155/html/ManualPolizaIntegralsatb/pdf/Manual%20de%20usuario%20AVANSAT%20BAASICO%20version%201.2.pdf",
+  "localDownload": "/Users/manuel/Downloads/Manual de usuario AVANSAT BAASICO version 1.2.pdf",
+  "sha256": "5b21acd9ef5f3f9f6d2f362b0cdeed73b7a4959ff74e302e4ce582c9cf4aea8e",
+  "pages": 469,
+  "reviewedSections": {
+    "alarmConfiguration": [
+      370,
+      371,
+      372,
+      373,
+      374
+    ],
+    "tracking": [
+      252,
+      253,
+      254
+    ],
+    "arrival": [
+      245,
+      246
+    ],
+    "rating": [
+      255,
+      256,
+      257
+    ],
+    "incidentFlags": [
+      419,
+      421,
+      424
+    ]
+  },
+  "interactiveVersion": "2025",
+  "sourceStatus": "Manual explanations compared with live UI; timing units conflict with the live legend."
+}

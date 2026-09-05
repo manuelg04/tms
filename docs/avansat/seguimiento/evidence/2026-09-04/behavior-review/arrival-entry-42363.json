@@ -1,0 +1,1132 @@
+{
+  "capturedAt": "2026-09-04T23:58:30.424Z",
+  "controls": [
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "dia",
+      "onchange": null,
+      "onclick": null,
+      "options": [
+        {
+          "label": "04",
+          "selected": true,
+          "value": "04"
+        },
+        {
+          "label": "01",
+          "selected": false,
+          "value": "01"
+        },
+        {
+          "label": "02",
+          "selected": false,
+          "value": "02"
+        },
+        {
+          "label": "03",
+          "selected": false,
+          "value": "03"
+        },
+        {
+          "label": "04",
+          "selected": false,
+          "value": "04"
+        },
+        {
+          "label": "05",
+          "selected": false,
+          "value": "05"
+        },
+        {
+          "label": "06",
+          "selected": false,
+          "value": "06"
+        },
+        {
+          "label": "07",
+          "selected": false,
+          "value": "07"
+        },
+        {
+          "label": "08",
+          "selected": false,
+          "value": "08"
+        },
+        {
+          "label": "09",
+          "selected": false,
+          "value": "09"
+        },
+        {
+          "label": "10",
+          "selected": false,
+          "value": "10"
+        },
+        {
+          "label": "11",
+          "selected": false,
+          "value": "11"
+        },
+        {
+          "label": "12",
+          "selected": false,
+          "value": "12"
+        },
+        {
+          "label": "13",
+          "selected": false,
+          "value": "13"
+        },
+        {
+          "label": "14",
+          "selected": false,
+          "value": "14"
+        },
+        {
+          "label": "15",
+          "selected": false,
+          "value": "15"
+        },
+        {
+          "label": "16",
+          "selected": false,
+          "value": "16"
+        },
+        {
+          "label": "17",
+          "selected": false,
+          "value": "17"
+        },
+        {
+          "label": "18",
+          "selected": false,
+          "value": "18"
+        },
+        {
+          "label": "19",
+          "selected": false,
+          "value": "19"
+        },
+        {
+          "label": "20",
+          "selected": false,
+          "value": "20"
+        },
+        {
+          "label": "21",
+          "selected": false,
+          "value": "21"
+        },
+        {
+          "label": "22",
+          "selected": false,
+          "value": "22"
+        },
+        {
+          "label": "23",
+          "selected": false,
+          "value": "23"
+        },
+        {
+          "label": "24",
+          "selected": false,
+          "value": "24"
+        },
+        {
+          "label": "25",
+          "selected": false,
+          "value": "25"
+        },
+        {
+          "label": "26",
+          "selected": false,
+          "value": "26"
+        },
+        {
+          "label": "27",
+          "selected": false,
+          "value": "27"
+        },
+        {
+          "label": "28",
+          "selected": false,
+          "value": "28"
+        },
+        {
+          "label": "29",
+          "selected": false,
+          "value": "29"
+        },
+        {
+          "label": "30",
+          "selected": false,
+          "value": "30"
+        },
+        {
+          "label": "31",
+          "selected": false,
+          "value": "31"
+        }
+      ],
+      "readOnly": false,
+      "required": false,
+      "tag": "SELECT",
+      "type": "select-one",
+      "value": "04"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "mes",
+      "onchange": null,
+      "onclick": null,
+      "options": [
+        {
+          "label": "September",
+          "selected": true,
+          "value": "09"
+        },
+        {
+          "label": "January",
+          "selected": false,
+          "value": "01"
+        },
+        {
+          "label": "February",
+          "selected": false,
+          "value": "02"
+        },
+        {
+          "label": "March",
+          "selected": false,
+          "value": "03"
+        },
+        {
+          "label": "April",
+          "selected": false,
+          "value": "04"
+        },
+        {
+          "label": "May",
+          "selected": false,
+          "value": "05"
+        },
+        {
+          "label": "June",
+          "selected": false,
+          "value": "06"
+        },
+        {
+          "label": "July",
+          "selected": false,
+          "value": "07"
+        },
+        {
+          "label": "August",
+          "selected": false,
+          "value": "08"
+        },
+        {
+          "label": "September",
+          "selected": false,
+          "value": "09"
+        },
+        {
+          "label": "October",
+          "selected": false,
+          "value": "10"
+        },
+        {
+          "label": "November",
+          "selected": false,
+          "value": "11"
+        },
+        {
+          "label": "December",
+          "selected": false,
+          "value": "12"
+        }
+      ],
+      "readOnly": false,
+      "required": false,
+      "tag": "SELECT",
+      "type": "select-one",
+      "value": "09"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "ano",
+      "onchange": null,
+      "onclick": null,
+      "options": [
+        {
+          "label": "2026",
+          "selected": true,
+          "value": "2026"
+        },
+        {
+          "label": "2000",
+          "selected": false,
+          "value": "2000"
+        },
+        {
+          "label": "2001",
+          "selected": false,
+          "value": "2001"
+        },
+        {
+          "label": "2002",
+          "selected": false,
+          "value": "2002"
+        },
+        {
+          "label": "2003",
+          "selected": false,
+          "value": "2003"
+        },
+        {
+          "label": "2004",
+          "selected": false,
+          "value": "2004"
+        },
+        {
+          "label": "2005",
+          "selected": false,
+          "value": "2005"
+        },
+        {
+          "label": "2006",
+          "selected": false,
+          "value": "2006"
+        },
+        {
+          "label": "2007",
+          "selected": false,
+          "value": "2007"
+        },
+        {
+          "label": "2008",
+          "selected": false,
+          "value": "2008"
+        },
+        {
+          "label": "2009",
+          "selected": false,
+          "value": "2009"
+        },
+        {
+          "label": "2010",
+          "selected": false,
+          "value": "2010"
+        },
+        {
+          "label": "2011",
+          "selected": false,
+          "value": "2011"
+        },
+        {
+          "label": "2012",
+          "selected": false,
+          "value": "2012"
+        },
+        {
+          "label": "2013",
+          "selected": false,
+          "value": "2013"
+        },
+        {
+          "label": "2014",
+          "selected": false,
+          "value": "2014"
+        },
+        {
+          "label": "2015",
+          "selected": false,
+          "value": "2015"
+        },
+        {
+          "label": "2016",
+          "selected": false,
+          "value": "2016"
+        },
+        {
+          "label": "2017",
+          "selected": false,
+          "value": "2017"
+        },
+        {
+          "label": "2018",
+          "selected": false,
+          "value": "2018"
+        },
+        {
+          "label": "2019",
+          "selected": false,
+          "value": "2019"
+        },
+        {
+          "label": "2020",
+          "selected": false,
+          "value": "2020"
+        },
+        {
+          "label": "2021",
+          "selected": false,
+          "value": "2021"
+        },
+        {
+          "label": "2022",
+          "selected": false,
+          "value": "2022"
+        },
+        {
+          "label": "2023",
+          "selected": false,
+          "value": "2023"
+        },
+        {
+          "label": "2024",
+          "selected": false,
+          "value": "2024"
+        },
+        {
+          "label": "2025",
+          "selected": false,
+          "value": "2025"
+        },
+        {
+          "label": "2026",
+          "selected": false,
+          "value": "2026"
+        }
+      ],
+      "readOnly": false,
+      "required": false,
+      "tag": "SELECT",
+      "type": "select-one",
+      "value": "2026"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "hora",
+      "onchange": null,
+      "onclick": null,
+      "options": [
+        {
+          "label": "18",
+          "selected": true,
+          "value": "18"
+        },
+        {
+          "label": "00",
+          "selected": false,
+          "value": "00"
+        },
+        {
+          "label": "01",
+          "selected": false,
+          "value": "01"
+        },
+        {
+          "label": "02",
+          "selected": false,
+          "value": "02"
+        },
+        {
+          "label": "03",
+          "selected": false,
+          "value": "03"
+        },
+        {
+          "label": "04",
+          "selected": false,
+          "value": "04"
+        },
+        {
+          "label": "05",
+          "selected": false,
+          "value": "05"
+        },
+        {
+          "label": "06",
+          "selected": false,
+          "value": "06"
+        },
+        {
+          "label": "07",
+          "selected": false,
+          "value": "07"
+        },
+        {
+          "label": "08",
+          "selected": false,
+          "value": "08"
+        },
+        {
+          "label": "09",
+          "selected": false,
+          "value": "09"
+        },
+        {
+          "label": "10",
+          "selected": false,
+          "value": "10"
+        },
+        {
+          "label": "11",
+          "selected": false,
+          "value": "11"
+        },
+        {
+          "label": "12",
+          "selected": false,
+          "value": "12"
+        },
+        {
+          "label": "13",
+          "selected": false,
+          "value": "13"
+        },
+        {
+          "label": "14",
+          "selected": false,
+          "value": "14"
+        },
+        {
+          "label": "15",
+          "selected": false,
+          "value": "15"
+        },
+        {
+          "label": "16",
+          "selected": false,
+          "value": "16"
+        },
+        {
+          "label": "17",
+          "selected": false,
+          "value": "17"
+        },
+        {
+          "label": "18",
+          "selected": false,
+          "value": "18"
+        },
+        {
+          "label": "19",
+          "selected": false,
+          "value": "19"
+        },
+        {
+          "label": "20",
+          "selected": false,
+          "value": "20"
+        },
+        {
+          "label": "21",
+          "selected": false,
+          "value": "21"
+        },
+        {
+          "label": "22",
+          "selected": false,
+          "value": "22"
+        },
+        {
+          "label": "23",
+          "selected": false,
+          "value": "23"
+        }
+      ],
+      "readOnly": false,
+      "required": false,
+      "tag": "SELECT",
+      "type": "select-one",
+      "value": "18"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "minuto",
+      "onchange": null,
+      "onclick": null,
+      "options": [
+        {
+          "label": "58",
+          "selected": true,
+          "value": "58"
+        },
+        {
+          "label": "00",
+          "selected": false,
+          "value": "00"
+        },
+        {
+          "label": "01",
+          "selected": false,
+          "value": "01"
+        },
+        {
+          "label": "02",
+          "selected": false,
+          "value": "02"
+        },
+        {
+          "label": "03",
+          "selected": false,
+          "value": "03"
+        },
+        {
+          "label": "04",
+          "selected": false,
+          "value": "04"
+        },
+        {
+          "label": "05",
+          "selected": false,
+          "value": "05"
+        },
+        {
+          "label": "06",
+          "selected": false,
+          "value": "06"
+        },
+        {
+          "label": "07",
+          "selected": false,
+          "value": "07"
+        },
+        {
+          "label": "08",
+          "selected": false,
+          "value": "08"
+        },
+        {
+          "label": "09",
+          "selected": false,
+          "value": "09"
+        },
+        {
+          "label": "10",
+          "selected": false,
+          "value": "10"
+        },
+        {
+          "label": "11",
+          "selected": false,
+          "value": "11"
+        },
+        {
+          "label": "12",
+          "selected": false,
+          "value": "12"
+        },
+        {
+          "label": "13",
+          "selected": false,
+          "value": "13"
+        },
+        {
+          "label": "14",
+          "selected": false,
+          "value": "14"
+        },
+        {
+          "label": "15",
+          "selected": false,
+          "value": "15"
+        },
+        {
+          "label": "16",
+          "selected": false,
+          "value": "16"
+        },
+        {
+          "label": "17",
+          "selected": false,
+          "value": "17"
+        },
+        {
+          "label": "18",
+          "selected": false,
+          "value": "18"
+        },
+        {
+          "label": "19",
+          "selected": false,
+          "value": "19"
+        },
+        {
+          "label": "20",
+          "selected": false,
+          "value": "20"
+        },
+        {
+          "label": "21",
+          "selected": false,
+          "value": "21"
+        },
+        {
+          "label": "22",
+          "selected": false,
+          "value": "22"
+        },
+        {
+          "label": "23",
+          "selected": false,
+          "value": "23"
+        },
+        {
+          "label": "24",
+          "selected": false,
+          "value": "24"
+        },
+        {
+          "label": "25",
+          "selected": false,
+          "value": "25"
+        },
+        {
+          "label": "26",
+          "selected": false,
+          "value": "26"
+        },
+        {
+          "label": "27",
+          "selected": false,
+          "value": "27"
+        },
+        {
+          "label": "28",
+          "selected": false,
+          "value": "28"
+        },
+        {
+          "label": "29",
+          "selected": false,
+          "value": "29"
+        },
+        {
+          "label": "30",
+          "selected": false,
+          "value": "30"
+        },
+        {
+          "label": "31",
+          "selected": false,
+          "value": "31"
+        },
+        {
+          "label": "32",
+          "selected": false,
+          "value": "32"
+        },
+        {
+          "label": "33",
+          "selected": false,
+          "value": "33"
+        },
+        {
+          "label": "34",
+          "selected": false,
+          "value": "34"
+        },
+        {
+          "label": "35",
+          "selected": false,
+          "value": "35"
+        },
+        {
+          "label": "36",
+          "selected": false,
+          "value": "36"
+        },
+        {
+          "label": "37",
+          "selected": false,
+          "value": "37"
+        },
+        {
+          "label": "38",
+          "selected": false,
+          "value": "38"
+        },
+        {
+          "label": "39",
+          "selected": false,
+          "value": "39"
+        },
+        {
+          "label": "40",
+          "selected": false,
+          "value": "40"
+        },
+        {
+          "label": "41",
+          "selected": false,
+          "value": "41"
+        },
+        {
+          "label": "42",
+          "selected": false,
+          "value": "42"
+        },
+        {
+          "label": "43",
+          "selected": false,
+          "value": "43"
+        },
+        {
+          "label": "44",
+          "selected": false,
+          "value": "44"
+        },
+        {
+          "label": "45",
+          "selected": false,
+          "value": "45"
+        },
+        {
+          "label": "46",
+          "selected": false,
+          "value": "46"
+        },
+        {
+          "label": "47",
+          "selected": false,
+          "value": "47"
+        },
+        {
+          "label": "48",
+          "selected": false,
+          "value": "48"
+        },
+        {
+          "label": "49",
+          "selected": false,
+          "value": "49"
+        },
+        {
+          "label": "50",
+          "selected": false,
+          "value": "50"
+        },
+        {
+          "label": "51",
+          "selected": false,
+          "value": "51"
+        },
+        {
+          "label": "52",
+          "selected": false,
+          "value": "52"
+        },
+        {
+          "label": "53",
+          "selected": false,
+          "value": "53"
+        },
+        {
+          "label": "54",
+          "selected": false,
+          "value": "54"
+        },
+        {
+          "label": "55",
+          "selected": false,
+          "value": "55"
+        },
+        {
+          "label": "56",
+          "selected": false,
+          "value": "56"
+        },
+        {
+          "label": "57",
+          "selected": false,
+          "value": "57"
+        },
+        {
+          "label": "58",
+          "selected": false,
+          "value": "58"
+        },
+        {
+          "label": "59",
+          "selected": false,
+          "value": "59"
+        }
+      ],
+      "readOnly": false,
+      "required": false,
+      "tag": "SELECT",
+      "type": "select-one",
+      "value": "58"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "obs",
+      "onchange": null,
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "TEXTAREA",
+      "type": "textarea",
+      "value": ""
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "num_califi",
+      "onchange": null,
+      "onclick": null,
+      "options": [
+        {
+          "label": "--",
+          "selected": true,
+          "value": ""
+        },
+        {
+          "label": "Pésimo",
+          "selected": false,
+          "value": "1"
+        },
+        {
+          "label": "Malo",
+          "selected": false,
+          "value": "2"
+        },
+        {
+          "label": "Regular",
+          "selected": false,
+          "value": "3"
+        },
+        {
+          "label": "Bueno",
+          "selected": false,
+          "value": "4"
+        },
+        {
+          "label": "Excelente",
+          "selected": false,
+          "value": "5"
+        }
+      ],
+      "readOnly": false,
+      "required": false,
+      "tag": "SELECT",
+      "type": "select-one",
+      "value": ""
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "obs_califi",
+      "onchange": null,
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "TEXTAREA",
+      "type": "textarea",
+      "value": ""
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "Aceptar",
+      "onchange": null,
+      "onclick": "aceptar_ins()",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Aceptar"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "Borrar",
+      "onchange": null,
+      "onclick": "form_ins.reset()",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Borrar"
+    }
+  ],
+  "links": [],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Llegada"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42363",
+        "Origen",
+        "TOCANCIPA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "[omitted]",
+        "Destino",
+        "PEREIRA (Risa)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "TOCANCIPA (Cund) - [omitted] - PEREIRA (Risa) - [omitted] VIA CAJAMARCA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "GUTIERREZ CRISTIAN CAMILO",
+        "Fecha Salida",
+        "14:17 02-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[omitted]",
+        "Fecha Planeada Llegada",
+        "15:47 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[omitted]",
+        "Fecha Creación",
+        "2026-09-02 14:17:20"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[omitted]",
+        "Placa",
+        "SVC821"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carroceria",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AZUL",
+        "Modelo",
+        "2012"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Fecha de Llegada"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Dia:",
+        "04\n01\n02\n03\n04\n05\n06\n07\n08\n09\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31",
+        "Mes:",
+        "September\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
+        "Año:",
+        "2026\n2000\n2001\n2002\n2003\n2004\n2005\n2006\n2007\n2008\n2009\n2010\n2011\n2012\n2013\n2014\n2015\n2016\n2017\n2018\n2019\n2020\n2021\n2022\n2023\n2024\n2025\n2026",
+        "Hora:",
+        "18\n00\n01\n02\n03\n04\n05\n06\n07\n08\n09\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23",
+        "Minutos:",
+        "58\n00\n01\n02\n03\n04\n05\n06\n07\n08\n09\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\n50\n51\n52\n53\n54\n55\n56\n57\n58\n59"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Calificación conductor"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "* Calificación:",
+        "--\nPésimo\nMalo\nRegular\nBueno\nExcelente"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "* Observaciones:",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Llegada"
+      ],
+      "visible": true
+    }
+  ],
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=1335&window=central&despac=42363&opcion=1"
+}

@@ -1,0 +1,549 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42374&opcion=2&codpc=10783&pc=GIRARDOT (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GIRARDOT (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42374&opcion=2&codpc=10161&pc=ESPINAL (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ESPINAL (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42374&opcion=2&codpc=10786&pc=GUALANDAY (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GUALANDAY (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42374&opcion=2&codpc=10163&pc=IBAGUE (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "IBAGUE (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42374&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42374",
+        "Origen",
+        "TOCANCIPA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043351",
+        "Destino",
+        "IBAGUE (Toli)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "78810 - TOCANCIPA (Cund) - Col - 25817000 - IBAGUE (Toli) - Col - 73001000 VIA 8> GUALANDAY"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "RIOS OSCAR ALIRIO",
+        "Fecha Salida",
+        "14:17 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "3017717",
+        "Fecha Planeada Llegada",
+        "21:47 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 12:24:14"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SWM838"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "INTERNATIONAL",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "9400",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "ROJO",
+        "Modelo",
+        "2007"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "",
+        "14:44 03-09-2026",
+        "28Min(s)",
+        "Pernoctacion",
+        "14:45 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "",
+        "16:55 03-09-2026",
+        "130Min(s)",
+        "Pernoctacion",
+        "16:55 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "",
+        "19:44 03-09-2026",
+        "169Min(s)",
+        "Pernoctacion",
+        "19:44 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "",
+        "21:45 03-09-2026",
+        "121Min(s)",
+        "Pernoctacion",
+        "21:45 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "",
+        "00:05 04-09-2026",
+        "139Min(s)",
+        "Pernoctacion",
+        "00:05 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "",
+        "04:13 04-09-2026",
+        "248Min(s)",
+        "Retrasado",
+        "04:13 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "",
+        "06:37 04-09-2026",
+        "143Min(s)",
+        "Retrasado",
+        "06:37 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "",
+        "06:58 04-09-2026",
+        "21Min(s)",
+        "Retrasado",
+        "06:59 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SILVANIA",
+        "",
+        "09:35 04-09-2026",
+        "156Min(s)",
+        "Retrasado",
+        "09:35 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MELGAR",
+        "",
+        "11:51 04-09-2026",
+        "136Min(s)",
+        "Retrasado",
+        "11:52 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "",
+        "14:04 04-09-2026",
+        "133Min(s)",
+        "Retrasado",
+        "14:05 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "",
+        "16:30 04-09-2026",
+        "146Min(s)",
+        "Retrasado",
+        "16:31 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRARDOT (Virtual) (Virtual)",
+        "19:17 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ESPINAL (Virtual) (Virtual)",
+        "19:57 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUALANDAY (Virtual)",
+        "20:37 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE (Virtual)",
+        "21:17 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "21:47 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "Retrasado",
+        "VEH ESTACIONADO EN KOBA (CEDI ALMACÉNES D-1 EN IBAGUE\n- PEND ENTREGA",
+        "16:30 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN PORTERIA\nDE DONDE VA A DESCARGAR INFORMA QUE APENAS SE DIRIGE\nA ENTREGAR PAPELES PARA PROCEDER CON EL DESCARGUE",
+        "14:04 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MELGAR",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR MELGAR SIN NOVEDAD",
+        "11:51 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SILVANIA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR SILVANIA SIN\nNOVEDAD",
+        "09:35 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "Retrasado",
+        "VEH ESTACIONADO EN Cll 55 Sur, 87, El Danubio Azul,\nKennedy, BOGOTA - PERNOCTANDO - PEND INICIO DE RUTA\nCEL/NO CONTESTA",
+        "06:58 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "Retrasado",
+        "VEH ESTACIONADO EN Cll 55 Sur, 87, El Danubio Azul, Kennedy,\nBOGOTA - PERNOCTANDO - PEND INICIO DE RUTA",
+        "06:37 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "Retrasado",
+        "VEH ESTACIONADO EN Cll 55 Sur, 87, El Danubio Azul,\nKennedy, BOGOTA - PERNOCTANDO - PEND INICIO DE RUTA",
+        "04:13 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN Cll 55 Sur, 87, El Danubio Azul, Kennedy,\nBOGOTA - PERNOCTANDO - PEND INICIO DE RUTA",
+        "00:05 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN Cll 55 Sur, 87, El Danubio Azul,\nKennedy, BOGOTA - PERNOCTANDO - PEND INICIO DE RUTA",
+        "21:45 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN Cll 55 Sur, 87, El Danubio Azul, Kennedy,\nBOGOTA - PERNOCTANDO - PEND INICIO DE RUTA",
+        "19:44 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN Cll 55 Sur, 87, El Danubio Azul,\nKennedy, BOGOTA - PERNOCTANDO - PEND INICIO DE RUTA",
+        "16:55 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "[NOV-ESP] Pernoctacion",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCUENTRA\nEN EL PARQUEADERO CHICALA INFORMA QUE PERNOCTA AHI\nE INICA RUTA MAÑANA MADRUGADO YA QUE TIENE CITA A\nLAS 2:30PM",
+        "14:44 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42374&opcion=1"
+}

@@ -1,0 +1,376 @@
+{
+  "capturedAt": "2026-09-05T00:02:53.685Z",
+  "controls": [
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "fec",
+      "onchange": null,
+      "onclick": null,
+      "readOnly": true,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "2026-09-04"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "hor",
+      "onchange": null,
+      "onclick": null,
+      "readOnly": true,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "19:01"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": 50,
+      "name": "noved",
+      "onchange": null,
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "7-ALIMENTACION(GA)(ST)"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "date",
+      "onchange": null,
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "2026-09-04"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "hora",
+      "onchange": null,
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "19:001"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "sit",
+      "onchange": null,
+      "onclick": null,
+      "options": [
+        {
+          "label": "Antes",
+          "selected": true,
+          "value": "A"
+        },
+        {
+          "label": "Sitio",
+          "selected": false,
+          "value": "S"
+        }
+      ],
+      "readOnly": false,
+      "required": false,
+      "tag": "SELECT",
+      "type": "select-one",
+      "value": "A"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": 50,
+      "name": "sitio",
+      "onchange": null,
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": ""
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "obs",
+      "onchange": null,
+      "onclick": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "TEXTAREA",
+      "type": "textarea",
+      "value": ""
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "Aceptar",
+      "onchange": null,
+      "onclick": "aceptar_ins()",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Aceptar"
+    },
+    {
+      "checked": false,
+      "disabled": false,
+      "maxLength": -1,
+      "name": "Borrar",
+      "onchange": null,
+      "onclick": "form_ins.reset()",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Borrar"
+    }
+  ],
+  "links": [
+    {
+      "onclick": "showNotas( \"\" )",
+      "text": "",
+      "title": "",
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php#"
+    },
+    {
+      "onclick": null,
+      "text": "LLEGANDO A Y DE CIENAGA",
+      "title": "",
+      "url": ""
+    },
+    {
+      "onclick": null,
+      "text": "A DELANTE DE CIENAGA",
+      "title": "",
+      "url": ""
+    },
+    {
+      "onclick": null,
+      "text": "CIENAGA",
+      "title": "",
+      "url": ""
+    },
+    {
+      "onclick": null,
+      "text": "LA DE Y DE CIENAGA",
+      "title": "",
+      "url": ""
+    },
+    {
+      "onclick": null,
+      "text": "LA Y DE CIENAGA",
+      "title": "",
+      "url": ""
+    },
+    {
+      "onclick": null,
+      "text": "Y DE CIENAGA",
+      "title": "",
+      "url": ""
+    },
+    {
+      "onclick": null,
+      "text": "A 20 MINUTOS DE CIENAGA SI",
+      "title": "",
+      "url": ""
+    },
+    {
+      "onclick": null,
+      "text": "A DELA NTE DE CIENAGA",
+      "title": "",
+      "url": ""
+    },
+    {
+      "onclick": null,
+      "text": "A DELANTE DE CIENAGA",
+      "title": "",
+      "url": ""
+    },
+    {
+      "onclick": null,
+      "text": "ADELANTE CIENAGA",
+      "title": "",
+      "url": ""
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42389",
+        "Origen",
+        "SANTA MARTA (Magd)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "[omitted]",
+        "Destino",
+        "GIRON (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "NICOLL TATIANA",
+        "Ruta",
+        "992 - SANTA MARTA (Magd) - [omitted] - GIRON (Sant) - [omitted] VIA FUNDACION"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "NARANJO CRISTIAN FERNEY",
+        "Fecha Salida",
+        "18:44 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[omitted]",
+        "Fecha Planeada Llegada",
+        "04:59 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[omitted]",
+        "Fecha Creación",
+        "2026-09-03 18:44:37"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[omitted]",
+        "Placa",
+        "VKJ982"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "CHEVROLET",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "SUPER BRIGADIER 169",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AMARILLO",
+        "Modelo",
+        "2000"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "CIENAGA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Asignación del Sitio de Seguimiento y Novedad"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Fecha",
+        "Hora",
+        "Novedad",
+        "Tiempo Fecha/Hora",
+        "Antes/Sitio",
+        "Sitio",
+        "Observacion"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "",
+        "",
+        "",
+        "",
+        "Antes\nSitio",
+        "",
+        "Queda(n) 0 Caracter(es) para Escribir"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php"
+}

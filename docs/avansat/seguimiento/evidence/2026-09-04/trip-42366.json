@@ -1,0 +1,1285 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    }
+  ],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42366&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    },
+    {
+      "href": "http://www.openstreetmap.org/copyright",
+      "target": null,
+      "text": "OpenStreetMap"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42366",
+        "Origen",
+        "PIEDECUESTA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043338",
+        "Destino",
+        "CUCUTA (Nort)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "JORGE",
+        "Ruta",
+        "3685 - PIEDECUESTA (Sant) - 68547000 - CUCUTA (Nort) - 54001000 VIA AUTOPISTA BGA-PAMPLONA-CUCUTA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "RUIZ GERARDO",
+        "Fecha Salida",
+        "16:24 02-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "13703713",
+        "Fecha Planeada Llegada",
+        "16:29 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-02 16:24:40"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SXR508"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AMARILLO",
+        "Modelo",
+        "2012"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2490 M DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "16:27 02-09-2026",
+        "3Min(s)",
+        "GPS",
+        "16:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "16:26 02-09-2026",
+        "0Min(s)",
+        "Retrasado",
+        "16:27 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "17:27 02-09-2026",
+        "59Min(s)",
+        "GPS",
+        "17:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "17:25 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "18:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "19:09 02-09-2026",
+        "42Min(s)",
+        "Pernoctacion",
+        "19:09 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "17:25 02-09-2026",
+        "17Min(s)",
+        "GPS",
+        "19:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "20:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "20:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "20:22 02-09-2026",
+        "59Min(s)",
+        "GPS",
+        "21:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "20:22 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "22:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "22:30 02-09-2026",
+        "3Min(s)",
+        "Pernoctacion",
+        "22:30 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "23:27 02-09-2026",
+        "56Min(s)",
+        "GPS",
+        "23:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "00:08 03-09-2026",
+        "41Min(s)",
+        "Pernoctacion",
+        "00:08 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "23:22 02-09-2026",
+        "18Min(s)",
+        "GPS",
+        "00:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "23:22 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "01:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "02:27 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "02:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "02:21 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "03:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "02:21 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "04:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "04:49 03-09-2026",
+        "23Min(s)",
+        "Retrasado",
+        "04:50 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 517 M DE BOMBA TERPEL DEL MOLINO (PIEDECUESTA, SANTANDER).",
+        "",
+        "05:27 03-09-2026",
+        "36Min(s)",
+        "GPS",
+        "05:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1991 M DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "06:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "06:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 235 M DE CL 200 CONKR 18 (FLORIDABLANCA, SANTANDER).",
+        "",
+        "06:48 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "07:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 235 M DE CL 200 CONKR 18 (FLORIDABLANCA, SANTANDER).",
+        "",
+        "06:48 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "08:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FLORIDABLANCA",
+        "",
+        "08:42 03-09-2026",
+        "15Min(s)",
+        "Retrasado",
+        "08:43 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 235 M DE CL 200 CONKR 18 (FLORIDABLANCA, SANTANDER).",
+        "",
+        "06:48 03-09-2026",
+        "44Min(s)",
+        "GPS",
+        "09:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 10 M DE KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "10:03 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "10:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "10:45 03-09-2026",
+        "19Min(s)",
+        "Retrasado",
+        "10:46 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 10 M DE KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "10:03 03-09-2026",
+        "40Min(s)",
+        "GPS",
+        "11:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 10 M DE KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "10:03 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "12:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "12:56 03-09-2026",
+        "31Min(s)",
+        "Retrasado",
+        "12:58 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 10 M DE KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "13:00 03-09-2026",
+        "29Min(s)",
+        "GPS",
+        "13:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 10 M DE KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "13:00 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "14:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 10 M DE KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "13:00 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "15:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "16:06 03-09-2026",
+        "40Min(s)",
+        "Retrasado",
+        "16:07 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 10 M DE KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "16:00 03-09-2026",
+        "19Min(s)",
+        "GPS",
+        "16:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "17:17 03-09-2026",
+        "51Min(s)",
+        "Retrasado",
+        "17:18 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 10 M DE KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "16:00 03-09-2026",
+        "8Min(s)",
+        "GPS",
+        "17:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 10 M DE KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "16:00 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "18:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 82 M DE KR 30 CONCL 28 (BUCARAMANGA, SANTANDER).",
+        "",
+        "19:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "19:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "19:47 03-09-2026",
+        "20Min(s)",
+        "Retrasado",
+        "19:47 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2912 M DE LA CORCOVA (FLORIDABLANCA, SANTANDER).",
+        "",
+        "20:27 03-09-2026",
+        "39Min(s)",
+        "GPS",
+        "20:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE EL PICACHO",
+        "",
+        "21:25 03-09-2026",
+        "58Min(s)",
+        "Retrasado",
+        "21:25 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2872 M DE LA CORCOVA (FLORIDABLANCA, SANTANDER).",
+        "",
+        "21:04 03-09-2026",
+        "1Min(s)",
+        "GPS",
+        "21:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2216 M DE EL HATICO (TONA, SANTANDER).",
+        "",
+        "22:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "22:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1370 M DE ARMENIA (MUTISCUA, NORTE DE SANTANDER).",
+        "",
+        "23:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "23:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA",
+        "",
+        "23:55 03-09-2026",
+        "29Min(s)",
+        "Retrasado",
+        "23:56 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 5809 M DE DIVIDIVI (MUTISCUA, NORTE DE SANTANDER).",
+        "",
+        "23:51 03-09-2026",
+        "30Min(s)",
+        "GPS",
+        "00:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 4269 M DE LA DORADA (PAMPLONITA, NORTE DE SANTANDER).",
+        "",
+        "01:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "01:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 4284 M DE LA DORADA (PAMPLONITA, NORTE DE SANTANDER).",
+        "",
+        "01:26 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "02:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 4284 M DE LA DORADA (PAMPLONITA, NORTE DE SANTANDER).",
+        "",
+        "01:26 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "03:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA JIMENEZ",
+        "",
+        "03:52 04-09-2026",
+        "25Min(s)",
+        "Retrasado",
+        "03:52 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 4284 M DE LA DORADA (PAMPLONITA, NORTE DE SANTANDER).",
+        "",
+        "01:26 04-09-2026",
+        "34Min(s)",
+        "GPS",
+        "04:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 4284 M DE LA DORADA (PAMPLONITA, NORTE DE SANTANDER).",
+        "",
+        "04:23 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "05:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 4618 M DE PORTACHUELO (BOCHALEMA, NORTE DE SANTANDER).",
+        "",
+        "06:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "06:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS VADOS",
+        "",
+        "06:39 04-09-2026",
+        "12Min(s)",
+        "Retrasado",
+        "06:39 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 12 M DE AV 2 CONCL 1 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:10 04-09-2026",
+        "47Min(s)",
+        "GPS",
+        "07:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 193 M DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:54 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "08:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "09:05 04-09-2026",
+        "39Min(s)",
+        "Retrasado",
+        "09:06 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 193 M DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:54 04-09-2026",
+        "20Min(s)",
+        "GPS",
+        "09:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 193 M DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:54 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "10:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 193 M DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:54 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "11:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "12:25 04-09-2026",
+        "59Min(s)",
+        "Retrasado",
+        "12:26 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 193 M DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:54 04-09-2026",
+        "0Min(s)",
+        "GPS",
+        "12:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 193 M DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:54 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "13:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 193 M DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:54 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "14:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 193 M DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:54 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "15:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "15:31 04-09-2026",
+        "5Min(s)",
+        "Retrasado",
+        "15:32 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 193 M DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:54 04-09-2026",
+        "54Min(s)",
+        "GPS",
+        "16:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 238 M DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "17:27 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "17:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "07:24 03-09-2026",
+        "16:29 04-09-2026",
+        "58Min(s)",
+        "Ok",
+        "16:29 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Ver recorrido del vehículo"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "+\n−\ni"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "Ok",
+        "CEL/ MANIFIESTA VEH DESCARGADO SIN NOVEDAD FIN DE\nRUTA - OK FOTO DEL CUMPLIDO",
+        "16:29 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN POSTOBON\nCUCUTA QUE SE ENCEUNTRA EN PROCESO DE DESCARGUE",
+        "15:31 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN POSTOBON\nCUCUTA EN PROCEOSO DE DESCARGUE",
+        "12:25 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA ESTACIONADO EN POSTOBON CUCUTA\nPENDIENTE CONFIRMAR DESCARGUE CEL/NO CONTESTA",
+        "09:05 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS VADOS",
+        "Retrasado",
+        "VEH EN RUTA EN VIA LOS VADOS SIN NOVEDAD",
+        "06:39 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA JIMENEZ",
+        "Retrasado",
+        "VEH EN RUTA POR LA JIMENEZ SIN NOVEDAD",
+        "03:52 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PAMPLONA SIN NOVEDAD",
+        "23:55 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE EL PICACHO",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PEAJE EL PICACHO SIN NOVEDAD",
+        "21:25 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "VEH EN RUTA POR MORRORICO BUCARMANGA SIN NOVEDAD",
+        "19:47 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "VEH PERMANECE ESTACIONADO EN CLL 8 CRA 15B EN BUCARAMANGA CEL/\nMANIFIESTA ESTIMA ESTA TERMINANDO EL ARREGLO DE LA\nMANGUERA EN 1HORA E INICIA RUTA DE UNA VEZ, LE DA\nUN RATO",
+        "17:17 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "VEH PERMANECE ESTACIONADO EN CLL 8 CRA 15B EN BUCARAMANGA\n-PEND INICIO DE RUTA",
+        "16:06 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE PERMANECE EN BUCARAMANGA\nQUE ESTA ESPERANDO UNA MANGUERA QUE LE DEBE DE CAMBIAR\nAL VEHICULO DEL ACEITE PARA DESPUES PODER INICIAR\nRUTA",
+        "12:56 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN BUCARAMANGA\nCAMBIANDO LLANTAS Y REALIZANDO UNOS ARREGLOS AL VEHICULO\nPARA DESPUES PODER INICIAR RUTA",
+        "10:45 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FLORIDABLANCA",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA EN TRANSITO POR FLORIDABLANCA\nSIN NOVEDAD",
+        "08:42 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "Retrasado",
+        "VEH ESTACIONADO EN PARQUEADERO EL MOLINO EN PIEDECUESTA -\nPERNOCTANDO - PEND INICIO DE RUTA JUEVES DESPUES DE\nARREGLOS AL VEH",
+        "04:49 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN PARQUEADERO EL MOLINO EN PIEDECUESTA\n- PERNOCTANDO - PEND INICIO DE RUTA JUEVES DESPUES\nDE ARREGLOS AL VEH",
+        "00:08 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN PARQUEADERO EL MOLINO EN PIEDECUESTA -\nPERNOCTANDO - PEND INICIO DE RUTA JUEVES DESPUES DE\nARREGLOS AL VEH",
+        "22:30 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN PARQUEADERO EL MOLINO EN PIEDECUESTA\n- PERNOCTANDO - PEND INICIO DE RUTA JUEVES DESPUES\nDE ARREGLOS AL VEH",
+        "19:09 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "Retrasado",
+        "VEH ESTACIONADO EN POSTOBON EN PIEDECUESTA CEL/ MANIFIESTA\nYA CARGO, PERNOCTA EN EL PARQUEADERO EL MOLINO, INICIA\nRUTA MAÑANA JUEVES YA QUE DEBE PONER UNOS REPUESTOS\nY CAMBIAR UNOS FILTROS",
+        "16:26 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42366&opcion=1"
+}

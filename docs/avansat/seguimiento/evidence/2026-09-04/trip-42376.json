@@ -1,0 +1,471 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42376&opcion=2&codpc=13351&pc= LA DORADA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA DORADA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42376&opcion=2&codpc=10515&pc=LUGAR DE ENTREGA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR DE ENTREGA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42376&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42376",
+        "Origen",
+        "PAZ DE RIO (Boya)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043355",
+        "Destino",
+        "LA DORADA (Cald)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "3639 - PAZ DE RIO (Boya) - 15537000 - LA DORADA (Cald) - 17380000 VIA CALDAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "CAMARGO MANUEL RICARDO",
+        "Fecha Salida",
+        "13:25 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "12:25 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 13:24:57"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SZN274"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "HYUNDAI",
+        "Configuración",
+        "Volqueta de 4 ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "HD 320",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "BLANCO",
+        "Modelo",
+        "2012"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAZ DE RIO",
+        "",
+        "13:36 03-09-2026",
+        "12Min(s)",
+        "Retrasado",
+        "13:37 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BELEN",
+        "",
+        "15:36 03-09-2026",
+        "120Min(s)",
+        "Retrasado",
+        "15:37 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "DUITAMA",
+        "",
+        "16:48 03-09-2026",
+        "71Min(s)",
+        "Retrasado",
+        "16:48 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "VILLAPINZON",
+        "",
+        "19:34 03-09-2026",
+        "166Min(s)",
+        "Retrasado",
+        "19:35 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIA",
+        "",
+        "21:06 03-09-2026",
+        "92Min(s)",
+        "Retrasado",
+        "21:07 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ALTO EL VINO",
+        "",
+        "23:48 03-09-2026",
+        "162Min(s)",
+        "Retrasado",
+        "23:49 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA VEGA",
+        "",
+        "03:42 04-09-2026",
+        "233Min(s)",
+        "Retrasado",
+        "03:43 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ALTO EL TRIGO",
+        "",
+        "06:18 04-09-2026",
+        "155Min(s)",
+        "Retrasado",
+        "06:19 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA",
+        "",
+        "08:20 04-09-2026",
+        "121Min(s)",
+        "Retrasado",
+        "08:21 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA",
+        "",
+        "10:47 04-09-2026",
+        "147Min(s)",
+        "Retrasado",
+        "10:48 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA (Virtual)",
+        "10:25 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR DE ENTREGA (Virtual) (Virtual)",
+        "11:25 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "12:25 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA DESCARGO PENDINETE DE\nQUE ENVIE FOTO DE LOS CUMPLIDOS",
+        "10:47 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO LLEGANDO A LA DORADA\nSIN NOVEDAD",
+        "08:20 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ALTO EL TRIGO",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DEL ALTO EL TRIGO SIN NOVEDAD",
+        "06:18 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA VEGA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA LA VEGA SIN NOVEDAD",
+        "03:42 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ALTO EL VINO",
+        "Retrasado",
+        "VEH EN RUTA POR ALTO EL VINO SIN NOVEDAD",
+        "23:48 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIA",
+        "Retrasado",
+        "VEH EN RUTA POR CHIA CEL/ MANIFIESTA TODO OK SIN NOVEDAD,\nCONFIRMA UBICACION, LE DA PAREJO PERO SI LE DA SUEÑO,\nDESCANSA",
+        "21:06 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "VILLAPINZON",
+        "Retrasado",
+        "VEH EN RUTA EN VIA VILLAPINZON SIN NOVEDAD",
+        "19:34 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "DUITAMA",
+        "Retrasado",
+        "VEH ENTRANSITO POR DUITAMA SIN NOVEDAD",
+        "16:48 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Belen",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR BELEN TODO OK\nSIN NOVEDAD",
+        "15:36 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAZ DE RIO",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE ACABA DE CARGAR Y YA VA\nA INICIAR RUTA SIN NOVEDAD",
+        "13:36 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42376&opcion=1"
+}

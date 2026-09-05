@@ -1,0 +1,579 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42368&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42368",
+        "Origen",
+        "PIEDECUESTA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043341",
+        "Destino",
+        "TUNJA (Boya)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "JORGE",
+        "Ruta",
+        "1038 - PIEDECUESTA (Sant) - 68547000 - TUNJA (Boya) - 15001000 VIA VIA BOGOTA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "CASTANEDA NEDER FABIAN",
+        "Fecha Salida",
+        "21:59 02-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "15:49 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-02 21:59:31"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "WFL618"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "FREIGHTLINER",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "CL 120",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "BLANCO",
+        "Modelo",
+        "2015"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "22:02 02-09-2026",
+        "5Min(s)",
+        "Retrasado",
+        "22:04 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "23:54 02-09-2026",
+        "110Min(s)",
+        "Pernoctacion",
+        "23:54 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "04:46 03-09-2026",
+        "291Min(s)",
+        "Retrasado",
+        "04:46 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "VILLA NUEVA",
+        "",
+        "08:46 03-09-2026",
+        "240Min(s)",
+        "Retrasado",
+        "08:46 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LIZAMA",
+        "",
+        "10:49 03-09-2026",
+        "123Min(s)",
+        "Retrasado",
+        "10:50 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL PLACER",
+        "",
+        "12:58 03-09-2026",
+        "129Min(s)",
+        "Retrasado",
+        "12:59 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO NARE",
+        "",
+        "15:14 03-09-2026",
+        "136Min(s)",
+        "Retrasado",
+        "15:15 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA",
+        "",
+        "16:42 03-09-2026",
+        "87Min(s)",
+        "Retrasado",
+        "16:42 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE EL KORAN",
+        "",
+        "16:56 03-09-2026",
+        "14Min(s)",
+        "Retrasado",
+        "16:57 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "VILLETA",
+        "",
+        "19:42 03-09-2026",
+        "165Min(s)",
+        "Retrasado",
+        "19:42 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA VEGA",
+        "",
+        "21:19 03-09-2026",
+        "97Min(s)",
+        "Retrasado",
+        "21:20 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LAS VEGAS",
+        "",
+        "23:53 03-09-2026",
+        "154Min(s)",
+        "Pernoctacion",
+        "23:54 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA VEGA",
+        "",
+        "04:07 04-09-2026",
+        "253Min(s)",
+        "Retrasado",
+        "04:07 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SESQUILE",
+        "",
+        "07:06 04-09-2026",
+        "178Min(s)",
+        "Retrasado",
+        "07:06 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "10:19 04-09-2026",
+        "192Min(s)",
+        "Retrasado",
+        "10:19 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "14:23 04-09-2026",
+        "244Min(s)",
+        "Retrasado",
+        "14:24 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "22:59 03-09-2026",
+        "15:49 04-09-2026",
+        "84Min(s)",
+        "Ok",
+        "15:49 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "Ok",
+        "YA CUMPLIO",
+        "15:49 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA DESCARGO PENDIENTE DE\nQUE ENVIE FOTO DE LOS CUMPLIDOS",
+        "14:23 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN EL CLIENTE\nEN PROCEOS DE DESCARGUE",
+        "10:19 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SESQUILE",
+        "Retrasado",
+        "VEH EN RUTA POR SESQUILE SIN NOVEDAD",
+        "07:06 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA VEGA",
+        "Retrasado",
+        "VEH EN HOTEL VISTA BUENA DELANTE DE LA VEGA PEND\nREINICIO DE RUTA",
+        "04:07 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LAS VEGAS",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN HOTEL VISTA BUENA DELANTE DE LA VEGA PEND REINICIO\nDE RUTA",
+        "23:53 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA VEGA",
+        "Retrasado",
+        "VEH EN RUTA DELNATE DE LA VEGA SIN NOVEDAD",
+        "21:19 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "VILLETA",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE VILLETA SIN NOVEDAD",
+        "19:42 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE EL KORAN",
+        "Retrasado",
+        "VEH EN RUTA POR EL PEAJE EL KORAN CEL/ MANIFIESTA\nTODO OK SIN NOVEDAD, CONFIRMA UBICACION",
+        "16:56 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA LA DORADA CEL/ SIN SEÑAL - PEND\nRTA WPP",
+        "16:42 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO NARE",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR PUERTO NARE\nSIN NOVEDAD",
+        "15:14 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL PLACER",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR EL PLACER SIN\nNOVEDAD",
+        "12:58 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA LIZAMA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR LA LIZAMA SIN\nNOVEDAD",
+        "10:49 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "VILLA NUEVA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA LLEGANDO A\nVILLA NUEVA SIN NOVEDAD",
+        "08:46 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "Retrasado",
+        "VEH ESTACIONADO EN PRETECOR EN PIEDECUESTA PEND REINICIO\nDE RUTA",
+        "04:46 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN PRETECOR EN PIEDECUESTA CEL/ MANIFIESTA ESTA\nEN PROCESO DE CARGUE, PERNOCTA HOY E INICIA RUTA EL\nDIA DE MAÑANA JUEVES EN LA MAÑANA",
+        "23:54 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "Retrasado",
+        "VEH ESTACIONADO EN PRETECOR EN PIEDECUESTA CEL/ MANIFIESTA\nESTA EN PROCESO DE CARGUE, PERNOCTA HOY E INICIA RUTA\nEL DIA DE MAÑANA JUEVES EN LA MAÑANA",
+        "22:02 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42368&opcion=1"
+}

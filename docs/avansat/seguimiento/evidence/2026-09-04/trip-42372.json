@@ -1,0 +1,1039 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    }
+  ],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42372&opcion=2&codpc=207&pc=TOCANCIPA  (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "TOCANCIPA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42372&opcion=2&codpc=13351&pc= LA DORADA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA DORADA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42372&opcion=2&codpc=10262&pc= PUERTO BERRIO (virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PUERTO BERRIO (virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42372&opcion=2&codpc=13840&pc=SEGOVIA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SEGOVIA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42372&opcion=2&codpc=117&pc=CAUCASIA  (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CAUCASIA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42372&opcion=2&codpc=12271&pc=LA GLORIA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA GLORIA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42372&opcion=2&codpc=150&pc=APARTADO  (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "APARTADO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42372&opcion=2&codpc=10515&pc=LUGAR DE ENTREGA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR DE ENTREGA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42372&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    },
+    {
+      "href": "http://www.openstreetmap.org/copyright",
+      "target": null,
+      "text": "OpenStreetMap"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42372",
+        "Origen",
+        "TOCANCIPA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043348",
+        "Destino",
+        "APARTADO (Anti)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "2686 - TOCANCIPA (Cund) - 25817000 - APARTADO (Anti) - 5045000 VIA RUTA DEL SOL-SECTOR 2"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "DELGADO ELKIN",
+        "Fecha Salida",
+        "11:58 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "71193588",
+        "Fecha Planeada Llegada",
+        "04:38 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 11:58:38"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SSZ415"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "NARANJA",
+        "Modelo",
+        "2012"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJICA",
+        "",
+        "12:06 03-09-2026",
+        "9Min(s)",
+        "Retrasado",
+        "12:07 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 113 M DE AK 45 CON CL 245 (BOGOTA, CUNDINAMARCA).",
+        "",
+        "12:27 03-09-2026",
+        "20Min(s)",
+        "GPS",
+        "12:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 27 M DE AC 80 CON TV 93A (BOGOTA, CUNDINAMARCA).",
+        "",
+        "13:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "13:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL ROSAL",
+        "",
+        "14:26 03-09-2026",
+        "59Min(s)",
+        "Retrasado",
+        "14:26 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7301 M DE PARQ. MANSILLA (FACATATIVA, CUNDINAMARCA).",
+        "",
+        "14:27 03-09-2026",
+        "0Min(s)",
+        "GPS",
+        "14:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 3603 M DE SAN JUAN (LA VEGA, CUNDINAMARCA).",
+        "",
+        "15:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "15:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA VEGA",
+        "",
+        "16:25 03-09-2026",
+        "58Min(s)",
+        "Retrasado",
+        "16:26 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1001 M DE R HILA (LA VEGA, CUNDINAMARCA).",
+        "",
+        "16:27 03-09-2026",
+        "1Min(s)",
+        "GPS",
+        "16:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1141 M DE CENTRO VILLETA (VILLETA, CUNDINAMARCA).",
+        "",
+        "17:27 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "17:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1540 M DE RESTAURANTE EL PAISA (GUADUAS, CUNDINAMARCA).",
+        "",
+        "18:27 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "18:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUADUAS",
+        "",
+        "18:58 03-09-2026",
+        "32Min(s)",
+        "Retrasado",
+        "18:59 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1471 M DE TELECOM SARGENTO (GUADUAS, CUNDINAMARCA).",
+        "",
+        "19:27 03-09-2026",
+        "27Min(s)",
+        "GPS",
+        "19:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "HONDA",
+        "",
+        "19:56 03-09-2026",
+        "29Min(s)",
+        "Retrasado",
+        "19:56 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 664 M DE HACIENDA SANTA CECILIA (LA DORADA, CALDAS).",
+        "",
+        "20:27 03-09-2026",
+        "30Min(s)",
+        "GPS",
+        "20:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1123 M DE EDS KORAN (PUERTO SALGAR, CUNDINAMARCA).",
+        "",
+        "21:27 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "21:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA",
+        "",
+        "21:29 03-09-2026",
+        "2Min(s)",
+        "Retrasado",
+        "21:29 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1034 M DE DOS Y MEDIO (PUERTO BOYACA, BOYACA).",
+        "",
+        "22:27 03-09-2026",
+        "57Min(s)",
+        "GPS",
+        "22:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1418 M DE P ZAMBITO (CIMITARRA, SANTANDER).",
+        "",
+        "23:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "23:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CRUCE DE PTO BERRIO",
+        "",
+        "23:59 03-09-2026",
+        "33Min(s)",
+        "Retrasado",
+        "00:00 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7057 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "00:27 04-09-2026",
+        "26Min(s)",
+        "GPS",
+        "00:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "00:31 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "01:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "01:28 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "02:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "02:28 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "03:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PTO BERRIO",
+        "",
+        "03:55 04-09-2026",
+        "29Min(s)",
+        "Retrasado",
+        "03:56 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "03:29 04-09-2026",
+        "30Min(s)",
+        "GPS",
+        "04:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "04:29 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "05:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "05:29 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "06:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "06:29 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "07:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BERRIO",
+        "",
+        "08:12 04-09-2026",
+        "46Min(s)",
+        "Retrasado",
+        "08:13 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "07:30 04-09-2026",
+        "13Min(s)",
+        "GPS",
+        "08:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "08:29 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "09:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "09:30 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "10:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BERRIO",
+        "",
+        "11:08 04-09-2026",
+        "41Min(s)",
+        "Retrasado",
+        "11:08 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "10:30 04-09-2026",
+        "18Min(s)",
+        "GPS",
+        "11:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "11:30 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "12:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "12:30 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "13:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BERRIO",
+        "",
+        "14:08 04-09-2026",
+        "41Min(s)",
+        "Pernoctacion",
+        "14:08 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "13:30 04-09-2026",
+        "18Min(s)",
+        "GPS",
+        "14:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "14:31 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "15:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "15:30 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "16:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 7023 M DE SANTA CRUZ (PUERTO BERRIO, ANTIOQUIA).",
+        "",
+        "16:31 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "17:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BERRIO",
+        "",
+        "17:41 04-09-2026",
+        "16Min(s)",
+        "Pernoctacion",
+        "17:43 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TOCANCIPA (Virtual)",
+        "15:18 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA (Virtual)",
+        "16:58 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BERRIO (virtual) (Virtual)",
+        "18:38 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SEGOVIA (Virtual)",
+        "20:18 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAUCASIA (Virtual)",
+        "21:58 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA GLORIA (Virtual)",
+        "23:38 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "APARTADO (Virtual)",
+        "01:18 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR DE ENTREGA (Virtual) (Virtual)",
+        "02:58 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "04:38 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Ver recorrido del vehículo"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "+\n−\ni"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BERRIO",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN EDS TERPEL SERVICENTRO LA MARGARITA\nDELANTE DE PUERTO BERRIO - PERNOCTANDO - PEND REINICIO\nDE RUTA",
+        "17:41 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BERRIO",
+        "[NOV-ESP] Pernoctacion",
+        "CEL/CONDUCTOR INFORMA QUE PERNOCTA EN EDS LA MARGARITA\nE INICIA RUTA EL DIA DE MAÑANA YA QUE LA CITA ES PARA\nEL DOMINGO",
+        "14:08 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BERRIO",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN EDS LA MARGARITA DELANTE\nDE PUERTO BERRIO PENDIENTE CONFIRMAR REINICIO DE\nRUTA CEL/VUZON DE MENSAJES",
+        "11:08 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO BERRIO",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN EDS LA MARGARITA\nDELANTE DE PUERTO BERRIO PENDIENTE CONFIRMAR REINICIO\nDE RUTA CEL/NO CONTESTA",
+        "08:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PTO BERRIO",
+        "Retrasado",
+        "VEH EN EDS LA MARGARITA DELANTE DE PTO BERRIO CEL/\nESTA PERNOCTANDO REINICIA MAS TARDE",
+        "03:55 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CRUCE DE PTO BERRIO",
+        "Retrasado",
+        "VEH EN RUTA POR EL CRUCE DE PTO BERRIO SIN NOVEDAD",
+        "23:59 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DORADA",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE LA DORADA SIN NOVEDAD",
+        "21:29 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "HONDA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA HONDA CEL/ MANIFIESTA TODO OK SIN\nNOVEDAD, CONFIRMA UBICACION",
+        "19:56 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUADUAS",
+        "Retrasado",
+        "VEH EN RUTA POR GUADUAS CEL/NO CONTESTA - PEND RTA\nWPP",
+        "18:58 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA VEGA",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE LA VEGA SIN NOVEDAD",
+        "16:25 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "El rosal",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR EL ROSAL SIN\nNOVEDAD",
+        "14:26 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJICA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCUENTRA\nEN TRANSITO POR CAJICA SIN NOVEDAD",
+        "12:06 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42372&opcion=1"
+}

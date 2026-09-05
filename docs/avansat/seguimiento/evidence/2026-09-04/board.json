@@ -1,0 +1,1833 @@
+{
+  "capturedAt": "2026-09-04T23:16:27.134Z",
+  "tables": [
+    {
+      "id": "tbl_despac02ID",
+      "rows": [
+        [
+          "NEM\n",
+          "Despacho\n",
+          "Tiempo\n",
+          "Manifiesto\n",
+          "Tipo Manifiesto\n",
+          "Origen\n",
+          "Destino\n",
+          "Placa\n",
+          "Mercancía\n",
+          "Vinculación\n",
+          "Carrocería\n",
+          "Fecha de Salida\n",
+          "Conductor\n",
+          "Calificación\n",
+          "Cliente\n",
+          "Celular\n",
+          "Fecha Novedad\n",
+          "Último P/C\n",
+          "Novedad\n"
+        ],
+        [
+          "",
+          "42389",
+          "-37",
+          "0043368",
+          "Generales",
+          "SANTA MARTA",
+          "GIRON",
+          "VKJ982",
+          "MAIZ",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "NARANJO CRISTIAN FERNEY",
+          "Sin Calificar",
+          "ITALCOL S.A",
+          "[identifier omitted]",
+          "2026-09-04 17:57:00",
+          "PEAJE LA LOMA",
+          "Ok"
+        ],
+        [
+          "",
+          "42403",
+          "-58",
+          "0043382",
+          "Generales",
+          "CARTAGENA DE IN",
+          "GIRON",
+          "SQM101",
+          "PRODUCTO TERMINADO",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "PORTILLA JOSE ATANAEL",
+          "Sin Calificar",
+          "ITALCOL S.A",
+          "[identifier omitted]",
+          "2026-09-04 16:10:00",
+          "CARTAGENA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42390",
+          "-64",
+          "0043369",
+          "Generales",
+          "BOGOTA, D.C.",
+          "PIEDECUESTA",
+          "UPS144",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "ROZO EDMAR YESID",
+          "Sin Calificar",
+          "EDINSA",
+          "[identifier omitted]",
+          "2026-09-04 16:12:00",
+          "PUERTO ARAUJO",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42404",
+          "-68",
+          "0043383",
+          "Generales",
+          "PIEDECUESTA",
+          "CUCUTA",
+          "XIE557",
+          "POSTES DE CONCRETO",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "MOREA JAMES",
+          "Sin Calificar",
+          "PRETECOR LTDA",
+          "[identifier omitted]",
+          "2026-09-04 16:13:00",
+          "BUCARAMANGA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42374",
+          "-78",
+          "0043351",
+          "Generales",
+          "TOCANCIPA",
+          "IBAGUE",
+          "SWM838",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "RIOS OSCAR ALIRIO",
+          "Sin Calificar",
+          "EMBOTELLADORA CAPRI LTDA",
+          "[identifier omitted]",
+          "2026-09-04 16:30:00",
+          "IBAGUE",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42385",
+          "-83",
+          "0043364",
+          "Generales",
+          "TOCANCIPA",
+          "YUMBO",
+          "JVK464",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "ROA ELIECER",
+          "Sin Calificar",
+          "EMBOTELLADORA CAPRI LTDA",
+          "[identifier omitted]",
+          "2026-09-04 16:32:00",
+          "YUMBO",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42367",
+          "-84",
+          "0043339",
+          "Generales",
+          "PAMPLONA",
+          "AGUACHICA",
+          "SUD249",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-02",
+          "ROVIRA JULL BREANER",
+          "Sin Calificar",
+          "FLAME COLOMBIA S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 16:34:00",
+          "AGUACHICA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42387",
+          "-107",
+          "0043366",
+          "Generales",
+          "AGUACHICA",
+          "SITIONUEVO",
+          "SXS222",
+          "TIERRA MINERAL",
+          "TERCEROS",
+          "VOLCO",
+          "2026-09-03",
+          "CRISTANCHO ROBINSON",
+          "Sin Calificar",
+          "AVALEN METALS S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 17:30:00",
+          "REPORTE GPS",
+          "GPS"
+        ],
+        [
+          "",
+          "42377",
+          "-108",
+          "0043356",
+          "Generales",
+          "TOCANCIPA",
+          "LEBRIJA",
+          "SWM379",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "OSPINA CARLOS ALBERTO",
+          "Sin Calificar",
+          "EMBOTELLADORA CAPRI LTDA",
+          "[identifier omitted]",
+          "2026-09-04 15:45:00",
+          "LA FORTUNA",
+          "Pernoctacion"
+        ],
+        [
+          "",
+          "42394",
+          "-109",
+          "0043373",
+          "Generales",
+          "GUACHETA",
+          "LA DORADA",
+          "SSP997",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "GOMEZ MILTON GERMAN",
+          "Sin Calificar",
+          "FLAME COLOMBIA S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 16:09:00",
+          "UBATE",
+          "Pernoctacion"
+        ],
+        [
+          "",
+          "42406",
+          "-113",
+          "0043385",
+          "Generales",
+          "PUERTO ARAUJO",
+          "MINGUEO",
+          "XVX184",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "FLOREZ HECTOR DAVID",
+          "Sin Calificar",
+          "C.I BULK TRADING SUR AMERICA LTDA",
+          "[identifier omitted]",
+          "2026-09-04 17:02:00",
+          "PUERTO ARAUJO",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42400",
+          "-118",
+          "0043379",
+          "Generales",
+          "CIMITARRA",
+          "AGUACHICA",
+          "XIE638",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "PATINO JUAN DAVID",
+          "Sin Calificar",
+          "FLAME COLOMBIA S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 17:07:00",
+          "CAMPO 23",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42407",
+          "-119",
+          "0043386",
+          "Generales",
+          "PUERTO ARAUJO",
+          "MINGUEO",
+          "TFP926",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "ENRIQUEZ FRANK ENRIK",
+          "Sin Calificar",
+          "C.I BULK TRADING SUR AMERICA LTDA",
+          "[identifier omitted]",
+          "2026-09-04 17:05:00",
+          "PUERTO ARAUJO",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42396",
+          "-122",
+          "0043375",
+          "Generales",
+          "PIEDECUESTA",
+          "CUCUTA",
+          "SJQ168",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "MELGAREJO JHON FREDY",
+          "Sin Calificar",
+          "EDINSA",
+          "[identifier omitted]",
+          "2026-09-04 17:27:00",
+          "REPORTE GPS",
+          "GPS"
+        ],
+        [
+          "",
+          "42382",
+          "-123",
+          "0043361",
+          "Generales",
+          "PIEDECUESTA",
+          "CUCUTA",
+          "SSY740",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "HERNANDEZ AGUSTIN",
+          "Sin Calificar",
+          "EDINSA",
+          "[identifier omitted]",
+          "2026-09-04 17:57:00",
+          "REPORTE GPS",
+          "GPS"
+        ],
+        [
+          "",
+          "42391",
+          "-129",
+          "0043370",
+          "Generales",
+          "BOGOTA, D.C.",
+          "IBAGUE",
+          "SUK037",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "VILLAMIL ALVARO",
+          "Sin Calificar",
+          "EDINSA",
+          "[identifier omitted]",
+          "2026-09-04 16:17:00",
+          "IBAGUE",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42381",
+          "-133",
+          "0043360",
+          "Generales",
+          "CAMPO DOS",
+          "FUNZA",
+          "STA192",
+          "TORTA DE PALMISTE",
+          "TERCEROS",
+          "S.R.S",
+          "2026-09-03",
+          "CANO JOSE EDUYN",
+          "Sin Calificar",
+          "RIVERCOL S.A",
+          "[identifier omitted]",
+          "2026-09-04 16:27:00",
+          "CAPITANEJO",
+          "Pernoctacion"
+        ],
+        [
+          "",
+          "42379",
+          "-139",
+          "0043358",
+          "Generales",
+          "CUCUNUBA",
+          "BUENAVENTURA",
+          "SMO312",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "VELASQUEZ JUAN CAMILO",
+          "Sin Calificar",
+          "C.I BULK TRADING SUR AMERICA LTDA",
+          "[identifier omitted]",
+          "2026-09-04 17:29:00",
+          "LA TEBAIDA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42392",
+          "-144",
+          "0043371",
+          "Generales",
+          "TOCANCIPA",
+          "YUMBO",
+          "TDX574",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "JAIMES DIEGO HERNANDO",
+          "Sin Calificar",
+          "EMBOTELLADORA CAPRI LTDA",
+          "[identifier omitted]",
+          "2026-09-04 17:30:00",
+          "MELGAR",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42402",
+          "-149",
+          "0043381",
+          "Generales",
+          "CIMITARRA",
+          "AGUACHICA",
+          "SSY134",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "MURALLAS BRAYAN ANDRES",
+          "Sin Calificar",
+          "FLAME COLOMBIA S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 17:33:00",
+          "LA FORTUNA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42378",
+          "-149",
+          "0043357",
+          "Generales",
+          "LA LOMA",
+          "MOSQUERA",
+          "TLY163",
+          "TORTA DE PALMISTE",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "PEREA JULIO CESAR",
+          "Sin Calificar",
+          "RIVERCOL S.A",
+          "[identifier omitted]",
+          "2026-09-04 17:32:00",
+          "PEAJE ZAMBITO",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42405",
+          "-154",
+          "0043384",
+          "Generales",
+          "TOCANCIPA",
+          "FUNZA",
+          "KRZ949",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "CASTRO JAVIER ENRIQUE",
+          "Sin Calificar",
+          "EMBOTELLADORA CAPRI LTDA",
+          "[identifier omitted]",
+          "2026-09-04 16:46:00",
+          "TOCANCIPA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42398",
+          "-154",
+          "0043377",
+          "Generales",
+          "TOCANCIPA",
+          "CUCUTA",
+          "SQM107",
+          "GASEOSA",
+          "TERCEROS",
+          "S.R.S",
+          "2026-09-04",
+          "SILVA OLMAN OVIDIO",
+          "Sin Calificar",
+          "EMBOTELLADORA CAPRI LTDA",
+          "[identifier omitted]",
+          "2026-09-04 17:34:00",
+          "Belen",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42397",
+          "-154",
+          "0043376",
+          "Generales",
+          "BARRANQUILLA",
+          "BUCARAMANGA",
+          "XVW015",
+          "DESTILADO DE MAIZ",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "ACELAS GERMAN",
+          "Sin Calificar",
+          "FINCA SAS Y ALIFIN SAS",
+          "[identifier omitted]",
+          "2026-09-04 17:48:00",
+          "BARRANQUILLA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42411",
+          "-168",
+          "0043390",
+          "Generales",
+          "PUERTO ARAUJO",
+          "MINGUEO",
+          "SOS449",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "BUSTAMANTE FRAY DE JESUS",
+          "Sin Calificar",
+          "C.I BULK TRADING SUR AMERICA LTDA",
+          "[identifier omitted]",
+          "2026-09-04 17:54:00",
+          "PUERTO ARAUJO",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42384",
+          "-169",
+          "0043363",
+          "Generales",
+          "GUADALAJARA DE",
+          "BUCARAMANGA",
+          "UQX489",
+          "PRODUCTO TERMINADO",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "CAMACHO JESUS DAVID",
+          "Sin Calificar",
+          "FINCA SAS Y ALIFIN SAS",
+          "[identifier omitted]",
+          "2026-09-04 17:06:00",
+          "CHIMITA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42401",
+          "-169",
+          "0043380",
+          "Generales",
+          "PUERTO ARAUJO",
+          "MINGUEO",
+          "XVN377",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "FONSECA HUGO ALFONSO",
+          "Sin Calificar",
+          "C.I BULK TRADING SUR AMERICA LTDA",
+          "[identifier omitted]",
+          "2026-09-04 15:30:00",
+          "BUCARAMANGA",
+          "Pernoctacion"
+        ],
+        [
+          "",
+          "42412",
+          "-172",
+          "0043391",
+          "Generales",
+          "PUERTO ARAUJO",
+          "MINGUEO",
+          "TRI851",
+          "CARBON",
+          "TERCEROS",
+          "S.R.S",
+          "2026-09-04",
+          "BUSTAMANTE FRAY ANDRES",
+          "Sin Calificar",
+          "C.I BULK TRADING SUR AMERICA LTDA",
+          "[identifier omitted]",
+          "2026-09-04 17:55:00",
+          "PUERTO ARAUJO",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42393",
+          "-174",
+          "0043372",
+          "Generales",
+          "GUACHETA",
+          "LA DORADA",
+          "LLP536",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "MENDEZ LUIS GONZALO",
+          "Sin Calificar",
+          "FLAME COLOMBIA S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 17:08:00",
+          "LENGUAZAQUE",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42380",
+          "-178",
+          "0043359",
+          "Generales",
+          "CIENAGA DE ORO",
+          "BUCARAMANGA",
+          "KUN178",
+          "PRODUCTO TERMINADO",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "CAICEDO JORGE ELIECER",
+          "Sin Calificar",
+          "FINCA SAS Y ALIFIN SAS",
+          "[identifier omitted]",
+          "2026-09-04 17:11:00",
+          "CHIMITA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42365",
+          "-194",
+          "0043337",
+          "Generales",
+          "PAMPLONA",
+          "AGUACHICA",
+          "TLX937",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-02",
+          "ARIZA ANDERSON",
+          "Sin Calificar",
+          "FLAME COLOMBIA S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 17:25:00",
+          "AGUACHICA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42395",
+          "-209",
+          "0043374",
+          "Generales",
+          "BARRANQUILLA",
+          "GIRON",
+          "SWK949",
+          "DESTILADO DE MAIZ",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "FLOREZ DIEGO ARMANDO",
+          "Sin Calificar",
+          "ITALCOL S.A",
+          "[identifier omitted]",
+          "2026-09-04 17:35:00",
+          "BARRANQUILLA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42372",
+          "-212",
+          "0043348",
+          "Generales",
+          "TOCANCIPA",
+          "APARTADO",
+          "SSZ415",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "DELGADO ELKIN",
+          "Sin Calificar",
+          "EMBOTELLADORA CAPRI LTDA",
+          "[identifier omitted]",
+          "2026-09-04 17:41:00",
+          "PUERTO BERRIO",
+          "Pernoctacion"
+        ],
+        [
+          "",
+          "42383",
+          "-229",
+          "0043362",
+          "Generales",
+          "LA GLORIA",
+          "BELLO",
+          "SZN022",
+          "TORTA DE PALMISTE",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "GARCIA JAVIER ANDRES",
+          "Sin Calificar",
+          "AGROMAT S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 17:59:00",
+          "BELLO",
+          "Pernoctacion"
+        ],
+        [
+          "",
+          "42409",
+          "-349",
+          "0043388",
+          "Generales",
+          "BARRANQUILLA",
+          "GIRON",
+          "TTG487",
+          "MAIZ",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "SILVA VICTOR ALONSO",
+          "Sin Calificar",
+          "ITALCOL S.A",
+          "[identifier omitted]",
+          "2026-09-04 17:37:00",
+          "BARRANQUILLA",
+          "Pernoctacion"
+        ],
+        [
+          "",
+          "42410",
+          "-349",
+          "0043389",
+          "Generales",
+          "BARRANQUILLA",
+          "GIRON",
+          "UZN184",
+          "MAIZ",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-04",
+          "BENAVIDES DELIO JOSE",
+          "Sin Calificar",
+          "ITALCOL S.A",
+          "[identifier omitted]",
+          "2026-09-04 17:44:00",
+          "BARRANQUILLA",
+          "Pernoctacion"
+        ],
+        [
+          "",
+          "42408",
+          "-349",
+          "0043387",
+          "Generales",
+          "BARRANQUILLA",
+          "GIRON",
+          "VXI661",
+          "MAIZ",
+          "TERCEROS",
+          "S.R.S",
+          "2026-09-04",
+          "ROJAS EDSON STIVEN",
+          "Sin Calificar",
+          "ITALCOL S.A",
+          "[identifier omitted]",
+          "2026-09-04 17:47:00",
+          "SIN UBICACION",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42328",
+          "-888",
+          "0043298",
+          "Generales",
+          "PIEDECUESTA",
+          "CUCUTA",
+          "SXZ209",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-08-29",
+          "CHAPARRO JONATAN FERNANDO",
+          "Sin Calificar",
+          "EDINSA",
+          "[identifier omitted]",
+          "2026-09-04 17:27:00",
+          "REPORTE GPS",
+          "GPS"
+        ],
+        [
+          "",
+          "42376",
+          "-888",
+          "0043355",
+          "Generales",
+          "PAZ DE RIO",
+          "LA DORADA",
+          "SZN274",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "CAMARGO MANUEL RICARDO",
+          "Sin Calificar",
+          "FLAME COLOMBIA S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 10:47:00",
+          "LA DORADA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42364",
+          "-888",
+          "0043336",
+          "Generales",
+          "PAMPLONA",
+          "AGUACHICA",
+          "TRD294",
+          "CARBON",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-02",
+          "JARAMILLO GABRIEL JAIME",
+          "Sin Calificar",
+          "FLAME COLOMBIA S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 11:01:00",
+          "AGUACHICA",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42371",
+          "-888",
+          "0043344",
+          "Generales",
+          "SANTA MARTA",
+          "GIRON",
+          "UYA326",
+          "MAIZ",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "OVALLOS HANNER LEONARDO",
+          "Sin Calificar",
+          "ITALCOL S.A",
+          "[identifier omitted]",
+          "2026-09-04 15:14:00",
+          "GIRON",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42293",
+          "-889",
+          "0043262",
+          "Generales",
+          "PIEDECUESTA",
+          "TUNJA",
+          "SXU609",
+          "POSTES DE CONCRETO",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-08-28",
+          "FONSECA WILLIAM LEANDRO",
+          "Sin Calificar",
+          "PRETECOR LTDA",
+          "[identifier omitted]",
+          "2026-09-03 20:03:00",
+          "PEND CUMPLIDO",
+          "Retrasado"
+        ],
+        [
+          "",
+          "42386",
+          "-2,327",
+          "0043365",
+          "Generales",
+          "AGUACHICA",
+          "SITIONUEVO",
+          "GQV640",
+          "TIERRA MINERAL",
+          "TERCEROS",
+          "VOLCO",
+          "2026-09-03",
+          "HERNANDEZ HENRY",
+          "Sin Calificar",
+          "AVALEN METALS S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 17:04:00",
+          "REPORTE GPS",
+          "GPS"
+        ],
+        [
+          "",
+          "42388",
+          "-2,329",
+          "0043367",
+          "Generales",
+          "AGUACHICA",
+          "SITIONUEVO",
+          "SSR443",
+          "TIERRA MINERAL",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "VARGAS YONATHAN",
+          "Sin Calificar",
+          "AVALEN METALS S.A.S",
+          "[identifier omitted]",
+          "2026-09-04 17:24:00",
+          "PEND CUMPLIDO",
+          "Retrasado"
+        ]
+      ]
+    },
+    {
+      "id": "tbl_despac03ID",
+      "rows": [
+        [
+          "Despacho\n",
+          "Manifiesto\n",
+          "Tipo Manifiesto\n",
+          "Origen\n",
+          "Destino\n",
+          "Placa\n",
+          "Mercancía\n",
+          "Vinculación\n",
+          "Carrocería\n",
+          "Fecha de Salida\n",
+          "Conductor\n",
+          "Calificación\n",
+          "Cliente\n",
+          "Celular\n",
+          "Fecha Novedad\n",
+          "Último P/C\n",
+          "Novedad\n"
+        ],
+        [
+          "42373",
+          "0043350",
+          "Generales",
+          "TOCANCIPA",
+          "YUMBO",
+          "STR779",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-03",
+          "SANCHEZ CARLOS EDUARDO",
+          "Sin Calificar",
+          "EMBOTELLADORA CAPRI LTDA",
+          "[identifier omitted]",
+          "2026-09-04 15:49:00",
+          "LUGAR ENTREGA",
+          "Ok"
+        ],
+        [
+          "42368",
+          "0043341",
+          "Generales",
+          "PIEDECUESTA",
+          "TUNJA",
+          "WFL618",
+          "POSTES DE CONCRETO",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-02",
+          "CASTANEDA NEDER FABIAN",
+          "Sin Calificar",
+          "PRETECOR LTDA",
+          "[identifier omitted]",
+          "2026-09-04 15:49:00",
+          "Lugar Entrega",
+          "Ok"
+        ],
+        [
+          "42366",
+          "0043338",
+          "Generales",
+          "PIEDECUESTA",
+          "CUCUTA",
+          "SXR508",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-02",
+          "RUIZ GERARDO",
+          "Sin Calificar",
+          "EDINSA",
+          "[identifier omitted]",
+          "2026-09-04 16:29:00",
+          "Lugar Entrega",
+          "Ok"
+        ],
+        [
+          "42363",
+          "0043335",
+          "Generales",
+          "TOCANCIPA",
+          "PEREIRA",
+          "SVC821",
+          "GASEOSA",
+          "TERCEROS",
+          "ESTACAS",
+          "2026-09-02",
+          "GUTIERREZ CRISTIAN CAMILO",
+          "Sin Calificar",
+          "EMBOTELLADORA CAPRI LTDA",
+          "[identifier omitted]",
+          "2026-09-04 15:47:00",
+          "Lugar Entrega",
+          "Ok"
+        ]
+      ]
+    }
+  ],
+  "links": [
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42389&opcion=1",
+      "id": "42389"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42403&opcion=1",
+      "id": "42403"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42390&opcion=1",
+      "id": "42390"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42404&opcion=1",
+      "id": "42404"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42374&opcion=1",
+      "id": "42374"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42385&opcion=1",
+      "id": "42385"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42367&opcion=1",
+      "id": "42367"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42387&opcion=1",
+      "id": "42387"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42377&opcion=1",
+      "id": "42377"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42394&opcion=1",
+      "id": "42394"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42406&opcion=1",
+      "id": "42406"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42400&opcion=1",
+      "id": "42400"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42407&opcion=1",
+      "id": "42407"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42396&opcion=1",
+      "id": "42396"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42382&opcion=1",
+      "id": "42382"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42391&opcion=1",
+      "id": "42391"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42381&opcion=1",
+      "id": "42381"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42379&opcion=1",
+      "id": "42379"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42392&opcion=1",
+      "id": "42392"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42402&opcion=1",
+      "id": "42402"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42378&opcion=1",
+      "id": "42378"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42405&opcion=1",
+      "id": "42405"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42398&opcion=1",
+      "id": "42398"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42397&opcion=1",
+      "id": "42397"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42411&opcion=1",
+      "id": "42411"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42384&opcion=1",
+      "id": "42384"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42401&opcion=1",
+      "id": "42401"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42412&opcion=1",
+      "id": "42412"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42393&opcion=1",
+      "id": "42393"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42380&opcion=1",
+      "id": "42380"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42365&opcion=1",
+      "id": "42365"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42395&opcion=1",
+      "id": "42395"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42372&opcion=1",
+      "id": "42372"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42383&opcion=1",
+      "id": "42383"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42409&opcion=1",
+      "id": "42409"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42410&opcion=1",
+      "id": "42410"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42408&opcion=1",
+      "id": "42408"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42328&opcion=1",
+      "id": "42328"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42376&opcion=1",
+      "id": "42376"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42364&opcion=1",
+      "id": "42364"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42371&opcion=1",
+      "id": "42371"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42293&opcion=1",
+      "id": "42293"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42386&opcion=1",
+      "id": "42386"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42388&opcion=1",
+      "id": "42388"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42373&opcion=1",
+      "id": "42373"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42368&opcion=1",
+      "id": "42368"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42366&opcion=1",
+      "id": "42366"
+    },
+    {
+      "href": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42363&opcion=1",
+      "id": "42363"
+    }
+  ],
+  "filters": [
+    {
+      "id": "MenuRowHiddenID",
+      "label": null,
+      "type": "hidden",
+      "value": ""
+    },
+    {
+      "id": "DespachoFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "TiempoID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "ManifiestoFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "TipomanifiestoFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "OrigenFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "DestinoFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "PlacaFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "MercanciaFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "VinculacionFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "CarroceriaFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "FechaDeSalidaFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "ConductorFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "ClienteFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "CelularFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "FechaNovedadFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "UltimoPCFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "NovedadFID",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "search",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "search",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "",
+      "label": null,
+      "type": "text",
+      "value": ""
+    },
+    {
+      "id": "usuarioID",
+      "label": null,
+      "type": "hidden",
+      "value": ""
+    },
+    {
+      "id": "windowID",
+      "label": null,
+      "type": "hidden",
+      "value": ""
+    },
+    {
+      "id": "valorID",
+      "label": null,
+      "type": "hidden",
+      "value": ""
+    },
+    {
+      "id": "cod_servicID",
+      "label": null,
+      "type": "hidden",
+      "value": ""
+    },
+    {
+      "id": "MenuRowHiddenID",
+      "label": null,
+      "type": "hidden",
+      "value": ""
+    }
+  ]
+}

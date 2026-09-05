@@ -1,0 +1,1087 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42293&opcion=2&codpc=10211&pc=TUNJA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "TUNJA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42293&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42293&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42293",
+        "Origen",
+        "PIEDECUESTA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043262",
+        "Destino",
+        "TUNJA (Boya)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "JORGE",
+        "Ruta",
+        "794 - PIEDECUESTA (Sant) - 68547000 - TUNJA (Boya) - 15001000 VIA SAN GIL"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "FONSECA WILLIAM LEANDRO",
+        "Fecha Salida",
+        "07:07 28-08-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "17:07 28-08-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-08-28 07:07:10"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SXU609"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AZUL AGUA METALIZADO",
+        "Modelo",
+        "2011"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAMPO 23",
+        "",
+        "07:09 28-08-2026",
+        "3Min(s)",
+        "Retrasado",
+        "07:10 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE AGUAS NEGRAS",
+        "",
+        "07:24 28-08-2026",
+        "14Min(s)",
+        "Retrasado",
+        "07:24 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LANDAZURI",
+        "",
+        "10:48 28-08-2026",
+        "204Min(s)",
+        "Retrasado",
+        "10:49 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUALILO",
+        "",
+        "13:41 28-08-2026",
+        "172Min(s)",
+        "Retrasado",
+        "13:42 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARBOSA",
+        "",
+        "15:49 28-08-2026",
+        "128Min(s)",
+        "Retrasado",
+        "15:50 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ARCABUCO",
+        "",
+        "17:58 28-08-2026",
+        "131Min(s)",
+        "Retrasado",
+        "18:02 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "21:28 28-08-2026",
+        "207Min(s)",
+        "Retrasado",
+        "21:29 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "00:45 29-08-2026",
+        "195Min(s)",
+        "Pernoctacion",
+        "00:45 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "04:49 29-08-2026",
+        "244Min(s)",
+        "Retrasado",
+        "04:50 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "09:47 29-08-2026",
+        "297Min(s)",
+        "Pernoctacion",
+        "09:47 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "14:47 29-08-2026",
+        "300Min(s)",
+        "Pernoctacion",
+        "14:47 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "17:54 29-08-2026",
+        "186Min(s)",
+        "Pernoctacion",
+        "17:54 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "21:58 29-08-2026",
+        "244Min(s)",
+        "Pernoctacion",
+        "21:59 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "01:14 30-08-2026",
+        "195Min(s)",
+        "Pernoctacion",
+        "01:14 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "05:32 30-08-2026",
+        "258Min(s)",
+        "Pernoctacion",
+        "05:33 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "10:38 30-08-2026",
+        "305Min(s)",
+        "Pernoctacion",
+        "10:38 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "14:59 30-08-2026",
+        "260Min(s)",
+        "Pernoctacion",
+        "14:59 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "18:50 30-08-2026",
+        "231Min(s)",
+        "Pernoctacion",
+        "18:51 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "22:40 30-08-2026",
+        "229Min(s)",
+        "Pernoctacion",
+        "22:40 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "02:42 31-08-2026",
+        "242Min(s)",
+        "Pernoctacion",
+        "02:42 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "06:33 31-08-2026",
+        "231Min(s)",
+        "Retrasado",
+        "06:33 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "10:17 31-08-2026",
+        "223Min(s)",
+        "Retrasado",
+        "10:17 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "14:27 31-08-2026",
+        "252Min(s)",
+        "Retrasado",
+        "14:29 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "17:45 31-08-2026",
+        "196Min(s)",
+        "Retrasado",
+        "17:46 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "20:58 31-08-2026",
+        "192Min(s)",
+        "Retrasado",
+        "20:58 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "23:01 31-08-2026",
+        "123Min(s)",
+        "Retrasado",
+        "23:02 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "03:28 01-09-2026",
+        "266Min(s)",
+        "Pernoctacion",
+        "03:28 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "07:12 01-09-2026",
+        "223Min(s)",
+        "Retrasado",
+        "07:12 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "10:41 01-09-2026",
+        "209Min(s)",
+        "Retrasado",
+        "10:42 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "14:23 01-09-2026",
+        "222Min(s)",
+        "Pernoctacion",
+        "14:24 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "18:44 01-09-2026",
+        "260Min(s)",
+        "Pernoctacion",
+        "18:44 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "22:28 01-09-2026",
+        "223Min(s)",
+        "Pernoctacion",
+        "22:28 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "03:38 02-09-2026",
+        "309Min(s)",
+        "Pernoctacion",
+        "03:38 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "06:34 02-09-2026",
+        "176Min(s)",
+        "Retrasado",
+        "06:35 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "10:18 02-09-2026",
+        "223Min(s)",
+        "Retrasado",
+        "10:18 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "",
+        "12:26 02-09-2026",
+        "128Min(s)",
+        "Retrasado",
+        "12:26 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEND CUMPLIDO",
+        "",
+        "07:02 03-09-2026",
+        "1,116Min(s)",
+        "Retrasado",
+        "07:02 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEND CUMPLIDO",
+        "",
+        "20:03 03-09-2026",
+        "780Min(s)",
+        "Retrasado",
+        "20:03 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA (Virtual)",
+        "14:57 28-08-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "16:07 28-08-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "17:07 28-08-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEND CUMPLIDO",
+        "Retrasado",
+        "PEND CUMPLIDO",
+        "20:03 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEND CUMPLIDO",
+        "Retrasado",
+        "PEND CUMPLIDO",
+        "07:02 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA DESCARGO PENDIENTE DE\nQUE ENVIE FOTO DE LOS CUMPLIDOS",
+        "12:26 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA ESTACIONADO EN EL CLIENTE PENDIENTE\nCONFIRMAR DESCARGUE CEL/SISTEMA CORREO DE VOZ",
+        "10:18 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "VEH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO\n-PEND ENTREGA",
+        "06:34 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO -PEND\nENTREGA MIERCOLES",
+        "03:38 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO\n-PEND ENTREGA MIERCOLES",
+        "22:28 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO -PEND\nENTREGA MIERCOLES",
+        "18:44 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "CEL/CONDUCTOR INFORMA QUE PERMANECE EN EL HOTEL SOL\nDEL NORTE QUE EL DESCARGUE QUEDO PARA EL DIA DE MAÑANA",
+        "14:23 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN EL HOTEL SOL DEL\nNORTE PENDIENTE CONFIRMAR DESCARGUE CEL/NO CONTESTA",
+        "10:41 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO\n-PEND ENTREGA MARTES",
+        "07:12 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO -PEND\nENTREGA MARTES",
+        "03:28 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO\n-PEND ENTREGA MARTES",
+        "23:01 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE PERMANECE ESTACIONADO EN\nEL HOTEL SOL DEL NORTE ESPERANDO AQUE LO LLAMEN A\nDESCARGAR -INFORMA QUE TENIAN CITA PARA EL DIA DE\nHOY PERO QUE EN LA MAÑANA TEMRPANO LO LLAMARON Y\nQUE LO DESCARGABAN MAÑANA Y LO VOLVIERON A LLAMAR\nA DECIRLE QUE LO DESCARGAN EL MIERCOLES QUE PORQUE\nEL INGENIERO NO TIENE TIEMPO DE RECIBIRLES EL VIAJE\nYA EL CONDUCTOR SE ENCUENTRA MOLESTO E INFORMA QUE\nSI MAÑANA NO LO DESCARGAN VA Y ATRAVIESA LA MULA\nCON EL OTRO SEÑOR QUE ESTA EN LO MISMO",
+        "20:58 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE PERMANECE ESTACIONADO EN EL\nHOTEL SOL DEL NORTE ESPERANDO AQUE LO LLAMEN A DESCARGAR\n-INFORMA QUE TENIAN CITA PARA EL DIA DE HOY PERO\nQUE EN LA MAÑANA TEMRPANO LO LLAMARON Y QUE LO DESCARGABAN\nMAÑANA Y LO VOLVIERON A LLAMAR A DECIRLE QUE LO DESCARGAN\nEL MIERCOLES QUE PORQUE EL INGENIERO NO TIENE TIEMPO\nDE RECIBIRLES EL VIAJE YA EL CONDUCTOR SE ENCUENTRA\nMOLESTO E INFORMA QUE SI MAÑANA NO LO DESCARGAN VA\nY ATRAVIESA LA MULA CON EL OTRO SEÑOR QUE ESTA EN\nLO MISMO",
+        "17:45 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE PERMANECE ESTACIONADO EN\nEL HOTEL SOL DEL NORTE ESPERANDO AQUE LO LLAMEN A\nDESCARGAR -INFORMA QUE TENIAN CITA PARA EL DIA DE\nHOY PERO QUE EN LA MAÑANA TEMRPANO LO LLAMARON Y QUE\nLO DESCARGABAN MAÑANA Y LO VOLVIERON A LLAMAR A DECIRLE\nQUE LO DESCARGAN EL MIERCOLES QUE PORQUE EL INGENIERON\nNO TIENE TIEMPO DE RECIBIRLES EL VIAJE YA EL CONDUCTOR\nSE ENCUENTRA MOLESTO E INFORMA QUE SI MAÑANA NO LO\nDESCARGAN VA Y ATRAVIESA LA MULA CON EL OTRO SEÑOR\nQUE ESTA EN LO MISMO",
+        "14:27 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN EL HOTEL SOL DEL\nNORTE PENDIENTE CONFIRMAR DESCARGUE CEL/SISTEMA CORREO\nDE VOZ",
+        "10:17 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA -PEND\nENTREGA",
+        "06:33 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO -\nENTREGA EL LUNES",
+        "02:42 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO\n- ENTREGA EL LUNES",
+        "22:40 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO -\nENTREGA EL LUNES",
+        "18:50 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO\n- ENTREGA EL LUNES",
+        "14:59 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO -\nENTREGA EL LUNES",
+        "10:38 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO\n- ENTREGA EL LUNES",
+        "05:32 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO -\nENTREGA EL LUNES",
+        "01:14 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VH PERMANECE EN HOTEL SOL DEL NORTE EN TUNJA - PERNOCTANDO\n- ENTREGA EL LUNES",
+        "21:58 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN EDS Terpel A LA SALIDA DE TUNJA CEL/\nMANIFIESTA EL VEH QUEDA PERNOCTANDO ENTREGA EL DIA\nLUNES",
+        "17:54 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN EDS Terpel A LA SALIDA DE TUNJA\nCEL/ MANIFIESTA EL VEH QUEDA PERNOCTANDO ENTREGA\nEL DIA LUNES",
+        "14:47 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN EDS Terpel A LA SALIDA DE TUNJA CEL/\nMANIFIESTA EL VEH QUEDA PERNOCTANDO ENTREGA EL DIA\nLUNES",
+        "09:47 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "VEH ESTACIONADO EN EDS Terpel A LA SALIDA DE TUNJA\nCEL/ MANIFIESTA EL VEH QUEDA PERNOCTANDO ENTREGA\nEL DIA LUNES",
+        "04:49 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN EDS Terpel A LA SALIDA DE TUNJA CEL/\nMANIFIESTA EL VEH QUEDA PERNOCTANDO AHI HASTA EL\nLUNES",
+        "00:45 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUNJA",
+        "Retrasado",
+        "VEH ESTACIONADO EN EDS Terpel A LA SALIDA DE TUNJA\nCEL/ MANIFIESTA EL VEH QUEDA PERNOCTANDO AHI HASTA\nEL LUNES",
+        "21:28 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "arcabuco",
+        "Retrasado",
+        "VEH ESTACIONADO EN EDS Terpel Villa amparito EN ARCABUCO\nCEL/ MANIFIESTA TODO OK SIN NOVEDAD, PERNOCTA EN PARQUEADERO\nLA PERLA EN DUITAMA YA QUE DEBE REALIZAR ARREGLOS\nAL VEH, LA ENTREGA ES PARA EL LUNES.",
+        "17:58 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BARBOSA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN TRANSITO\nLLEGANDO A BARBOSA SIN NOVEDAD",
+        "15:49 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GUALILO",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR GUALILO SIN\nNOVEDAD",
+        "13:41 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LANDAZURI",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO LLEGANDO A LANDAZURI\nSIN NOVEDAD",
+        "10:48 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE AGUAS NEGRAS",
+        "Retrasado",
+        "VEH EN RUTA EN VIA PEAJE AGUAS NEGRAS CEL/ MANIFIESTA\nTODO OK SIN NOVEDAD, CONFIRMA UBICACION",
+        "07:24 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAMPO 23",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE CAMPO 23 CEL/NO CONTESTA -\nPEND RTA WPP",
+        "07:09 28-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42293&opcion=1"
+}

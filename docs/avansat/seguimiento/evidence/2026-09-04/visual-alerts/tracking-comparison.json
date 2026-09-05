@@ -1,0 +1,1619 @@
+{
+  "capturedAt": "2026-09-04T23:41:42.752Z",
+  "dispatches": [
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42403"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-27"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043382"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42390"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-33"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043369"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42404"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-37"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043383"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42374"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-47"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043351"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42389"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-48"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043368"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42385"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-52"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043364"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42367"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-53"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043339"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42377"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-77"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043356"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42387"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-77"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043366"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42394"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-78"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043373"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42406"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-82"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043385"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42400"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-87"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043379"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42407"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-88"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043386"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42396"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-92"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043375"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42382"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-93"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043361"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42391"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-98"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043370"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42381"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-102"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043360"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42379"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-108"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043358"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42392"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-113"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043371"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42402"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-118"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043381"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42378"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-118"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043357"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42405"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-123"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043384"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42398"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-123"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043377"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42397"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-123"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043376"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42411"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-137"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043390"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42384"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-138"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043363"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42401"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-138"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043380"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42412"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-141"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043391"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42393"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-143"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043372"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42380"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-147"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043359"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42365"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-163"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043337"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42395"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-178"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043374"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42372"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-181"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043348"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42383"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-198"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043362"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42413"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-228"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043392"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42414"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-232"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043393"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42415"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-236"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043394"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42409"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-318"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043388"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42410"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-318"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043389"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42408"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-318"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043387"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42376"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-857"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043355"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42364"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-857"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043336"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42371"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-857"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043344"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42293"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-858"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043262"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42386"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-2,297"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043365"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42388"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "-2,298"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043367"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000;background-color: #FFFFFF",
+          "text": "42328"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043298"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000; background-color: #FFFFFF",
+          "text": "42373"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043350"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "Generales"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "TOCANCIPA"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000; background-color: #FFFFFF",
+          "text": "42363"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043335"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "Generales"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "TOCANCIPA"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000; background-color: #FFFFFF",
+          "text": "42366"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043338"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "Generales"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "PIEDECUESTA"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    },
+    {
+      "cells": [
+        {
+          "background": "rgb(255, 255, 255)",
+          "bg": null,
+          "style": "font-size: 8pt;color: #000000; background-color: #FFFFFF",
+          "text": "42368"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "0043341"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "Generales"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "bg": null,
+          "style": null,
+          "text": "PIEDECUESTA"
+        }
+      ],
+      "rowBackground": "rgb(255, 255, 255)",
+      "rowBg": null,
+      "rowStyle": null
+    }
+  ],
+  "legend": [
+    {
+      "background": "rgb(51, 255, 153)",
+      "bg": null,
+      "style": "font-size: 8pt; color: #000000; background-color: #33FF99;",
+      "text": "Salida = 1 Min"
+    },
+    {
+      "background": "rgb(255, 255, 0)",
+      "bg": null,
+      "style": "font-size: 8pt; color: #000000; background-color: #FFFF00;",
+      "text": "Amarillo = 30 Min"
+    },
+    {
+      "background": "rgb(255, 102, 0)",
+      "bg": null,
+      "style": "font-size: 8pt; color: #000000; background-color: #FF6600;",
+      "text": "Naranja = 60 Min"
+    },
+    {
+      "background": "rgb(255, 0, 0)",
+      "bg": null,
+      "style": "font-size: 8pt; color: #000000; background-color: #FF0000;",
+      "text": "Rojo = 90 Min"
+    },
+    {
+      "background": "rgb(153, 51, 255)",
+      "bg": null,
+      "style": "font-size: 8pt; color: #000000; background-color: #9933FF;",
+      "text": "Violeta = 120 Min"
+    }
+  ],
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?window=central&op=inicio"
+}

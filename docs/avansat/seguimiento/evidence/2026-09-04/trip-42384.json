@@ -1,0 +1,454 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42384&opcion=2&codpc=10033&pc=BUCARAMANGA (Sant) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BUCARAMANGA (Sant) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42384&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42384",
+        "Origen",
+        "GUADALAJARA DE BUGA (Vall)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043363",
+        "Destino",
+        "BUCARAMANGA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "JORGE",
+        "Ruta",
+        "49263 - GUADALAJARA DE (Vall) - Col - 76111000 - BUCARAMANGA (Sant) - Col - 68001000 VIA LINEA...MAGDALENA MEDIO....1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "CAMACHO JESUS DAVID",
+        "Fecha Salida",
+        "15:53 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "91354876",
+        "Fecha Planeada Llegada",
+        "15:23 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 15:52:52"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "UQX489"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AZUL",
+        "Modelo",
+        "1998"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CALARCA",
+        "",
+        "15:57 03-09-2026",
+        "4Min(s)",
+        "Retrasado",
+        "15:57 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CALARCA",
+        "",
+        "16:56 03-09-2026",
+        "58Min(s)",
+        "Retrasado",
+        "16:56 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "",
+        "19:46 03-09-2026",
+        "170Min(s)",
+        "Retrasado",
+        "19:46 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "",
+        "21:27 03-09-2026",
+        "100Min(s)",
+        "Retrasado",
+        "21:27 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LERIDA",
+        "",
+        "23:57 03-09-2026",
+        "150Min(s)",
+        "Retrasado",
+        "23:58 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PTO BOYACA",
+        "",
+        "03:57 04-09-2026",
+        "240Min(s)",
+        "Retrasado",
+        "03:58 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RUTA DEL CACAO",
+        "",
+        "08:16 04-09-2026",
+        "258Min(s)",
+        "Retrasado",
+        "08:17 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUECARAMANGA",
+        "",
+        "10:49 04-09-2026",
+        "152Min(s)",
+        "Retrasado",
+        "10:50 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "14:11 04-09-2026",
+        "202Min(s)",
+        "Retrasado",
+        "14:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "",
+        "17:06 04-09-2026",
+        "174Min(s)",
+        "Retrasado",
+        "17:06 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA (Sant) (Virtual)",
+        "14:53 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "15:23 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "Retrasado",
+        "VEH ESTACIONADO EN ALIMENTOS FINCA S.A.S CEDI BUCARAMANGA\nEN CHIMITA - PEND ENTREGA",
+        "17:06 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE AUN SE ENCUENTRA EN PROCESO\nDE DESCARGUE QUE MASOMENOS MAÑANA ESTAN TERMINANDO\nDE DESCARGAR YA QUE ESTAN DESCARGANDO DE A POQUITO",
+        "14:11 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUECARAMANGA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA WUE SE ENCEUNTRA EN EL CLIENTE\nEN PROCESO DE DESCARGUE",
+        "10:49 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RUTA DEL CACAO",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA EN TRANSITO POR LA RUTA DEL\nCACAO CEL/SISTEMA CORREO DE VOZ",
+        "08:16 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PTO BOYACA",
+        "Retrasado",
+        "VEH EN EDS EL CASTILLO DELANTE DEPTO BOYACA PERNOCTANDO\nPEND REINICIO DE RUTA",
+        "03:57 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LERIDA",
+        "Retrasado",
+        "VEH EN RUTA POR LERIDA SIN NOVEDAD",
+        "23:57 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "Retrasado",
+        "VEH EN RUTA EN VIA IBAGUE SIN NOVEDAD",
+        "21:27 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA CAJAMARCA SIN NOVEDAD",
+        "19:46 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CALARCA",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE CALARCA SIN NOVEDAD",
+        "16:56 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CALARCA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCUENTRA\nEN TRANSITO LLEGANDO A CALARCA SIN NOVEDAD",
+        "15:57 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42384&opcion=1"
+}

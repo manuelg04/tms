@@ -21,6 +21,8 @@ type NavItem = {
 };
 
 const pageMeta: Record<string, PageMeta> = {
+  "/control/seguimiento": { title: "Seguimiento", subtitle: "Control de tráfico · Despachos y puntos de control" },
+  "/configuracion/alertas-visuales": { title: "Alertas visuales", subtitle: "Configuración de alarmas de seguimiento" },
   "/": {
     title: "Panel de operacion",
     subtitle: "Estado en vivo de tus documentos RNDC"
@@ -87,6 +89,18 @@ const navItems: NavItem[] = [
       href: `/documentos/${section.slug}`,
       label: section.label
     }))
+  },
+  {
+    href: "/control/seguimiento",
+    label: "Control",
+    icon: <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden><circle cx="8" cy="8" r="6" /><circle cx="8" cy="8" r="2" /><path d="M8 0v4M8 12v4M0 8h4M12 8h4" /></svg>,
+    children: [{ href: "/control/seguimiento", label: "Seguimiento" }]
+  },
+  {
+    href: "/configuracion/alertas-visuales",
+    label: "Configuración",
+    icon: <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden><path d="M3 2v12M8 2v12M13 2v12" /><path d="M1 5h4M6 10h4M11 6h4" strokeWidth="3" /></svg>,
+    children: [{ href: "/configuracion/alertas-visuales", label: "Alertas visuales" }]
   },
   {
     href: "/correcciones",
@@ -231,6 +245,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 }
 
 function resolvePageMeta(pathname: string): PageMeta {
+  if (pathname.startsWith("/control/seguimiento/")) return { title: "Seguimiento del despacho", subtitle: "Plan de ruta, novedades y notas de controlador" };
   if (pathname.startsWith("/maestros/nuevo/")) {
     const resource = pathname.split("/")[3];
     const labels: Record<string, string> = { conductor: "conductor", tercero: "tercero", remolque: "remolque", vehiculo: "vehículo" };

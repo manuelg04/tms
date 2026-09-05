@@ -1,0 +1,700 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42389&opcion=2&codpc=48&pc=CIENAGA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CIENAGA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42389&opcion=2&codpc=76&pc=FUNDACION (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "FUNDACION (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42389&opcion=2&codpc=46&pc=BOSCONIA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BOSCONIA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42389&opcion=2&codpc=44&pc=CURUMANI (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CURUMANI (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42389&opcion=2&codpc=30&pc=AGUACHICA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "AGUACHICA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42389&opcion=2&codpc=28&pc=SAN ALBERTO  (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN ALBERTO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42389&opcion=2&codpc=26&pc=RIONEGRO  (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "RIONEGRO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42389&opcion=2&codpc=166&pc=GIRON&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "GIRON"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42389&opcion=2&codpc=10515&pc=LUGAR DE ENTREGA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR DE ENTREGA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42389&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42389",
+        "Origen",
+        "SANTA MARTA (Magd)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043368",
+        "Destino",
+        "GIRON (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "NICOLL TATIANA",
+        "Ruta",
+        "992 - SANTA MARTA (Magd) - 47001000 - GIRON (Sant) - 68307000 VIA FUNDACION"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "NARANJO CRISTIAN FERNEY",
+        "Fecha Salida",
+        "18:44 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "04:59 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 18:44:37"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "VKJ982"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "CHEVROLET",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "SUPER BRIGADIER 169",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AMARILLO",
+        "Modelo",
+        "2000"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL COPEY",
+        "",
+        "18:50 03-09-2026",
+        "7Min(s)",
+        "Ok",
+        "18:51 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOMA DEL BALSAMO",
+        "",
+        "19:27 03-09-2026",
+        "36Min(s)",
+        "Ok",
+        "19:28 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUNDACION",
+        "",
+        "20:01 03-09-2026",
+        "33Min(s)",
+        "Ok",
+        "20:01 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN JOSE DE KENNEDY",
+        "",
+        "20:50 03-09-2026",
+        "49Min(s)",
+        "Ok",
+        "20:51 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SANTA MARTA",
+        "",
+        "21:49 03-09-2026",
+        "59Min(s)",
+        "Retrasado",
+        "21:50 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SANTA MARTA",
+        "",
+        "06:01 04-09-2026",
+        "490Min(s)",
+        "Retrasado",
+        "06:01 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SANTA MARTA",
+        "",
+        "10:59 04-09-2026",
+        "298Min(s)",
+        "Ok",
+        "11:00 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CIENAGA",
+        "",
+        "11:52 04-09-2026",
+        "53Min(s)",
+        "Ok",
+        "11:53 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RIO FRIO",
+        "",
+        "13:15 04-09-2026",
+        "82Min(s)",
+        "Ok",
+        "13:15 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUCURINCA",
+        "",
+        "14:30 04-09-2026",
+        "75Min(s)",
+        "Ok",
+        "14:31 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOMA DEL BALSAMO",
+        "",
+        "15:32 04-09-2026",
+        "61Min(s)",
+        "Ok",
+        "15:33 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE EL COPEY",
+        "",
+        "16:15 04-09-2026",
+        "42Min(s)",
+        "Ok",
+        "16:16 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSCONIA",
+        "",
+        "16:47 04-09-2026",
+        "31Min(s)",
+        "Ok",
+        "16:47 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUATRO VIENTOS",
+        "",
+        "17:26 04-09-2026",
+        "38Min(s)",
+        "Ok",
+        "17:26 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE LA LOMA",
+        "",
+        "17:57 04-09-2026",
+        "31Min(s)",
+        "Ok",
+        "17:57 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CIENAGA",
+        "20:14 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUNDACION (Virtual)",
+        "21:14 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSCONIA (Virtual)",
+        "22:14 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CURUMANI (Virtual)",
+        "23:44 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "01:34 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN ALBERTO (Virtual)",
+        "02:54 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RIONEGRO (Virtual)",
+        "04:24 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GIRON",
+        "04:34 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR DE ENTREGA (Virtual) (Virtual)",
+        "04:39 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "04:59 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE LA LOMA",
+        "Ok",
+        "VEH EN RUTA POR EL PEAJE LA LOMA SIN NOVEDAD",
+        "17:57 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUATRO VIENTOS",
+        "Ok",
+        "VEH EN RUTA EN VIA CUATRO VIENTOS SIN NOVEDAD",
+        "17:26 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOSCONIA",
+        "Ok",
+        "VEH EN RUTA SALIENDO DE BOSCONIA SIN NOVEDAD",
+        "16:47 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEAJE EL COPEY",
+        "Ok",
+        "VEH EN RUTA POR EL PEAJE EL COPEY SIN NOVEDAD",
+        "16:15 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOMA DEL BALSAMO",
+        "Ok",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR LOMA DEL BALSAMO\nSIN NOVEDAD",
+        "15:32 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TUCURINCA",
+        "Ok",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN TRANSITO\nPOR TUCURINCA PENDIENTE QUE ENVIE LA EVIDENCIA QUE\nSE LE SOLICITO",
+        "14:30 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RIO FRIO",
+        "Ok",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN TRANSITO\nPOR RIO FRIO SIN NOVEDAD",
+        "13:15 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CIENAGA",
+        "Ok",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR CIENAGA SIN\nNOVEDAD",
+        "11:52 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SANTA MARTA",
+        "Ok",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y SE ENCUENTRA\nEN RUTA SALIENDO DE SANTA MARTA SIN NOVEDAD",
+        "10:59 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SANTA MARTA",
+        "Retrasado",
+        "Cra 62, 30 Santa Marta, PEND CARGUE",
+        "06:01 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SANTA MARTA",
+        "Retrasado",
+        "VEH EN TRANSITO POR SANTA MARTA CEL/ MANIFIESTA CARGA\nMAÑANA VIERNES AUN NO LE HAN CONFIRMADO HORA",
+        "21:49 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN JOSE DE KENNEDY",
+        "Ok",
+        "VEH EN RUTA EN VIA SAN JOSE DE KENNEDY SIN NOVEDAD",
+        "20:50 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "FUNDACION",
+        "Ok",
+        "VEH EN RUTA SALIENDO DE FUNDACION SIN NOVEDAD",
+        "20:01 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOMA DEL BALSAMO",
+        "Ok",
+        "VEH EN RUTA POR LOMA DEL BALSAMO SIN NOVEDAD",
+        "19:27 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "EL COPEY",
+        "Ok",
+        "VEH ESTACIONADO EN VIA EL COPEY CEL/ MANIFIESTA YA\nCARGO, ESTA COMIENDO EN BREVE CONTINUA RUTA",
+        "18:50 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42389&opcion=1"
+}

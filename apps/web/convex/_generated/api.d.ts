@@ -47,12 +47,16 @@ import type * as model_operationState from "../model/operationState.js";
 import type * as model_reconciliationOutcome from "../model/reconciliationOutcome.js";
 import type * as model_rndcCatalogs from "../model/rndcCatalogs.js";
 import type * as model_searchText from "../model/searchText.js";
+import type * as model_tracking from "../model/tracking.js";
+import type * as model_trackingValidators from "../model/trackingValidators.js";
 import type * as model_volumeFixtures from "../model/volumeFixtures.js";
 import type * as notifications from "../notifications.js";
 import type * as officialDocuments from "../officialDocuments.js";
 import type * as rndc from "../rndc.js";
 import type * as rndcOperations from "../rndcOperations.js";
 import type * as rndcReferenceCatalogs from "../rndcReferenceCatalogs.js";
+import type * as tracking from "../tracking.js";
+import type * as trackingImport from "../trackingImport.js";
 
 import type {
   ApiFromModules,
@@ -100,12 +104,16 @@ declare const fullApi: ApiFromModules<{
   "model/reconciliationOutcome": typeof model_reconciliationOutcome;
   "model/rndcCatalogs": typeof model_rndcCatalogs;
   "model/searchText": typeof model_searchText;
+  "model/tracking": typeof model_tracking;
+  "model/trackingValidators": typeof model_trackingValidators;
   "model/volumeFixtures": typeof model_volumeFixtures;
   notifications: typeof notifications;
   officialDocuments: typeof officialDocuments;
   rndc: typeof rndc;
   rndcOperations: typeof rndcOperations;
   rndcReferenceCatalogs: typeof rndcReferenceCatalogs;
+  tracking: typeof tracking;
+  trackingImport: typeof trackingImport;
 }>;
 
 /**

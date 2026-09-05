@@ -1,0 +1,561 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42379&opcion=2&codpc=10333&pc= CARTAGO (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CARTAGO (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42379&opcion=2&codpc=210&pc=TULUA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "TULUA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42379&opcion=2&codpc=12691&pc= BUGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BUGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42379&opcion=2&codpc=11873&pc=CALI (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CALI (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42379&opcion=2&codpc=10009&pc=CISNEROS (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CISNEROS (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42379&opcion=2&codpc=12045&pc=BUENAVENTURA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BUENAVENTURA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42379&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42379",
+        "Origen",
+        "CUCUNUBA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043358",
+        "Destino",
+        "BUENAVENTURA (Vall)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "EDGAR ANDRES",
+        "Ruta",
+        "3683 - CUCUNUBA (Cund) - 25224000 - BUENAVENTURA (Vall) - 76109000 VIA POR IP - CAMBAO MANIZALES"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "VELASQUEZ JUAN CAMILO",
+        "Fecha Salida",
+        "14:08 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "08:28 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 14:08:35"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SMO312"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "FREIGHTLINER",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "CL 120",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "PURPURA METALICO",
+        "Modelo",
+        "2008"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ZIPAQUIRA",
+        "",
+        "14:24 03-09-2026",
+        "17Min(s)",
+        "Pernoctacion",
+        "14:25 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ZIPAQUIRA",
+        "",
+        "18:32 03-09-2026",
+        "248Min(s)",
+        "Pernoctacion",
+        "18:33 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ZIPAQUIRA",
+        "",
+        "21:38 03-09-2026",
+        "185Min(s)",
+        "Pernoctacion",
+        "21:38 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ZIPAQUIRA",
+        "",
+        "00:04 04-09-2026",
+        "145Min(s)",
+        "Retrasado",
+        "00:04 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GRANADA",
+        "",
+        "04:12 04-09-2026",
+        "247Min(s)",
+        "Retrasado",
+        "04:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MELGAR",
+        "",
+        "06:37 04-09-2026",
+        "145Min(s)",
+        "Retrasado",
+        "06:37 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "",
+        "09:04 04-09-2026",
+        "147Min(s)",
+        "Retrasado",
+        "09:04 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "",
+        "11:10 04-09-2026",
+        "126Min(s)",
+        "Retrasado",
+        "11:10 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "",
+        "13:24 04-09-2026",
+        "134Min(s)",
+        "Retrasado",
+        "13:25 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CALARCA",
+        "",
+        "15:33 04-09-2026",
+        "128Min(s)",
+        "Retrasado",
+        "15:34 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA TEBAIDA",
+        "",
+        "17:29 04-09-2026",
+        "115Min(s)",
+        "Retrasado",
+        "17:29 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CARTAGO (Virtual) (Virtual)",
+        "22:28 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "TULUA",
+        "00:08 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUGA (Virtual)",
+        "01:48 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CALI (Virtual)",
+        "03:28 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CISNEROS (Virtual)",
+        "05:08 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUENAVENTURA (Virtual)",
+        "06:48 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "08:28 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA TEBAIDA",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE LA TEBAIDA SIN NOVEDAD",
+        "17:29 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CALARCA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO LLEGANDO A CALARCA\nSIN NOVEDAD",
+        "15:33 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN EL TRANCON DE CAJAMARCA\nPENDIENTE DEL REINICIO DE RUTA",
+        "13:24 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CAJAMARCA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA EN TRANSITO\nPOR EL PARE Y SIGA DE CAJAMARCA SIN NOVEDAD",
+        "11:10 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "IBAGUE",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR IBAGUE SIN NOVEDAD",
+        "09:04 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MELGAR",
+        "Retrasado",
+        "VEH EN RUTA EN VIA MELGAR SIN NOVEDAD",
+        "06:37 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "GRANADA",
+        "Retrasado",
+        "VEH EN RUTA POR GRANADA SIN NOVEDAD",
+        "04:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ZIPAQUIRA",
+        "Retrasado",
+        "VEH ESTACIONADO EN Parqueadero Texas EN ZIPAQUIRA\n- PERNOCTANDO - PEND INICIO DE RUTA",
+        "00:04 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ZIPAQUIRA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN Parqueadero Texas EN ZIPAQUIRA -\nPERNOCTANDO - PEND INICIO DE RUTA",
+        "21:38 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ZIPAQUIRA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN Parqueadero Texas EN ZIPAQUIRA\n- PERNOCTANDO - PEND INICIO DE RUTA",
+        "18:32 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ZIPAQUIRA",
+        "[NOV-ESP] Pernoctacion",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO Y QUE GUARDA EN\nZIPAQUIRA EN EL PARQUEADERO MEXICANO E INICIA RUTA\nEL DIA DE MAÑANA MADRUGADO",
+        "14:24 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42379&opcion=1"
+}

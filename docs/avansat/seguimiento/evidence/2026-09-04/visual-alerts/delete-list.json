@@ -1,0 +1,125 @@
+{
+  "capturedAt": "2026-09-04T23:40:42.469Z",
+  "controls": [
+    {
+      "disabled": false,
+      "maxLength": -1,
+      "name": "volver",
+      "onclick": "javascript:history.go(-2)",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "volver"
+    }
+  ],
+  "links": [
+    {
+      "href": "index.php?cod_servic=3217&window=central&cod_alarma=5&opcion=1 ",
+      "onclick": "javascript:\n    if(confirm('Desea Eliminar la Alarma'))\n    {\n     submit();\n     return true\n    }\n    else\n    {return false}\n        ",
+      "text": "Eliminar"
+    },
+    {
+      "href": "index.php?cod_servic=3217&window=central&cod_alarma=1&opcion=1 ",
+      "onclick": "javascript:\n    if(confirm('Desea Eliminar la Alarma'))\n    {\n     submit();\n     return true\n    }\n    else\n    {return false}\n        ",
+      "text": "Eliminar"
+    },
+    {
+      "href": "index.php?cod_servic=3217&window=central&cod_alarma=3&opcion=1 ",
+      "onclick": "javascript:\n    if(confirm('Desea Eliminar la Alarma'))\n    {\n     submit();\n     return true\n    }\n    else\n    {return false}\n        ",
+      "text": "Eliminar"
+    },
+    {
+      "href": "index.php?cod_servic=3217&window=central&cod_alarma=2&opcion=1 ",
+      "onclick": "javascript:\n    if(confirm('Desea Eliminar la Alarma'))\n    {\n     submit();\n     return true\n    }\n    else\n    {return false}\n        ",
+      "text": "Eliminar"
+    },
+    {
+      "href": "index.php?cod_servic=3217&window=central&cod_alarma=4&opcion=1 ",
+      "onclick": "javascript:\n    if(confirm('Desea Eliminar la Alarma'))\n    {\n     submit();\n     return true\n    }\n    else\n    {return false}\n        ",
+      "text": "Eliminar"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Configuracion > Alertas Visuales > Eliminar"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Eliminar Alarmas"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Se Encontraron 5 Alarmas"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Codigo Alarma",
+        "Nombre",
+        "Tiempo de Alarma",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "5",
+        "Salida",
+        "1",
+        "Eliminar"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "1",
+        "Amarillo",
+        "30",
+        "Eliminar"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "3",
+        "Naranja",
+        "60",
+        "Eliminar"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "2",
+        "Rojo",
+        "90",
+        "Eliminar"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "4",
+        "Violeta",
+        "120",
+        "Eliminar"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Configuracion > Alertas Visuales > Eliminar"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?window=central&cod_servic=3217"
+}

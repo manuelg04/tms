@@ -1,0 +1,2212 @@
+[
+  {
+    "test": "plate VKJ982",
+    "result": {
+      "summary": [
+        "Mostrando 1 a 1 de 1 Filas (filtrando del total de 45 filas)",
+        "Mostrando 0 a 0 de 0 filas (filtrando del total de 4 filas)"
+      ],
+      "tables": [
+        {
+          "id": "tbl_despac02ID",
+          "rows": [
+            {
+              "cells": 19,
+              "dispatch": ""
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": null,
+              "text": "NEM\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Despacho\n"
+            },
+            {
+              "ariaSort": "ascending",
+              "text": "Tiempo\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "42389"
+            }
+          ]
+        },
+        {
+          "id": "tbl_despac03ID",
+          "rows": [
+            {
+              "cells": 1,
+              "dispatch": "No se hallan filas que coincidan con el criterio"
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": "ascending",
+              "text": "Despacho"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "test": "origin BARRANQUILLA + destination GIRON",
+    "result": {
+      "summary": [
+        "Mostrando 1 a 4 de 4 Filas (filtrando del total de 45 filas)",
+        "Mostrando 0 a 0 de 0 filas (filtrando del total de 4 filas)"
+      ],
+      "tables": [
+        {
+          "id": "tbl_despac02ID",
+          "rows": [
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": null,
+              "text": "NEM\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Despacho\n"
+            },
+            {
+              "ariaSort": "ascending",
+              "text": "Tiempo\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "42395"
+            },
+            {
+              "ariaSort": null,
+              "text": "42409"
+            },
+            {
+              "ariaSort": null,
+              "text": "42410"
+            },
+            {
+              "ariaSort": null,
+              "text": "42408"
+            }
+          ]
+        },
+        {
+          "id": "tbl_despac03ID",
+          "rows": [
+            {
+              "cells": 1,
+              "dispatch": "No se hallan filas que coincidan con el criterio"
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": "ascending",
+              "text": "Despacho"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "test": "clear filters and expand pending arrivals",
+    "result": {
+      "summary": [
+        "Mostrando 1 a 45 de 45 Filas",
+        "Mostrando 1 a 4 de 4 Filas"
+      ],
+      "tables": [
+        {
+          "id": "tbl_despac02ID",
+          "rows": [
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": null,
+              "text": "NEM\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Despacho\n"
+            },
+            {
+              "ariaSort": "ascending",
+              "text": "Tiempo\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "42413"
+            },
+            {
+              "ariaSort": null,
+              "text": "42389"
+            },
+            {
+              "ariaSort": null,
+              "text": "42403"
+            },
+            {
+              "ariaSort": null,
+              "text": "42390"
+            },
+            {
+              "ariaSort": null,
+              "text": "42404"
+            },
+            {
+              "ariaSort": null,
+              "text": "42374"
+            },
+            {
+              "ariaSort": null,
+              "text": "42385"
+            },
+            {
+              "ariaSort": null,
+              "text": "42367"
+            },
+            {
+              "ariaSort": null,
+              "text": "42387"
+            },
+            {
+              "ariaSort": null,
+              "text": "42377"
+            },
+            {
+              "ariaSort": null,
+              "text": "42394"
+            },
+            {
+              "ariaSort": null,
+              "text": "42406"
+            },
+            {
+              "ariaSort": null,
+              "text": "42400"
+            },
+            {
+              "ariaSort": null,
+              "text": "42407"
+            },
+            {
+              "ariaSort": null,
+              "text": "42396"
+            },
+            {
+              "ariaSort": null,
+              "text": "42382"
+            },
+            {
+              "ariaSort": null,
+              "text": "42391"
+            },
+            {
+              "ariaSort": null,
+              "text": "42381"
+            },
+            {
+              "ariaSort": null,
+              "text": "42379"
+            },
+            {
+              "ariaSort": null,
+              "text": "42392"
+            },
+            {
+              "ariaSort": null,
+              "text": "42402"
+            },
+            {
+              "ariaSort": null,
+              "text": "42378"
+            },
+            {
+              "ariaSort": null,
+              "text": "42405"
+            },
+            {
+              "ariaSort": null,
+              "text": "42398"
+            },
+            {
+              "ariaSort": null,
+              "text": "42397"
+            },
+            {
+              "ariaSort": null,
+              "text": "42411"
+            },
+            {
+              "ariaSort": null,
+              "text": "42384"
+            },
+            {
+              "ariaSort": null,
+              "text": "42401"
+            },
+            {
+              "ariaSort": null,
+              "text": "42412"
+            },
+            {
+              "ariaSort": null,
+              "text": "42393"
+            },
+            {
+              "ariaSort": null,
+              "text": "42380"
+            },
+            {
+              "ariaSort": null,
+              "text": "42365"
+            },
+            {
+              "ariaSort": null,
+              "text": "42395"
+            },
+            {
+              "ariaSort": null,
+              "text": "42372"
+            },
+            {
+              "ariaSort": null,
+              "text": "42383"
+            },
+            {
+              "ariaSort": null,
+              "text": "42409"
+            },
+            {
+              "ariaSort": null,
+              "text": "42410"
+            },
+            {
+              "ariaSort": null,
+              "text": "42408"
+            },
+            {
+              "ariaSort": null,
+              "text": "42328"
+            },
+            {
+              "ariaSort": null,
+              "text": "42376"
+            },
+            {
+              "ariaSort": null,
+              "text": "42364"
+            },
+            {
+              "ariaSort": null,
+              "text": "42371"
+            },
+            {
+              "ariaSort": null,
+              "text": "42293"
+            },
+            {
+              "ariaSort": null,
+              "text": "42386"
+            },
+            {
+              "ariaSort": null,
+              "text": "42388"
+            }
+          ]
+        },
+        {
+          "id": "tbl_despac03ID",
+          "rows": [
+            {
+              "cells": 17,
+              "dispatch": "42373"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42368"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42366"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42363"
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": "ascending",
+              "text": "Despacho"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "test": "global search no match",
+    "result": {
+      "summary": [
+        "Mostrando 0 a 0 de 0 filas (filtrando del total de 45 filas)",
+        "Mostrando 1 a 4 de 4 Filas"
+      ],
+      "tables": [
+        {
+          "id": "tbl_despac02ID",
+          "rows": [
+            {
+              "cells": 1,
+              "dispatch": "No se hallan filas que coincidan con el criterio"
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": null,
+              "text": "NEM\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Despacho\n"
+            },
+            {
+              "ariaSort": "descending",
+              "text": "Tiempo\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad\n"
+            }
+          ]
+        },
+        {
+          "id": "tbl_despac03ID",
+          "rows": [
+            {
+              "cells": 17,
+              "dispatch": "42373"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42368"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42366"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42363"
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": "ascending",
+              "text": "Despacho"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "test": "global search cleared using keyboard",
+    "result": {
+      "summary": [
+        "Mostrando 1 a 45 de 45 Filas",
+        "Mostrando 1 a 4 de 4 Filas"
+      ],
+      "tables": [
+        {
+          "id": "tbl_despac02ID",
+          "rows": [
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": null,
+              "text": "NEM\n"
+            },
+            {
+              "ariaSort": "descending",
+              "text": "Despacho\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tiempo\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "42413"
+            },
+            {
+              "ariaSort": null,
+              "text": "42412"
+            },
+            {
+              "ariaSort": null,
+              "text": "42411"
+            },
+            {
+              "ariaSort": null,
+              "text": "42410"
+            },
+            {
+              "ariaSort": null,
+              "text": "42409"
+            },
+            {
+              "ariaSort": null,
+              "text": "42408"
+            },
+            {
+              "ariaSort": null,
+              "text": "42407"
+            },
+            {
+              "ariaSort": null,
+              "text": "42406"
+            },
+            {
+              "ariaSort": null,
+              "text": "42405"
+            },
+            {
+              "ariaSort": null,
+              "text": "42404"
+            },
+            {
+              "ariaSort": null,
+              "text": "42403"
+            },
+            {
+              "ariaSort": null,
+              "text": "42402"
+            },
+            {
+              "ariaSort": null,
+              "text": "42401"
+            },
+            {
+              "ariaSort": null,
+              "text": "42400"
+            },
+            {
+              "ariaSort": null,
+              "text": "42398"
+            },
+            {
+              "ariaSort": null,
+              "text": "42397"
+            },
+            {
+              "ariaSort": null,
+              "text": "42396"
+            },
+            {
+              "ariaSort": null,
+              "text": "42395"
+            },
+            {
+              "ariaSort": null,
+              "text": "42394"
+            },
+            {
+              "ariaSort": null,
+              "text": "42393"
+            },
+            {
+              "ariaSort": null,
+              "text": "42392"
+            },
+            {
+              "ariaSort": null,
+              "text": "42391"
+            },
+            {
+              "ariaSort": null,
+              "text": "42390"
+            },
+            {
+              "ariaSort": null,
+              "text": "42389"
+            },
+            {
+              "ariaSort": null,
+              "text": "42388"
+            },
+            {
+              "ariaSort": null,
+              "text": "42387"
+            },
+            {
+              "ariaSort": null,
+              "text": "42386"
+            },
+            {
+              "ariaSort": null,
+              "text": "42385"
+            },
+            {
+              "ariaSort": null,
+              "text": "42384"
+            },
+            {
+              "ariaSort": null,
+              "text": "42383"
+            },
+            {
+              "ariaSort": null,
+              "text": "42382"
+            },
+            {
+              "ariaSort": null,
+              "text": "42381"
+            },
+            {
+              "ariaSort": null,
+              "text": "42380"
+            },
+            {
+              "ariaSort": null,
+              "text": "42379"
+            },
+            {
+              "ariaSort": null,
+              "text": "42378"
+            },
+            {
+              "ariaSort": null,
+              "text": "42377"
+            },
+            {
+              "ariaSort": null,
+              "text": "42376"
+            },
+            {
+              "ariaSort": null,
+              "text": "42374"
+            },
+            {
+              "ariaSort": null,
+              "text": "42372"
+            },
+            {
+              "ariaSort": null,
+              "text": "42371"
+            },
+            {
+              "ariaSort": null,
+              "text": "42367"
+            },
+            {
+              "ariaSort": null,
+              "text": "42365"
+            },
+            {
+              "ariaSort": null,
+              "text": "42364"
+            },
+            {
+              "ariaSort": null,
+              "text": "42328"
+            },
+            {
+              "ariaSort": null,
+              "text": "42293"
+            }
+          ]
+        },
+        {
+          "id": "tbl_despac03ID",
+          "rows": [
+            {
+              "cells": 17,
+              "dispatch": "42373"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42368"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42366"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42363"
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": "ascending",
+              "text": "Despacho"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "test": "sort dispatch direction A",
+    "result": {
+      "summary": [
+        "Mostrando 1 a 45 de 45 Filas",
+        "Mostrando 1 a 4 de 4 Filas"
+      ],
+      "tables": [
+        {
+          "id": "tbl_despac02ID",
+          "rows": [
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            },
+            {
+              "cells": 19,
+              "dispatch": ""
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": null,
+              "text": "NEM\n"
+            },
+            {
+              "ariaSort": "descending",
+              "text": "Despacho\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tiempo\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad\n"
+            },
+            {
+              "ariaSort": null,
+              "text": "42293"
+            },
+            {
+              "ariaSort": null,
+              "text": "42328"
+            },
+            {
+              "ariaSort": null,
+              "text": "42364"
+            },
+            {
+              "ariaSort": null,
+              "text": "42365"
+            },
+            {
+              "ariaSort": null,
+              "text": "42367"
+            },
+            {
+              "ariaSort": null,
+              "text": "42371"
+            },
+            {
+              "ariaSort": null,
+              "text": "42372"
+            },
+            {
+              "ariaSort": null,
+              "text": "42374"
+            },
+            {
+              "ariaSort": null,
+              "text": "42376"
+            },
+            {
+              "ariaSort": null,
+              "text": "42377"
+            },
+            {
+              "ariaSort": null,
+              "text": "42378"
+            },
+            {
+              "ariaSort": null,
+              "text": "42379"
+            },
+            {
+              "ariaSort": null,
+              "text": "42380"
+            },
+            {
+              "ariaSort": null,
+              "text": "42381"
+            },
+            {
+              "ariaSort": null,
+              "text": "42382"
+            },
+            {
+              "ariaSort": null,
+              "text": "42383"
+            },
+            {
+              "ariaSort": null,
+              "text": "42384"
+            },
+            {
+              "ariaSort": null,
+              "text": "42385"
+            },
+            {
+              "ariaSort": null,
+              "text": "42386"
+            },
+            {
+              "ariaSort": null,
+              "text": "42387"
+            },
+            {
+              "ariaSort": null,
+              "text": "42388"
+            },
+            {
+              "ariaSort": null,
+              "text": "42389"
+            },
+            {
+              "ariaSort": null,
+              "text": "42390"
+            },
+            {
+              "ariaSort": null,
+              "text": "42391"
+            },
+            {
+              "ariaSort": null,
+              "text": "42392"
+            },
+            {
+              "ariaSort": null,
+              "text": "42393"
+            },
+            {
+              "ariaSort": null,
+              "text": "42394"
+            },
+            {
+              "ariaSort": null,
+              "text": "42395"
+            },
+            {
+              "ariaSort": null,
+              "text": "42396"
+            },
+            {
+              "ariaSort": null,
+              "text": "42397"
+            },
+            {
+              "ariaSort": null,
+              "text": "42398"
+            },
+            {
+              "ariaSort": null,
+              "text": "42400"
+            },
+            {
+              "ariaSort": null,
+              "text": "42401"
+            },
+            {
+              "ariaSort": null,
+              "text": "42402"
+            },
+            {
+              "ariaSort": null,
+              "text": "42403"
+            },
+            {
+              "ariaSort": null,
+              "text": "42404"
+            },
+            {
+              "ariaSort": null,
+              "text": "42405"
+            },
+            {
+              "ariaSort": null,
+              "text": "42406"
+            },
+            {
+              "ariaSort": null,
+              "text": "42407"
+            },
+            {
+              "ariaSort": null,
+              "text": "42408"
+            },
+            {
+              "ariaSort": null,
+              "text": "42409"
+            },
+            {
+              "ariaSort": null,
+              "text": "42410"
+            },
+            {
+              "ariaSort": null,
+              "text": "42411"
+            },
+            {
+              "ariaSort": null,
+              "text": "42412"
+            },
+            {
+              "ariaSort": null,
+              "text": "42413"
+            }
+          ]
+        },
+        {
+          "id": "tbl_despac03ID",
+          "rows": [
+            {
+              "cells": 17,
+              "dispatch": "42373"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42368"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42366"
+            },
+            {
+              "cells": 17,
+              "dispatch": "42363"
+            }
+          ],
+          "sort": [
+            {
+              "ariaSort": "ascending",
+              "text": "Despacho"
+            },
+            {
+              "ariaSort": null,
+              "text": "Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Tipo Manifiesto"
+            },
+            {
+              "ariaSort": null,
+              "text": "Origen"
+            },
+            {
+              "ariaSort": null,
+              "text": "Destino"
+            },
+            {
+              "ariaSort": null,
+              "text": "Placa"
+            },
+            {
+              "ariaSort": null,
+              "text": "Mercancía"
+            },
+            {
+              "ariaSort": null,
+              "text": "Vinculación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Carrocería"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha de Salida"
+            },
+            {
+              "ariaSort": null,
+              "text": "Conductor"
+            },
+            {
+              "ariaSort": null,
+              "text": "Calificación"
+            },
+            {
+              "ariaSort": null,
+              "text": "Cliente"
+            },
+            {
+              "ariaSort": null,
+              "text": "Celular"
+            },
+            {
+              "ariaSort": null,
+              "text": "Fecha Novedad"
+            },
+            {
+              "ariaSort": null,
+              "text": "Último P/C"
+            },
+            {
+              "ariaSort": null,
+              "text": "Novedad"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

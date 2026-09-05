@@ -1,0 +1,490 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42390&opcion=2&codpc=10365&pc=ZIPAQUIRA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "ZIPAQUIRA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42390&opcion=2&codpc=10368&pc=CHIQUINQUIRA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CHIQUINQUIRA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42390&opcion=2&codpc=10550&pc=PUENTE NACIONAL (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PUENTE NACIONAL (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42390&opcion=2&codpc=10201&pc=SOCORRO (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SOCORRO (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42390&opcion=2&codpc=10199&pc=SAN GIL (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "SAN GIL (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42390&opcion=2&codpc=10196&pc=PIEDECUESTA (Virtual) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PIEDECUESTA (Virtual) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42390&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42390&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42390",
+        "Origen",
+        "BOGOTA, D.C. (Bogo)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043369",
+        "Destino",
+        "PIEDECUESTA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "JORGE",
+        "Ruta",
+        "1150 - BOGOTA, D.C. (Bogo) - 11001000 - PIEDECUESTA (Sant) - 68547000 VIA MAGADALENA MEDIO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "ROZO EDMAR YESID",
+        "Fecha Salida",
+        "22:25 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "08:25 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 22:25:29"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "UPS144"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "VERDE AMARILLO",
+        "Modelo",
+        "2008"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "",
+        "23:37 03-09-2026",
+        "72Min(s)",
+        "Retrasado",
+        "23:37 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "",
+        "03:46 04-09-2026",
+        "249Min(s)",
+        "Retrasado",
+        "03:47 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MOSQUERA",
+        "",
+        "06:35 04-09-2026",
+        "169Min(s)",
+        "Retrasado",
+        "06:36 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SASAIMA",
+        "",
+        "09:03 04-09-2026",
+        "147Min(s)",
+        "Retrasado",
+        "09:03 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ALTO EL TRIGO",
+        "",
+        "11:13 04-09-2026",
+        "131Min(s)",
+        "Retrasado",
+        "11:14 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO SALGAR",
+        "",
+        "14:05 04-09-2026",
+        "171Min(s)",
+        "Retrasado",
+        "14:05 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO ARAUJO",
+        "",
+        "16:12 04-09-2026",
+        "127Min(s)",
+        "Retrasado",
+        "16:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ZIPAQUIRA (Virtual)",
+        "23:51 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIQUINQUIRA (Virtual)",
+        "02:20 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUENTE NACIONAL (Virtual)",
+        "02:40 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SOCORRO (Virtual)",
+        "05:10 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SAN GIL (Virtual) (Virtual)",
+        "05:35 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA (Virtual) (Virtual)",
+        "07:13 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "08:05 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "08:25 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO ARAUJO",
+        "Retrasado",
+        "VEH ESTACIONADO DELANTE DE PUERTO ARAUJO CEL/ MANIFIESTA\nESTA EN UN PARE Y SIGA SIN NOVEDAD",
+        "16:12 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PUERTO SALGAR",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA EN TRANSITO POR PUERTO SALGAR\nSIN NOVEDAD",
+        "14:05 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "ALTO EL TRIGO",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA POR EL ALTO\nDEL TRIGO QUE ESTA LAVANDO EL VEHICULO Y YA AHORA\nRETOMA NUEVAMENTE RUTA",
+        "11:13 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "SASAIMA",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA EN TRANSITO POR SASAIMA SIN\nNOVEDAD",
+        "09:03 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MOSQUERA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA MOSQUERA CEL/ MANIFIESTA YA CARGO\nE INICIA RUTA SIN NOVEDAD",
+        "06:35 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "Retrasado",
+        "VEH EN Carrera 53 5C-2 a 5C-100, Bogotá,EN POSTOBON PEND\nCARGUE CEL/NO CONTESTA",
+        "03:46 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BOGOTA",
+        "Retrasado",
+        "VEH EN Carrera 53 5C-2 a 5C-100, Bogotá,EN POSTOBON\nPEND CARGUE CEL/NO CONTESTA",
+        "23:37 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42390&opcion=1"
+}

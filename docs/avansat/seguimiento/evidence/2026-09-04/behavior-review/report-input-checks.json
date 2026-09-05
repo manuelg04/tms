@@ -1,0 +1,105 @@
+{
+  "locationTests": [
+    {
+      "query": "CIENAGA",
+      "choices": [
+        "LLEGANDO A Y DE CIENAGA",
+        "A DELANTE DE CIENAGA",
+        "CIENAGA",
+        "LA DE Y DE CIENAGA",
+        "LA Y DE CIENAGA",
+        "Y DE CIENAGA",
+        "A 20 MINUTOS DE CIENAGA SI",
+        "A DELA NTE DE CIENAGA",
+        "A DELANTE DE CIENAGA",
+        "ADELANTE CIENAGA"
+      ]
+    },
+    {
+      "query": "c",
+      "choices": []
+    },
+    {
+      "query": "ci",
+      "choices": []
+    },
+    {
+      "query": "cie",
+      "choices": []
+    },
+    {
+      "query": "cien",
+      "actual": "cien",
+      "choices": []
+    },
+    {
+      "query": "cienaga",
+      "actual": "cienaga",
+      "choices": [
+        "LLEGANDO A Y DE CIENAGA",
+        "A DELANTE DE CIENAGA",
+        "CIENAGA",
+        "LA DE Y DE CIENAGA",
+        "LA Y DE CIENAGA",
+        "Y DE CIENAGA",
+        "A 20 MINUTOS DE CIENAGA SI",
+        "A DELA NTE DE CIENAGA",
+        "A DELANTE DE CIENAGA",
+        "ADELANTE CIENAGA"
+      ]
+    },
+    {
+      "query": "CI",
+      "actual": "CI",
+      "choices": []
+    },
+    {
+      "query": "CIENA",
+      "actual": "CIENA",
+      "choices": [
+        "LLEGANDO A Y DE CIENAGA",
+        "A DELANTE DE CIENAGA",
+        "CIENAGA",
+        "LA DE Y DE CIENAGA",
+        "LA Y DE CIENAGA",
+        "Y DE CIENAGA",
+        "A 20 MINUTOS DE CIENAGA SI",
+        "A DELA NTE DE CIENAGA",
+        "A DELANTE DE CIENAGA",
+        "ADELANTE CIENAGA"
+      ]
+    }
+  ],
+  "incidentLookups": [
+    {
+      "query": "1003",
+      "visibleChoices": []
+    },
+    {
+      "query": "com",
+      "visibleChoices": [
+        "1000-NO COMUNICACION(NE)(MA)",
+        "1003-COMENTARIO(NE)(MA)",
+        "20001-NICC / NO COMUNICACIÃ“N(NE)(ST)",
+        "20015-NEC / NO COMUNICACIÃ“N(NE)(ST)",
+        "20022-NER / COMPARENDO SOBREPESO(NE)(ST)",
+        "20026-NER / NO COMUNICACION (GC)(NE)(ST)",
+        "20036-NER / COMPARENDO DOCUMENTOS(NE)(ST)",
+        "20052-NED / NO RECIBO-ORDEN DE COMPRA VENCIDAS(NE)(ST)",
+        "20056-NED / COMPARENDO ZONA AMARILLA(NE)(ST)"
+      ]
+    },
+    {
+      "query": "alimentacion",
+      "visibleChoices": [
+        "7-ALIMENTACION(GA)(ST)"
+      ]
+    }
+  ],
+  "observationLimit": {
+    "attemptedLength": 502,
+    "afterKeyEventLength": 500,
+    "counter": "Queda(n) 0 Caracter(es) para Escribir"
+  },
+  "selectedPlaceValue": " CIENAGA "
+}

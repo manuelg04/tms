@@ -1,5 +1,6 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { trackingDispatchFields, checkpointFields, reportFields, incidentFields, alarmFields, locationFields, positionFields, noteFields } from "./model/trackingValidators";
 import {
   consignmentDraftValidator,
   fulfillmentDraftValidator,
@@ -208,6 +209,19 @@ export const masterSyncValidator = v.object({
 });
 
 export default defineSchema({
+  trackingDispatches: defineTable(trackingDispatchFields)
+    .index("by_org_code", ["organizationId", "externalCode"])
+    .index("by_org_queue", ["organizationId", "queue"])
+    .index("by_expediente", ["expedienteId"]),
+  trackingNotes: defineTable(noteFields).index("by_dispatch", ["dispatchId"]),
+  trackingCheckpoints: defineTable(checkpointFields).index("by_dispatch", ["dispatchId"]),
+  trackingReports: defineTable(reportFields)
+    .index("by_dispatch", ["dispatchId"])
+    .index("by_dispatch_request", ["dispatchId", "requestKey"]),
+  trackingIncidents: defineTable(incidentFields).index("by_org_code", ["organizationId", "code"]),
+  trackingAlarms: defineTable(alarmFields).index("by_org_code", ["organizationId", "code"]),
+  trackingLocations: defineTable(locationFields).index("by_org_key", ["organizationId", "key"]),
+  trackingPositions: defineTable(positionFields).index("by_dispatch", ["dispatchId"]),
   trips: defineTable({
     organizationId: v.optional(v.id("organizations")),
     expedienteId: v.optional(v.id("expedientes")),

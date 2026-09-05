@@ -1,0 +1,260 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "fecID",
+      "maxLength": -1,
+      "name": "fec",
+      "readOnly": true,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "2026-09-04"
+    },
+    {
+      "disabled": false,
+      "id": "horID",
+      "maxLength": -1,
+      "name": "hor",
+      "readOnly": true,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "18:19"
+    },
+    {
+      "disabled": false,
+      "id": "novedadID",
+      "maxLength": 50,
+      "name": "noved",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "sitID",
+      "maxLength": -1,
+      "name": "sit",
+      "options": [
+        {
+          "label": "Sitio",
+          "selected": true,
+          "value": "S"
+        }
+      ],
+      "readOnly": false,
+      "required": false,
+      "tag": "SELECT",
+      "type": null,
+      "value": "S"
+    },
+    {
+      "disabled": false,
+      "id": "sitioID",
+      "maxLength": 50,
+      "name": "sitio",
+      "readOnly": true,
+      "required": false,
+      "tag": "INPUT",
+      "type": "text",
+      "value": "Lugar Entrega"
+    },
+    {
+      "disabled": false,
+      "id": "obsID",
+      "maxLength": -1,
+      "name": "obs",
+      "readOnly": false,
+      "required": false,
+      "tag": "TEXTAREA",
+      "type": null,
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": "Aceptar",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Aceptar"
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": "Borrar",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Borrar"
+    }
+  ],
+  "links": [],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42363",
+        "Origen",
+        "TOCANCIPA (Cund)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043335",
+        "Destino",
+        "PEREIRA (Risa)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "DIEGO MANTILLA",
+        "Ruta",
+        "1195 - TOCANCIPA (Cund) - 25817000 - PEREIRA (Risa) - 66001000 VIA CAJAMARCA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "GUTIERREZ CRISTIAN CAMILO",
+        "Fecha Salida",
+        "14:17 02-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "15:47 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-02 14:17:20"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SVC821"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AZUL",
+        "Modelo",
+        "2012"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Lugar Entrega"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Asignación del Sitio de Seguimiento y Novedad"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Fecha",
+        "Hora",
+        "Novedad",
+        "Antes/Sitio",
+        "Sitio",
+        "Observacion"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "",
+        "",
+        "",
+        "Sitio",
+        "",
+        "Queda(n) 500 Caracter(es) para Escribir"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42363&opcion=2&codpc=9999&pc=Lugar%20Entrega&ind_virtua=0&cod_transp=900773684%20&opcurban=0"
+}

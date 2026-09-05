@@ -1,0 +1,920 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    }
+  ],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42382&opcion=2&codpc=165&pc=PIEDECUESTA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PIEDECUESTA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42382&opcion=2&codpc=10301&pc=BUCARAMAGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BUCARAMAGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42382&opcion=2&codpc=57&pc=BERLIN&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "BERLIN"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42382&opcion=2&codpc=182&pc=PAMPLONA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "PAMPLONA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42382&opcion=2&codpc=10384&pc=LA DONJUANA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LA DONJUANA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42382&opcion=2&codpc=10449&pc=LOS PATIOS (N SANT) (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LOS PATIOS (N SANT) (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42382&opcion=2&codpc=129&pc=CUCUTA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CUCUTA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42382&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    },
+    {
+      "href": "http://www.openstreetmap.org/copyright",
+      "target": null,
+      "text": "OpenStreetMap"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42382",
+        "Origen",
+        "PIEDECUESTA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043361",
+        "Destino",
+        "CUCUTA (Nort)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "JORGE",
+        "Ruta",
+        "3685 - PIEDECUESTA (Sant) - 68547000 - CUCUTA (Nort) - 54001000 VIA AUTOPISTA BGA-PAMPLONA-CUCUTA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "HERNANDEZ AGUSTIN",
+        "Fecha Salida",
+        "15:27 03-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "91285768",
+        "Fecha Planeada Llegada",
+        "06:27 04-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-03 15:26:47"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SSY740"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AMARILLO",
+        "Modelo",
+        "2012"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "15:34 03-09-2026",
+        "8Min(s)",
+        "Retrasado",
+        "15:35 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2.66 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "15:57 03-09-2026",
+        "22Min(s)",
+        "GPS",
+        "15:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "16:44 03-09-2026",
+        "47Min(s)",
+        "Retrasado",
+        "16:45 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2.65 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "16:57 03-09-2026",
+        "12Min(s)",
+        "GPS",
+        "16:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2.67 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "17:57 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "17:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2.59 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "18:57 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "18:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "19:33 03-09-2026",
+        "37Min(s)",
+        "Retrasado",
+        "19:34 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 184.25 M. DE KR 13 CONCL 200 (FLORIDABLANCA, SANTANDER).",
+        "",
+        "19:57 03-09-2026",
+        "22Min(s)",
+        "GPS",
+        "19:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 122.03 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "20:57 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "20:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "",
+        "21:03 03-09-2026",
+        "7Min(s)",
+        "Pernoctacion",
+        "21:04 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 125.8 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "21:57 03-09-2026",
+        "52Min(s)",
+        "GPS",
+        "21:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 151.65 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "22:57 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "22:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 121.29 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "23:57 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "23:57 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "",
+        "00:02 04-09-2026",
+        "5Min(s)",
+        "Pernoctacion",
+        "00:02 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 125.63 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "00:57 04-09-2026",
+        "54Min(s)",
+        "GPS",
+        "00:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 121.43 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "01:57 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "01:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 124.1 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "02:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "02:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 100.72 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "03:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "03:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "",
+        "04:09 04-09-2026",
+        "12Min(s)",
+        "Pernoctacion",
+        "04:10 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 128.92 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "04:57 04-09-2026",
+        "47Min(s)",
+        "GPS",
+        "04:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 124.4 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "05:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "05:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 128.82 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "06:57 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "06:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 131.88 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "07:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "07:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "",
+        "08:38 04-09-2026",
+        "41Min(s)",
+        "Pernoctacion",
+        "08:39 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 125.25 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "08:57 04-09-2026",
+        "18Min(s)",
+        "GPS",
+        "08:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 129.75 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "09:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "09:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 124.33 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "10:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "10:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 122.65 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "11:57 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "11:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "",
+        "12:24 04-09-2026",
+        "27Min(s)",
+        "Pernoctacion",
+        "12:24 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 121.98 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "12:57 04-09-2026",
+        "32Min(s)",
+        "GPS",
+        "12:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 127.82 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "13:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "13:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 122.74 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "14:57 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "14:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 118.94 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "15:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "15:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "",
+        "16:15 04-09-2026",
+        "18Min(s)",
+        "Pernoctacion",
+        "16:15 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 124.82 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "16:57 04-09-2026",
+        "41Min(s)",
+        "GPS",
+        "16:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 126.21 M. DE POR LA VIA A GIRONBOMBA MOVIL (GIRON, SANTANDER).",
+        "",
+        "17:57 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "17:57 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "18:47 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMAGA (Virtual)",
+        "20:27 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BERLIN",
+        "22:07 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA",
+        "23:47 03-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DONJUANA (Virtual)",
+        "01:27 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LOS PATIOS (N SANT) (Virtual)",
+        "03:07 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "04:47 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "06:27 04-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Ver recorrido del vehículo"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "+\n−\ni"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "[NOV-ESP] Pernoctacion",
+        "VEHICULO PERMANECE ESTACIONADO EN PARQUEADERO HOTEL LA\nCEIBA EN CHIMITA - PERNOCTANDO - PEND ARREGLOS -\nINICIA RUTA SABADO",
+        "16:15 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "[NOV-ESP] Pernoctacion",
+        "VEHICULO PERMANECE ESTACIONADO EN PARQUEADERO HOTEL\nLA CEIBA EN CHIMITA - PERNOCTANDO - PEND ARREGLOS\n- INICIA RUTA SABADO",
+        "12:24 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN PARQUEADERO HOTEL LA CEIBA EN CHIMITA -\nPERNOCTANDO - PEND ARREGLOS - INICIA RUTA SABADO",
+        "08:38 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN PARQUEADERO HOTEL LA CEIBA EN CHIMITA\n- PERNOCTANDO - PEND ARREGLOS - INICIA RUTA SABADO",
+        "04:09 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN PARQUEADERO HOTEL LA CEIBA EN\nCHIMITA - PERNOCTANDO - PEND ARREGLOS - INICIA RUTA\nSABADO",
+        "00:02 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CHIMITA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN PARQUEADERO HOTEL LA CEIBA EN CHIMITA\n- PERNOCTANDO - PEND ARREGLOS - INICIA RUTA SABADO",
+        "21:03 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "Retrasado",
+        "VEH SALIENDO DE PLANTA POSTOBON EN PIEDECUESTA CEL/\nMANIFIESTA SE DIRIGE A PERNOCTAR, MAÑANA REALIZA ARREGLOS\nAL VEH E INICIA RUTA EL DIA SABADO",
+        "19:33 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "Retrasado",
+        "VEH ESTACIONADO EN POSTOBON EN PIEDECUESTA CEL/MANIFIESTA\nESTA EN PROCESO DE CARGUE",
+        "16:44 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "Retrasado",
+        "VEHICULO SE ENCEUNTRA ESTACIONADO EN POSTOBON PIEDECUESTA\nPENDIENTE CONFIRMAR CARGUE CEL/SISTEMA CORREO DE VOZ",
+        "15:34 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42382&opcion=1"
+}

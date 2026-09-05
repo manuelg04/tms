@@ -1,0 +1,125 @@
+{
+  "verifiedAt": "2026-09-04T23:43:55.863409+00:00",
+  "scope": "Visual-alert configuration follow-up; documentation only",
+  "alarmCount": 5,
+  "checks": [
+    "Five original alarms match final read-back",
+    "All five editor values and field limits match catalogue",
+    "All five legend labels and colors match configuration",
+    "216 unique palette entries captured",
+    "Unsaved color selection and reset verified",
+    "Create-form reset verified",
+    "47 en-route and four pending color observations reconciled",
+    "Documentation links resolve and evidence JSON parses",
+    "Five new screenshots visually inspected",
+    "No alarm or parameter save/delete submitted; original tab restored"
+  ],
+  "internalLinksChecked": 39,
+  "files": [
+    {
+      "path": "color-picker.json",
+      "sha256": "739bffa193b2550ddffb21b43663fa8d1de1a6ed0690b7be04f42e7b26dd4f30",
+      "bytes": 24750
+    },
+    {
+      "path": "color-picker.png",
+      "sha256": "4fbc32c570be61f5601f7d605336f8fcce0c76b0c9a431d605ed84bbf4b5c5cf",
+      "bytes": 15215
+    },
+    {
+      "path": "color-selection-reset.json",
+      "sha256": "a63324faa858c715a6e65dab347e999243d385248fbdaa9e08772df0a5c9797a",
+      "bytes": 153
+    },
+    {
+      "path": "create-reset.json",
+      "sha256": "ebbca6d51d57229745ccb2bbcd08c360518c0c1f4996ea925407d0fbc1c6285b",
+      "bytes": 1367
+    },
+    {
+      "path": "create.json",
+      "sha256": "33287369531591b51ba364a7f5de90411d0e5c3c17b468c1e82e6d475f15d1c0",
+      "bytes": 2391
+    },
+    {
+      "path": "create.png",
+      "sha256": "1c830100ab65b8fb14862eb75b99be342d8570bc913c1280e634e575842351a2",
+      "bytes": 38414
+    },
+    {
+      "path": "delete-list.json",
+      "sha256": "5af312e33790c2c995b96e83e99e629d534ae47add26003d49c8339cecc515c4",
+      "bytes": 3084
+    },
+    {
+      "path": "delete-list.png",
+      "sha256": "1c49eaef6dff4306af40966286f4c3623486c0755eed131aa239915e36887ed6",
+      "bytes": 44348
+    },
+    {
+      "path": "list-final.json",
+      "sha256": "297a5c4ccec4f9876321cdd9953399967fa3175c40681fe0e49190af89e2c8f2",
+      "bytes": 3045
+    },
+    {
+      "path": "list.json",
+      "sha256": "b66423af75871e22add03974877a88c03f25d68d1fc7abb169e20c57eada0474",
+      "bytes": 3676
+    },
+    {
+      "path": "list.png",
+      "sha256": "71ee8ab341dfb703781b694cfe3f448e35c29d00ec8be57142419c1b7999f866",
+      "bytes": 41602
+    },
+    {
+      "path": "parameter-field-index.json",
+      "sha256": "f472326ab05e2fa1dabf3b1f269f2194eeb7033516ceaeea8dc57fb9f1a7b056",
+      "bytes": 7849
+    },
+    {
+      "path": "related-parameters.json",
+      "sha256": "11e76346762fa377f4df2184cd0ba36c9bba01ca2ddb86b582a4588c0b49af25",
+      "bytes": 1400
+    },
+    {
+      "path": "tracking-comparison.json",
+      "sha256": "b0aca27af1da2eb7021acd955f4f165ce5f7b6b5a04c271ae29e3d70cae17f5c",
+      "bytes": 38362
+    },
+    {
+      "path": "update-1.json",
+      "sha256": "a6f7fc93873fce8c046738b866ba8b16cd5dc9cada9b11ff67a4eb89f1c53581",
+      "bytes": 2434
+    },
+    {
+      "path": "update-2.json",
+      "sha256": "1184eb2788001becabce8f2722f5a4a8f7722f819b08510cf473ad9bfe1a8f70",
+      "bytes": 2430
+    },
+    {
+      "path": "update-3.json",
+      "sha256": "eb7ad7a8f9c15f62996a34cbaf37b37dd1d15614cd65c71db88feca65cee05d0",
+      "bytes": 2433
+    },
+    {
+      "path": "update-4.json",
+      "sha256": "cb79e08aa7df712c9c9c9b37be26c0ffe3a969494dde7b039e1bc6185a89226d",
+      "bytes": 2434
+    },
+    {
+      "path": "update-5.json",
+      "sha256": "cf1491fddda6259bf435874f5684cfecd8499d342ac1ce860bb511772b910a58",
+      "bytes": 3805
+    },
+    {
+      "path": "update-list.json",
+      "sha256": "c1d3b0fc79cf9e22acc1cc73a99506bae4ac821069d924dd3272906b85296a34",
+      "bytes": 2180
+    },
+    {
+      "path": "update-violeta.png",
+      "sha256": "63a2e79ed10a032769d32328fd8d7b83134e946f19e10ac69421fdc729bc9a71",
+      "bytes": 39480
+    }
+  ]
+}

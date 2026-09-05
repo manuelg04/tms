@@ -1,0 +1,647 @@
+{
+  "controls": [],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42364&opcion=2&codpc=156&pc=AGUACHICA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "AGUACHICA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42364&opcion=2&codpc=10013&pc=LUGAR ENTREGA (Virtual)&ind_virtua=1&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "LUGAR ENTREGA (Virtual)"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42364&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42364",
+        "Origen",
+        "PAMPLONA (Nort)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043336",
+        "Destino",
+        "AGUACHICA (Cesa)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "WILSON",
+        "Ruta",
+        "3610 - PAMPLONA (Nort) - 54518000 - AGUACHICA (Cesa) - 20011000 VIA CESAR"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "JARAMILLO GABRIEL JAIME",
+        "Fecha Salida",
+        "15:06 02-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "21:46 02-09-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-09-02 15:06:34"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "TRD294"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "KENWORTH",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "T800",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "AZUL",
+        "Modelo",
+        "2002"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA",
+        "",
+        "15:32 02-09-2026",
+        "27Min(s)",
+        "Retrasado",
+        "15:33 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MUTISCUA",
+        "",
+        "17:39 02-09-2026",
+        "126Min(s)",
+        "Retrasado",
+        "17:40 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BERLIN",
+        "",
+        "19:15 02-09-2026",
+        "95Min(s)",
+        "Retrasado",
+        "19:16 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RIONEGRO",
+        "",
+        "22:28 02-09-2026",
+        "193Min(s)",
+        "Retrasado",
+        "22:29 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA ESPERANZA",
+        "",
+        "00:07 03-09-2026",
+        "98Min(s)",
+        "Retrasado",
+        "00:07 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "04:35 03-09-2026",
+        "268Min(s)",
+        "Retrasado",
+        "04:36 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "08:54 03-09-2026",
+        "259Min(s)",
+        "Retrasado",
+        "08:56 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "12:33 03-09-2026",
+        "217Min(s)",
+        "Retrasado",
+        "12:33 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "15:37 03-09-2026",
+        "184Min(s)",
+        "Retrasado",
+        "15:38 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "16:50 03-09-2026",
+        "71Min(s)",
+        "Retrasado",
+        "16:50 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "16:53 03-09-2026",
+        "3Min(s)",
+        "Retrasado",
+        "16:53 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "19:40 03-09-2026",
+        "167Min(s)",
+        "Retrasado",
+        "19:40 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "21:41 03-09-2026",
+        "122Min(s)",
+        "Retrasado",
+        "21:43 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "21:51 03-09-2026",
+        "8Min(s)",
+        "Retrasado",
+        "21:52 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "23:42 03-09-2026",
+        "111Min(s)",
+        "Retrasado",
+        "23:43 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "04:06 04-09-2026",
+        "263Min(s)",
+        "Retrasado",
+        "04:06 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "07:11 04-09-2026",
+        "184Min(s)",
+        "Retrasado",
+        "07:11 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "",
+        "11:01 04-09-2026",
+        "231Min(s)",
+        "Retrasado",
+        "11:02 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "16:46 02-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LUGAR ENTREGA (Virtual)",
+        "20:56 02-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "21:46 02-09-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA DESCARGO PENDIENTE DE\nQUE ENVIE FOTO DE CUMPLIDOS",
+        "11:01 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH ESTACIONADO EN PATIO BUTURAMA EN AGUACHICA PEND\nENTREGA",
+        "07:11 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH ESTACIONADO EN PATIO BUTURAMA EN AGUACHICA PEND ENTREGA",
+        "04:06 04-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH ESTACIONADO EN PATIO BUTURAMA EN AGUACHICA PEND\nENTREGA",
+        "23:42 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH ESTACIONADO EN PATIO BUTURAMA EN AGUACHICA CEL/\nMANIFIESTA ACABAN DE COMENZAR A DESCARGAR",
+        "21:51 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH ESTACIONADO EN PATIO BUTURAMA EN AGUACHICA - PEND ENTREGA\nCEL/ SINS EÑAL - PEND RTA WPP",
+        "21:41 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH ESTACIONADO EN PATIO BUTURAMA EN AGUACHICA - PEND\nENTREGA",
+        "19:40 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN EL PUERTO BUTURAMA -\nCEL/ MANIFIESTA CONTINUA EN ESPERA PARA DESCARGAR",
+        "16:53 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN EL PUERTO BUTURAMA\n- PEND ENTREGA",
+        "16:50 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN EL PUERTO BUTURAMA\nPENDIENTE CONFIRMAR DESCARGUE CEL/SIN SEÑAL",
+        "15:37 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA EN PUERTO BUTARAMA\nA LA ESPERA DE QUE LO PASEN A DESCARGAR",
+        "12:33 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEHICULO SE ENCUENTRA ESTACIONADO EN PUERTO BUTURAMA\nPENDIENTE CONFIRMAR DESCARGUE CEL/NO CONTESTA",
+        "08:54 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "AGUACHICA",
+        "Retrasado",
+        "VEH EN EDS EN AGUACHICA PEND ENTREGA EN BUTURAMA",
+        "04:35 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA ESPERANZA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA LA ESPERANZA SIN NOVEDAD",
+        "00:07 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "RIONEGRO",
+        "Retrasado",
+        "VEH EN RUTA POR RIONEGRO CEL/MANIFIESTA TODO OK SIN\nNOVEDAD, CONFIRMA UBICACION, LE DA PAREJO HASTA DONDE\nEL CLIENTE",
+        "22:28 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BERLIN",
+        "Retrasado",
+        "VEH EN RUTA DELANTE DE BERLIN SIN NOVEDAD",
+        "19:15 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "MUTISCUA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA MUTISCUA SIN NOVEDAD",
+        "17:39 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PAMPLONA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE ACABA DE SALIR DE CARGAR\nSIN NOVEDAD E INCIIA RUTA DE UNA VEZ",
+        "15:32 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42364&opcion=1"
+}

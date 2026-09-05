@@ -1,0 +1,7653 @@
+{
+  "definitions": [
+    {
+      "code": "20072",
+      "capturedAt": "2026-09-04T23:52:38.010Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "A cargo Empresa"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20072&opcion=2"
+    },
+    {
+      "code": "7",
+      "capturedAt": "2026-09-04T23:52:38.342Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Alimentacion"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=7&opcion=2"
+    },
+    {
+      "code": "20131",
+      "capturedAt": "2026-09-04T23:52:38.601Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "ALIMENTACION"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20131&opcion=2"
+    },
+    {
+      "code": "10",
+      "capturedAt": "2026-09-04T23:52:38.831Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Bloqueo de Via"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=10&opcion=2"
+    },
+    {
+      "code": "20109",
+      "capturedAt": "2026-09-04T23:52:39.208Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Bodega FIN DESCARGUE CON NOVEDAD"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20109&opcion=2"
+    },
+    {
+      "code": "20129",
+      "capturedAt": "2026-09-04T23:52:39.456Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Bodega FIN DESCARGUE SIN NOVEDAD"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20129&opcion=2"
+    },
+    {
+      "code": "20107",
+      "capturedAt": "2026-09-04T23:52:39.711Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Bodega INICIA CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20107&opcion=2"
+    },
+    {
+      "code": "20081",
+      "capturedAt": "2026-09-04T23:52:39.950Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Bodega Inicia DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20081&opcion=2"
+    },
+    {
+      "code": "20125",
+      "capturedAt": "2026-09-04T23:52:40.290Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Bodega PENDIENTE CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20125&opcion=2"
+    },
+    {
+      "code": "20130",
+      "capturedAt": "2026-09-04T23:52:40.537Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Bodega PENDIENTE DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20130&opcion=2"
+    },
+    {
+      "code": "20102",
+      "capturedAt": "2026-09-04T23:52:40.778Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Bodega Proceso CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20102&opcion=2"
+    },
+    {
+      "code": "20103",
+      "capturedAt": "2026-09-04T23:52:41.020Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Bodega Proceso DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20103&opcion=2"
+    },
+    {
+      "code": "20079",
+      "capturedAt": "2026-09-04T23:52:41.416Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "BODEGA PROCESO DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20079&opcion=2"
+    },
+    {
+      "code": "20080",
+      "capturedAt": "2026-09-04T23:52:41.677Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "CAMBIO  DE RUTA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20080&opcion=2"
+    },
+    {
+      "code": "20095",
+      "capturedAt": "2026-09-04T23:52:41.947Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Cambio Cabezote"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20095&opcion=2"
+    },
+    {
+      "code": "20085",
+      "capturedAt": "2026-09-04T23:52:42.290Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Cambio de CONDUCTOR"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20085&opcion=2"
+    },
+    {
+      "code": "17",
+      "capturedAt": "2026-09-04T23:52:42.540Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Cambio de Ruta"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=17&opcion=2"
+    },
+    {
+      "code": "20101",
+      "capturedAt": "2026-09-04T23:52:42.887Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "CAMBIO DE RUTA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20101&opcion=2"
+    },
+    {
+      "code": "9997",
+      "capturedAt": "2026-09-04T23:52:43.296Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "CAMBIO DE RUTA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9997&opcion=2"
+    },
+    {
+      "code": "20127",
+      "capturedAt": "2026-09-04T23:52:43.701Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Cambio GPS"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20127&opcion=2"
+    },
+    {
+      "code": "20073",
+      "capturedAt": "2026-09-04T23:52:44.040Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "CARGADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20073&opcion=2"
+    },
+    {
+      "code": "20076",
+      "capturedAt": "2026-09-04T23:52:44.466Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "CELULAR SIN SEÑAL"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20076&opcion=2"
+    },
+    {
+      "code": "20096",
+      "capturedAt": "2026-09-04T23:52:44.739Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "CLIENTE CAMBIA CELULAR CONDUCTOR"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20096&opcion=2"
+    },
+    {
+      "code": "1003",
+      "capturedAt": "2026-09-04T23:52:45.022Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Comentario"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=1003&opcion=2"
+    },
+    {
+      "code": "20088",
+      "capturedAt": "2026-09-04T23:52:45.412Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "COMENTARIO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20088&opcion=2"
+    },
+    {
+      "code": "20133",
+      "capturedAt": "2026-09-04T23:52:45.677Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "COMPARENDO SOBREPESO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20133&opcion=2"
+    },
+    {
+      "code": "20082",
+      "capturedAt": "2026-09-04T23:52:45.943Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Conductor Cambia CELULAR"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20082&opcion=2"
+    },
+    {
+      "code": "20069",
+      "capturedAt": "2026-09-04T23:52:46.305Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Continua NO Comunicación"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20069&opcion=2"
+    },
+    {
+      "code": "20112",
+      "capturedAt": "2026-09-04T23:52:46.559Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "DATO GPS"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20112&opcion=2"
+    },
+    {
+      "code": "20123",
+      "capturedAt": "2026-09-04T23:52:46.797Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "DESCARGANDO(ST)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20123&opcion=2"
+    },
+    {
+      "code": "20132",
+      "capturedAt": "2026-09-04T23:52:47.151Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "DESVIO DE RUTA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20132&opcion=2"
+    },
+    {
+      "code": "20094",
+      "capturedAt": "2026-09-04T23:52:47.387Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "EAL (REPORTE TELEFONICO)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20094&opcion=2"
+    },
+    {
+      "code": "20115",
+      "capturedAt": "2026-09-04T23:52:47.634Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "EN ESPERA DE CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20115&opcion=2"
+    },
+    {
+      "code": "20074",
+      "capturedAt": "2026-09-04T23:52:47.909Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "EN ESPERA DE DOCUMENTOS"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20074&opcion=2"
+    },
+    {
+      "code": "20110",
+      "capturedAt": "2026-09-04T23:52:48.291Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "ENTURNO PARA DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20110&opcion=2"
+    },
+    {
+      "code": "20114",
+      "capturedAt": "2026-09-04T23:52:48.542Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "FIN PERNOCTACION"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20114&opcion=2"
+    },
+    {
+      "code": "20113",
+      "capturedAt": "2026-09-04T23:52:48.832Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "GPS (MA)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20113&opcion=2"
+    },
+    {
+      "code": "13",
+      "capturedAt": "2026-09-04T23:52:49.205Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Hurto"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=13&opcion=2"
+    },
+    {
+      "code": "20120",
+      "capturedAt": "2026-09-04T23:52:49.455Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INCUMPLIMIENTO PROCEDIMIENTO EAL"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20120&opcion=2"
+    },
+    {
+      "code": "20077",
+      "capturedAt": "2026-09-04T23:52:49.720Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Información Especial"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20077&opcion=2"
+    },
+    {
+      "code": "20068",
+      "capturedAt": "2026-09-04T23:52:49.955Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Inicia Pernoctación Extensa"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20068&opcion=2"
+    },
+    {
+      "code": "20121",
+      "capturedAt": "2026-09-04T23:52:50.288Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INICIA TRAYECTO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20121&opcion=2"
+    },
+    {
+      "code": "20135",
+      "capturedAt": "2026-09-04T23:52:50.541Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INICIO DE RUTA (ST)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20135&opcion=2"
+    },
+    {
+      "code": "20136",
+      "capturedAt": "2026-09-04T23:52:50.790Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INICIO RUTA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20136&opcion=2"
+    },
+    {
+      "code": "9261",
+      "capturedAt": "2026-09-04T23:52:51.278Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS -  ENTRADA CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9261&opcion=2"
+    },
+    {
+      "code": "9176",
+      "capturedAt": "2026-09-04T23:53:04.582Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - ACELERACION BRUSCA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9176&opcion=2"
+    },
+    {
+      "code": "9265",
+      "capturedAt": "2026-09-04T23:53:04.827Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - APROXIMACION A  DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9265&opcion=2"
+    },
+    {
+      "code": "9172",
+      "capturedAt": "2026-09-04T23:53:05.204Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - APROXIMACION A ZONA DE CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9172&opcion=2"
+    },
+    {
+      "code": "9110",
+      "capturedAt": "2026-09-04T23:53:05.471Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - BOTON DE PANICO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9110&opcion=2"
+    },
+    {
+      "code": "9275",
+      "capturedAt": "2026-09-04T23:53:05.711Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - DESTINATARIO NO GEORREFERENCIADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9275&opcion=2"
+    },
+    {
+      "code": "9264",
+      "capturedAt": "2026-09-04T23:53:05.961Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - ENTRADA AL CLIENTE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9264&opcion=2"
+    },
+    {
+      "code": "9208",
+      "capturedAt": "2026-09-04T23:53:06.298Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - EQUIPO APAGADO "
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9208&opcion=2"
+    },
+    {
+      "code": "9226",
+      "capturedAt": "2026-09-04T23:53:06.536Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - ERROR DATOS EN INTEGRADOR"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9226&opcion=2"
+    },
+    {
+      "code": "9273",
+      "capturedAt": "2026-09-04T23:53:06.793Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - ERROR DE INTEGRAGRACION (CLAVE Y/O USUARIO INCORRECTO)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9273&opcion=2"
+    },
+    {
+      "code": "9116",
+      "capturedAt": "2026-09-04T23:53:07.125Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - EXCESO DE VELOCIDAD"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9116&opcion=2"
+    },
+    {
+      "code": "9111",
+      "capturedAt": "2026-09-04T23:53:07.392Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - FINALIZACION BOTON DE PANICO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9111&opcion=2"
+    },
+    {
+      "code": "9130",
+      "capturedAt": "2026-09-04T23:53:07.659Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - FINALIZACION DE ITINERARIO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9130&opcion=2"
+    },
+    {
+      "code": "9177",
+      "capturedAt": "2026-09-04T23:53:07.910Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - FRENADA BRUSCA "
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9177&opcion=2"
+    },
+    {
+      "code": "9129",
+      "capturedAt": "2026-09-04T23:53:08.243Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - INICIO DE ITINERARIO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9129&opcion=2"
+    },
+    {
+      "code": "9260",
+      "capturedAt": "2026-09-04T23:53:08.551Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - LLEGADA A LA PLANTA "
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9260&opcion=2"
+    },
+    {
+      "code": "9263",
+      "capturedAt": "2026-09-04T23:53:08.785Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - LLEGADA AL CLIENTE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9263&opcion=2"
+    },
+    {
+      "code": "9274",
+      "capturedAt": "2026-09-04T23:53:09.132Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - OPERADOR GPS NO HOMOLOGADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9274&opcion=2"
+    },
+    {
+      "code": "9266",
+      "capturedAt": "2026-09-04T23:53:09.406Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - PASO POR OAL"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9266&opcion=2"
+    },
+    {
+      "code": "9267",
+      "capturedAt": "2026-09-04T23:53:09.703Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - PASO POR PEAJE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9267&opcion=2"
+    },
+    {
+      "code": "9183",
+      "capturedAt": "2026-09-04T23:53:09.952Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - POR  DEFINIR"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9183&opcion=2"
+    },
+    {
+      "code": "9117",
+      "capturedAt": "2026-09-04T23:53:10.281Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - POR DEFINIR"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9117&opcion=2"
+    },
+    {
+      "code": "9268",
+      "capturedAt": "2026-09-04T23:53:10.515Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - REPORTA INICIO  DE RUTA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9268&opcion=2"
+    },
+    {
+      "code": "9173",
+      "capturedAt": "2026-09-04T23:53:10.770Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - SALIDA DE CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9173&opcion=2"
+    },
+    {
+      "code": "9262",
+      "capturedAt": "2026-09-04T23:53:11.037Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - SALIDA DE PLANTA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9262&opcion=2"
+    },
+    {
+      "code": "9271",
+      "capturedAt": "2026-09-04T23:53:11.368Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - SALIDA DE ZONA DE DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9271&opcion=2"
+    },
+    {
+      "code": "9270",
+      "capturedAt": "2026-09-04T23:53:11.644Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - SEGUIMIENTO A LA CITA DE CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9270&opcion=2"
+    },
+    {
+      "code": "9269",
+      "capturedAt": "2026-09-04T23:53:11.899Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - SEGUIMIENTO A LA CITA DE DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9269&opcion=2"
+    },
+    {
+      "code": "9169",
+      "capturedAt": "2026-09-04T23:53:12.241Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - SIN SENAL DISPOSITIVO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9169&opcion=2"
+    },
+    {
+      "code": "9160",
+      "capturedAt": "2026-09-04T23:53:12.499Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - SOLICITUD DE UBICACIÃ“N"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9160&opcion=2"
+    },
+    {
+      "code": "9114",
+      "capturedAt": "2026-09-04T23:53:12.754Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - VEHICULO APAGADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9114&opcion=2"
+    },
+    {
+      "code": "9113",
+      "capturedAt": "2026-09-04T23:53:12.995Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - VEHICULO ENCENDIDO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9113&opcion=2"
+    },
+    {
+      "code": "9225",
+      "capturedAt": "2026-09-04T23:53:13.326Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - VH ENCENDIDO POR MAS TIEMPO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9225&opcion=2"
+    },
+    {
+      "code": "9272",
+      "capturedAt": "2026-09-04T23:53:13.585Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS - VIAJE SIN OPERADOR GPS"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9272&opcion=2"
+    },
+    {
+      "code": "9145",
+      "capturedAt": "2026-09-04T23:53:13.826Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "INT GPS -REPORTA DESVIÃ“ DE RUTA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9145&opcion=2"
+    },
+    {
+      "code": "20090",
+      "capturedAt": "2026-09-04T23:53:14.201Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "L&T - NO COMUNICACION "
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20090&opcion=2"
+    },
+    {
+      "code": "9027",
+      "capturedAt": "2026-09-04T23:53:14.468Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NC - CONDUCTOR REPORTA FIN  DE CARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9027&opcion=2"
+    },
+    {
+      "code": "9026",
+      "capturedAt": "2026-09-04T23:53:14.710Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NC - CONDUCTOR REPORTA INGRESO A CARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9026&opcion=2"
+    },
+    {
+      "code": "9023",
+      "capturedAt": "2026-09-04T23:53:14.959Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NC - CONDUCTOR REPORTA INICIO DE CARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9023&opcion=2"
+    },
+    {
+      "code": "9021",
+      "capturedAt": "2026-09-04T23:53:15.299Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NC - CONDUCTOR REPORTA LLEGADA A CARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9021&opcion=2"
+    },
+    {
+      "code": "9024",
+      "capturedAt": "2026-09-04T23:53:15.536Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NC - CONDUCTOR REPORTA SALIDA DE CARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9024&opcion=2"
+    },
+    {
+      "code": "9020",
+      "capturedAt": "2026-09-04T23:53:15.792Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NCD - CONDUCTOR REPORTA CUMPLIDO DE REMISIÃ“N (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9020&opcion=2"
+    },
+    {
+      "code": "20124",
+      "capturedAt": "2026-09-04T23:53:16.141Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NCD / OK.CUMPLIMIENTO DE CITA DE DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20124&opcion=2"
+    },
+    {
+      "code": "20104",
+      "capturedAt": "2026-09-04T23:53:16.381Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "ND / LUGAR DE ENTREGA ENTURNADO PARA DESCARGAR"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20104&opcion=2"
+    },
+    {
+      "code": "20116",
+      "capturedAt": "2026-09-04T23:53:16.644Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "ND / OK - VEHICULO DESCARGA SIN NOVEDAD "
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20116&opcion=2"
+    },
+    {
+      "code": "20014",
+      "capturedAt": "2026-09-04T23:53:16.896Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NEC / CANCELACIÃ“N DE VIAJE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20014&opcion=2"
+    },
+    {
+      "code": "20016",
+      "capturedAt": "2026-09-04T23:53:29.565Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NEC / DAÃ‘O EN VEHICULO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20016&opcion=2"
+    },
+    {
+      "code": "20019",
+      "capturedAt": "2026-09-04T23:53:29.894Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NEC / DEMORA EN CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20019&opcion=2"
+    },
+    {
+      "code": "20020",
+      "capturedAt": "2026-09-04T23:53:30.472Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NEC / MAYOR CANTIDAD DE CLIENTES A LO CONTRATADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20020&opcion=2"
+    },
+    {
+      "code": "20015",
+      "capturedAt": "2026-09-04T23:53:30.736Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NEC / NO COMUNICACIÃ“N"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20015&opcion=2"
+    },
+    {
+      "code": "20018",
+      "capturedAt": "2026-09-04T23:53:31.002Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NEC / PENDIENTE CONSIGNACION ANTICIPO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20018&opcion=2"
+    },
+    {
+      "code": "20017",
+      "capturedAt": "2026-09-04T23:53:31.350Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NEC / SIN AUTORIZACIÃ“N DE INGRESO A PLANTA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20017&opcion=2"
+    },
+    {
+      "code": "20058",
+      "capturedAt": "2026-09-04T23:53:31.624Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NEC / SOLICITUD PAGO STAND BY"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20058&opcion=2"
+    },
+    {
+      "code": "9030",
+      "capturedAt": "2026-09-04T23:53:31.900Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED - CONDUCTOR REPORTA FIN  DE DESCARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9030&opcion=2"
+    },
+    {
+      "code": "9028",
+      "capturedAt": "2026-09-04T23:53:32.479Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED - CONDUCTOR REPORTA INGRESO A DESCARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9028&opcion=2"
+    },
+    {
+      "code": "9029",
+      "capturedAt": "2026-09-04T23:53:32.747Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED - CONDUCTOR REPORTA INICIO DE DESCARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9029&opcion=2"
+    },
+    {
+      "code": "9011",
+      "capturedAt": "2026-09-04T23:53:33.007Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED - CONDUCTOR REPORTA LLEGADA A DESCARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9011&opcion=2"
+    },
+    {
+      "code": "9013",
+      "capturedAt": "2026-09-04T23:53:33.375Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED - CONDUCTOR REPORTA SALIDA DE DESCARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9013&opcion=2"
+    },
+    {
+      "code": "9017",
+      "capturedAt": "2026-09-04T23:53:33.664Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED - REPORTA DESCARGUE CON AVERIA (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9017&opcion=2"
+    },
+    {
+      "code": "9015",
+      "capturedAt": "2026-09-04T23:53:33.912Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED - REPORTA DESCARGUE CON DEVOLUCION (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9015&opcion=2"
+    },
+    {
+      "code": "9016",
+      "capturedAt": "2026-09-04T23:53:34.281Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED - REPORTA DESCARGUE CON FALTANTE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9016&opcion=2"
+    },
+    {
+      "code": "9014",
+      "capturedAt": "2026-09-04T23:53:34.542Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED - REPORTA DESCARGUE SIN NOVEDAD (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9014&opcion=2"
+    },
+    {
+      "code": "9012",
+      "capturedAt": "2026-09-04T23:53:34.899Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED - REPORTA NOVEDAD EN DESCARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9012&opcion=2"
+    },
+    {
+      "code": "9018",
+      "capturedAt": "2026-09-04T23:53:35.245Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED - REPORTA OTRA (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9018&opcion=2"
+    },
+    {
+      "code": "20056",
+      "capturedAt": "2026-09-04T23:53:35.502Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / COMPARENDO ZONA AMARILLA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20056&opcion=2"
+    },
+    {
+      "code": "20046",
+      "capturedAt": "2026-09-04T23:53:35.758Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / DEMORA EN RECIBO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20046&opcion=2"
+    },
+    {
+      "code": "20061",
+      "capturedAt": "2026-09-04T23:53:35.996Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / DEVOLUCION POR ESTIBAS VACIASÂ "
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20061&opcion=2"
+    },
+    {
+      "code": "20045",
+      "capturedAt": "2026-09-04T23:53:36.336Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / DEVOLUCION-INCONSISTENCIAS EN LAS FACTURAS VS FISICO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20045&opcion=2"
+    },
+    {
+      "code": "20042",
+      "capturedAt": "2026-09-04T23:53:36.593Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / DEVOLUCION-INCUMPLIMIENTO FECHA Y/O HORA DE ENTREGA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20042&opcion=2"
+    },
+    {
+      "code": "20044",
+      "capturedAt": "2026-09-04T23:53:36.838Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / DEVOLUCION-MERCANCIA POR IMPERFECTOS DE FABRICA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20044&opcion=2"
+    },
+    {
+      "code": "20043",
+      "capturedAt": "2026-09-04T23:53:37.281Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / DEVOLUCION-MERCANCIA POR ROTURA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20043&opcion=2"
+    },
+    {
+      "code": "20047",
+      "capturedAt": "2026-09-04T23:53:37.564Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / DEVOLUCION-NOVEDAD EN EMPAQUE Y/O EMBALAJE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20047&opcion=2"
+    },
+    {
+      "code": "20048",
+      "capturedAt": "2026-09-04T23:53:37.826Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / DEVOLUCION-PEDIDO NO SOLICITADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20048&opcion=2"
+    },
+    {
+      "code": "20049",
+      "capturedAt": "2026-09-04T23:53:38.193Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / DEVOLUCION-POR NOVEDAD EN RECIBO EN EL CLIENTE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20049&opcion=2"
+    },
+    {
+      "code": "20050",
+      "capturedAt": "2026-09-04T23:53:38.457Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / FACTURA FUERA DE ALIANZA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20050&opcion=2"
+    },
+    {
+      "code": "20063",
+      "capturedAt": "2026-09-04T23:53:38.694Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / FALTA DE CORREO DE AUTORIZACION DE RECIBO DE MERCANCIAÂ "
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20063&opcion=2"
+    },
+    {
+      "code": "20051",
+      "capturedAt": "2026-09-04T23:53:38.940Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / MAYOR VALOR EN DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20051&opcion=2"
+    },
+    {
+      "code": "20060",
+      "capturedAt": "2026-09-04T23:53:39.312Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / MERCANCIA EN PLATAFORMA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20060&opcion=2"
+    },
+    {
+      "code": "20052",
+      "capturedAt": "2026-09-04T23:53:39.566Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / NO RECIBO-ORDEN DE COMPRA VENCIDAS"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20052&opcion=2"
+    },
+    {
+      "code": "20053",
+      "capturedAt": "2026-09-04T23:53:39.814Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / NOVEDAD EN DOCUMENTOS"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20053&opcion=2"
+    },
+    {
+      "code": "20059",
+      "capturedAt": "2026-09-04T23:53:40.185Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / PAGO STAND BY ( SOBRECOSTOS PENDIENTES) "
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20059&opcion=2"
+    },
+    {
+      "code": "20062",
+      "capturedAt": "2026-09-04T23:53:40.439Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / RETORNO DE DEVOLUCIONÂ "
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20062&opcion=2"
+    },
+    {
+      "code": "20054",
+      "capturedAt": "2026-09-04T23:53:40.668Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / VALIDAR DIRECCION DE ENTREGA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20054&opcion=2"
+    },
+    {
+      "code": "20055",
+      "capturedAt": "2026-09-04T23:53:40.918Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NED / ZONA DE DIFICIL ACCESO PARA EL DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20055&opcion=2"
+    },
+    {
+      "code": "9004",
+      "capturedAt": "2026-09-04T23:53:41.265Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NEP - REPORTA NOVEDAD EN CARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9004&opcion=2"
+    },
+    {
+      "code": "9005",
+      "capturedAt": "2026-09-04T23:53:41.502Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER - REPORTA ACCIDENTE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9005&opcion=2"
+    },
+    {
+      "code": "9009",
+      "capturedAt": "2026-09-04T23:53:41.754Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER - REPORTA HURTO (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9009&opcion=2"
+    },
+    {
+      "code": "9010",
+      "capturedAt": "2026-09-04T23:53:42.009Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER - REPORTA OTRA (MOVIL) "
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9010&opcion=2"
+    },
+    {
+      "code": "9007",
+      "capturedAt": "2026-09-04T23:53:42.336Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER - REPORTA TRANCON (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9007&opcion=2"
+    },
+    {
+      "code": "9006",
+      "capturedAt": "2026-09-04T23:53:42.656Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER - REPORTA VARADA (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9006&opcion=2"
+    },
+    {
+      "code": "20039",
+      "capturedAt": "2026-09-04T23:53:42.886Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / ACCIDENTE EN RUTA - CHOQUE BAJO IMPACTO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20039&opcion=2"
+    },
+    {
+      "code": "20024",
+      "capturedAt": "2026-09-04T23:53:43.244Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / ACCIDENTE EN RUTA - NOVEDAD ALTO IMPACTO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20024&opcion=2"
+    },
+    {
+      "code": "20037",
+      "capturedAt": "2026-09-04T23:53:43.620Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / ACCIDENTE EN RUTA - NOVEDAD ALTO IMPACTO FATAL"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20037&opcion=2"
+    },
+    {
+      "code": "20034",
+      "capturedAt": "2026-09-04T23:53:43.880Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / CALAMIDAD DOMESTICA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20034&opcion=2"
+    },
+    {
+      "code": "20036",
+      "capturedAt": "2026-09-04T23:53:44.249Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / COMPARENDO DOCUMENTOS"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20036&opcion=2"
+    },
+    {
+      "code": "20022",
+      "capturedAt": "2026-09-04T23:53:44.507Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / COMPARENDO SOBREPESO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20022&opcion=2"
+    },
+    {
+      "code": "20027",
+      "capturedAt": "2026-09-04T23:53:49.587Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / HURTO-SAQUEO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20027&opcion=2"
+    },
+    {
+      "code": "20033",
+      "capturedAt": "2026-09-04T23:53:49.850Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / INCUMPLIMIENTO PLAN DE VIAJE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20033&opcion=2"
+    },
+    {
+      "code": "20025",
+      "capturedAt": "2026-09-04T23:53:50.229Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / INFRACCIONES AL CODIGO NACIONAL DE TRANSITO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20025&opcion=2"
+    },
+    {
+      "code": "20040",
+      "capturedAt": "2026-09-04T23:53:50.487Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / INSPECCION ANTINARCOTICOS"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20040&opcion=2"
+    },
+    {
+      "code": "20026",
+      "capturedAt": "2026-09-04T23:53:50.757Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / NO COMUNICACION (GC)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20026&opcion=2"
+    },
+    {
+      "code": "20038",
+      "capturedAt": "2026-09-04T23:53:51.010Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / PENDIENTE CONSIGNACION ANTICIPO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20038&opcion=2"
+    },
+    {
+      "code": "20021",
+      "capturedAt": "2026-09-04T23:53:51.324Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / PROBLEMAS EN LA VIA - EXTERNA PARO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20021&opcion=2"
+    },
+    {
+      "code": "20035",
+      "capturedAt": "2026-09-04T23:53:51.589Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / PROBLEMAS EN LA VIA ALTO IMPACTO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20035&opcion=2"
+    },
+    {
+      "code": "20031",
+      "capturedAt": "2026-09-04T23:53:51.829Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / PROBLEMAS EN LA VIA BAJO IMPACTO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20031&opcion=2"
+    },
+    {
+      "code": "20032",
+      "capturedAt": "2026-09-04T23:53:52.183Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / PUESTOS DE CONTROL POR ORGANISMOS DEL ESTADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20032&opcion=2"
+    },
+    {
+      "code": "20041",
+      "capturedAt": "2026-09-04T23:53:52.446Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / REPROGRAMACION DE CITA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20041&opcion=2"
+    },
+    {
+      "code": "20023",
+      "capturedAt": "2026-09-04T23:53:52.697Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / VARADO ALTO IMPACTO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20023&opcion=2"
+    },
+    {
+      "code": "20028",
+      "capturedAt": "2026-09-04T23:53:52.939Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / VARADO BAJO IMPACTO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20028&opcion=2"
+    },
+    {
+      "code": "20029",
+      "capturedAt": "2026-09-04T23:53:53.284Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NER / VEHICULO EN OPERATIVO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20029&opcion=2"
+    },
+    {
+      "code": "9000",
+      "capturedAt": "2026-09-04T23:53:53.546Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC - REPORTA ACCIDENTE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9000&opcion=2"
+    },
+    {
+      "code": "9022",
+      "capturedAt": "2026-09-04T23:53:53.792Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC - REPORTA LLEGADA AL CARGUE (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9022&opcion=2"
+    },
+    {
+      "code": "9003",
+      "capturedAt": "2026-09-04T23:53:54.160Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC - REPORTA OTRA (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9003&opcion=2"
+    },
+    {
+      "code": "9002",
+      "capturedAt": "2026-09-04T23:53:54.439Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC - REPORTA TRANCON (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9002&opcion=2"
+    },
+    {
+      "code": "9001",
+      "capturedAt": "2026-09-04T23:53:54.682Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC - REPORTA VARADA (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9001&opcion=2"
+    },
+    {
+      "code": "20008",
+      "capturedAt": "2026-09-04T23:53:54.916Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / CALAMIDAD DOMESTICA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20008&opcion=2"
+    },
+    {
+      "code": "20013",
+      "capturedAt": "2026-09-04T23:53:55.247Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / COLISIÃ“N"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20013&opcion=2"
+    },
+    {
+      "code": "20012",
+      "capturedAt": "2026-09-04T23:53:55.486Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / DEMORA ENTREGA DE CONTENEDOR"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20012&opcion=2"
+    },
+    {
+      "code": "20007",
+      "capturedAt": "2026-09-04T23:53:55.754Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / DESCARGANDO VIAJE ANTERIOR"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20007&opcion=2"
+    },
+    {
+      "code": "20011",
+      "capturedAt": "2026-09-04T23:53:55.998Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / IMPREVISTOS EN LA VIA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20011&opcion=2"
+    },
+    {
+      "code": "20057",
+      "capturedAt": "2026-09-04T23:53:56.311Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / INCIDENTES APP CONTRATACION"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20057&opcion=2"
+    },
+    {
+      "code": "20006",
+      "capturedAt": "2026-09-04T23:53:56.590Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / INCONSISTENCIAS EN LA CONTRATACIÃ“N"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20006&opcion=2"
+    },
+    {
+      "code": "20001",
+      "capturedAt": "2026-09-04T23:53:56.836Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / NO COMUNICACIÃ“N"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20001&opcion=2"
+    },
+    {
+      "code": "20004",
+      "capturedAt": "2026-09-04T23:53:57.201Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / PLANILLANDO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20004&opcion=2"
+    },
+    {
+      "code": "20005",
+      "capturedAt": "2026-09-04T23:53:57.559Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / SIN JUSTIFICACION DEL CONDUCTOR"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20005&opcion=2"
+    },
+    {
+      "code": "20003",
+      "capturedAt": "2026-09-04T23:53:57.906Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / TRANSPORTADOR SIN SEGURIDAD SOCIAL AL DÃA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20003&opcion=2"
+    },
+    {
+      "code": "20002",
+      "capturedAt": "2026-09-04T23:53:58.260Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / VEHÃCULO CONFIRMADO SIN 3 HORAS DE ANTICIPACIÃ“N"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20002&opcion=2"
+    },
+    {
+      "code": "20009",
+      "capturedAt": "2026-09-04T23:53:58.534Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / VEHÃCULO EN MANTENIMIENTO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20009&opcion=2"
+    },
+    {
+      "code": "20010",
+      "capturedAt": "2026-09-04T23:53:58.778Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / VEHICULO BLOQUEADO EN PARQUEADERO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20010&opcion=2"
+    },
+    {
+      "code": "20000",
+      "capturedAt": "2026-09-04T23:53:59.053Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NICC / VEHICULO Y CONDUCTOR NO CUMPLEN CON LAS CONDICIONES PARA EL CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20000&opcion=2"
+    },
+    {
+      "code": "20065",
+      "capturedAt": "2026-09-04T23:53:59.387Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "No comunicación"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20065&opcion=2"
+    },
+    {
+      "code": "1000",
+      "capturedAt": "2026-09-04T23:53:59.624Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "No Comunicacion"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=1000&opcion=2"
+    },
+    {
+      "code": "20093",
+      "capturedAt": "2026-09-04T23:53:59.870Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NO COMUNICACION L&T"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20093&opcion=2"
+    },
+    {
+      "code": "20071",
+      "capturedAt": "2026-09-04T23:54:00.228Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NOTIFICACION A LA TRANSPORTADORA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20071&opcion=2"
+    },
+    {
+      "code": "20117",
+      "capturedAt": "2026-09-04T23:54:00.486Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "NOVEDAD EN DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20117&opcion=2"
+    },
+    {
+      "code": "2",
+      "capturedAt": "2026-09-04T23:54:00.747Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Ok"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=2&opcion=2"
+    },
+    {
+      "code": "20098",
+      "capturedAt": "2026-09-04T23:54:00.974Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "OK > (EAL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20098&opcion=2"
+    },
+    {
+      "code": "20128",
+      "capturedAt": "2026-09-04T23:54:01.323Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "OK EAL SIN NOVEDAD (CORREO)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20128&opcion=2"
+    },
+    {
+      "code": "10058",
+      "capturedAt": "2026-09-04T23:54:01.575Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Ok Vehiculo sin novedad"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=10058&opcion=2"
+    },
+    {
+      "code": "20089",
+      "capturedAt": "2026-09-04T23:54:01.907Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "OK-No Despacho en Limpio"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20089&opcion=2"
+    },
+    {
+      "code": "20067",
+      "capturedAt": "2026-09-04T23:54:02.248Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "OK-novedad especial"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20067&opcion=2"
+    },
+    {
+      "code": "20122",
+      "capturedAt": "2026-09-04T23:54:02.498Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Parado por ACCIDENTE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20122&opcion=2"
+    },
+    {
+      "code": "5",
+      "capturedAt": "2026-09-04T23:54:02.746Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Parqueadero"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=5&opcion=2"
+    },
+    {
+      "code": "6",
+      "capturedAt": "2026-09-04T23:54:02.994Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Pernoctacion"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=6&opcion=2"
+    },
+    {
+      "code": "1004",
+      "capturedAt": "2026-09-04T23:54:03.331Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Pernoctacion"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=1004&opcion=2"
+    },
+    {
+      "code": "16",
+      "capturedAt": "2026-09-04T23:54:03.578Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Pinchada"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=16&opcion=2"
+    },
+    {
+      "code": "8",
+      "capturedAt": "2026-09-04T23:54:19.524Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Reinicio"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=8&opcion=2"
+    },
+    {
+      "code": "9025",
+      "capturedAt": "2026-09-04T23:54:19.781Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REINICIO RUTA (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9025&opcion=2"
+    },
+    {
+      "code": "9103",
+      "capturedAt": "2026-09-04T23:54:20.021Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA FIN DE CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9103&opcion=2"
+    },
+    {
+      "code": "9108",
+      "capturedAt": "2026-09-04T23:54:20.356Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA FIN DE DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9108&opcion=2"
+    },
+    {
+      "code": "9101",
+      "capturedAt": "2026-09-04T23:54:20.605Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA INGRESO A CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9101&opcion=2"
+    },
+    {
+      "code": "9106",
+      "capturedAt": "2026-09-04T23:54:20.861Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA INGRESO A DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9106&opcion=2"
+    },
+    {
+      "code": "9102",
+      "capturedAt": "2026-09-04T23:54:21.252Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA INICIO DE CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9102&opcion=2"
+    },
+    {
+      "code": "9107",
+      "capturedAt": "2026-09-04T23:54:21.505Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA INICIO DE DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9107&opcion=2"
+    },
+    {
+      "code": "9100",
+      "capturedAt": "2026-09-04T23:54:21.740Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA LLEGADA AL CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9100&opcion=2"
+    },
+    {
+      "code": "9105",
+      "capturedAt": "2026-09-04T23:54:22.013Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA LLEGADA AL DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9105&opcion=2"
+    },
+    {
+      "code": "9008",
+      "capturedAt": "2026-09-04T23:54:22.355Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA PERNOCTACIÃ“N (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9008&opcion=2"
+    },
+    {
+      "code": "20119",
+      "capturedAt": "2026-09-04T23:54:22.594Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA PUESTO DE CONTROL"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20119&opcion=2"
+    },
+    {
+      "code": "9104",
+      "capturedAt": "2026-09-04T23:54:22.850Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA SALIDA DEL CARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9104&opcion=2"
+    },
+    {
+      "code": "9109",
+      "capturedAt": "2026-09-04T23:54:23.228Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA SALIDA DEL DESCARGUE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9109&opcion=2"
+    },
+    {
+      "code": "9019",
+      "capturedAt": "2026-09-04T23:54:23.469Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA UBICACION SIN NOVEDAD (MOVIL)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9019&opcion=2"
+    },
+    {
+      "code": "20105",
+      "capturedAt": "2026-09-04T23:54:23.700Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "REPORTA VARADA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20105&opcion=2"
+    },
+    {
+      "code": "20091",
+      "capturedAt": "2026-09-04T23:54:23.940Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "RESTRICCION VEHICULAR"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20091&opcion=2"
+    },
+    {
+      "code": "11",
+      "capturedAt": "2026-09-04T23:54:24.258Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Reten Dian"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=11&opcion=2"
+    },
+    {
+      "code": "14",
+      "capturedAt": "2026-09-04T23:54:24.514Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Reten Militar"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=14&opcion=2"
+    },
+    {
+      "code": "15",
+      "capturedAt": "2026-09-04T23:54:24.774Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Reten Policia Carreteras"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=15&opcion=2"
+    },
+    {
+      "code": "3",
+      "capturedAt": "2026-09-04T23:54:25.010Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Retrasado"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=3&opcion=2"
+    },
+    {
+      "code": "20064",
+      "capturedAt": "2026-09-04T23:54:25.367Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "RETRASADO (GA) (ST)"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20064&opcion=2"
+    },
+    {
+      "code": "12",
+      "capturedAt": "2026-09-04T23:54:25.622Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Saqueo"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=12&opcion=2"
+    },
+    {
+      "code": "10031",
+      "capturedAt": "2026-09-04T23:54:25.860Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "SEGUIMIENTO EN RUTA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=10031&opcion=2"
+    },
+    {
+      "code": "20030",
+      "capturedAt": "2026-09-04T23:54:26.235Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "SEGUIMIENTO EN RUTA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20030&opcion=2"
+    },
+    {
+      "code": "20070",
+      "capturedAt": "2026-09-04T23:54:26.496Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "TIEMPO ADICIONAL"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20070&opcion=2"
+    },
+    {
+      "code": "1002",
+      "capturedAt": "2026-09-04T23:54:26.750Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Tiempo de Llegada P/C"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=1002&opcion=2"
+    },
+    {
+      "code": "20066",
+      "capturedAt": "2026-09-04T23:54:26.981Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Tiempo Llegada P/C"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20066&opcion=2"
+    },
+    {
+      "code": "20087",
+      "capturedAt": "2026-09-04T23:54:27.318Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Ubicacion por GPS"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20087&opcion=2"
+    },
+    {
+      "code": "20078",
+      "capturedAt": "2026-09-04T23:54:27.567Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "UBICACION SATELITAL"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20078&opcion=2"
+    },
+    {
+      "code": "9",
+      "capturedAt": "2026-09-04T23:54:27.844Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Varada"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=9&opcion=2"
+    },
+    {
+      "code": "1001",
+      "capturedAt": "2026-09-04T23:54:28.228Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Varado"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=1001&opcion=2"
+    },
+    {
+      "code": "20099",
+      "capturedAt": "2026-09-04T23:54:28.496Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "VEHICULO ACCIDENTADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20099&opcion=2"
+    },
+    {
+      "code": "20092",
+      "capturedAt": "2026-09-04T23:54:28.750Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "VEHICULO CARGANDO "
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20092&opcion=2"
+    },
+    {
+      "code": "10003",
+      "capturedAt": "2026-09-04T23:54:28.979Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "VEHÍCULO CONFIRMADO CON DATOS ERRADOS"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=10003&opcion=2"
+    },
+    {
+      "code": "20106",
+      "capturedAt": "2026-09-04T23:54:29.310Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "VEHICULO DEMORA EN SALIDA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20106&opcion=2"
+    },
+    {
+      "code": "20111",
+      "capturedAt": "2026-09-04T23:54:29.569Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "VEHICULO DEMORA EN SALIDA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20111&opcion=2"
+    },
+    {
+      "code": "20084",
+      "capturedAt": "2026-09-04T23:54:29.812Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Vehiculo en OPERATIVO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20084&opcion=2"
+    },
+    {
+      "code": "20108",
+      "capturedAt": "2026-09-04T23:54:30.170Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Vehiculo en PARQUEADERO CARGADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20108&opcion=2"
+    },
+    {
+      "code": "20100",
+      "capturedAt": "2026-09-04T23:54:30.437Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Vehiculo en TRANCON"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20100&opcion=2"
+    },
+    {
+      "code": "20118",
+      "capturedAt": "2026-09-04T23:54:30.670Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Vehiculo HURTADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20118&opcion=2"
+    },
+    {
+      "code": "20126",
+      "capturedAt": "2026-09-04T23:54:30.909Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Vehiculo OPERATIVO PREVENTIVO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20126&opcion=2"
+    },
+    {
+      "code": "20075",
+      "capturedAt": "2026-09-04T23:54:31.264Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Vehiculo PENDIENTE POR REPORTE"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20075&opcion=2"
+    },
+    {
+      "code": "20083",
+      "capturedAt": "2026-09-04T23:54:31.502Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "VEHICULO REPORTA  FALLA MECANICA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20083&opcion=2"
+    },
+    {
+      "code": "10059",
+      "capturedAt": "2026-09-04T23:54:31.768Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Vehiculo SAQUEADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=10059&opcion=2"
+    },
+    {
+      "code": "20134",
+      "capturedAt": "2026-09-04T23:54:32.026Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Vehiculo TRANSBORDA"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20134&opcion=2"
+    },
+    {
+      "code": "20086",
+      "capturedAt": "2026-09-04T23:54:32.341Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Vehiculo VARADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20086&opcion=2"
+    },
+    {
+      "code": "20097",
+      "capturedAt": "2026-09-04T23:54:32.593Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "VIAJE NO REALIZADO"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": true
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=20097&opcion=2"
+    },
+    {
+      "code": "4",
+      "capturedAt": "2026-09-04T23:54:32.846Z",
+      "fields": [
+        {
+          "maxLength": 100,
+          "name": "nombre",
+          "value": "Volcamiento"
+        },
+        {
+          "maxLength": -1,
+          "name": "indala",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "indtiemp",
+          "value": true
+        },
+        {
+          "maxLength": -1,
+          "name": "nov_especi",
+          "value": false
+        },
+        {
+          "maxLength": -1,
+          "name": "ind_manala",
+          "value": false
+        }
+      ],
+      "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=3211&window=central&noveda=4&opcion=2"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,2718 @@
+{
+  "capturedAt": "2026-09-04T23:51:30.058Z",
+  "controls": [
+    {
+      "disabled": false,
+      "maxLength": -1,
+      "name": "Volver <==",
+      "onclick": "javascript:history.go(-1)",
+      "readOnly": false,
+      "required": false,
+      "tag": "INPUT",
+      "type": "button",
+      "value": "Volver <=="
+    }
+  ],
+  "links": [],
+  "rows": [
+    {
+      "cells": [
+        "Tablas > Novedades > Listar"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Resultado de la Consulta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Se encontraron 242 Novedades"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Codigo",
+        "Descripcion",
+        "Genera Alerta",
+        "Solicita Tiempos",
+        "Novedad Especial",
+        "Mantiene Alerta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20072",
+        "A cargo Empresa",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "7",
+        "Alimentacion",
+        "SI",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20131",
+        "ALIMENTACION",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "10",
+        "Bloqueo de Via",
+        "SI",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20109",
+        "Bodega FIN DESCARGUE CON NOVEDAD",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20129",
+        "Bodega FIN DESCARGUE SIN NOVEDAD",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20107",
+        "Bodega INICIA CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20081",
+        "Bodega Inicia DESCARGUE",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20125",
+        "Bodega PENDIENTE CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20130",
+        "Bodega PENDIENTE DESCARGUE",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20102",
+        "Bodega Proceso CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20103",
+        "Bodega Proceso DESCARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20079",
+        "BODEGA PROCESO DESCARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20080",
+        "CAMBIO DE RUTA",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20095",
+        "Cambio Cabezote",
+        "SI",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20085",
+        "Cambio de CONDUCTOR",
+        "SI",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20101",
+        "CAMBIO DE RUTA",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "17",
+        "Cambio de Ruta",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9997",
+        "CAMBIO DE RUTA",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20127",
+        "Cambio GPS",
+        "SI",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20073",
+        "CARGADO",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20076",
+        "CELULAR SIN SEÑAL",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20096",
+        "CLIENTE CAMBIA CELULAR CONDUCTOR",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20088",
+        "COMENTARIO",
+        "NO",
+        "NO",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "1003",
+        "Comentario",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20133",
+        "COMPARENDO SOBREPESO",
+        "SI",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20082",
+        "Conductor Cambia CELULAR",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20069",
+        "Continua NO Comunicación",
+        "SI",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20112",
+        "DATO GPS",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20123",
+        "DESCARGANDO(ST)",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20132",
+        "DESVIO DE RUTA",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20094",
+        "EAL (REPORTE TELEFONICO)",
+        "SI",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20115",
+        "EN ESPERA DE CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20074",
+        "EN ESPERA DE DOCUMENTOS",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20110",
+        "ENTURNO PARA DESCARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20114",
+        "FIN PERNOCTACION",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20113",
+        "GPS (MA)",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "13",
+        "Hurto",
+        "SI",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20120",
+        "INCUMPLIMIENTO PROCEDIMIENTO EAL",
+        "SI",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20077",
+        "Información Especial",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9999",
+        "Inicia PERNOCTACION",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20068",
+        "Inicia Pernoctación Extensa",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20121",
+        "INICIA TRAYECTO",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20135",
+        "INICIO DE RUTA (ST)",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20136",
+        "INICIO RUTA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9261",
+        "INT GPS - ENTRADA CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9176",
+        "INT GPS - ACELERACION BRUSCA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9265",
+        "INT GPS - APROXIMACION A DESCARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9172",
+        "INT GPS - APROXIMACION A ZONA DE CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9110",
+        "INT GPS - BOTON DE PANICO",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9275",
+        "INT GPS - DESTINATARIO NO GEORREFERENCIADO",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9264",
+        "INT GPS - ENTRADA AL CLIENTE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9208",
+        "INT GPS - EQUIPO APAGADO",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9226",
+        "INT GPS - ERROR DATOS EN INTEGRADOR",
+        "NO",
+        "NO",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9273",
+        "INT GPS - ERROR DE INTEGRAGRACION (CLAVE Y/O USUARIO INCORRECTO)",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9116",
+        "INT GPS - EXCESO DE VELOCIDAD",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9111",
+        "INT GPS - FINALIZACION BOTON DE PANICO",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9130",
+        "INT GPS - FINALIZACION DE ITINERARIO",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9177",
+        "INT GPS - FRENADA BRUSCA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9129",
+        "INT GPS - INICIO DE ITINERARIO",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9260",
+        "INT GPS - LLEGADA A LA PLANTA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9263",
+        "INT GPS - LLEGADA AL CLIENTE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9274",
+        "INT GPS - OPERADOR GPS NO HOMOLOGADO",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9266",
+        "INT GPS - PASO POR OAL",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9267",
+        "INT GPS - PASO POR PEAJE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9183",
+        "INT GPS - POR DEFINIR",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9117",
+        "INT GPS - POR DEFINIR",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9268",
+        "INT GPS - REPORTA INICIO DE RUTA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9173",
+        "INT GPS - SALIDA DE CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9262",
+        "INT GPS - SALIDA DE PLANTA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9271",
+        "INT GPS - SALIDA DE ZONA DE DESCARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9270",
+        "INT GPS - SEGUIMIENTO A LA CITA DE CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9269",
+        "INT GPS - SEGUIMIENTO A LA CITA DE DESCARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9169",
+        "INT GPS - SIN SENAL DISPOSITIVO",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9160",
+        "INT GPS - SOLICITUD DE UBICACIÃ“N",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9114",
+        "INT GPS - VEHICULO APAGADO",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9113",
+        "INT GPS - VEHICULO ENCENDIDO",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9225",
+        "INT GPS - VH ENCENDIDO POR MAS TIEMPO",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9272",
+        "INT GPS - VIAJE SIN OPERADOR GPS",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9145",
+        "INT GPS -REPORTA DESVIÃ“ DE RUTA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20090",
+        "L&T - NO COMUNICACION",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9027",
+        "NC - CONDUCTOR REPORTA FIN DE CARGUE (MOVIL)",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9026",
+        "NC - CONDUCTOR REPORTA INGRESO A CARGUE (MOVIL)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9023",
+        "NC - CONDUCTOR REPORTA INICIO DE CARGUE (MOVIL)",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9021",
+        "NC - CONDUCTOR REPORTA LLEGADA A CARGUE (MOVIL)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9024",
+        "NC - CONDUCTOR REPORTA SALIDA DE CARGUE (MOVIL)",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9020",
+        "NCD - CONDUCTOR REPORTA CUMPLIDO DE REMISIÃ“N (MOVIL)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20124",
+        "NCD / OK.CUMPLIMIENTO DE CITA DE DESCARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20104",
+        "ND / LUGAR DE ENTREGA ENTURNADO PARA DESCARGAR",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20116",
+        "ND / OK - VEHICULO DESCARGA SIN NOVEDAD",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20014",
+        "NEC / CANCELACIÃ“N DE VIAJE",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20016",
+        "NEC / DAÃ‘O EN VEHICULO",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20019",
+        "NEC / DEMORA EN CARGUE",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20020",
+        "NEC / MAYOR CANTIDAD DE CLIENTES A LO CONTRATADO",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20015",
+        "NEC / NO COMUNICACIÃ“N",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20018",
+        "NEC / PENDIENTE CONSIGNACION ANTICIPO",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20017",
+        "NEC / SIN AUTORIZACIÃ“N DE INGRESO A PLANTA",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20058",
+        "NEC / SOLICITUD PAGO STAND BY",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9030",
+        "NED - CONDUCTOR REPORTA FIN DE DESCARGUE (MOVIL)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9028",
+        "NED - CONDUCTOR REPORTA INGRESO A DESCARGUE (MOVIL)",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9029",
+        "NED - CONDUCTOR REPORTA INICIO DE DESCARGUE (MOVIL)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9011",
+        "NED - CONDUCTOR REPORTA LLEGADA A DESCARGUE (MOVIL)",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9013",
+        "NED - CONDUCTOR REPORTA SALIDA DE DESCARGUE (MOVIL)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9017",
+        "NED - REPORTA DESCARGUE CON AVERIA (MOVIL)",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9015",
+        "NED - REPORTA DESCARGUE CON DEVOLUCION (MOVIL)",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9016",
+        "NED - REPORTA DESCARGUE CON FALTANTE (MOVIL)",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9014",
+        "NED - REPORTA DESCARGUE SIN NOVEDAD (MOVIL)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9012",
+        "NED - REPORTA NOVEDAD EN DESCARGUE (MOVIL)",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9018",
+        "NED - REPORTA OTRA (MOVIL)",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20056",
+        "NED / COMPARENDO ZONA AMARILLA",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20046",
+        "NED / DEMORA EN RECIBO",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20061",
+        "NED / DEVOLUCION POR ESTIBAS VACIASÂ",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20045",
+        "NED / DEVOLUCION-INCONSISTENCIAS EN LAS FACTURAS VS FISICO",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20042",
+        "NED / DEVOLUCION-INCUMPLIMIENTO FECHA Y/O HORA DE ENTREGA",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20044",
+        "NED / DEVOLUCION-MERCANCIA POR IMPERFECTOS DE FABRICA",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20043",
+        "NED / DEVOLUCION-MERCANCIA POR ROTURA",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20047",
+        "NED / DEVOLUCION-NOVEDAD EN EMPAQUE Y/O EMBALAJE",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20048",
+        "NED / DEVOLUCION-PEDIDO NO SOLICITADO",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20049",
+        "NED / DEVOLUCION-POR NOVEDAD EN RECIBO EN EL CLIENTE",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20050",
+        "NED / FACTURA FUERA DE ALIANZA",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20063",
+        "NED / FALTA DE CORREO DE AUTORIZACION DE RECIBO DE MERCANCIAÂ",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20051",
+        "NED / MAYOR VALOR EN DESCARGUE",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20060",
+        "NED / MERCANCIA EN PLATAFORMA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20052",
+        "NED / NO RECIBO-ORDEN DE COMPRA VENCIDAS",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20053",
+        "NED / NOVEDAD EN DOCUMENTOS",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20059",
+        "NED / PAGO STAND BY ( SOBRECOSTOS PENDIENTES)",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20062",
+        "NED / RETORNO DE DEVOLUCIONÂ",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20054",
+        "NED / VALIDAR DIRECCION DE ENTREGA",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20055",
+        "NED / ZONA DE DIFICIL ACCESO PARA EL DESCARGUE",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9004",
+        "NEP - REPORTA NOVEDAD EN CARGUE (MOVIL)",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9005",
+        "NER - REPORTA ACCIDENTE (MOVIL)",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9009",
+        "NER - REPORTA HURTO (MOVIL)",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9010",
+        "NER - REPORTA OTRA (MOVIL)",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9007",
+        "NER - REPORTA TRANCON (MOVIL)",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9006",
+        "NER - REPORTA VARADA (MOVIL)",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20039",
+        "NER / ACCIDENTE EN RUTA - CHOQUE BAJO IMPACTO",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20024",
+        "NER / ACCIDENTE EN RUTA - NOVEDAD ALTO IMPACTO",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20037",
+        "NER / ACCIDENTE EN RUTA - NOVEDAD ALTO IMPACTO FATAL",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20034",
+        "NER / CALAMIDAD DOMESTICA",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20036",
+        "NER / COMPARENDO DOCUMENTOS",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20022",
+        "NER / COMPARENDO SOBREPESO",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20027",
+        "NER / HURTO-SAQUEO",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20033",
+        "NER / INCUMPLIMIENTO PLAN DE VIAJE",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20025",
+        "NER / INFRACCIONES AL CODIGO NACIONAL DE TRANSITO",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20040",
+        "NER / INSPECCION ANTINARCOTICOS",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20026",
+        "NER / NO COMUNICACION (GC)",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20038",
+        "NER / PENDIENTE CONSIGNACION ANTICIPO",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20021",
+        "NER / PROBLEMAS EN LA VIA - EXTERNA PARO",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20035",
+        "NER / PROBLEMAS EN LA VIA ALTO IMPACTO",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20031",
+        "NER / PROBLEMAS EN LA VIA BAJO IMPACTO",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20032",
+        "NER / PUESTOS DE CONTROL POR ORGANISMOS DEL ESTADO",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20041",
+        "NER / REPROGRAMACION DE CITA",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20023",
+        "NER / VARADO ALTO IMPACTO",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20028",
+        "NER / VARADO BAJO IMPACTO",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20029",
+        "NER / VEHICULO EN OPERATIVO",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9000",
+        "NICC - REPORTA ACCIDENTE (MOVIL)",
+        "NO",
+        "NO",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9022",
+        "NICC - REPORTA LLEGADA AL CARGUE (MOVIL)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9003",
+        "NICC - REPORTA OTRA (MOVIL)",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9002",
+        "NICC - REPORTA TRANCON (MOVIL)",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9001",
+        "NICC - REPORTA VARADA (MOVIL)",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20008",
+        "NICC / CALAMIDAD DOMESTICA",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20013",
+        "NICC / COLISIÃ“N",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20012",
+        "NICC / DEMORA ENTREGA DE CONTENEDOR",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20007",
+        "NICC / DESCARGANDO VIAJE ANTERIOR",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20011",
+        "NICC / IMPREVISTOS EN LA VIA",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20057",
+        "NICC / INCIDENTES APP CONTRATACION",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20006",
+        "NICC / INCONSISTENCIAS EN LA CONTRATACIÃ“N",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20001",
+        "NICC / NO COMUNICACIÃ“N",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20004",
+        "NICC / PLANILLANDO",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20005",
+        "NICC / SIN JUSTIFICACION DEL CONDUCTOR",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20003",
+        "NICC / TRANSPORTADOR SIN SEGURIDAD SOCIAL AL DÃA",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20002",
+        "NICC / VEHÃCULO CONFIRMADO SIN 3 HORAS DE ANTICIPACIÃ“N",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20009",
+        "NICC / VEHÃCULO EN MANTENIMIENTO",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20010",
+        "NICC / VEHICULO BLOQUEADO EN PARQUEADERO",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20000",
+        "NICC / VEHICULO Y CONDUCTOR NO CUMPLEN CON LAS CONDICIONES PARA EL CARGUE",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20065",
+        "No comunicación",
+        "NO",
+        "NO",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "1000",
+        "No Comunicacion",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20093",
+        "NO COMUNICACION L&T",
+        "SI",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20071",
+        "NOTIFICACION A LA TRANSPORTADORA",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20117",
+        "NOVEDAD EN DESCARGUE",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "2",
+        "Ok",
+        "SI",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20098",
+        "OK > (EAL)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20128",
+        "OK EAL SIN NOVEDAD (CORREO)",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "10058",
+        "Ok Vehiculo sin novedad",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20089",
+        "OK-No Despacho en Limpio",
+        "SI",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20067",
+        "OK-novedad especial",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20122",
+        "Parado por ACCIDENTE",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "5",
+        "Parqueadero",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "1004",
+        "Pernoctacion",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "6",
+        "Pernoctacion",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "16",
+        "Pinchada",
+        "SI",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "8",
+        "Reinicio",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9025",
+        "REINICIO RUTA (MOVIL)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9103",
+        "REPORTA FIN DE CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9108",
+        "REPORTA FIN DE DESCARGUE",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9101",
+        "REPORTA INGRESO A CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9106",
+        "REPORTA INGRESO A DESCARGUE",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9102",
+        "REPORTA INICIO DE CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9107",
+        "REPORTA INICIO DE DESCARGUE",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9100",
+        "REPORTA LLEGADA AL CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9105",
+        "REPORTA LLEGADA AL DESCARGUE",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9008",
+        "REPORTA PERNOCTACIÃ“N (MOVIL)",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20119",
+        "REPORTA PUESTO DE CONTROL",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9104",
+        "REPORTA SALIDA DEL CARGUE",
+        "NO",
+        "NO",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9109",
+        "REPORTA SALIDA DEL DESCARGUE",
+        "NO",
+        "SI",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9019",
+        "REPORTA UBICACION SIN NOVEDAD (MOVIL)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20105",
+        "REPORTA VARADA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20091",
+        "RESTRICCION VEHICULAR",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "11",
+        "Reten Dian",
+        "SI",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "14",
+        "Reten Militar",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "15",
+        "Reten Policia Carreteras",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "3",
+        "Retrasado",
+        "SI",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20064",
+        "RETRASADO (GA) (ST)",
+        "SI",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9998",
+        "Robo (Mintra)",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "12",
+        "Saqueo",
+        "SI",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "10031",
+        "SEGUIMIENTO EN RUTA",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20030",
+        "SEGUIMIENTO EN RUTA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20070",
+        "TIEMPO ADICIONAL",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "1002",
+        "Tiempo de Llegada P/C",
+        "NO",
+        "NO",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20066",
+        "Tiempo Llegada P/C",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "1",
+        "Tiempo Llegada P/C",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20087",
+        "Ubicacion por GPS",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20078",
+        "UBICACION SATELITAL",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "9",
+        "Varada",
+        "SI",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "1001",
+        "Varado",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20099",
+        "VEHICULO ACCIDENTADO",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20092",
+        "VEHICULO CARGANDO",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "10003",
+        "VEHÍCULO CONFIRMADO CON DATOS ERRADOS",
+        "NO",
+        "SI",
+        "SI",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20106",
+        "VEHICULO DEMORA EN SALIDA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20111",
+        "VEHICULO DEMORA EN SALIDA",
+        "NO",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20084",
+        "Vehiculo en OPERATIVO",
+        "NO",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20108",
+        "Vehiculo en PARQUEADERO CARGADO",
+        "SI",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20100",
+        "Vehiculo en TRANCON",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20118",
+        "Vehiculo HURTADO",
+        "SI",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20126",
+        "Vehiculo OPERATIVO PREVENTIVO",
+        "SI",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20075",
+        "Vehiculo PENDIENTE POR REPORTE",
+        "SI",
+        "NO",
+        "NO",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20083",
+        "VEHICULO REPORTA FALLA MECANICA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "10059",
+        "Vehiculo SAQUEADO",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20134",
+        "Vehiculo TRANSBORDA",
+        "NO",
+        "NO",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20086",
+        "Vehiculo VARADO",
+        "NO",
+        "NO",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "20097",
+        "VIAJE NO REALIZADO",
+        "SI",
+        "SI",
+        "SI",
+        "SI"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "4",
+        "Volcamiento",
+        "SI",
+        "SI",
+        "NO",
+        "NO"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Tablas > Novedades > Listar"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php"
+}

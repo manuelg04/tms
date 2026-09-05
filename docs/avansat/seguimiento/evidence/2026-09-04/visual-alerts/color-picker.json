@@ -1,0 +1,1096 @@
+{
+  "inputs": [],
+  "links": [
+    {
+      "href": "webpal.map",
+      "onclick": null,
+      "text": ""
+    }
+  ],
+  "swatches": [],
+  "text": " \n\nSeleccione un color para identificar la alarma.",
+  "title": "Alarmas",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_sta155/config/colores.php?nom=color",
+  "areas": [
+    {
+      "coords": "2,2,18,18",
+      "href": "javascript:setClose('330000')",
+      "shape": null
+    },
+    {
+      "coords": "18,2,34,18",
+      "href": "javascript:setClose('333300')",
+      "shape": null
+    },
+    {
+      "coords": "34,2,50,18",
+      "href": "javascript:setClose('336600')",
+      "shape": null
+    },
+    {
+      "coords": "50,2,66,18",
+      "href": "javascript:setClose('339900')",
+      "shape": null
+    },
+    {
+      "coords": "66,2,82,18",
+      "href": "javascript:setClose('33CC00')",
+      "shape": null
+    },
+    {
+      "coords": "82,2,98,18",
+      "href": "javascript:setClose('33FF00')",
+      "shape": null
+    },
+    {
+      "coords": "98,2,114,18",
+      "href": "javascript:setClose('66FF00')",
+      "shape": null
+    },
+    {
+      "coords": "114,2,130,18",
+      "href": "javascript:setClose('66CC00')",
+      "shape": null
+    },
+    {
+      "coords": "130,2,146,18",
+      "href": "javascript:setClose('669900')",
+      "shape": null
+    },
+    {
+      "coords": "146,2,162,18",
+      "href": "javascript:setClose('666600')",
+      "shape": null
+    },
+    {
+      "coords": "162,2,178,18",
+      "href": "javascript:setClose('663300')",
+      "shape": null
+    },
+    {
+      "coords": "178,2,194,18",
+      "href": "javascript:setClose('660000')",
+      "shape": null
+    },
+    {
+      "coords": "194,2,210,18",
+      "href": "javascript:setClose('FF0000')",
+      "shape": null
+    },
+    {
+      "coords": "210,2,226,18",
+      "href": "javascript:setClose('FF3300')",
+      "shape": null
+    },
+    {
+      "coords": "226,2,242,18",
+      "href": "javascript:setClose('FF6600')",
+      "shape": null
+    },
+    {
+      "coords": "242,2,258,18",
+      "href": "javascript:setClose('FF9900')",
+      "shape": null
+    },
+    {
+      "coords": "258,2,274,18",
+      "href": "javascript:setClose('FFCC00')",
+      "shape": null
+    },
+    {
+      "coords": "274,2,290,18",
+      "href": "javascript:setClose('FFFF00')",
+      "shape": null
+    },
+    {
+      "coords": "2,18,18,34",
+      "href": "javascript:setClose('330033')",
+      "shape": null
+    },
+    {
+      "coords": "18,18,34,34",
+      "href": "javascript:setClose('333333')",
+      "shape": null
+    },
+    {
+      "coords": "34,18,50,34",
+      "href": "javascript:setClose('336633')",
+      "shape": null
+    },
+    {
+      "coords": "50,18,66,34",
+      "href": "javascript:setClose('339933')",
+      "shape": null
+    },
+    {
+      "coords": "66,18,82,34",
+      "href": "javascript:setClose('33CC33')",
+      "shape": null
+    },
+    {
+      "coords": "82,18,98,34",
+      "href": "javascript:setClose('33FF33')",
+      "shape": null
+    },
+    {
+      "coords": "98,18,114,34",
+      "href": "javascript:setClose('66FF33')",
+      "shape": null
+    },
+    {
+      "coords": "114,18,130,34",
+      "href": "javascript:setClose('66CC33')",
+      "shape": null
+    },
+    {
+      "coords": "130,18,146,34",
+      "href": "javascript:setClose('669933')",
+      "shape": null
+    },
+    {
+      "coords": "146,18,162,34",
+      "href": "javascript:setClose('666633')",
+      "shape": null
+    },
+    {
+      "coords": "162,18,178,34",
+      "href": "javascript:setClose('663333')",
+      "shape": null
+    },
+    {
+      "coords": "178,18,194,34",
+      "href": "javascript:setClose('660033')",
+      "shape": null
+    },
+    {
+      "coords": "194,18,210,34",
+      "href": "javascript:setClose('FF0033')",
+      "shape": null
+    },
+    {
+      "coords": "210,18,226,34",
+      "href": "javascript:setClose('FF3333')",
+      "shape": null
+    },
+    {
+      "coords": "226,18,242,34",
+      "href": "javascript:setClose('FF6633')",
+      "shape": null
+    },
+    {
+      "coords": "242,18,258,34",
+      "href": "javascript:setClose('FF9933')",
+      "shape": null
+    },
+    {
+      "coords": "258,18,274,34",
+      "href": "javascript:setClose('FFCC33')",
+      "shape": null
+    },
+    {
+      "coords": "274,18,290,34",
+      "href": "javascript:setClose('FFFF33')",
+      "shape": null
+    },
+    {
+      "coords": "2,34,18,50",
+      "href": "javascript:setClose('330066')",
+      "shape": null
+    },
+    {
+      "coords": "18,34,34,50",
+      "href": "javascript:setClose('333366')",
+      "shape": null
+    },
+    {
+      "coords": "34,34,50,50",
+      "href": "javascript:setClose('336666')",
+      "shape": null
+    },
+    {
+      "coords": "50,34,66,50",
+      "href": "javascript:setClose('339966')",
+      "shape": null
+    },
+    {
+      "coords": "66,34,82,50",
+      "href": "javascript:setClose('33CC66')",
+      "shape": null
+    },
+    {
+      "coords": "82,34,98,50",
+      "href": "javascript:setClose('33FF66')",
+      "shape": null
+    },
+    {
+      "coords": "98,34,114,50",
+      "href": "javascript:setClose('66FF66')",
+      "shape": null
+    },
+    {
+      "coords": "114,34,130,50",
+      "href": "javascript:setClose('66CC66')",
+      "shape": null
+    },
+    {
+      "coords": "130,34,146,50",
+      "href": "javascript:setClose('669966')",
+      "shape": null
+    },
+    {
+      "coords": "146,34,162,50",
+      "href": "javascript:setClose('666666')",
+      "shape": null
+    },
+    {
+      "coords": "162,34,178,50",
+      "href": "javascript:setClose('663366')",
+      "shape": null
+    },
+    {
+      "coords": "178,34,194,50",
+      "href": "javascript:setClose('660066')",
+      "shape": null
+    },
+    {
+      "coords": "194,34,210,50",
+      "href": "javascript:setClose('FF0066')",
+      "shape": null
+    },
+    {
+      "coords": "210,34,226,50",
+      "href": "javascript:setClose('FF3366')",
+      "shape": null
+    },
+    {
+      "coords": "226,34,242,50",
+      "href": "javascript:setClose('FF6666')",
+      "shape": null
+    },
+    {
+      "coords": "242,34,258,50",
+      "href": "javascript:setClose('FF9966')",
+      "shape": null
+    },
+    {
+      "coords": "258,34,274,50",
+      "href": "javascript:setClose('FFCC66')",
+      "shape": null
+    },
+    {
+      "coords": "274,34,290,50",
+      "href": "javascript:setClose('FFFF66')",
+      "shape": null
+    },
+    {
+      "coords": "2,50,18,66",
+      "href": "javascript:setClose('330099')",
+      "shape": null
+    },
+    {
+      "coords": "18,50,34,66",
+      "href": "javascript:setClose('333399')",
+      "shape": null
+    },
+    {
+      "coords": "34,50,50,66",
+      "href": "javascript:setClose('336699')",
+      "shape": null
+    },
+    {
+      "coords": "50,50,66,66",
+      "href": "javascript:setClose('339999')",
+      "shape": null
+    },
+    {
+      "coords": "66,50,82,66",
+      "href": "javascript:setClose('33CC99')",
+      "shape": null
+    },
+    {
+      "coords": "82,50,98,66",
+      "href": "javascript:setClose('33FF99')",
+      "shape": null
+    },
+    {
+      "coords": "98,50,114,66",
+      "href": "javascript:setClose('66FF99')",
+      "shape": null
+    },
+    {
+      "coords": "114,50,130,66",
+      "href": "javascript:setClose('66CC99')",
+      "shape": null
+    },
+    {
+      "coords": "130,50,146,66",
+      "href": "javascript:setClose('669999')",
+      "shape": null
+    },
+    {
+      "coords": "146,50,162,66",
+      "href": "javascript:setClose('666699')",
+      "shape": null
+    },
+    {
+      "coords": "162,50,178,66",
+      "href": "javascript:setClose('663399')",
+      "shape": null
+    },
+    {
+      "coords": "178,50,194,66",
+      "href": "javascript:setClose('660099')",
+      "shape": null
+    },
+    {
+      "coords": "194,50,210,66",
+      "href": "javascript:setClose('FF0099')",
+      "shape": null
+    },
+    {
+      "coords": "210,50,226,66",
+      "href": "javascript:setClose('FF3399')",
+      "shape": null
+    },
+    {
+      "coords": "226,50,242,66",
+      "href": "javascript:setClose('FF6699')",
+      "shape": null
+    },
+    {
+      "coords": "242,50,258,66",
+      "href": "javascript:setClose('FF9999')",
+      "shape": null
+    },
+    {
+      "coords": "258,50,274,66",
+      "href": "javascript:setClose('FFCC99')",
+      "shape": null
+    },
+    {
+      "coords": "274,50,290,66",
+      "href": "javascript:setClose('FFFF99')",
+      "shape": null
+    },
+    {
+      "coords": "2,66,18,82",
+      "href": "javascript:setClose('3300CC')",
+      "shape": null
+    },
+    {
+      "coords": "18,66,34,82",
+      "href": "javascript:setClose('3333CC')",
+      "shape": null
+    },
+    {
+      "coords": "34,66,50,82",
+      "href": "javascript:setClose('3366CC')",
+      "shape": null
+    },
+    {
+      "coords": "50,66,66,82",
+      "href": "javascript:setClose('3399CC')",
+      "shape": null
+    },
+    {
+      "coords": "66,66,82,82",
+      "href": "javascript:setClose('33CCCC')",
+      "shape": null
+    },
+    {
+      "coords": "82,66,98,82",
+      "href": "javascript:setClose('33FFCC')",
+      "shape": null
+    },
+    {
+      "coords": "98,66,114,82",
+      "href": "javascript:setClose('66FFCC')",
+      "shape": null
+    },
+    {
+      "coords": "114,66,130,82",
+      "href": "javascript:setClose('66CCCC')",
+      "shape": null
+    },
+    {
+      "coords": "130,66,146,82",
+      "href": "javascript:setClose('6699CC')",
+      "shape": null
+    },
+    {
+      "coords": "146,66,162,82",
+      "href": "javascript:setClose('6666CC')",
+      "shape": null
+    },
+    {
+      "coords": "162,66,178,82",
+      "href": "javascript:setClose('6633CC')",
+      "shape": null
+    },
+    {
+      "coords": "178,66,194,82",
+      "href": "javascript:setClose('6600CC')",
+      "shape": null
+    },
+    {
+      "coords": "194,66,210,82",
+      "href": "javascript:setClose('FF00CC')",
+      "shape": null
+    },
+    {
+      "coords": "210,66,226,82",
+      "href": "javascript:setClose('FF33CC')",
+      "shape": null
+    },
+    {
+      "coords": "226,66,242,82",
+      "href": "javascript:setClose('FF66CC')",
+      "shape": null
+    },
+    {
+      "coords": "242,66,258,82",
+      "href": "javascript:setClose('FF99CC')",
+      "shape": null
+    },
+    {
+      "coords": "258,66,274,82",
+      "href": "javascript:setClose('FFCCCC')",
+      "shape": null
+    },
+    {
+      "coords": "274,66,290,82",
+      "href": "javascript:setClose('FFFFCC')",
+      "shape": null
+    },
+    {
+      "coords": "2,82,18,98",
+      "href": "javascript:setClose('3300FF')",
+      "shape": null
+    },
+    {
+      "coords": "18,82,34,98",
+      "href": "javascript:setClose('3333FF')",
+      "shape": null
+    },
+    {
+      "coords": "34,82,50,98",
+      "href": "javascript:setClose('3366FF')",
+      "shape": null
+    },
+    {
+      "coords": "50,82,66,98",
+      "href": "javascript:setClose('3399FF')",
+      "shape": null
+    },
+    {
+      "coords": "66,82,82,98",
+      "href": "javascript:setClose('33CCFF')",
+      "shape": null
+    },
+    {
+      "coords": "82,82,98,98",
+      "href": "javascript:setClose('33FFFF')",
+      "shape": null
+    },
+    {
+      "coords": "98,82,114,98",
+      "href": "javascript:setClose('66FFFF')",
+      "shape": null
+    },
+    {
+      "coords": "114,82,130,98",
+      "href": "javascript:setClose('66CCFF')",
+      "shape": null
+    },
+    {
+      "coords": "130,82,146,98",
+      "href": "javascript:setClose('6699FF')",
+      "shape": null
+    },
+    {
+      "coords": "146,82,162,98",
+      "href": "javascript:setClose('6666FF')",
+      "shape": null
+    },
+    {
+      "coords": "162,82,178,98",
+      "href": "javascript:setClose('6633FF')",
+      "shape": null
+    },
+    {
+      "coords": "178,82,194,98",
+      "href": "javascript:setClose('6600FF')",
+      "shape": null
+    },
+    {
+      "coords": "194,82,210,98",
+      "href": "javascript:setClose('FF00FF')",
+      "shape": null
+    },
+    {
+      "coords": "210,82,226,98",
+      "href": "javascript:setClose('FF33FF')",
+      "shape": null
+    },
+    {
+      "coords": "226,82,242,98",
+      "href": "javascript:setClose('FF66FF')",
+      "shape": null
+    },
+    {
+      "coords": "242,82,258,98",
+      "href": "javascript:setClose('FF99FF')",
+      "shape": null
+    },
+    {
+      "coords": "258,82,274,98",
+      "href": "javascript:setClose('FFCCFF')",
+      "shape": null
+    },
+    {
+      "coords": "274,82,290,98",
+      "href": "javascript:setClose('FFFFFF')",
+      "shape": null
+    },
+    {
+      "coords": "2,98,18,114",
+      "href": "javascript:setClose('0000FF')",
+      "shape": null
+    },
+    {
+      "coords": "18,98,34,114",
+      "href": "javascript:setClose('0033FF')",
+      "shape": null
+    },
+    {
+      "coords": "34,98,50,114",
+      "href": "javascript:setClose('0066FF')",
+      "shape": null
+    },
+    {
+      "coords": "50,98,66,114",
+      "href": "javascript:setClose('0099FF')",
+      "shape": null
+    },
+    {
+      "coords": "66,98,82,114",
+      "href": "javascript:setClose('00CCFF')",
+      "shape": null
+    },
+    {
+      "coords": "82,98,98,114",
+      "href": "javascript:setClose('00FFFF')",
+      "shape": null
+    },
+    {
+      "coords": "98,98,114,114",
+      "href": "javascript:setClose('99FFFF')",
+      "shape": null
+    },
+    {
+      "coords": "114,98,130,114",
+      "href": "javascript:setClose('99CCFF')",
+      "shape": null
+    },
+    {
+      "coords": "130,98,146,114",
+      "href": "javascript:setClose('9999FF')",
+      "shape": null
+    },
+    {
+      "coords": "146,98,162,114",
+      "href": "javascript:setClose('9966FF')",
+      "shape": null
+    },
+    {
+      "coords": "162,98,178,114",
+      "href": "javascript:setClose('9933FF')",
+      "shape": null
+    },
+    {
+      "coords": "178,98,194,114",
+      "href": "javascript:setClose('9900FF')",
+      "shape": null
+    },
+    {
+      "coords": "194,98,210,114",
+      "href": "javascript:setClose('CC00FF')",
+      "shape": null
+    },
+    {
+      "coords": "210,98,226,114",
+      "href": "javascript:setClose('CC33FF')",
+      "shape": null
+    },
+    {
+      "coords": "226,98,242,114",
+      "href": "javascript:setClose('CC66FF')",
+      "shape": null
+    },
+    {
+      "coords": "242,98,258,114",
+      "href": "javascript:setClose('CC99FF')",
+      "shape": null
+    },
+    {
+      "coords": "258,98,274,114",
+      "href": "javascript:setClose('CCCCFF')",
+      "shape": null
+    },
+    {
+      "coords": "274,98,290,114",
+      "href": "javascript:setClose('CCFFFF')",
+      "shape": null
+    },
+    {
+      "coords": "2,114,18,130",
+      "href": "javascript:setClose('0000CC')",
+      "shape": null
+    },
+    {
+      "coords": "18,114,34,130",
+      "href": "javascript:setClose('0033CC')",
+      "shape": null
+    },
+    {
+      "coords": "34,114,50,130",
+      "href": "javascript:setClose('0066CC')",
+      "shape": null
+    },
+    {
+      "coords": "50,114,66,130",
+      "href": "javascript:setClose('0099CC')",
+      "shape": null
+    },
+    {
+      "coords": "66,113,82,129",
+      "href": "javascript:setClose('00CCCC')",
+      "shape": null
+    },
+    {
+      "coords": "82,114,98,130",
+      "href": "javascript:setClose('00FFCC')",
+      "shape": null
+    },
+    {
+      "coords": "98,114,114,130",
+      "href": "javascript:setClose('99FFCC')",
+      "shape": null
+    },
+    {
+      "coords": "114,114,130,130",
+      "href": "javascript:setClose('99CCCC')",
+      "shape": null
+    },
+    {
+      "coords": "130,114,146,130",
+      "href": "javascript:setClose('9999CC')",
+      "shape": null
+    },
+    {
+      "coords": "146,114,162,130",
+      "href": "javascript:setClose('9966CC')",
+      "shape": null
+    },
+    {
+      "coords": "162,114,178,130",
+      "href": "javascript:setClose('9933CC')",
+      "shape": null
+    },
+    {
+      "coords": "178,114,194,130",
+      "href": "javascript:setClose('9900CC')",
+      "shape": null
+    },
+    {
+      "coords": "194,114,210,130",
+      "href": "javascript:setClose('CC00CC')",
+      "shape": null
+    },
+    {
+      "coords": "210,114,226,130",
+      "href": "javascript:setClose('CC33CC')",
+      "shape": null
+    },
+    {
+      "coords": "226,114,242,130",
+      "href": "javascript:setClose('CC66CC')",
+      "shape": null
+    },
+    {
+      "coords": "242,114,258,130",
+      "href": "javascript:setClose('CC99CC')",
+      "shape": null
+    },
+    {
+      "coords": "258,114,274,130",
+      "href": "javascript:setClose('CCCCCC')",
+      "shape": null
+    },
+    {
+      "coords": "274,114,290,130",
+      "href": "javascript:setClose('CCFFCC')",
+      "shape": null
+    },
+    {
+      "coords": "2,130,18,146",
+      "href": "javascript:setClose('000099')",
+      "shape": null
+    },
+    {
+      "coords": "18,130,34,146",
+      "href": "javascript:setClose('003399')",
+      "shape": null
+    },
+    {
+      "coords": "34,130,50,146",
+      "href": "javascript:setClose('006699')",
+      "shape": null
+    },
+    {
+      "coords": "50,130,66,146",
+      "href": "javascript:setClose('009999')",
+      "shape": null
+    },
+    {
+      "coords": "66,130,82,146",
+      "href": "javascript:setClose('00CC99')",
+      "shape": null
+    },
+    {
+      "coords": "82,130,98,146",
+      "href": "javascript:setClose('00FF99')",
+      "shape": null
+    },
+    {
+      "coords": "98,130,114,146",
+      "href": "javascript:setClose('99FF99')",
+      "shape": null
+    },
+    {
+      "coords": "114,130,130,146",
+      "href": "javascript:setClose('99CC99')",
+      "shape": null
+    },
+    {
+      "coords": "130,130,146,146",
+      "href": "javascript:setClose('999999')",
+      "shape": null
+    },
+    {
+      "coords": "146,130,162,146",
+      "href": "javascript:setClose('996699')",
+      "shape": null
+    },
+    {
+      "coords": "162,130,178,146",
+      "href": "javascript:setClose('993399')",
+      "shape": null
+    },
+    {
+      "coords": "178,130,194,146",
+      "href": "javascript:setClose('990099')",
+      "shape": null
+    },
+    {
+      "coords": "194,130,210,146",
+      "href": "javascript:setClose('CC0099')",
+      "shape": null
+    },
+    {
+      "coords": "210,130,226,146",
+      "href": "javascript:setClose('CC3399')",
+      "shape": null
+    },
+    {
+      "coords": "226,130,242,146",
+      "href": "javascript:setClose('CC6699')",
+      "shape": null
+    },
+    {
+      "coords": "242,130,258,146",
+      "href": "javascript:setClose('CC9999')",
+      "shape": null
+    },
+    {
+      "coords": "258,130,274,146",
+      "href": "javascript:setClose('CCCC99')",
+      "shape": null
+    },
+    {
+      "coords": "274,130,290,146",
+      "href": "javascript:setClose('CCFF99')",
+      "shape": null
+    },
+    {
+      "coords": "2,146,18,162",
+      "href": "javascript:setClose('000066')",
+      "shape": null
+    },
+    {
+      "coords": "18,146,34,162",
+      "href": "javascript:setClose('003366')",
+      "shape": null
+    },
+    {
+      "coords": "34,146,50,162",
+      "href": "javascript:setClose('006666')",
+      "shape": null
+    },
+    {
+      "coords": "50,146,66,162",
+      "href": "javascript:setClose('009966')",
+      "shape": null
+    },
+    {
+      "coords": "66,146,82,162",
+      "href": "javascript:setClose('00CC66')",
+      "shape": null
+    },
+    {
+      "coords": "82,146,98,162",
+      "href": "javascript:setClose('00FF66')",
+      "shape": null
+    },
+    {
+      "coords": "98,146,114,162",
+      "href": "javascript:setClose('99FF66')",
+      "shape": null
+    },
+    {
+      "coords": "114,146,130,162",
+      "href": "javascript:setClose('99CC66')",
+      "shape": null
+    },
+    {
+      "coords": "130,146,146,162",
+      "href": "javascript:setClose('999966')",
+      "shape": null
+    },
+    {
+      "coords": "146,146,162,162",
+      "href": "javascript:setClose('996666')",
+      "shape": null
+    },
+    {
+      "coords": "162,146,178,162",
+      "href": "javascript:setClose('993366')",
+      "shape": null
+    },
+    {
+      "coords": "178,146,194,162",
+      "href": "javascript:setClose('990066')",
+      "shape": null
+    },
+    {
+      "coords": "194,146,210,162",
+      "href": "javascript:setClose('CC0066')",
+      "shape": null
+    },
+    {
+      "coords": "210,146,226,162",
+      "href": "javascript:setClose('CC3366')",
+      "shape": null
+    },
+    {
+      "coords": "226,146,242,162",
+      "href": "javascript:setClose('CC6666')",
+      "shape": null
+    },
+    {
+      "coords": "242,146,258,162",
+      "href": "javascript:setClose('CC9966')",
+      "shape": null
+    },
+    {
+      "coords": "258,146,274,162",
+      "href": "javascript:setClose('CCCC66')",
+      "shape": null
+    },
+    {
+      "coords": "274,146,290,162",
+      "href": "javascript:setClose('CCFF66')",
+      "shape": null
+    },
+    {
+      "coords": "2,162,18,178",
+      "href": "javascript:setClose('000033')",
+      "shape": null
+    },
+    {
+      "coords": "18,162,34,178",
+      "href": "javascript:setClose('003333')",
+      "shape": null
+    },
+    {
+      "coords": "34,162,50,178",
+      "href": "javascript:setClose('006633')",
+      "shape": null
+    },
+    {
+      "coords": "50,162,66,178",
+      "href": "javascript:setClose('009933')",
+      "shape": null
+    },
+    {
+      "coords": "66,162,82,178",
+      "href": "javascript:setClose('00CC33')",
+      "shape": null
+    },
+    {
+      "coords": "82,162,98,178",
+      "href": "javascript:setClose('00FF33')",
+      "shape": null
+    },
+    {
+      "coords": "98,162,114,178",
+      "href": "javascript:setClose('99FF33')",
+      "shape": null
+    },
+    {
+      "coords": "114,162,130,178",
+      "href": "javascript:setClose('99CC33')",
+      "shape": null
+    },
+    {
+      "coords": "130,162,146,178",
+      "href": "javascript:setClose('999933')",
+      "shape": null
+    },
+    {
+      "coords": "146,162,162,178",
+      "href": "javascript:setClose('996633')",
+      "shape": null
+    },
+    {
+      "coords": "162,162,178,178",
+      "href": "javascript:setClose('993333')",
+      "shape": null
+    },
+    {
+      "coords": "178,162,194,178",
+      "href": "javascript:setClose('990033')",
+      "shape": null
+    },
+    {
+      "coords": "194,162,210,178",
+      "href": "javascript:setClose('CC0033')",
+      "shape": null
+    },
+    {
+      "coords": "210,162,226,178",
+      "href": "javascript:setClose('CC3333')",
+      "shape": null
+    },
+    {
+      "coords": "226,162,242,178",
+      "href": "javascript:setClose('CC6633')",
+      "shape": null
+    },
+    {
+      "coords": "242,162,258,178",
+      "href": "javascript:setClose('CC9933')",
+      "shape": null
+    },
+    {
+      "coords": "258,162,274,178",
+      "href": "javascript:setClose('CCCC33')",
+      "shape": null
+    },
+    {
+      "coords": "274,162,290,178",
+      "href": "javascript:setClose('CCFF33')",
+      "shape": null
+    },
+    {
+      "coords": "2,178,18,194",
+      "href": "javascript:setClose('000000')",
+      "shape": null
+    },
+    {
+      "coords": "18,178,34,194",
+      "href": "javascript:setClose('003300')",
+      "shape": null
+    },
+    {
+      "coords": "34,178,50,194",
+      "href": "javascript:setClose('006600')",
+      "shape": null
+    },
+    {
+      "coords": "50,178,66,194",
+      "href": "javascript:setClose('009900')",
+      "shape": null
+    },
+    {
+      "coords": "66,178,82,194",
+      "href": "javascript:setClose('00CC00')",
+      "shape": null
+    },
+    {
+      "coords": "82,178,98,194",
+      "href": "javascript:setClose('00FF00')",
+      "shape": null
+    },
+    {
+      "coords": "98,178,114,194",
+      "href": "javascript:setClose('99FF00')",
+      "shape": null
+    },
+    {
+      "coords": "114,178,130,194",
+      "href": "javascript:setClose('99CC00')",
+      "shape": null
+    },
+    {
+      "coords": "130,178,146,194",
+      "href": "javascript:setClose('999900')",
+      "shape": null
+    },
+    {
+      "coords": "146,178,162,194",
+      "href": "javascript:setClose('996600')",
+      "shape": null
+    },
+    {
+      "coords": "162,178,178,194",
+      "href": "javascript:setClose('993300')",
+      "shape": null
+    },
+    {
+      "coords": "178,178,194,194",
+      "href": "javascript:setClose('990000')",
+      "shape": null
+    },
+    {
+      "coords": "194,178,210,194",
+      "href": "javascript:setClose('CC0000')",
+      "shape": null
+    },
+    {
+      "coords": "210,178,226,194",
+      "href": "javascript:setClose('CC3300')",
+      "shape": null
+    },
+    {
+      "coords": "226,178,242,194",
+      "href": "javascript:setClose('CC6600')",
+      "shape": null
+    },
+    {
+      "coords": "242,178,258,194",
+      "href": "javascript:setClose('CC9900')",
+      "shape": null
+    },
+    {
+      "coords": "258,178,274,194",
+      "href": "javascript:setClose('CCCC00')",
+      "shape": null
+    },
+    {
+      "coords": "274,178,290,194",
+      "href": "javascript:setClose('CCFF00')",
+      "shape": null
+    }
+  ]
+}

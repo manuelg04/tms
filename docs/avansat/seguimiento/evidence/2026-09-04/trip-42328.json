@@ -1,0 +1,2698 @@
+{
+  "controls": [
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    },
+    {
+      "disabled": false,
+      "id": "",
+      "maxLength": -1,
+      "name": null,
+      "readOnly": false,
+      "required": false,
+      "tag": "BUTTON",
+      "type": "button",
+      "value": ""
+    }
+  ],
+  "links": [
+    {
+      "href": "#",
+      "target": null,
+      "text": "Seguimiento"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Interfaz GPS"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Movil"
+    },
+    {
+      "href": "#",
+      "target": null,
+      "text": "Todas"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42328&opcion=2&codpc=129&pc=CUCUTA&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "CUCUTA"
+    },
+    {
+      "href": "index.php?cod_servic=5055&window=central&despac=42328&opcion=2&codpc=9999&pc=Lugar Entrega&ind_virtua=0&cod_transp=900773684 &opcurban=0 ",
+      "target": "centralFrame",
+      "text": "Lugar Entrega"
+    },
+    {
+      "href": "http://www.openstreetmap.org/copyright",
+      "target": null,
+      "text": "OpenStreetMap"
+    }
+  ],
+  "rows": [
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Informacion del Despacho"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información Principal"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho",
+        "42328",
+        "Origen",
+        "PIEDECUESTA (Sant)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Manifiesto",
+        "0043298",
+        "Destino",
+        "CUCUTA (Nort)"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Agencia",
+        "JORGE",
+        "Ruta",
+        "3685 - PIEDECUESTA (Sant) - 68547000 - CUCUTA (Nort) - 54001000 VIA AUTOPISTA BGA-PAMPLONA-CUCUTA"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Conductor",
+        "CHAPARRO JONATAN FERNANDO",
+        "Fecha Salida",
+        "14:52 29-08-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "C.C.",
+        "[identifier omitted]",
+        "Fecha Planeada Llegada",
+        "05:52 30-08-2026"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Celular",
+        "[identifier omitted]",
+        "Fecha Creación",
+        "2026-08-29 14:39:38"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Telefono",
+        "[identifier omitted]",
+        "Placa",
+        "SXZ209"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Marca",
+        "INTERNATIONAL",
+        "Configuración",
+        "3 Ejes Semiremolque 3 Ejes"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Linea",
+        "4300",
+        "Carrocería",
+        "ESTACAS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Color",
+        "NARANJA",
+        "Modelo",
+        "2011"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Despacho anulado",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información del Plan de Ruta"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Hora/Fecha Programada",
+        "Hora/Fecha Control",
+        "Tiempo",
+        "Novedad",
+        "Hora/Fecha Novedad",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.89 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "14:57 29-08-2026",
+        "5Min(s)",
+        "GPS",
+        "14:57 29-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "15:20 29-08-2026",
+        "24Min(s)",
+        "Retrasado",
+        "15:21 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "15:57 29-08-2026",
+        "35Min(s)",
+        "GPS",
+        "15:57 29-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "16:57 29-08-2026",
+        "60Min(s)",
+        "GPS",
+        "16:57 29-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "17:57 29-08-2026",
+        "60Min(s)",
+        "GPS",
+        "17:57 29-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "17:59 29-08-2026",
+        "2Min(s)",
+        "Pernoctacion",
+        "17:59 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "18:57 29-08-2026",
+        "57Min(s)",
+        "GPS",
+        "18:57 29-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "19:57 29-08-2026",
+        "60Min(s)",
+        "GPS",
+        "19:57 29-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "20:57 29-08-2026",
+        "60Min(s)",
+        "GPS",
+        "20:57 29-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "21:57 29-08-2026",
+        "59Min(s)",
+        "GPS",
+        "21:57 29-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "22:10 29-08-2026",
+        "13Min(s)",
+        "Pernoctacion",
+        "22:10 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "22:57 29-08-2026",
+        "46Min(s)",
+        "GPS",
+        "22:57 29-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "23:57 29-08-2026",
+        "60Min(s)",
+        "GPS",
+        "23:57 29-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "00:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "00:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "01:09 30-08-2026",
+        "13Min(s)",
+        "Pernoctacion",
+        "01:10 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.96 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "01:57 30-08-2026",
+        "46Min(s)",
+        "GPS",
+        "01:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "02:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "02:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "03:57 30-08-2026",
+        "59Min(s)",
+        "GPS",
+        "03:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "04:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "04:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "05:27 30-08-2026",
+        "30Min(s)",
+        "Pernoctacion",
+        "05:27 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "05:57 30-08-2026",
+        "29Min(s)",
+        "GPS",
+        "05:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "06:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "06:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "07:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "07:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.93 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "08:57 30-08-2026",
+        "59Min(s)",
+        "GPS",
+        "08:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "09:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "09:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "10:32 30-08-2026",
+        "36Min(s)",
+        "Pernoctacion",
+        "10:33 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "10:57 30-08-2026",
+        "23Min(s)",
+        "GPS",
+        "10:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "11:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "11:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "12:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "12:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "13:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "13:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "14:53 30-08-2026",
+        "56Min(s)",
+        "Pernoctacion",
+        "14:53 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "14:57 30-08-2026",
+        "3Min(s)",
+        "GPS",
+        "14:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "15:57 30-08-2026",
+        "59Min(s)",
+        "GPS",
+        "15:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "16:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "16:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "17:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "17:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "18:45 30-08-2026",
+        "48Min(s)",
+        "Pernoctacion",
+        "18:45 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "18:57 30-08-2026",
+        "11Min(s)",
+        "GPS",
+        "18:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "19:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "19:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "20:57 30-08-2026",
+        "59Min(s)",
+        "GPS",
+        "20:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "21:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "21:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "22:37 30-08-2026",
+        "41Min(s)",
+        "Pernoctacion",
+        "22:38 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "22:57 30-08-2026",
+        "18Min(s)",
+        "GPS",
+        "22:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "23:57 30-08-2026",
+        "60Min(s)",
+        "GPS",
+        "23:57 30-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "00:57 31-08-2026",
+        "60Min(s)",
+        "GPS",
+        "00:57 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.93 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "01:57 31-08-2026",
+        "60Min(s)",
+        "GPS",
+        "01:57 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "02:36 31-08-2026",
+        "40Min(s)",
+        "Pernoctacion",
+        "02:37 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "02:57 31-08-2026",
+        "19Min(s)",
+        "GPS",
+        "02:57 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.95 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "03:57 31-08-2026",
+        "60Min(s)",
+        "GPS",
+        "03:57 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "04:57 31-08-2026",
+        "60Min(s)",
+        "GPS",
+        "04:57 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 1.94 KM. DE AGENCIA DE LINES BERLINAS DEL FONSE (PIEDECUESTA, SANTANDER).",
+        "",
+        "05:57 31-08-2026",
+        "60Min(s)",
+        "GPS",
+        "05:57 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "",
+        "06:17 31-08-2026",
+        "20Min(s)",
+        "Retrasado",
+        "06:17 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 364.71 M. DE COLVANES (GIRON, SANTANDER).",
+        "",
+        "06:57 31-08-2026",
+        "39Min(s)",
+        "GPS",
+        "06:57 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 39.69 M. DE ESTACION DE SERVICIO AVENIDA LTDA (BUCARAMANGA, SANTANDER).",
+        "",
+        "07:57 31-08-2026",
+        "60Min(s)",
+        "GPS",
+        "07:57 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "08:57 31-08-2026",
+        "59Min(s)",
+        "GPS",
+        "08:57 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "09:51 31-08-2026",
+        "54Min(s)",
+        "Retrasado",
+        "09:51 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "10:27 31-08-2026",
+        "35Min(s)",
+        "GPS",
+        "10:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "11:27 31-08-2026",
+        "59Min(s)",
+        "GPS",
+        "11:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "12:27 31-08-2026",
+        "60Min(s)",
+        "GPS",
+        "12:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "13:13 31-08-2026",
+        "46Min(s)",
+        "Retrasado",
+        "13:13 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "13:27 31-08-2026",
+        "13Min(s)",
+        "GPS",
+        "13:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "KR 15B CONCL 8 (BUCARAMANGA, SANTANDER).",
+        "",
+        "14:27 31-08-2026",
+        "60Min(s)",
+        "GPS",
+        "14:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "",
+        "15:24 31-08-2026",
+        "58Min(s)",
+        "Retrasado",
+        "15:25 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CL 8 CONKR 18 (BUCARAMANGA, SANTANDER).",
+        "",
+        "15:27 31-08-2026",
+        "1Min(s)",
+        "GPS",
+        "15:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 4.03 KM. DE LA CORCOVA (FLORIDABLANCA, SANTANDER).",
+        "",
+        "16:27 31-08-2026",
+        "59Min(s)",
+        "GPS",
+        "16:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2.8 KM. DE LA CORCOVA (FLORIDABLANCA, SANTANDER).",
+        "",
+        "17:27 31-08-2026",
+        "59Min(s)",
+        "GPS",
+        "17:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 927.06 M. DE BERLIN (TONA, SANTANDER).",
+        "",
+        "18:27 31-08-2026",
+        "60Min(s)",
+        "GPS",
+        "18:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BERLIN",
+        "",
+        "18:30 31-08-2026",
+        "3Min(s)",
+        "Retrasado",
+        "18:30 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 181.57 M. DE LAS VIGAS (SILOS, NORTE DE SANTANDER).",
+        "",
+        "19:27 31-08-2026",
+        "56Min(s)",
+        "GPS",
+        "19:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LLEGANDO A PAMPLONA",
+        "",
+        "20:19 31-08-2026",
+        "53Min(s)",
+        "Retrasado",
+        "20:20 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 5.85 KM. DE DIVIDIVI (MUTISCUA, NORTE DE SANTANDER).",
+        "",
+        "20:27 31-08-2026",
+        "6Min(s)",
+        "GPS",
+        "20:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 750.88 M. DE LOS ANDES (PAMPLONA, NORTE DE SANTANDER).",
+        "",
+        "21:27 31-08-2026",
+        "59Min(s)",
+        "GPS",
+        "21:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 2.38 KM. DE CANAFISTULA (CHINACOTA, NORTE DE SANTANDER).",
+        "",
+        "22:27 31-08-2026",
+        "60Min(s)",
+        "GPS",
+        "22:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DON JUANA",
+        "",
+        "22:27 31-08-2026",
+        "0Min(s)",
+        "Retrasado",
+        "22:27 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 220.14 M. DE CL 1 CONAV 4 (VILLADELROSARIO, NORTE DE SANTANDER).",
+        "",
+        "23:27 31-08-2026",
+        "59Min(s)",
+        "GPS",
+        "23:27 31-08-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 136.02 M. DE CL 5 NORTECONKR 6 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "00:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "00:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "00:49 01-09-2026",
+        "23Min(s)",
+        "Pernoctacion",
+        "00:50 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 129.67 M. DE CL 5 NORTECONKR 6 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "01:27 01-09-2026",
+        "36Min(s)",
+        "GPS",
+        "01:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 121.79 M. DE CL 5 NORTECONKR 6 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "02:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "02:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 127.16 M. DE CL 5 NORTECONKR 6 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "03:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "03:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 113.12 M. DE CL 5 NORTECONKR 6 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "04:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "04:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 128.61 M. DE CL 5 NORTECONKR 6 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "05:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "05:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "05:37 01-09-2026",
+        "11Min(s)",
+        "Retrasado",
+        "05:38 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 130.15 M. DE CL 5 NORTECONKR 6 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "06:27 01-09-2026",
+        "48Min(s)",
+        "GPS",
+        "06:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 126.08 M. DE CL 5 NORTECONKR 6 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:27 01-09-2026",
+        "59Min(s)",
+        "GPS",
+        "07:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 121.31 M. DE CL 5 NORTECONKR 6 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "08:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "08:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "09:00 01-09-2026",
+        "34Min(s)",
+        "Retrasado",
+        "09:01 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 117.22 M. DE CL 5 NORTECONKR 6 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "09:27 01-09-2026",
+        "25Min(s)",
+        "GPS",
+        "09:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 188.17 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "10:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "10:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 188.01 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "11:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "11:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 185.39 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "12:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "12:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 184.01 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "13:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "13:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "13:29 01-09-2026",
+        "3Min(s)",
+        "Retrasado",
+        "13:30 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 184.21 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "14:27 01-09-2026",
+        "56Min(s)",
+        "GPS",
+        "14:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 188.24 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "15:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "15:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "16:14 01-09-2026",
+        "48Min(s)",
+        "Retrasado",
+        "16:16 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 189.88 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "16:27 01-09-2026",
+        "11Min(s)",
+        "GPS",
+        "16:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 188.92 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "17:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "17:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.9 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "18:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "18:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.55 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "19:27 01-09-2026",
+        "59Min(s)",
+        "GPS",
+        "19:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "19:26 01-09-2026",
+        "0Min(s)",
+        "Pernoctacion",
+        "19:27 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 188.62 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "20:27 01-09-2026",
+        "59Min(s)",
+        "GPS",
+        "20:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 198.05 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "21:27 01-09-2026",
+        "60Min(s)",
+        "GPS",
+        "21:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 191.34 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "22:27 01-09-2026",
+        "59Min(s)",
+        "GPS",
+        "22:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "22:35 01-09-2026",
+        "8Min(s)",
+        "Pernoctacion",
+        "22:35 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 153.07 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "23:27 01-09-2026",
+        "51Min(s)",
+        "GPS",
+        "23:27 01-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 187.94 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "00:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "00:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 185.66 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "01:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "01:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 183.18 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "02:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "02:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 211.58 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "03:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "03:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "03:32 02-09-2026",
+        "5Min(s)",
+        "Pernoctacion",
+        "03:32 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 192.05 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "04:27 02-09-2026",
+        "54Min(s)",
+        "GPS",
+        "04:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 182.92 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "05:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "05:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 184.71 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "06:27 02-09-2026",
+        "59Min(s)",
+        "GPS",
+        "06:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 83.0 M. DE PUENTE GARCIA HERREROS (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "07:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 237.88 M. DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "08:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "08:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "09:06 02-09-2026",
+        "39Min(s)",
+        "Retrasado",
+        "09:06 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 251.76 M. DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "09:27 02-09-2026",
+        "20Min(s)",
+        "GPS",
+        "09:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 234.81 M. DE KR 5 CONCL 2 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "10:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "10:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.96 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "11:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "11:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 183.33 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "12:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "12:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "",
+        "12:32 02-09-2026",
+        "5Min(s)",
+        "Retrasado",
+        "12:33 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.32 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "13:27 02-09-2026",
+        "54Min(s)",
+        "GPS",
+        "13:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.49 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "14:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "14:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 185.78 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "15:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "15:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 192.08 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "16:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "16:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 196.1 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "17:27 02-09-2026",
+        "59Min(s)",
+        "GPS",
+        "17:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.27 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "18:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "18:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 189.14 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "19:27 02-09-2026",
+        "59Min(s)",
+        "GPS",
+        "19:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 185.81 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "20:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "20:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.17 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "21:27 02-09-2026",
+        "59Min(s)",
+        "GPS",
+        "21:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.62 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "22:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "22:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 190.56 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "23:27 02-09-2026",
+        "60Min(s)",
+        "GPS",
+        "23:27 02-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 176.53 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "00:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "00:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 184.72 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "01:27 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "01:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 187.78 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "02:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "02:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 189.88 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "03:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "03:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 184.43 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "04:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "04:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 187.41 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "05:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "05:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 185.24 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "06:27 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "06:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEND CUMPLIDO",
+        "",
+        "07:10 03-09-2026",
+        "43Min(s)",
+        "Retrasado",
+        "07:10 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.07 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "07:27 03-09-2026",
+        "16Min(s)",
+        "GPS",
+        "07:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 187.02 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "08:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "08:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 187.8 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "09:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "09:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 189.42 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "10:27 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "10:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 188.23 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "11:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "11:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 188.12 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "12:27 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "12:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 200.8 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "13:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "13:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 195.78 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "14:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "14:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.46 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "15:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "15:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 192.07 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "16:27 03-09-2026",
+        "59Min(s)",
+        "GPS",
+        "16:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 187.34 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "17:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "17:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 185.25 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "18:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "18:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 184.35 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "19:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "19:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEND CUMPLIDO",
+        "",
+        "20:03 03-09-2026",
+        "36Min(s)",
+        "Retrasado",
+        "20:03 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 188.79 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "20:27 03-09-2026",
+        "23Min(s)",
+        "GPS",
+        "20:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.15 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "21:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "21:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 183.88 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "22:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "22:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 188.49 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "23:27 03-09-2026",
+        "60Min(s)",
+        "GPS",
+        "23:27 03-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 197.89 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "00:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "00:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.74 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "01:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "01:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 181.34 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "01:50 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "02:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 181.34 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "01:50 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "03:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 181.34 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "01:50 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "04:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 181.34 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "01:50 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "05:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 181.34 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "01:50 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "06:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 181.34 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "01:50 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "07:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 190.22 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "08:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "08:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 177.26 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "09:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "09:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 190.54 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "10:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "10:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 185.8 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "11:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "11:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.03 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "12:27 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "12:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 186.04 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "13:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "13:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 180.4 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "14:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "14:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 187.66 M. DE CL 1 CONAV 3 NORTE (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "15:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "15:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 789.84 M. DE CL 6 CONAV 50 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "16:27 04-09-2026",
+        "60Min(s)",
+        "GPS",
+        "16:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "A 786.17 M. DE CL 32 CONAV 42 (CUCUTA, NORTE DE SANTANDER).",
+        "",
+        "17:27 04-09-2026",
+        "59Min(s)",
+        "GPS",
+        "17:27 04-09-2026",
+        "InterfGPS"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "04:12 30-08-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Lugar Entrega",
+        "05:52 30-08-2026",
+        "",
+        "Min(s)",
+        "",
+        "",
+        ""
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Ver recorrido del vehículo"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "+\n−\ni"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Información de Notas de Controlador"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Sitio de Seguimiento",
+        "Novedad",
+        "Observación",
+        "Fecha",
+        "Usuario"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEND CUMPLIDO",
+        "Retrasado",
+        "PEND CUMPLIDO",
+        "20:03 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PEND CUMPLIDO",
+        "Retrasado",
+        "PEND CUMPLIDO",
+        "07:10 03-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA DESCARGO PENDIENTE DE\nQUE ENVIE FOTO DE LOS CUMPLIDOS",
+        "12:32 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA EN POSTOBON\nCUCUTA EN PROCESO DE DESCARGUE",
+        "09:06 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN HOTEL LOS ANGELES DE CUCUTA - PERNOCTANDO\n- PEND ENTREGA MIERCOLES",
+        "03:32 02-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN HOTEL LOS ANGELES DE CUCUTA -\nPERNOCTANDO - PEND ENTREGA MIERCOLES",
+        "22:35 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH ESTACIONADO EN HOTEL LOS ANGELES DE CUCUTA - PERNOCTANDO\n- PEND ENTREGA MIERCOLES",
+        "19:26 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "Retrasado",
+        "VEH EN HOTEL LOS ANGELES DE CUCUTA CEL/ PERNOCTA AHI\nEL DESCARGUE QUEDO PARA EL DIA MIERCOLES",
+        "16:14 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN POSTOBON CUCUTA\nPENDIENTE CONFIRMAR DESCARGUE CEL/NO CONTESTA",
+        "13:29 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCUENTRA ESPERANDO A\nQUE LO LLAMEN A DESCARGAR INFORMA QUE SE ENCEUNTRA\nDE TURNO 10 PARA EL DESCARGUE",
+        "09:00 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "Retrasado",
+        "VEH EN POSTOBON EN CUCUTA PEND ENTREGA",
+        "05:37 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "CUCUTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN CUCUTA LUGAR DONDE DEALICCA",
+        "00:49 01-09-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LA DON JUANA",
+        "Retrasado",
+        "VEH EN RUTA EN VIA LA DON JUANA SIN NOVEDAD",
+        "22:27 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "LLEGANDO A PAMPLONA",
+        "Retrasado",
+        "VH EN RUTA LLEGANDO AL SECTOR DE PAMPLONA SIN NOVEDAD",
+        "20:19 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BERLIN",
+        "Retrasado",
+        "VH EN RUTA PASANDO EL SECTOR DE BERLIN SIN NOVEDAD",
+        "18:30 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE APENAS TERMINO DE REALIZARLE\nLOS ARREGLOS AL VEHICULO E INCIA RUTA DE UNA VEZ LE\nHACE PAREJO HASTA LLEGAR A CUCUTA",
+        "15:24 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "VEHICULO PERMANECE ESTACIONADO EN BUCARAMANGA PENDIENTE\nDEL INICIO DE RUTA Y DE LOS ARREGLOS DEL VEHICULO",
+        "13:13 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "BUCARAMANGA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE SE ENCEUNTRA EN BUCARAMANGA\nHACIENDOLE UNOS ARREGLOS AL VEHICULO PARA DESPUES\nINICIAR RUTA PENDIENTE DE QUE ENVIE EVIDENCIA",
+        "09:51 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "Retrasado",
+        "VEH EN RUTA SALIENDO DE PIEDECUESTA SIN NOVEDAD",
+        "06:17 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN PARQUEADERO SENA EN PIEDECUESTA - CEL/CONDUCTOR\nINFORMA QUE INICIA RUTA LUNES DESPUÉS DE MEDIO DÍA YA\nQUE TIENE QUE ENTRAR A TALLER PRIMERO PARA HACER ARREGLOS\nMENORES",
+        "02:36 31-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN PARQUEADERO SENA EN PIEDECUESTA - CEL/CONDUCTOR INFORMA\nQUE INICIA RUTA MAÑANA LUNES DESPUÉS DE MEDIO DÍA\nYA QUE TIENE QUE ENTRAR A TALLER PRIMERO PARA HACER\nARREGLOS MENORES",
+        "22:37 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN PARQUEADERO SENA EN PIEDECUESTA - CEL/CONDUCTOR\nINFORMA QUE INICIA RUTA MAÑANA LUNES DESPUÉS DE MEDIO\nDÍA YA QUE TIENE QUE ENTRAR A TALLER PRIMERO PARA\nHACER ARREGLOS MENORES",
+        "18:45 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN PARQUEADERO SENA EN PIEDECUESTA - CEL/CONDUCTOR INFORMA\nQUE INICIA RUTA MAÑANA LUNES DESPUÉS DE MEDIO DÍA\nYA QUE TIENE QUE ENTRAR A TALLER PRIMERO PARA HACER\nARREGLOS MENORES",
+        "14:53 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN PARQUEADERO SENA EN PIEDECUESTA - CEL/CONDUCTOR\nINFORMA QUE INICIA RUTA MAÑANA LUNES DESPUÉS DE MEDIO\nDÍA YA QUE TIENE QUE ENTRAR A TALLER PRIMERO PARA\nHACER ARREGLOS MENORES",
+        "10:32 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN PARQUEADERO SENA EN PIEDECUESTA - PENDIENTE\nINICIO DE RUTA DOMINGO",
+        "05:27 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN PARQUEADERO SENA EN PIEDECUESTA - PENDIENTE INICIO\nDE RUTA DOMINGO",
+        "01:09 30-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN PARQUEADERO SENA EN PIEDECUESTA - PENDIENTE\nINICIO DE RUTA MAÑANA",
+        "22:10 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "[NOV-ESP] Pernoctacion",
+        "VEH EN PARQUEADERO SENA EN PIEDECUESTA PEND REINICIO\nDE RUTA",
+        "17:59 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "PIEDECUESTA",
+        "Retrasado",
+        "CEL/CONDUCTOR INFORMA QUE YA CARGO QUE ESTA ESPERANDO\nANTICIPO Y PRECINTOS",
+        "15:20 29-08-2026",
+        "SEGBNS1"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Observaciones Generales",
+        "Medios de Comunicacion",
+        "Protecciones Especiales"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) [identifier omitted] - [identifier omitted].",
+        "-",
+        "-"
+      ],
+      "visible": true
+    },
+    {
+      "cells": [
+        "Control Trafico > Seguimiento"
+      ],
+      "visible": true
+    }
+  ],
+  "title": "S.@.T. BASICO",
+  "url": "https://oet-avansatb.intrared.net/ap/satb_tramtm/index.php?cod_servic=5055&window=central&despac=42328&opcion=1"
+}

@@ -53,6 +53,97 @@ test("loading order creation mirrors the Avansat field contract", async ({ page 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 
+test("loading order validation highlights fields and keeps unknown cargo measures empty", async ({ page }, testInfo) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+  await page.goto("/expedientes/nuevo");
+  await expect(page).toHaveTitle(/TMS RNDC/);
+  await expect(page.getByRole("button", { name: "Guardar borrador", exact: true })).toBeEnabled();
+  await page.getByRole("button", { name: "Guardar borrador", exact: true }).click();
+  const client = page.getByRole("combobox", { name: "Cliente", exact: true });
+  await expect(client).toHaveAttribute("aria-invalid", "true");
+  await expect(client).toBeFocused();
+  await expect(page.getByLabel("Mercancía", { exact: true })).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByLabel(/^Flete conductor/)).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByRole("combobox", { name: "Placa", exact: true })).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByRole("combobox", { name: "Tipo de empaque", exact: true })).toHaveAttribute("aria-invalid", "true");
+  await page.getByRole("combobox", { name: "Tipo de empaque", exact: true }).fill("no existe");
+  await expect(page.getByRole("combobox", { name: "Tipo de empaque", exact: true })).toHaveAttribute("aria-invalid", "true");
+  await page.getByRole("combobox", { name: "Tipo de empaque", exact: true }).press("Escape");
+  await page.screenshot({ path: `/tmp/tms-validation-initial-${testInfo.project.name}.png` });
+
+  await fillLoadingOrder(page, `VALIDATION-${Date.now()}`);
+  await page.getByLabel("Mercancía", { exact: true }).fill("Gaseosa");
+  await page.getByLabel("Peso (TN)", { exact: true }).fill("34");
+  await expect(client).not.toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByLabel("Volumen (m³)", { exact: true })).toHaveValue("");
+  await expect(page.getByLabel("Cantidad", { exact: true })).toHaveValue("");
+  await expect(page.getByText("¿Transportas 34 toneladas de gaseosa?", { exact: true })).toBeVisible();
+  await page.getByLabel("Volumen (m³)", { exact: true }).fill("-2");
+  await page.getByRole("button", { name: "Crear despacho y abrir documentos", exact: true }).click();
+  await expect(page.getByLabel("Volumen (m³)", { exact: true })).toBeFocused();
+  await expect(page.getByLabel("Volumen (m³)", { exact: true })).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator('.has-error .field-validation-error').first()).toContainText("mínimo");
+  await page.screenshot({ path: `/tmp/tms-validation-cargo-${testInfo.project.name}.png` });
+  await page.getByLabel("Volumen (m³)", { exact: true }).fill("");
+  await expect(page.getByLabel("Volumen (m³)", { exact: true })).not.toHaveAttribute("aria-invalid", "true");
+  await pickDate(page, "Fecha mínima", "Mañana");
+  await pickDate(page, "Fecha máxima", "Hoy");
+  await page.getByRole("button", { name: "Guardar borrador", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Fecha máxima", exact: true })).toBeFocused();
+  await expect(page.getByRole("button", { name: "Fecha máxima", exact: true })).toHaveAttribute("aria-invalid", "true");
+  await pickDate(page, "Fecha máxima", "Mañana");
+  await expect(page.getByRole("button", { name: "Fecha máxima", exact: true })).not.toHaveAttribute("aria-invalid", "true");
+  await page.getByRole("button", { name: "Crear despacho y abrir documentos", exact: true }).click();
+  await expect(page).toHaveURL(/\/expedientes\/[^/?]+\?stage=orden_cargue/);
+  await expect(page.getByRole("heading", { name: "Documentos e historial" })).toHaveCount(0);
+  await expect(page.getByText(/Evidencia técnica RNDC/)).toHaveCount(0);
+  await expect(page.getByLabel("Peso (TN)", { exact: true })).toHaveValue("34");
+  await expect(page.getByLabel("Volumen m³", { exact: true })).toHaveValue("");
+  await expect(page.getByLabel("Cantidad", { exact: true })).toHaveValue("");
+
+  await page.getByLabel("Teléfono remitente", { exact: true }).fill("");
+  await page.getByRole("button", { name: "Guardar cambios", exact: true }).click();
+  await expect(page.getByLabel("Teléfono remitente", { exact: true })).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByLabel("Sede RNDC remitente", { exact: true })).toHaveAttribute("aria-invalid", "true");
+  await page.getByLabel("Sede RNDC remitente", { exact: true }).fill("1");
+  await expect(page.getByLabel("Sede RNDC remitente", { exact: true })).not.toHaveAttribute("aria-invalid", "true");
+
+  await documentCard(page, "Remesas").getByRole("button", { name: "Editar", exact: true }).click();
+  await expect(page.getByLabel("Nro. de remesa", { exact: true })).toHaveValue(/^\d{5}$/);
+  await page.getByRole("button", { name: "Guardar cambios", exact: true }).click();
+  const code = page.getByLabel("Código de mercancía", { exact: true });
+  await expect(code).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByLabel("Valor declarado mercancía", { exact: true })).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByRole("button", { name: "Vigencia final", exact: true })).toHaveAttribute("aria-invalid", "true");
+  await page.locator(".form-validation-summary").getByRole("button", { name: /^Código de mercancía:/ }).click();
+  await expect(code).toBeFocused();
+  await expect(code).toHaveAccessibleDescription("Completa este campo.");
+  await page.screenshot({ path: `/tmp/tms-validation-remesa-${testInfo.project.name}.png` });
+  await code.fill("002705");
+  await expect(code).not.toHaveAttribute("aria-invalid", "true");
+
+  await documentCard(page, "Manifiesto").getByRole("button", { name: "Editar", exact: true }).click();
+  await page.getByRole("button", { name: "Guardar cambios", exact: true }).click();
+  await expect(page.getByRole("button", { name: "Fecha estimada de entrega", exact: true })).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByRole("button", { name: "Fecha estimada de entrega", exact: true })).toBeFocused();
+  await expect(page.getByLabel("Valor flete", { exact: true })).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByLabel("Responsable de pago", { exact: true })).toHaveAttribute("aria-invalid", "true");
+  await page.screenshot({ path: `/tmp/tms-validation-manifest-${testInfo.project.name}.png` });
+  await pickDate(page, "Fecha estimada de entrega", "Mañana");
+  await page.getByLabel("Valor flete", { exact: true }).fill("2300000");
+  await page.getByLabel("Responsable de pago", { exact: true }).fill("MTM");
+  await page.getByRole("button", { name: "Guardar cambios", exact: true }).click();
+  await expect(page.locator(".operation-notice.ok")).toContainText("El manifiesto quedó guardado.");
+  await page.reload();
+  await documentCard(page, "Manifiesto").getByRole("button", { name: "Editar", exact: true }).click();
+  await expect(page.getByLabel("Valor flete", { exact: true })).toHaveValue("2.300.000");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  expect(errors).toEqual([]);
+});
+
 test("dispatch queue shows stage RNDC status and one next action without horizontal overflow", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Despachos", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Listado de despachos" })).toBeVisible();
@@ -142,7 +233,7 @@ test("consignment creation mirrors the Avansat field contract", async ({ page })
     "Aseguradora",
     "Nro. póliza",
     "Unidad de medida",
-    "Mercancía",
+    "Código de mercancía",
     "Código de empaque",
     "Naturaleza de la carga",
     "Grupo embalaje envase",
@@ -238,13 +329,15 @@ test("dispatch documents can be completed and emitted in separate sessions", asy
   await expect(manifestCard.locator(".status-badge")).toContainText("Autorizado", { timeout: 20_000 });
 });
 
-test("dispatch detail keeps independent documents and history in one hub", async ({ page }) => {
+test("dispatch detail keeps independent documents without the removed history panels", async ({ page }) => {
   await page.locator(".dispatch-row").first().locator(".queue-next-action").click();
   await expect(page.getByRole("heading", { level: 1, name: "Expediente de viaje" })).toBeVisible();
   await expect(page.getByText("Siguiente acción")).toBeVisible();
   await expect(page.getByRole("region", { name: "Documentos del despacho" })).toBeVisible();
   await expect(page.locator(".document-hub-card")).toHaveCount(5);
-  await expect(page.getByRole("heading", { name: "Documentos e historial" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Documentos e historial" })).toHaveCount(0);
+  await expect(page.getByText("Siempre disponible", { exact: true })).toHaveCount(0);
+  await expect(page.getByText(/Evidencia técnica RNDC/)).toHaveCount(0);
   await expect(page.locator(".next-action-card .primary-action")).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });

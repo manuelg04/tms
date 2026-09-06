@@ -1,5 +1,7 @@
 "use client";
 
+import { FormField } from "./form-validation";
+
 import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -30,13 +32,15 @@ export function divisionLabel(division: DivisionPick | null | undefined): string
   return division.isMunicipality ? `${division.name}, ${division.departmentName}` : `${division.name} (${division.municipalityName}), ${division.departmentName}`;
 }
 
-export function PartyField({ className, label, role, required, disabled, selected, typedName, onType, onSelect, onClear, hint }: { className?: string; label: string; role?: "sender" | "recipient" | "owner" | "possessor" | "holder"; required?: boolean; disabled?: boolean; selected?: { name?: string; document?: string; documentType?: string } | null; typedName?: string; onType?: (name: string) => void; onSelect: (party: PartyPick) => void; onClear?: () => void; hint?: string }) {
+export function PartyField({ className, name, label, role, required, disabled, selected, typedName, onType, onSelect, onClear, hint }: { className?: string; name?: string; label: string; role?: "sender" | "recipient" | "owner" | "possessor" | "holder"; required?: boolean; disabled?: boolean; selected?: { name?: string; document?: string; documentType?: string } | null; typedName?: string; onType?: (name: string) => void; onSelect: (party: PartyPick) => void; onClear?: () => void; hint?: string }) {
   const [term, setTerm] = useState("");
   const results = useQuery(api.lookups.partiesSearch, term.trim().length >= 2 ? { term, role } : "skip");
   const selectedLabel = selected?.name ? selected.name : undefined;
   const fallbackHint = selected?.document ? `${idTypeLabel(selected.documentType)} ${formatDocument(selected.document)} · tomado del RNDC` : typedName ? "No está en el RNDC: se registrará con los datos que escribas" : undefined;
   return (
     <SearchSelect
+      name={name ?? (role ? `${role}Name` : "clientName")}
+      validationValue={typedName ?? selected?.name ?? ""}
       className={className}
       disabled={disabled}
       emptyText="No hay terceros con ese nombre o documento. Puedes seguir escribiendo el nombre."
@@ -59,16 +63,16 @@ export function PartyField({ className, label, role, required, disabled, selecte
   );
 }
 
-export function SiteField({ className = "", label, thirdPartyId, required, disabled, selectedCode, selectedName, onSelect, onClear, onManual }: { className?: string; label: string; thirdPartyId?: Id<"thirdParties"> | null; required?: boolean; disabled?: boolean; selectedCode?: string; selectedName?: string; onSelect: (site: SitePick) => void; onClear?: () => void; onManual?: (code: string) => void }) {
+export function SiteField({ className = "", name, label, thirdPartyId, required, disabled, selectedCode, selectedName, onSelect, onClear, onManual }: { className?: string; name?: string; label: string; thirdPartyId?: Id<"thirdParties"> | null; required?: boolean; disabled?: boolean; selectedCode?: string; selectedName?: string; onSelect: (site: SitePick) => void; onClear?: () => void; onManual?: (code: string) => void }) {
   const [term, setTerm] = useState("");
   const sites = useQuery(api.lookups.partySites, thirdPartyId ? { thirdPartyId } : "skip");
   if (!thirdPartyId) {
     return (
-      <label className={`form-field ${className}`}>
+      <FormField name={name ?? label} required={required} value={selectedCode ?? ""} className={className}>
         <span>{label}{required ? <em aria-hidden="true"> *</em> : null}</span>
         <input disabled={disabled} inputMode="numeric" onChange={(event) => onManual?.(event.target.value.replace(/\D/g, ""))} placeholder="Código de sede en el RNDC" value={selectedCode ?? ""} />
         <small className="search-select-hint">Elige un tercero del RNDC para ver sus sedes, o escribe el código de sede</small>
-      </label>
+      </FormField>
     );
   }
   const needle = term.trim().toLowerCase();
@@ -76,6 +80,8 @@ export function SiteField({ className = "", label, thirdPartyId, required, disab
   const selectedLabel = selectedCode ? `${selectedCode} · ${selectedName ?? "Sede"}` : undefined;
   return (
     <SearchSelect
+      name={name}
+      validationValue={selectedCode ?? ""}
       className={className}
       disabled={disabled}
       emptyText={sites && sites.length === 0 ? "Este tercero no tiene sedes registradas en el RNDC" : "Ninguna sede coincide"}
@@ -104,6 +110,8 @@ export function MunicipalityField({ className, label, name, required, disabled, 
   return (
     <>
       <SearchSelect
+        name={name}
+        validationValue={code ?? ""}
         className={className}
         disabled={disabled}
         emptyText="No hay municipios con ese nombre"
@@ -133,6 +141,8 @@ export function PackagingField({ className, label, name, required, disabled, cod
   return (
     <>
       <SearchSelect
+        name={name}
+        validationValue={code ?? ""}
         className={className}
         disabled={disabled}
         emptyText="No hay empaques con esa descripción"
@@ -161,6 +171,8 @@ export function InsurerField({ className, label, name, required, disabled, nit, 
   return (
     <>
       <SearchSelect
+        name={name}
+        validationValue={nit ?? ""}
         className={className}
         disabled={disabled}
         emptyText="No hay aseguradoras con ese nombre o NIT"
@@ -186,6 +198,8 @@ export function DriverField({ className, label, required, disabled, selected, on
   const results = useQuery(api.lookups.driversLookup, term.trim().length >= 2 ? { term } : "skip");
   return (
     <SearchSelect
+      name="driverId"
+      validationValue={selected?._id ?? ""}
       className={className}
       disabled={disabled}
       emptyText="No hay conductores con ese nombre o documento"
@@ -210,6 +224,8 @@ export function VehicleField({ className, label, required, disabled, selected, o
   const results = useQuery(api.lookups.vehiclesWithDriversSearch, term.trim().length >= 2 ? { term } : "skip");
   return (
     <SearchSelect
+      name="vehicleId"
+      validationValue={selected?._id ?? ""}
       className={className}
       disabled={disabled}
       emptyText="No hay vehículos con esa placa"
@@ -313,18 +329,18 @@ export const CARGO_NATURES = [
 
 export function CargoNatureField({ className = "", name, value, required, onChange }: { className?: string; name: string; value?: string; required?: boolean; onChange?: (value: string) => void }) {
   return (
-    <label className={`form-field ${className}`}>
+    <FormField className={className}>
       <span>Naturaleza de la carga{required ? <em aria-hidden="true"> *</em> : null}</span>
       <select defaultValue={onChange ? undefined : value ?? "1"} name={name} onChange={onChange ? (event) => onChange(event.target.value) : undefined} value={onChange ? value ?? "1" : undefined}>
         {CARGO_NATURES.map((nature) => <option key={nature.code} value={nature.code}>{nature.label}</option>)}
       </select>
-    </label>
+    </FormField>
   );
 }
 
 export function IdTypeField({ className = "", label, name, value, onChange, required }: { className?: string; label: string; name: string; value?: string; onChange?: (value: string) => void; required?: boolean }) {
   return (
-    <label className={`form-field ${className}`}>
+    <FormField className={className}>
       <span>{label}{required ? <em aria-hidden="true"> *</em> : null}</span>
       <select name={name} onChange={(event) => onChange?.(event.target.value)} value={value ?? "N"}>
         <option value="N">NIT</option>
@@ -332,6 +348,6 @@ export function IdTypeField({ className = "", label, name, value, onChange, requ
         <option value="E">Cédula de extranjería</option>
         <option value="P">Pasaporte</option>
       </select>
-    </label>
+    </FormField>
   );
 }

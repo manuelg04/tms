@@ -1,10 +1,13 @@
 "use client";
 
+import { FormField } from "./form-validation";
 import { useEffect, useId, useRef, useState } from "react";
 
 export type SearchOption = { key: string; title: string; subtitle?: string; badge?: string };
 
 type Props = {
+  name?: string;
+  validationValue?: string;
   label: string;
   className?: string;
   placeholder?: string;
@@ -21,7 +24,7 @@ type Props = {
   mono?: boolean;
 };
 
-export function SearchSelect({ label, className = "", placeholder, required, disabled, selectedLabel, options, onSearch, onSelect, onClear, hint, emptyText = "Sin resultados", minLength = 2, mono }: Props) {
+export function SearchSelect({ name, validationValue, label, className = "", placeholder, required, disabled, selectedLabel, options, onSearch, onSelect, onClear, hint, emptyText = "Sin resultados", minLength = 2, mono }: Props) {
   const id = useId();
   const [term, setTerm] = useState("");
   const [open, setOpen] = useState(false);
@@ -72,7 +75,7 @@ export function SearchSelect({ label, className = "", placeholder, required, dis
   }
 
   return (
-    <div className={`form-field search-select ${selectedLabel ? "has-selection" : ""} ${className}`} ref={rootRef}>
+    <FormField as="div" name={name ?? label} required={required} value={validationValue ?? selectedLabel ?? ""} className={`search-select ${selectedLabel ? "has-selection" : ""} ${className}`} ref={rootRef}>
       <span id={`${id}-label`}>{label}{required ? <em aria-hidden="true"> *</em> : null}</span>
       <div className="search-select-control">
         <input
@@ -129,6 +132,6 @@ export function SearchSelect({ label, className = "", placeholder, required, dis
         ) : null}
       </div>
       {hint ? <small className="search-select-hint">{hint}</small> : null}
-    </div>
+    </FormField>
   );
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { FormField } from "./form-validation";
+
 import { useState } from "react";
 
 export function formatThousands(digits: string): string {
@@ -11,7 +13,7 @@ export function MoneyField({ className = "", label, name, value, onChange, requi
   const [internal, setInternal] = useState(() => (value ?? "").replace(/\D/g, ""));
   const raw = onChange ? (value ?? "").replace(/\D/g, "") : internal;
   return (
-    <label className={`form-field money-field ${className}`}>
+    <FormField name={name} required={required} value={raw} className={`money-field ${className}`}>
       <span>{label}{required ? <em aria-hidden="true"> *</em> : null}</span>
       <div className="money-input">
         <span>$</span>
@@ -29,6 +31,6 @@ export function MoneyField({ className = "", label, name, value, onChange, requi
       </div>
       <input name={name} type="hidden" value={raw} />
       {hint ? <small className="search-select-hint">{hint}</small> : null}
-    </label>
+    </FormField>
   );
 }

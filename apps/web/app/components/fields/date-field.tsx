@@ -1,5 +1,6 @@
 "use client";
 
+import { FormField } from "./form-validation";
 import { useEffect, useId, useRef, useState } from "react";
 
 const MONTHS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
@@ -99,7 +100,7 @@ export function DateField({ className = "", label, name, value, withTime, requir
   const [hour = "08", minute = "00"] = (time || "08:00").split(":");
 
   return (
-    <div className={`form-field date-field ${className}`} ref={rootRef}>
+    <FormField as="div" name={name} required={required} value={serialized} className={`date-field ${className}`} ref={rootRef}>
       <span id={`${id}-label`}>{label}{required ? <em aria-hidden="true"> *</em> : null}</span>
       <button
         aria-expanded={open}
@@ -153,6 +154,6 @@ export function DateField({ className = "", label, name, value, withTime, requir
           </div>
         </div>
       ) : null}
-    </div>
+    </FormField>
   );
 }

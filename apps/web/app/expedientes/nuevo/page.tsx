@@ -1,5 +1,8 @@
 "use client";
 
+import { CargoGuidance, cargoHints } from "../components/cargo-guidance";
+import { FormField, FormValidationError, ValidatedForm } from "../../components/fields/form-validation";
+
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
@@ -132,7 +135,6 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
   const formRef = useRef<HTMLFormElement>(null);
   const me = useQuery(api.access.me, {});
   const organizationId = me?.organizationId;
-  const [error, setError] = useState("");
   const [reservationError, setReservationError] = useState("");
   const [reservationAttempt, setReservationAttempt] = useState(0);
   const [reservation, setReservation] = useState<Reservation | null>(null);
@@ -168,20 +170,18 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
 
   async function saveBase(action: "draft" | "open") {
     if (!me || !formRef.current) {
-      setError("La sesión todavía no está conectada al espacio de trabajo.");
-      return;
+      throw new Error("La sesión todavía no está conectada al espacio de trabajo.");
     }
     if (!reservation) {
-      setError("Espera a que se reserve el consecutivo de la orden.");
-      return;
+      throw new Error("Espera a que se reserve el consecutivo de la orden.");
     }
 
     setSavingAction(action);
-    setError("");
     const data = new FormData(formRef.current);
 
     try {
-      if (!state.vehicle) throw new Error("Selecciona una placa existente en maestros.");
+      if (!state.vehicle) throw new FormValidationError("vehicleId", "Selecciona una placa existente en maestros.");
+      const preparedOrder = loadingOrderDraft(data);
       const senderId = requiredText(data, "senderId");
       const clientDocument = optionalText(data, "clientDocument") ?? senderId;
       const clientIdType = optionalText(data, "clientIdType") ?? requiredText(data, "senderIdType");
@@ -242,22 +242,22 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
       await Promise.all([
         saveLoadingOrder({
           expedienteId: created.expedienteId,
-          draft: loadingOrderDraft(data, customerId)
+          draft: { ...preparedOrder, customerId }
         }),
         saveAssignment({ expedienteId: created.expedienteId, vehicleId: state.vehicle._id, driverId: state.vehicle.drivers?.length === 1 ? state.vehicle.drivers[0]._id : undefined })
       ]);
 
       router.push(action === "open" ? `/expedientes/${created.expedienteId}?stage=orden_cargue#centro-documental` : `/expedientes/${created.expedienteId}`);
     } catch (cause) {
-      setError(readError(cause));
       setSavingAction(null);
+      throw cause;
     }
   }
 
   const saving = savingAction !== null;
 
   return (
-    <form className="guided-dispatch-form base-dispatch-form form-compact" onSubmit={(event) => event.preventDefault()} ref={formRef}>
+    <ValidatedForm className="guided-dispatch-form base-dispatch-form form-compact" onSubmit={(event) => saveBase((event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "draft" ? "draft" : "open")} ref={formRef}>
       <section className="base-dispatch-intro">
         <div>
           <span className="eyebrow">Nueva orden de cargue</span>
@@ -278,7 +278,7 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
             <DateField label="Fecha" name="expeditionDate" required value={today} />
             <Field label="Nro. de orden de cargue" name="orderNumber" placeholder={reservationError ? "No disponible" : "Reservando…"} readOnly value={reservation?.number ?? ""} />
             <Field defaultValue={copied?.agencyCode} label="Agencia responsable" name="agencyCode" placeholder="Principal" />
-            <label className="form-field checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked={copied?.generatesConsignment ?? true} name="generatesConsignment" type="checkbox" /><em>Crear la remesa desde esta orden</em></span></label>
+            <FormField className="checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked={copied?.generatesConsignment ?? true} name="generatesConsignment" type="checkbox" /><em>Crear la remesa desde esta orden</em></span></FormField>
             <PartyField
               className="span-2"
               label="Cliente"
@@ -342,9 +342,10 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
             <MoneyField label="Flete conductor" name="driverFreight" required value={copied?.driverFreight} />
 
             <div className="field-group-note"><strong>Datos de la mercancía</strong></div>
-            <Field defaultValue={copied?.weightTons} label="Peso (TN)" min="0" name="weightTons" required step="0.001" type="number" />
-            <Field defaultValue={copied?.volumeM3} label="Volumen (m³)" min="0" name="volumeM3" step="0.01" type="number" />
-            <Field defaultValue={copied?.cargoQuantity} label="Cantidad" min="0" name="cargoQuantity" type="number" />
+            <CargoGuidance />
+            <Field defaultValue={copied?.weightTons} hint={cargoHints.weight} label="Peso (TN)" min="0" name="weightTons" required step="0.001" type="number" />
+            <Field defaultValue={copied?.volumeM3} hint={cargoHints.volume} label="Volumen (m³)" min="0" name="volumeM3" step="0.01" type="number" />
+            <Field defaultValue={copied?.cargoQuantity} hint={cargoHints.quantity} label="Cantidad" min="0" name="cargoQuantity" type="number" />
             <Field defaultValue={copied?.cargoDescription} label="Mercancía" name="cargoDescription" required />
             <PackagingField code={state.packagingCode || undefined} description={state.packagingDescription} label="Tipo de empaque" name="packagingCode" onClear={() => update({ packagingCode: "", packagingDescription: "" })} onSelect={(option) => update({ packagingCode: option.code, packagingDescription: option.description })} required />
             <Field defaultValue={copied?.optionalCargoField} label="Campo opcional" name="optionalCargoField" />
@@ -353,10 +354,10 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
             <input defaultValue={copied?.natureOfCargo} name="natureOfCargo" type="hidden" />
 
             <div className="field-group-note"><strong>Observaciones especiales</strong></div>
-            <label className="form-field"><span>Sellos y/o precintos</span><textarea defaultValue={copied?.sealNumbers} name="sealNumbers" rows={3} /></label>
-            <label className="form-field"><span>Condiciones de cargue</span><textarea defaultValue={copied?.loadingConditions} name="loadingConditions" rows={3} /></label>
-            <label className="form-field"><span>Embalaje especial</span><textarea defaultValue={copied?.specialPackaging} name="specialPackaging" rows={3} /></label>
-            <label className="form-field"><span>Observaciones</span><textarea defaultValue={copied?.observations} name="orderObservations" rows={3} /></label>
+            <FormField><span>Sellos y/o precintos</span><textarea defaultValue={copied?.sealNumbers} name="sealNumbers" rows={3} /></FormField>
+            <FormField><span>Condiciones de cargue</span><textarea defaultValue={copied?.loadingConditions} name="loadingConditions" rows={3} /></FormField>
+            <FormField><span>Embalaje especial</span><textarea defaultValue={copied?.specialPackaging} name="specialPackaging" rows={3} /></FormField>
+            <FormField><span>Observaciones</span><textarea defaultValue={copied?.observations} name="orderObservations" rows={3} /></FormField>
 
             <div className="field-group-note"><strong>Fechas de cargue</strong></div>
             <DateField label="Fecha mínima" name="minLoadingDate" required value={copied?.minLoadingDate ?? today} />
@@ -366,15 +367,14 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
       </div>
 
       {reservationError ? <div className="form-error" role="alert">{reservationError} <button className="link-button" onClick={() => setReservationAttempt((current) => current + 1)} type="button">Reintentar consecutivo</button></div> : null}
-      {error ? <div className="form-error" role="alert" tabIndex={-1}>{error}</div> : null}
       <div className="guided-action-bar base-action-bar">
         <span>Los demás documentos quedarán disponibles como borradores independientes.</span>
         <div>
-          <button className="ghost-button" disabled={saving || !me || !reservation} onClick={() => void saveBase("draft")} type="button">{savingAction === "draft" ? "Guardando…" : "Guardar borrador"}</button>
-          <button className="primary-action" disabled={saving || !me || !reservation} onClick={() => void saveBase("open")} type="button">{savingAction === "open" ? "Creando…" : "Crear despacho y abrir documentos"}</button>
+          <button className="ghost-button" disabled={saving || !me || !reservation} value="draft" type="submit">{savingAction === "draft" ? "Guardando…" : "Guardar borrador"}</button>
+          <button className="primary-action" disabled={saving || !me || !reservation} value="open" type="submit">{savingAction === "open" ? "Creando…" : "Crear despacho y abrir documentos"}</button>
         </div>
       </div>
-    </form>
+    </ValidatedForm>
   );
 }
 
@@ -382,18 +382,17 @@ function StageHeading({ id, text, title }: { id: string; text: string; title: st
   return <div className="guided-stage-heading"><span>01</span><div><h3 id={id}>{title}</h3><p>{text}</p></div></div>;
 }
 
-function Field({ className = "", label, name, ...props }: { className?: string; label: string; name: string } & React.InputHTMLAttributes<HTMLInputElement>) {
-  return <label className={`form-field ${className}`}><span>{label}</span><input name={name} {...props} /></label>;
+function Field({ className = "", label, name, hint, ...props }: { hint?: string; className?: string; label: string; name: string } & React.InputHTMLAttributes<HTMLInputElement>) {
+  return <FormField className={className}><span>{label}{props.required ? <em aria-hidden="true"> *</em> : null}</span><input aria-describedby={hint ? `${name}-hint` : undefined} name={name} {...props} />{hint ? <small className="cargo-field-hint" id={`${name}-hint`}>{hint}</small> : null}</FormField>;
 }
 
-function loadingOrderDraft(data: FormData, customerId: Id<"customers">) {
+function loadingOrderDraft(data: FormData) {
   const loadingAppointment = loadingDateTime(data, "minLoadingDate", false);
   const unloadingAppointment = loadingDateTime(data, "maxLoadingDate", true);
   return {
     orderNumber: requiredText(data, "orderNumber"),
     expeditionDate: requiredText(data, "expeditionDate"),
     agencyCode: optionalText(data, "agencyCode"),
-    customerId,
     sender: compact({
       name: requiredText(data, "senderName"),
       identificationType: requiredText(data, "senderIdType"),
@@ -457,13 +456,13 @@ function compact<T extends Record<string, unknown>>(value: T): T {
 function loadingWindowEnd(data: FormData): string {
   const min = requiredText(data, "minLoadingDate");
   const max = requiredText(data, "maxLoadingDate");
-  if (max < min) throw new Error("La fecha máxima de cargue no puede ser anterior a la fecha mínima.");
+  if (max < min) throw new FormValidationError("maxLoadingDate", "La fecha máxima de cargue no puede ser anterior a la fecha mínima.");
   return max;
 }
 
 function requiredText(data: FormData, key: string): string {
   const value = String(data.get(key) ?? "").trim();
-  if (!value) throw new Error(`Completa el campo ${fieldLabel(key)}.`);
+  if (!value) throw new FormValidationError(key);
   return value;
 }
 
@@ -485,12 +484,8 @@ function money(value: string): number {
 function loadingDateTime(data: FormData, key: string, endOfDay: boolean): number {
   const value = requiredText(data, key);
   const timestamp = new Date(`${value}T${endOfDay ? "23:59:00" : "00:00:00"}-05:00`).getTime();
-  if (!Number.isFinite(timestamp)) throw new Error(`Completa ${fieldLabel(key)}.`);
+  if (!Number.isFinite(timestamp)) throw new FormValidationError(key, "Selecciona una fecha válida.");
   return timestamp;
-}
-
-function fieldLabel(key: string): string {
-  return key.replaceAll(/([A-Z])/g, " $1").toLocaleLowerCase("es");
 }
 
 function readError(cause: unknown): string {

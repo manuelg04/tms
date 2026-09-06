@@ -1,5 +1,8 @@
 "use client";
 
+import { CargoGuidance, cargoHints } from "./cargo-guidance";
+import { FormField, ValidatedForm } from "../../components/fields/form-validation";
+
 import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -166,10 +169,11 @@ function PartyBlock({ label, role, state, onChange, siteLabel, onSite }: { label
       />
       <input name={`${prefix}Name`} type="hidden" value={state.name} />
       <IdTypeField label="Tipo de identificación" name={`${prefix}IdType`} onChange={(idType) => onChange({ ...state, idType })} required value={state.idType} />
-      <label className="form-field"><span>Identificación<em aria-hidden="true"> *</em></span><input name={`${prefix}Id`} onChange={(event) => onChange({ ...state, document: event.target.value })} required value={state.document} /></label>
+      <FormField><span>Identificación<em aria-hidden="true"> *</em></span><input name={`${prefix}Id`} onChange={(event) => onChange({ ...state, document: event.target.value })} required value={state.document} /></FormField>
       <SiteField
         className="span-2"
         label={siteLabel}
+        name={`${prefix}SiteCode`}
         onClear={() => onChange({ ...state, siteCode: "", siteName: "" })}
         onManual={(siteCode) => onChange({ ...state, siteCode, siteName: "" })}
         onSelect={(site) => {
@@ -186,7 +190,7 @@ function PartyBlock({ label, role, state, onChange, siteLabel, onSite }: { label
   );
 }
 
-export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: LoadingOrder; onSubmit: (data: FormData) => void; readOnly: boolean }) {
+export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: LoadingOrder; onSubmit: (data: FormData) => void | Promise<void>; readOnly: boolean }) {
   const [sender, setSender] = useState<PartyState>(() => partyState(draft.sender));
   const [recipient, setRecipient] = useState<PartyState>(() => partyState(draft.recipient));
   const [loading, setLoading] = useState({ siteName: draft.loading?.siteName ?? "", address: draft.loading?.address ?? "", cityName: draft.loading?.cityName ?? "", municipalityCode: draft.loading?.municipalityCode ?? draft.sender?.municipalityCode ?? "" });
@@ -195,7 +199,7 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
   const today = new Date().toISOString().slice(0, 10);
 
   return (
-    <form className="form-compact" id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
+    <ValidatedForm className="form-compact" id="stage-primary-form" onSubmit={(event) => { return onSubmit(new FormData(event.currentTarget)); }}>
       <StageHeading number="01" title="Orden de cargue" text="Cliente, partes, sitios, citas y mercancía alimentan las siguientes etapas." readOnly={readOnly} />
       <fieldset className="stage-form-fields" disabled={readOnly}>
         <div className="field-group-note"><strong>Datos básicos</strong></div>
@@ -203,7 +207,7 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
         <Field label="Nro. de orden de cargue" name="orderNumberPreview" placeholder="Automático" readOnly value={draft.orderNumber} />
         <Field label="Agencia" name="agencyCode" value={draft.agencyCode} />
         <Field className="span-2" label="Referencia del cliente" name="customerReference" value={draft.customerReference} />
-        <label className="form-field checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked={draft.generatesConsignment ?? true} name="generatesConsignment" type="checkbox" /><em>Crear la remesa a partir de esta orden</em></span></label>
+        <FormField className="checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked={draft.generatesConsignment ?? true} name="generatesConsignment" type="checkbox" /><em>Crear la remesa a partir de esta orden</em></span></FormField>
 
         <div className="field-group-note"><strong>Remitente y cargue</strong></div>
         <PartyBlock label="Remitente" onChange={setSender} onSite={(site) => setLoading((current) => ({ siteName: site.siteName, address: site.address ?? current.address, cityName: site.city ?? current.cityName, municipalityCode: site.cityCode ?? current.municipalityCode }))} role="sender" siteLabel="Sede RNDC remitente" state={sender} />
@@ -229,26 +233,27 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
         <MoneyField label="Flete conductor" name="driverFreight" value={draft.driverFreight} />
 
         <div className="field-group-note"><strong>Mercancía</strong></div>
+        <CargoGuidance />
         <Field className="span-2" label="Mercancía" name="cargoDescription" required value={draft.cargoDescription} />
         <Field label="Código de mercancía" name="merchandiseCode" value={draft.merchandiseCode} />
-        <Field label="Cantidad" name="cargoQuantity" value={draft.cargoQuantity} />
+        <Field hint="Cantidad según la unidad indicada al lado: cajas, estibas u otra unidad de la remisión. Usa el dato del remitente." label="Cantidad" name="cargoQuantity" value={draft.cargoQuantity} />
         <Field label="Unidad" name="cargoUnit" value={draft.cargoUnit} />
-        <Field label="Peso (TN)" min="0" name="weightTons" required step="0.001" type="number" value={draft.weightTons} />
-        <Field label="Volumen m³" min="0" name="volumeM3" step="0.01" type="number" value={draft.volumeM3} />
+        <Field hint={cargoHints.weight} label="Peso (TN)" min="0" name="weightTons" required step="0.001" type="number" value={draft.weightTons} />
+        <Field hint={cargoHints.volume} label="Volumen m³" min="0" name="volumeM3" step="0.01" type="number" value={draft.volumeM3} />
         <PackagingField code={packaging.code || undefined} description={packaging.description || undefined} label="Empaque" name="packagingCode" onClear={() => setPackaging({ code: "", description: "" })} onSelect={(option) => setPackaging({ code: option.code, description: option.description })} required />
         <CargoNatureField name="natureOfCargo" required value={draft.natureOfCargo} />
 
         <div className="field-group-note"><strong>Observaciones especiales</strong></div>
-        <label className="form-field"><span>Sellos y/o precintos</span><textarea defaultValue={draft.sealNumbers} name="sealNumbers" rows={3} /></label>
-        <label className="form-field"><span>Condiciones de cargue</span><textarea defaultValue={draft.loadingConditions} name="loadingConditions" rows={3} /></label>
-        <label className="form-field"><span>Embalaje especial</span><textarea defaultValue={draft.specialPackaging} name="specialPackaging" rows={3} /></label>
-        <label className="form-field span-2"><span>Observaciones</span><textarea defaultValue={draft.observations} name="observations" rows={3} /></label>
+        <FormField><span>Sellos y/o precintos</span><textarea defaultValue={draft.sealNumbers} name="sealNumbers" rows={3} /></FormField>
+        <FormField><span>Condiciones de cargue</span><textarea defaultValue={draft.loadingConditions} name="loadingConditions" rows={3} /></FormField>
+        <FormField><span>Embalaje especial</span><textarea defaultValue={draft.specialPackaging} name="specialPackaging" rows={3} /></FormField>
+        <FormField className="span-2"><span>Observaciones</span><textarea defaultValue={draft.observations} name="observations" rows={3} /></FormField>
 
         <div className="field-group-note"><strong>Fechas de cargue</strong></div>
         <DateField label="Fecha mínima" name="minLoadingDate" required value={draft.minLoadingDate ?? today} />
         <DateField label="Fecha máxima" name="maxLoadingDate" required value={draft.maxLoadingDate ?? today} />
       </fieldset>
-    </form>
+    </ValidatedForm>
   );
 }
 
@@ -298,12 +303,12 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
 
       <div className="field-group-note"><strong>Tipo de remesa</strong></div>
       <div className="remesa-choice-group span-2">
-        <label><input aria-label="Remesa municipal" checked={consignmentClass === "municipal"} name={`${key}_class`} onChange={() => setConsignmentClass("municipal")} type="radio" value="municipal" /><span>Remesa municipal</span></label>
-        <label><input aria-label="Remesa terrestre de carga" checked={consignmentClass === "terrestre_carga"} name={`${key}_class`} onChange={() => setConsignmentClass("terrestre_carga")} type="radio" value="terrestre_carga" /><span>Remesa terrestre de carga</span></label>
+        <FormField><input aria-label="Remesa municipal" checked={consignmentClass === "municipal"} name={`${key}_class`} onChange={() => setConsignmentClass("municipal")} type="radio" value="municipal" /><span>Remesa municipal</span></FormField>
+        <FormField><input aria-label="Remesa terrestre de carga" checked={consignmentClass === "terrestre_carga"} name={`${key}_class`} onChange={() => setConsignmentClass("terrestre_carga")} type="radio" value="terrestre_carga" /><span>Remesa terrestre de carga</span></FormField>
       </div>
 
       <div className="field-group-note"><strong>Información del cliente</strong></div>
-      <label className="form-field checkbox-field"><span>De orden de cargue</span><span className="checkbox-control"><input aria-label="De orden de cargue" checked disabled readOnly type="checkbox" /><em>Sí</em></span></label>
+      <FormField className="checkbox-field"><span>De orden de cargue</span><span className="checkbox-control"><input aria-label="De orden de cargue" checked disabled readOnly type="checkbox" /><em>Sí</em></span></FormField>
       <Field className="span-2" label="Cliente" name={`${key}_customerPreview`} readOnly value={context.customerName} />
       <Field label="Nro. de orden de cargue" name={`${key}_orderPreview`} readOnly value={context.loadingOrderNumber} />
 
@@ -321,7 +326,7 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
       <input name={`${key}_unloadingCity`} type="hidden" value={unloading.cityName ?? ""} />
 
       <div className="field-group-note"><strong>Sitio de cargue</strong></div>
-      <PartyField className="span-2" label="Remitente" onClear={() => setSender(remesaPartyState(undefined))} onSelect={(party) => { setSender({ ...sender, selected: party, name: party.name, identificationType: party.documentType, identificationNumber: party.document, address: party.address ?? sender.address, cityName: party.city ?? sender.cityName, municipalityCode: party.cityCode ?? sender.municipalityCode, phone: party.phone ?? sender.phone }); setLoading({ ...loading, address: party.address ?? loading.address, cityName: party.city ?? loading.cityName, municipalityCode: party.cityCode ?? loading.municipalityCode }); }} onType={(name) => setSender({ ...sender, selected: null, name })} required role="sender" selected={sender.selected ?? (sender.name ? { name: sender.name, document: sender.identificationNumber, documentType: sender.identificationType } : null)} typedName={sender.selected ? undefined : sender.name} />
+      <PartyField name={`${key}_senderName`} className="span-2" label="Remitente" onClear={() => setSender(remesaPartyState(undefined))} onSelect={(party) => { setSender({ ...sender, selected: party, name: party.name, identificationType: party.documentType, identificationNumber: party.document, address: party.address ?? sender.address, cityName: party.city ?? sender.cityName, municipalityCode: party.cityCode ?? sender.municipalityCode, phone: party.phone ?? sender.phone }); setLoading({ ...loading, address: party.address ?? loading.address, cityName: party.city ?? loading.cityName, municipalityCode: party.cityCode ?? loading.municipalityCode }); }} onType={(name) => setSender({ ...sender, selected: null, name })} required role="sender" selected={sender.selected ?? (sender.name ? { name: sender.name, document: sender.identificationNumber, documentType: sender.identificationType } : null)} typedName={sender.selected ? undefined : sender.name} />
       <input name={`${key}_senderName`} type="hidden" value={sender.name ?? ""} />
       <IdTypeField label="Tipo de identificación remitente" name={`${key}_senderIdType`} onChange={(identificationType) => setSender({ ...sender, identificationType })} required value={sender.identificationType ?? "N"} />
       <Field label="Número de identificación remitente" name={`${key}_senderId`} onChange={(event) => setSender({ ...sender, identificationNumber: event.target.value })} required value={sender.identificationNumber} />
@@ -336,7 +341,7 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
       <input name={`${key}_loadingSiteName`} type="hidden" value={loading.siteName ?? ""} />
 
       <div className="field-group-note"><strong>Sitio de descargue</strong></div>
-      <PartyField className="span-2" label="Destinatario" onClear={() => setRecipient(remesaPartyState(undefined))} onSelect={(party) => { setRecipient({ ...recipient, selected: party, name: party.name, identificationType: party.documentType, identificationNumber: party.document, address: party.address ?? recipient.address, cityName: party.city ?? recipient.cityName, municipalityCode: party.cityCode ?? recipient.municipalityCode, phone: party.phone ?? recipient.phone }); setUnloading({ ...unloading, address: party.address ?? unloading.address, cityName: party.city ?? unloading.cityName, municipalityCode: party.cityCode ?? unloading.municipalityCode }); }} onType={(name) => setRecipient({ ...recipient, selected: null, name })} required role="recipient" selected={recipient.selected ?? (recipient.name ? { name: recipient.name, document: recipient.identificationNumber, documentType: recipient.identificationType } : null)} typedName={recipient.selected ? undefined : recipient.name} />
+      <PartyField name={`${key}_recipientName`} className="span-2" label="Destinatario" onClear={() => setRecipient(remesaPartyState(undefined))} onSelect={(party) => { setRecipient({ ...recipient, selected: party, name: party.name, identificationType: party.documentType, identificationNumber: party.document, address: party.address ?? recipient.address, cityName: party.city ?? recipient.cityName, municipalityCode: party.cityCode ?? recipient.municipalityCode, phone: party.phone ?? recipient.phone }); setUnloading({ ...unloading, address: party.address ?? unloading.address, cityName: party.city ?? unloading.cityName, municipalityCode: party.cityCode ?? unloading.municipalityCode }); }} onType={(name) => setRecipient({ ...recipient, selected: null, name })} required role="recipient" selected={recipient.selected ?? (recipient.name ? { name: recipient.name, document: recipient.identificationNumber, documentType: recipient.identificationType } : null)} typedName={recipient.selected ? undefined : recipient.name} />
       <input name={`${key}_recipientName`} type="hidden" value={recipient.name ?? ""} />
       <IdTypeField label="Tipo de identificación destinatario" name={`${key}_recipientIdType`} onChange={(identificationType) => setRecipient({ ...recipient, identificationType })} required value={recipient.identificationType ?? "N"} />
       <Field label="Número de identificación destinatario" name={`${key}_recipientId`} onChange={(event) => setRecipient({ ...recipient, identificationNumber: event.target.value })} required value={recipient.identificationNumber} />
@@ -351,8 +356,8 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
       <input name={`${key}_unloadingSiteName`} type="hidden" value={unloading.siteName ?? ""} />
 
       <div className="field-group-note"><strong>Datos del despacho</strong></div>
-      <label className="form-field checkbox-field"><span>Remesa contado</span><span className="checkbox-control"><input aria-label="Remesa contado" defaultChecked={draft.cashConsignment} name={`${key}_cashConsignment`} type="checkbox" /><em>Sí / No</em></span></label>
-      <label className="form-field checkbox-field"><span>Remesa contraentrega</span><span className="checkbox-control"><input aria-label="Remesa contraentrega" defaultChecked={draft.cashOnDelivery} name={`${key}_cashOnDelivery`} type="checkbox" /><em>Sí / No</em></span></label>
+      <FormField className="checkbox-field"><span>Remesa contado</span><span className="checkbox-control"><input aria-label="Remesa contado" defaultChecked={draft.cashConsignment} name={`${key}_cashConsignment`} type="checkbox" /><em>Sí / No</em></span></FormField>
+      <FormField className="checkbox-field"><span>Remesa contraentrega</span><span className="checkbox-control"><input aria-label="Remesa contraentrega" defaultChecked={draft.cashOnDelivery} name={`${key}_cashOnDelivery`} type="checkbox" /><em>Sí / No</em></span></FormField>
       <MoneyField label="Valor declarado mercancía" name={`${key}_declaredValue`} required value={draft.declaredValue} />
       <MoneyField label="Valor remesa" name={`${key}_consignmentValue`} required value={draft.consignmentValue} />
       <Field label="Nro. manifiesto" name={`${key}_manifestPreview`} placeholder="Pendiente" readOnly value={context.manifestNumber} />
@@ -370,12 +375,12 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
         <div className="remission-row remission-head" aria-hidden="true"><span>Remisión Nro.</span><span>Cantidad</span><span>Clase de bultos</span><span>Descripción</span><span>Peso (TN)</span><span>Volumen m³</span><span /></div>
         {remissions.map((line, index) => (
           <div className="remission-row" key={line.rowId}>
-            <input aria-label={`Remisión ${index + 1} número`} defaultValue={line.remissionNumber} name={`${key}_rem${index}_number`} required />
-            <input aria-label={`Remisión ${index + 1} cantidad`} defaultValue={line.quantity} name={`${key}_rem${index}_quantity`} placeholder={inherited(order.cargoQuantity)} required />
-            <input aria-label={`Remisión ${index + 1} clase de bultos`} defaultValue={line.packagingClass} name={`${key}_rem${index}_packagingClass`} placeholder={inherited(order.packagingCode)} required />
-            <input aria-label={`Remisión ${index + 1} descripción`} defaultValue={line.description} name={`${key}_rem${index}_description`} placeholder={inherited(order.cargoDescription)} required />
-            <input aria-label={`Remisión ${index + 1} peso`} defaultValue={line.weightTons} min="0" name={`${key}_rem${index}_weightTons`} placeholder={inherited(order.weightTons)} required step="0.001" type="number" />
-            <input aria-label={`Remisión ${index + 1} volumen`} defaultValue={line.volumeM3} min="0" name={`${key}_rem${index}_volumeM3`} placeholder={inherited(order.volumeM3)} step="0.01" type="number" />
+            <FormField label={`Remisión ${index + 1} número`}><span className="remission-field-label">Nro. remisión</span><input aria-label={`Remisión ${index + 1} número`} defaultValue={line.remissionNumber} name={`${key}_rem${index}_number`} required /></FormField>
+            <FormField label={`Remisión ${index + 1} cantidad`}><span className="remission-field-label">Cantidad</span><input aria-label={`Remisión ${index + 1} cantidad`} defaultValue={line.quantity} name={`${key}_rem${index}_quantity`} placeholder={inherited(order.cargoQuantity)} required /></FormField>
+            <FormField label={`Remisión ${index + 1} clase de bultos`}><span className="remission-field-label">Clase de bultos</span><input aria-label={`Remisión ${index + 1} clase de bultos`} defaultValue={line.packagingClass} name={`${key}_rem${index}_packagingClass`} placeholder={inherited(order.packagingCode)} required /></FormField>
+            <FormField label={`Remisión ${index + 1} descripción`}><span className="remission-field-label">Descripción</span><input aria-label={`Remisión ${index + 1} descripción`} defaultValue={line.description} name={`${key}_rem${index}_description`} placeholder={inherited(order.cargoDescription)} required /></FormField>
+            <FormField label={`Remisión ${index + 1} peso`}><span className="remission-field-label">Peso (TN)</span><input aria-label={`Remisión ${index + 1} peso`} defaultValue={line.weightTons} min="0" name={`${key}_rem${index}_weightTons`} placeholder={inherited(order.weightTons)} required step="0.001" type="number" /></FormField>
+            <FormField label={`Remisión ${index + 1} volumen`}><span className="remission-field-label">Volumen (m³)</span><input aria-label={`Remisión ${index + 1} volumen`} defaultValue={line.volumeM3} min="0" name={`${key}_rem${index}_volumeM3`} placeholder={inherited(order.volumeM3)} step="0.01" type="number" /></FormField>
             <button aria-label={`Quitar remisión ${index + 1}`} className="ghost-button" disabled={remissions.length === 1} onClick={() => setRemissions(remissions.filter((row) => row.rowId !== line.rowId))} type="button">×</button>
           </div>
         ))}
@@ -385,41 +390,41 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
 
       <div className="field-group-note"><strong>Resumen que pasa al manifiesto</strong></div>
       <Field label="Unidad de medida" name={`${key}_unitOfMeasure`} required value={effective.unitOfMeasure} />
-      <Field label="Mercancía" name={`${key}_merchandiseCode`} required value={effective.merchandiseCode} />
+      <Field label="Código de mercancía" name={`${key}_merchandiseCode`} required value={effective.merchandiseCode} />
       <PackagingField code={packaging.code || undefined} description={packaging.description || undefined} label="Código de empaque" name={`${key}_packagingCode`} onClear={() => setPackaging({ code: "", description: "" })} onSelect={(option) => setPackaging({ code: option.code, description: option.description })} />
       <CargoNatureField name={`${key}_natureOfCargo`} required value={effective.natureOfCargo} />
       <Field label="Grupo embalaje envase" name={`${key}_packagingGroup`} placeholder="Sin relación en catálogo" readOnly value={packagingGroup} />
       <Field className="span-2" label="Orden de servicio transportador" name={`${key}_serviceOrderTransporter`} value={draft.serviceOrderTransporter ?? context.serviceOrderCode} />
-      <label className="form-field"><span>Observaciones del transportador</span><textarea defaultValue={draft.transporterObservations} name={`${key}_transporterObservations`} rows={3} /></label>
-      <label className="form-field span-2"><span>Observaciones generales</span><textarea defaultValue={draft.generalObservations} name={`${key}_observations`} rows={3} /></label>
+      <FormField><span>Observaciones del transportador</span><textarea defaultValue={draft.transporterObservations} name={`${key}_transporterObservations`} rows={3} /></FormField>
+      <FormField className="span-2"><span>Observaciones generales</span><textarea defaultValue={draft.generalObservations} name={`${key}_observations`} rows={3} /></FormField>
       {remesa.officialState !== "draft" ? <span className="official-lock">Documento oficial · Sólo lectura</span> : null}
     </fieldset>
   );
 }
 
-export function ConsignmentsForm({ context, onSubmit, order, readOnly, remesas }: { context: RemesaContext; onSubmit: (data: FormData) => void; order: LoadingOrder; readOnly: boolean; remesas: Remesa[] }) {
+export function ConsignmentsForm({ context, onSubmit, order, readOnly, remesas }: { context: RemesaContext; onSubmit: (data: FormData) => void | Promise<void>; order: LoadingOrder; readOnly: boolean; remesas: Remesa[] }) {
   const rows = remesas.length > 0 ? remesas : [{ _id: "new", sequence: 1, officialState: "draft" }];
   return (
-    <form className="form-compact" id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
+    <ValidatedForm className="form-compact" id="stage-primary-form" onSubmit={(event) => { return onSubmit(new FormData(event.currentTarget)); }}>
       <StageHeading number="02" title="Remesas" text="Revisa los datos heredados de la orden y completa la información propia de la remesa." readOnly={readOnly} />
       <div className="inheritance-note"><span>✓</span><div><strong>Datos precargados desde la orden</strong><p>Puedes corregirlos antes de emitir; el sistema conserva únicamente las diferencias.</p></div></div>
       <div className="stage-remesa-list">
         {rows.map((remesa) => <RemesaCard context={context} key={remesa._id} order={order} readOnly={readOnly} remesa={remesa} />)}
       </div>
-    </form>
+    </ValidatedForm>
   );
 }
 
-export function AssignmentForm({ currentDriverDocument, currentVehiclePlate, onSubmit, readOnly }: { currentDriverDocument?: string; currentVehiclePlate?: string; onSubmit: (values: { driverId?: string; vehicleId?: string }) => void; readOnly: boolean }) {
+export function AssignmentForm({ currentDriverDocument, currentVehiclePlate, onSubmit, readOnly }: { currentDriverDocument?: string; currentVehiclePlate?: string; onSubmit: (values: { driverId?: string; vehicleId?: string }) => void | Promise<void>; readOnly: boolean }) {
   const [assignment, setAssignment] = useState<VehicleAssignmentValue>({ vehicle: null, driver: null });
 
   return (
-    <form className="form-compact" id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit({ driverId: assignment.driver?._id, vehicleId: assignment.vehicle?._id }); }}>
+    <ValidatedForm className="form-compact" id="stage-primary-form" onSubmit={(event) => { return onSubmit({ driverId: assignment.driver?._id, vehicleId: assignment.vehicle?._id }); }}>
       <StageHeading number="03" title="Vehículo y conductor" text="Empieza por la placa: el sistema propone los conductores vinculados a ese vehículo en el RNDC." readOnly={readOnly} />
       <fieldset className="stage-form-fields" disabled={readOnly}>
         <VehicleAssignmentPicker currentDriverDocument={currentDriverDocument} currentVehiclePlate={currentVehiclePlate} disabled={readOnly} onChange={setAssignment} value={assignment} />
       </fieldset>
-    </form>
+    </ValidatedForm>
   );
 }
 
@@ -429,13 +434,13 @@ function paidByOptions(current: string | undefined) {
 
 const MONEY_KEYS = ["freightTotal", "advance", "withholdingSource", "withholdingIca", "fopatContribution", "adjustments"] as const;
 
-export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: ManifestContext; draft: Manifest; onSubmit: (data: FormData) => void; readOnly: boolean }) {
+export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: ManifestContext; draft: Manifest; onSubmit: (data: FormData) => void | Promise<void>; readOnly: boolean }) {
   const [money, setMoney] = useState<Record<(typeof MONEY_KEYS)[number], string>>({ freightTotal: draft.freightTotal ?? "", advance: draft.advance ?? "0", withholdingSource: draft.withholdingSource ?? "0", withholdingIca: draft.withholdingIca ?? "0", fopatContribution: draft.fopatContribution ?? "0", adjustments: draft.adjustments ?? "0" });
   const suggested = String(Math.max(0, Number(money.freightTotal || 0) - Number(money.advance || 0) - Number(money.withholdingSource || 0) - Number(money.withholdingIca || 0) - Number(money.fopatContribution || 0) + Number(money.adjustments || 0)));
   const [net, setNet] = useState<{ value: string; manual: boolean }>({ value: draft.netPayable ?? "", manual: Boolean(draft.netPayable) });
   const netValue = net.manual ? net.value : suggested;
   return (
-    <form className="form-compact" id="stage-primary-form" onSubmit={(event) => { event.preventDefault(); onSubmit(new FormData(event.currentTarget)); }}>
+    <ValidatedForm className="form-compact" id="stage-primary-form" onSubmit={(event) => { return onSubmit(new FormData(event.currentTarget)); }}>
       <StageHeading number="04" title="Manifiesto" text="La ruta, flota y remesas ya están vinculadas. Revisa la operación y la liquidación." readOnly={readOnly} />
       <fieldset className="stage-form-fields" disabled={readOnly}>
         <div className="field-group-note"><strong>Datos básicos</strong></div>
@@ -443,13 +448,13 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <DateField label="Fecha estimada de entrega" name="estimatedDeliveryDate" required value={draft.estimatedDeliveryDate} />
         <Field label="Nro. de manifiesto" name="manifestNumberPreview" placeholder="Automático" readOnly value={draft.manifestNumber} />
         <Field label="Agencia" name="agencyPreview" placeholder="—" readOnly value={context.agencyCode} />
-        <label className="form-field"><span>Tipo de manifiesto<em aria-hidden="true"> *</em></span><select defaultValue={normalizeManifestType(draft.manifestType) ?? "G"} name="manifestType" required>{MANIFEST_TYPE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
+        <FormField><span>Tipo de manifiesto<em aria-hidden="true"> *</em></span><select defaultValue={normalizeManifestType(draft.manifestType) ?? "G"} name="manifestType" required>{MANIFEST_TYPE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></FormField>
         {context.consignmentCount < 2 ? <div className="field-hint span-2">Multiparada solo aplica cuando el manifiesto agrupa dos o más remesas (una por cada entrega del recorrido).</div> : null}
         <Field label="Nro. de contrato" name="contractNumber" placeholder="Opcional" value={draft.contractNumber} />
         <Field label="Origen" name="originPreview" placeholder="—" readOnly value={context.originCity} />
         <Field label="Destino" name="destinationPreview" placeholder="—" readOnly value={context.destinationCity} />
-        <label className="form-field"><span>Alcance</span><select defaultValue={draft.operationScope ?? "intermunicipal"} name="operationScope"><option value="intermunicipal">Intermunicipal</option><option value="municipal">Municipal</option></select></label>
-        <label className="form-field checkbox-field"><span>Requiere seguimiento</span><span className="checkbox-control"><input defaultChecked={draft.requiresTracking ?? false} name="requiresTracking" type="checkbox" /><em>Marcar el viaje para control de tráfico</em></span></label>
+        <FormField><span>Alcance</span><select defaultValue={draft.operationScope ?? "intermunicipal"} name="operationScope"><option value="intermunicipal">Intermunicipal</option><option value="municipal">Municipal</option></select></FormField>
+        <FormField className="checkbox-field"><span>Requiere seguimiento</span><span className="checkbox-control"><input defaultChecked={draft.requiresTracking ?? false} name="requiresTracking" type="checkbox" /><em>Marcar el viaje para control de tráfico</em></span></FormField>
 
         <div className="field-group-note"><strong>Datos del vehículo</strong></div>
         {context.vehicle ? (
@@ -480,14 +485,14 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <MoneyField hint={net.manual && net.value !== suggested ? `Calculado: $${formatThousands(suggested)}` : "Flete − anticipo − retenciones + ajustes"} label="Neto a pagar" name="netPayable" onChange={(value) => setNet({ value, manual: true })} required value={netValue} />
         <Field label="Agencia de pago" name="paymentAgencyCode" placeholder={context.agencyCode ?? "—"} value={draft.paymentAgencyCode} />
         <Field label="Responsable de pago" name="paymentResponsible" required value={draft.paymentResponsible} />
-        <label className="form-field"><span>Cargue pagado por</span><select defaultValue={draft.loadingResponsible ?? ""} name="loadingResponsible">{paidByOptions(draft.loadingResponsible).map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
-        <label className="form-field"><span>Descargue pagado por</span><select defaultValue={draft.unloadingResponsible ?? ""} name="unloadingResponsible">{paidByOptions(draft.unloadingResponsible).map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
+        <FormField><span>Cargue pagado por</span><select defaultValue={draft.loadingResponsible ?? ""} name="loadingResponsible">{paidByOptions(draft.loadingResponsible).map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></FormField>
+        <FormField><span>Descargue pagado por</span><select defaultValue={draft.unloadingResponsible ?? ""} name="unloadingResponsible">{paidByOptions(draft.unloadingResponsible).map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></FormField>
         <DateField label="Fecha de pago" name="paymentDate" value={draft.paymentDate} />
 
         <div className="field-group-note"><strong>Observaciones especiales</strong></div>
-        <label className="form-field span-2"><span>Observaciones</span><textarea defaultValue={draft.observations} name="observations" rows={4} /></label>
+        <FormField className="span-2"><span>Observaciones</span><textarea defaultValue={draft.observations} name="observations" rows={4} /></FormField>
       </fieldset>
-    </form>
+    </ValidatedForm>
   );
 }
 
@@ -499,12 +504,13 @@ function StageHeading({ number, readOnly, text, title }: { number: string; readO
   return <div className="stage-form-heading"><span>{number}</span><div><h3 id="active-stage-title" tabIndex={-1}>{title}</h3><p>{text}</p></div>{readOnly ? <span className="read-only-chip">Sólo lectura</span> : null}</div>;
 }
 
-function Field({ className = "", label, name, value, onChange, required, ...props }: { className?: string; label: string; name: string; value?: string; onChange?: React.ChangeEventHandler<HTMLInputElement> } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "defaultValue" | "value" | "onChange">) {
+function Field({ className = "", label, name, value, onChange, required, hint, ...props }: { hint?: string; className?: string; label: string; name: string; value?: string; onChange?: React.ChangeEventHandler<HTMLInputElement> } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "defaultValue" | "value" | "onChange">) {
   return (
-    <label className={`form-field ${className}`}>
+    <FormField className={className}>
       <span>{label}{required ? <em aria-hidden="true"> *</em> : null}</span>
-      {onChange || props.readOnly ? <input name={name} onChange={onChange} required={required} value={value ?? ""} {...props} /> : <input defaultValue={value} name={name} required={required} {...props} />}
-    </label>
+      {onChange || props.readOnly ? <input aria-describedby={hint ? `${name}-hint` : undefined} name={name} onChange={onChange} required={required} value={value ?? ""} {...props} /> : <input aria-describedby={hint ? `${name}-hint` : undefined} defaultValue={value} name={name} required={required} {...props} />}
+      {hint ? <small className="cargo-field-hint" id={`${name}-hint`}>{hint}</small> : null}
+    </FormField>
   );
 }
 

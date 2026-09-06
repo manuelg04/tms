@@ -27,7 +27,7 @@ import { MunicipalityField, type DivisionPick } from "../../components/fields/lo
 import { BlockerList } from "../components/blocker-list";
 import { ConsignmentFulfillmentForm, ManifestFulfillmentForm } from "../components/consignment-fulfillment-form";
 import { DocumentHub, type DocumentHubItem } from "../components/document-hub";
-import { DocumentHistory } from "../components/document-history";
+import { FormValidationError } from "../../components/fields/form-validation";
 import {
   AssignmentForm,
   ConsignmentsForm,
@@ -172,7 +172,7 @@ export default function DespachoDetailPage() {
         }
       });
       moveTo("remesas", "La orden de cargue quedó guardada. Los datos conocidos ya están disponibles para las remesas.");
-    });
+    }, true);
   }
 
   async function saveRemesas(data: FormData) {
@@ -222,7 +222,7 @@ export default function DespachoDetailPage() {
         })
       });
       moveTo("vehiculo_conductor", "Las remesas quedaron guardadas y siguen heredando la información de la orden.");
-    });
+    }, true);
   }
 
   async function saveFleet(values: { driverId?: string; vehicleId?: string }) {
@@ -231,7 +231,7 @@ export default function DespachoDetailPage() {
       if (!values.driverId || !values.vehicleId) throw new Error("Selecciona un conductor y un vehículo existentes en maestros.");
       await saveAssignment({ expedienteId, driverId: values.driverId as Id<"drivers">, vehicleId: values.vehicleId as Id<"vehicles"> });
       moveTo("manifiesto", "El vehículo y el conductor quedaron asignados al despacho.");
-    });
+    }, true);
   }
 
   async function saveManifestStage(data: FormData) {
@@ -268,7 +268,7 @@ export default function DespachoDetailPage() {
         }
       });
       moveTo("envio_rndc", "El manifiesto quedó guardado. Revisa el resumen y los bloqueos antes de enviar.");
-    });
+    }, true);
   }
 
   async function fulfillRemesas(data: FormData) {
@@ -295,7 +295,7 @@ export default function DespachoDetailPage() {
       }
       await callDispatchRoute("fulfill", { scope: "remesas" });
       moveTo("cumplido_final", "Todas las remesas disponibles quedaron cumplidas. El manifiesto sigue abierto hasta el cierre final.");
-    });
+    }, true);
   }
 
   async function fulfillManifest(data: FormData) {
@@ -303,7 +303,7 @@ export default function DespachoDetailPage() {
       await recordManifestFulfillment({ expedienteId, draft: { documentsDeliveryDate: required(data, "documentsDeliveryDate"), observation: value(data, "observation") } });
       await callDispatchRoute("fulfill", { scope: "manifiesto" });
       setNotice({ tone: "ok", text: "El manifiesto quedó cumplido y el despacho está cerrado." });
-    });
+    }, true);
   }
 
   async function runPrimaryAction() {
@@ -323,7 +323,7 @@ export default function DespachoDetailPage() {
       return;
     }
     if (primaryAction.kind === "print" || primaryAction.kind === "view") {
-      document.getElementById("documentos-historial")?.scrollIntoView({ behavior: "smooth" });
+      document.getElementById("centro-documental")?.scrollIntoView({ behavior: "smooth" });
       return;
     }
     if (stageResult) setSelectedStage(stageResult.stage);
@@ -338,12 +338,13 @@ export default function DespachoDetailPage() {
     });
   }
 
-  async function run(action: () => Promise<void>) {
+  async function run(action: () => Promise<void>, formSubmission = false) {
     setBusy(true);
     setNotice(null);
     try {
       await action();
     } catch (cause) {
+      if (formSubmission) throw cause;
       setNotice({ tone: "bad", text: cause instanceof Error ? cause.message.replace(/^.*?: /, "") : "No fue posible completar la acción." });
     } finally {
       setBusy(false);
@@ -426,7 +427,6 @@ export default function DespachoDetailPage() {
         </div>
       ) : null}
 
-      <DocumentHistory deliveryEvidence={detail.deliveryEvidence} documents={detail.documents} events={detail.events} technicalEvidence={(evidence ?? []).map((item) => ({ _id: item._id, documentId: item.documentId, kind: item.kind, fileName: item.fileName, createdAt: item.createdAt }))} />
       {advancedModal ? <AdvancedActionModal detail={detail} modal={advancedModal} onClose={() => setAdvancedModal(null)} operations={uncertainOperations ?? []} onDone={(message) => { setAdvancedModal(null); setNotice({ tone: "ok", text: message }); }} /> : null}
     </>
   );
@@ -627,13 +627,13 @@ function value(data: FormData, key: string): string | undefined {
 
 function required(data: FormData, key: string): string {
   const result = value(data, key);
-  if (!result) throw new Error(`Completa ${key.replaceAll(/([A-Z])/g, " $1").toLocaleLowerCase("es")}.`);
+  if (!result) throw new FormValidationError(key);
   return result;
 }
 
 function timestamp(data: FormData, key: string): number {
   const result = new Date(required(data, key)).getTime();
-  if (!Number.isFinite(result)) throw new Error(`La fecha de ${key} no es válida.`);
+  if (!Number.isFinite(result)) throw new FormValidationError(key, "Selecciona una fecha válida.");
   return result;
 }
 
@@ -753,7 +753,7 @@ function successMessage(modal: AdvancedAction): string {
 function loadingWindowEnd(data: FormData): string {
   const min = required(data, "minLoadingDate");
   const max = required(data, "maxLoadingDate");
-  if (max < min) throw new Error("La fecha máxima de cargue no puede ser anterior a la fecha mínima.");
+  if (max < min) throw new FormValidationError("maxLoadingDate", "La fecha máxima de cargue no puede ser anterior a la fecha mínima.");
   return max;
 }
 

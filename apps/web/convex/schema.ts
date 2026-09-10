@@ -42,6 +42,12 @@ const userRole = v.union(
 
 const userStatus = v.union(v.literal("active"), v.literal("disabled"));
 
+const userJobTitle = v.union(
+  v.literal("administrador"),
+  v.literal("jefe_seguridad"),
+  v.literal("auxiliar_seguridad")
+);
+
 const serviceOrderStatus = v.union(
   v.literal("draft"),
   v.literal("confirmed"),
@@ -753,11 +759,15 @@ export default defineSchema({
     email: v.string(),
     roles: v.array(userRole),
     status: userStatus,
+    jobTitle: v.optional(userJobTitle),
+    passwordHash: v.optional(v.string()),
+    passwordUpdatedAt: v.optional(v.number()),
     createdAt: v.number(),
     updatedAt: v.number()
   })
     .index("by_actor_token", ["actorToken"])
     .index("by_auth_subject", ["authSubject"])
+    .index("by_email", ["email"])
     .index("by_organization_and_email", ["organizationId", "email"])
     .index("by_organization_and_external_id", ["organizationId", "externalId"]),
 

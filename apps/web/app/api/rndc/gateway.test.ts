@@ -38,6 +38,19 @@ test("protects the health route and exposes only the safe mode", async () => {
   assert.deepEqual(body, { ok: true, mode: "dry-run" });
 });
 
+test("reports the configured mode once real users are enabled and keeps demo sessions in dry-run", async () => {
+  process.env.RNDC_MODE = "live";
+  globalThis.fetch = async () => Response.json({ ok: true, status: "alive" });
+
+  const demoResponse = await getHealth(authenticatedRequest("http://localhost/api/rndc/health", "operator"));
+  assert.equal(demoResponse.status, 503);
+  assert.deepEqual(await demoResponse.json(), { ok: false, mode: "offline" });
+
+  process.env.AUTH_MODE = "local";
+  const localResponse = await getHealth(authenticatedRequest("http://localhost/api/rndc/health", "operator"));
+  assert.deepEqual(await localResponse.json(), { ok: true, mode: "live" });
+});
+
 test("allows operators through the typed form gateway and keeps the service secret server-side", async () => {
   let authorization = "";
   let backendUrl = "";

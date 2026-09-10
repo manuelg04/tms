@@ -127,7 +127,7 @@ RNDC_API_URL=https://<backend-rndc>
 RNDC_SERVICE_TOKEN=<mismo-secreto-del-backend>
 RNDC_INGEST_KEY=<mismo-secreto-de-convex>
 RNDC_MODE=dry-run
-AUTH_MODE=<modo-autenticacion-aprobado>
+AUTH_MODE=local
 AUTH_SESSION_SECRET=<secreto-de-sesion>
 AUTH_JWT_PRIVATE_KEY_BASE64=<clave-privada-base64>
 AUTH_JWT_PUBLIC_KEY_BASE64=<clave-publica-base64>
@@ -137,7 +137,15 @@ AUTH_JWT_KEY_ID=<identificador-de-clave>
 CONVEX_AUTH_JWKS=<jwks-configurado>
 ```
 
-La autenticacion de demostracion esta pensada para validar roles y pantallas. No debe desbloquear trafico RNDC continuo. Antes de produccion debe existir un modo de autenticacion soportado para usuarios reales, con revocacion y trazabilidad.
+La autenticacion de demostracion (`AUTH_MODE=demo`) esta pensada para validar roles y pantallas y nunca desbloquea trafico RNDC: con ella el gateway fuerza `dry-run`. El modo `AUTH_MODE=local` autentica usuarios reales con correo y contrasena guardados en Convex (hash scrypt), con cargos administrador, jefe de seguridad y auxiliar de seguridad, desactivacion de cuentas y auditoria por usuario. Solo con `AUTH_MODE=local` el gateway respeta `RNDC_MODE=live`.
+
+Alta del primer administrador (requiere `NEXT_PUBLIC_CONVEX_URL` y `RNDC_INGEST_KEY` en `apps/web/.env.local` o en el entorno):
+
+```bash
+npm run auth:create-user -- --email admin@empresa.com --name "Nombre Apellido" --cargo administrador --password "<clave-temporal>"
+```
+
+Los demas usuarios se crean desde Configuracion > Usuarios con la sesion del administrador. Cada usuario cambia su clave en Configuracion > Mi contrasena. Los usuarios de demostracion no tienen contrasena y no pueden ingresar en modo `local`.
 
 ### Interruptor de escrituras oficiales en Convex
 

@@ -7,6 +7,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useDemoUser } from "../providers";
 import { documentSections, resolveDocumentSection } from "../lib/document-workspace";
+import { jobTitleLabels } from "../../convex/model/userAccounts";
 
 type PageMeta = {
   title: string;
@@ -23,6 +24,8 @@ type NavItem = {
 const pageMeta: Record<string, PageMeta> = {
   "/control/seguimiento": { title: "Seguimiento", subtitle: "Control de tráfico · Despachos y puntos de control" },
   "/configuracion/alertas-visuales": { title: "Alertas visuales", subtitle: "Configuración de alarmas de seguimiento" },
+  "/configuracion/usuarios": { title: "Usuarios", subtitle: "Cuentas de acceso y cargos de la empresa" },
+  "/configuracion/mi-clave": { title: "Mi contraseña", subtitle: "Cambio de la contraseña de acceso" },
   "/": {
     title: "Panel de operacion",
     subtitle: "Estado en vivo de tus documentos RNDC"
@@ -100,7 +103,11 @@ const navItems: NavItem[] = [
     href: "/configuracion/alertas-visuales",
     label: "Configuración",
     icon: <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden><path d="M3 2v12M8 2v12M13 2v12" /><path d="M1 5h4M6 10h4M11 6h4" strokeWidth="3" /></svg>,
-    children: [{ href: "/configuracion/alertas-visuales", label: "Alertas visuales" }]
+    children: [
+      { href: "/configuracion/alertas-visuales", label: "Alertas visuales" },
+      { href: "/configuracion/usuarios", label: "Usuarios" },
+      { href: "/configuracion/mi-clave", label: "Mi contraseña" }
+    ]
   },
   {
     href: "/correcciones",
@@ -228,7 +235,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <span className="user-avatar" aria-hidden>{user.name.slice(0, 1)}</span>
                 <span className="user-summary">
                   <strong>{user.name}</strong>
-                  <small>{roleLabel(user.role)}</small>
+                  <small>{user.jobTitle ? jobTitleLabels[user.jobTitle] : roleLabel(user.role)}</small>
                 </span>
                 <button className="user-logout" onClick={() => void logout()} type="button">
                   Salir

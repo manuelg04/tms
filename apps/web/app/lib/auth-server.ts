@@ -8,8 +8,10 @@ import {
 
 export const sessionCookieName = "tms_session";
 
+export type AuthMode = "demo" | "local";
+
 export type AuthSettings = {
-  mode: "demo";
+  mode: AuthMode;
   demoPassword: string;
   sessionSecret: string;
   privateKey: string;
@@ -20,14 +22,22 @@ export type AuthSettings = {
   secureCookies: boolean;
 };
 
-export function getAuthSettings(): AuthSettings {
-  if ((process.env.AUTH_MODE ?? "demo") !== "demo") {
+export function resolveAuthMode(): AuthMode {
+  const mode = process.env.AUTH_MODE ?? "demo";
+
+  if (mode !== "demo" && mode !== "local") {
     throw new Error("Unsupported authentication mode");
   }
 
+  return mode;
+}
+
+export function getAuthSettings(): AuthSettings {
+  const mode = resolveAuthMode();
+
   return {
-    mode: "demo",
-    demoPassword: required("DEMO_AUTH_PASSWORD"),
+    mode,
+    demoPassword: mode === "demo" ? required("DEMO_AUTH_PASSWORD") : "",
     sessionSecret: required("AUTH_SESSION_SECRET"),
     privateKey: readPem("AUTH_JWT_PRIVATE_KEY", "AUTH_JWT_PRIVATE_KEY_BASE64"),
     publicKey: readPem("AUTH_JWT_PUBLIC_KEY", "AUTH_JWT_PUBLIC_KEY_BASE64"),

@@ -11,11 +11,14 @@ export type Permission =
   | "view_audit"
   | "download_evidence";
 
+export type JobTitle = "administrador" | "jefe_seguridad" | "auxiliar_seguridad";
+
 export type DemoUser = {
   id: string;
   email: string;
   name: string;
   role: DemoRole;
+  jobTitle?: JobTitle;
 };
 
 export const demoUsers: DemoUser[] = [
@@ -134,5 +137,6 @@ function isSessionPayload(value: Record<string, unknown>): value is DemoUser & {
     && typeof value.email === "string"
     && typeof value.name === "string"
     && (value.role === "admin" || value.role === "operator" || value.role === "auditor")
+    && (value.jobTitle === undefined || value.jobTitle === "administrador" || value.jobTitle === "jefe_seguridad" || value.jobTitle === "auxiliar_seguridad")
     && typeof value.expiresAt === "number";
 }

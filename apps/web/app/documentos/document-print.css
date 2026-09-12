@@ -1,0 +1,83 @@
+.document-print-preview { min-width: 0; }
+.document-print-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; }
+.document-print-toolbar h2 { margin: 4px 0 0; font-size: 22px; }
+.document-print-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.document-print-notice { padding: 14px 18px; border: 1px solid var(--line, #d8dde4); border-radius: 6px; background: var(--surface, #fff); font-size: 13px; line-height: 1.6; margin-bottom: 18px; }
+.document-pdf-caption { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.document-pdf-frame { display: block; width: 100%; height: min(1050px, 78vh); min-height: 520px; border: 1px solid var(--line, #d8dde4); border-radius: 6px; background: #e9ebee; }
+.document-pdf-help { margin: 12px 0; font-size: 13px; }
+.document-pdf-help a, .document-print-notice a { text-decoration: underline; }
+.document-print-sheet { max-width: 1000px; margin: 0 auto; padding: 36px; background: #fff; color: #1a2432; border: 1px solid #d5dae0; box-shadow: 0 8px 26px #1823330b; font-size: 12px; line-height: 1.45; }
+.document-paper-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 2px solid #1a2432; padding-bottom: 20px; }
+.document-paper-heading > div:last-child { text-align: right; }
+.document-paper-heading h1 { font-size: 22px; font-weight: 700; margin: 0 0 8px; }
+.document-paper-heading p { margin: 4px 0; font-size: 12px; }
+.document-paper-brand { display: flex; flex-direction: column; gap: 5px; }
+.document-paper-brand > strong { font-size: 36px; line-height: 1; letter-spacing: -2px; color: #163653; }
+.document-paper-brand > span { font-size: 12px; }
+.document-paper-condition { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 12px 0; border-bottom: 1px solid #c7cdd5; margin-bottom: 16px; font-size: 11px; }
+.document-paper-fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid #c7cdd5; border-left: 1px solid #c7cdd5; margin: 16px 0; }
+.document-paper-field { display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid #c7cdd5; border-right: 1px solid #c7cdd5; padding: 9px 10px; min-width: 0; }
+.document-paper-field > span { font-size: 10px; color: #596575; }
+.document-paper-field > strong { font-weight: 600; overflow-wrap: anywhere; }
+.document-paper-locations { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid #c7cdd5; margin: 16px 0; }
+.document-paper-location + .document-paper-location { border-left: 1px solid #c7cdd5; }
+.document-paper-location h2, .document-paper-section-title { font-size: 12px; font-weight: 700; background: #edf0f4; margin: 0; padding: 9px 10px; }
+.document-paper-location dl { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 0; padding: 8px 10px; margin: 0; }
+.document-paper-location dt, .document-paper-location dd { padding: 5px 0; margin: 0; overflow-wrap: anywhere; }
+.document-paper-location dt { font-size: 10px; color: #596575; padding-right: 10px; }
+.document-paper-section-title { border: 1px solid #c7cdd5; }
+.document-paper-financials { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.document-paper-table-wrap { overflow-x: auto; margin-bottom: 16px; }
+.document-paper-table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: left; }
+.document-paper-table th, .document-paper-table td { padding: 10px; border: 1px solid #c7cdd5; vertical-align: top; overflow-wrap: anywhere; }
+.document-paper-table th { background: #f7f8fa; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.document-paper-table td { min-width: 60px; }
+.document-paper-table td:last-child { min-width: 150px; }
+.document-paper-observations { border: 1px solid #c7cdd5; padding: 12px; margin-top: 16px; min-height: 76px; }
+.document-paper-observations > strong { font-size: 10px; text-transform: uppercase; }
+.document-paper-observations p { margin: 6px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.document-paper-signatures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 20px; gap: 32px; }
+.document-paper-signatures > div { display: flex; flex-direction: column; min-height: 95px; }
+.document-paper-signatures strong { font-size: 11px; }
+.document-paper-signatures span { margin-top: auto; border-top: 1px solid #919dab; padding-top: 7px; color: #596575; font-size: 10px; }
+.document-paper-footer { display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid #d5dae0; margin-top: 24px; padding-top: 10px; color: #687484; font-size: 9px; }
+@media (max-width: 700px) {
+  .document-print-toolbar { align-items: flex-start; flex-direction: column; }
+  .document-print-actions { width: 100%; }
+  .document-print-sheet { padding: 18px 14px; }
+  .document-paper-heading { gap: 12px; align-items: flex-start; }
+  .document-paper-heading h1 { font-size: 17px; }
+  .document-paper-brand > strong { font-size: 29px; }
+  .document-paper-brand > span { font-size: 10px; }
+  .document-paper-fields, .document-paper-financials { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .document-paper-locations { grid-template-columns: minmax(0, 1fr); }
+  .document-paper-location + .document-paper-location { border-left: 0; border-top: 1px solid #c7cdd5; }
+  .document-paper-footer { flex-direction: column; gap: 4px; }
+  .document-pdf-frame { min-height: 500px; }
+}
+@media print {
+  @page { size: A4; margin: 12mm; }
+  body:has(.document-print-sheet) { background: #fff; }
+  body:has(.document-print-sheet) .sidebar,
+  body:has(.document-print-sheet) .topbar,
+  body:has(.document-print-sheet) .mobile-nav-backdrop,
+  body:has(.document-print-sheet) .registry-heading,
+  body:has(.document-print-sheet) .document-print-toolbar,
+  body:has(.document-print-sheet) .document-print-notice { display: none !important; }
+  body:has(.document-print-sheet) .app { display: block !important; min-height: 0; }
+  body:has(.document-print-sheet) .content,
+  body:has(.document-print-sheet) .page { display: block !important; padding: 0 !important; margin: 0 !important; width: 100% !important; min-width: 0 !important; overflow: visible !important; }
+  .document-print-sheet { border: 0; box-shadow: none; margin: 0; padding: 0; max-width: none; font-size: 10px; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .document-paper-heading, .document-paper-locations, .document-paper-signatures, .document-paper-observations { break-inside: avoid; }
+  .document-paper-fields { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .document-paper-financials { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .document-paper-locations { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .document-paper-location + .document-paper-location { border-left: 1px solid #c7cdd5; border-top: 0; }
+  .document-paper-location dl { grid-template-columns: 94px minmax(0, 1fr); }
+  .document-paper-table-wrap { overflow: visible; }
+  .document-paper-table td, .document-paper-table td:last-child { min-width: 0; }
+  .document-paper-table th, .document-paper-table td { padding: 6px; }
+  .document-paper-table tr { break-inside: avoid; }
+  .document-paper-footer { flex-direction: row; }
+}

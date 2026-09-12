@@ -1455,7 +1455,7 @@ async function buildProjection(
   };
 }
 
-async function claimConsecutive(
+export async function claimConsecutive(
   ctx: MutationCtx,
   organizationId: Id<"organizations">,
   agencyCode: string,

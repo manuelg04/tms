@@ -1,0 +1,385 @@
+.document-registry,
+.document-focused-editor {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+.registry-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.document-registry > .registry-heading {
+  margin-bottom: 0;
+}
+
+.registry-heading p {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.registry-heading h2 {
+  font-size: clamp(21px, 2.2vw, 28px);
+  margin: 0;
+  letter-spacing: -0.035em;
+}
+
+.registry-filters,
+.registry-lookup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 14px;
+}
+
+.registry-filters {
+  padding: 18px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.registry-filters label,
+.registry-lookup label,
+.registry-action-panel form > label {
+  display: grid;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.registry-filters label {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+.registry-lookup label {
+  flex: 0 1 340px;
+}
+
+.registry-filters input,
+.registry-lookup input,
+.registry-action-panel textarea,
+.registry-list-toolbar select {
+  min-height: 40px;
+  width: 100%;
+  padding: 9px 11px;
+  color: var(--ink);
+  font: inherit;
+  background: white;
+  border: 1px solid #cdd3dc;
+  border-radius: 6px;
+}
+
+.registry-results {
+  min-width: 0;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.registry-list-toolbar,
+.registry-pagination,
+.registry-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+}
+
+.registry-list-toolbar > div,
+.registry-selection > div {
+  display: grid;
+  gap: 5px;
+  font-size: 13px;
+}
+
+.registry-list-toolbar > div > span,
+.registry-selection span,
+.registry-note {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.registry-list-toolbar label,
+.registry-pagination > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.registry-table-scroll {
+  width: 100%;
+  max-height: 65vh;
+  overflow: auto;
+  border-block: 1px solid var(--line);
+}
+
+.registry-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+  font-size: 12px;
+}
+
+.registry-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  min-width: 135px;
+  padding: 12px 10px;
+  background: #163250;
+  color: white;
+  border-right: 1px solid #34506c;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11px;
+}
+
+.registry-table th:first-child {
+  min-width: 150px;
+}
+
+.registry-table th:nth-child(4) {
+  min-width: 220px;
+}
+
+.registry-table th:last-child {
+  min-width: 180px;
+}
+
+.registry-table th > span {
+  display: block;
+  margin-bottom: 8px;
+  white-space: nowrap;
+}
+
+.registry-table th input {
+  width: 100%;
+  min-width: 0;
+  min-height: 30px;
+  padding: 6px 8px;
+  border: 1px solid #71859a;
+  border-radius: 4px;
+  background: #fff;
+  color: #183044;
+  font: inherit;
+}
+
+.registry-table td {
+  height: 45px;
+  max-width: 300px;
+  padding: 9px 10px;
+  border-bottom: 1px solid #e9edf1;
+  white-space: nowrap;
+}
+
+.registry-table tbody tr:nth-child(even) {
+  background: #f6f8fa;
+}
+
+.registry-table tbody tr {
+  cursor: pointer;
+}
+
+.registry-table tbody tr:hover,
+.registry-table tbody tr:focus-within {
+  background: #edf3fa;
+}
+
+.registry-number {
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: #144b82;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.registry-status {
+  display: inline-block;
+  padding: 4px 7px;
+  border-radius: 5px;
+  background: #e9edf3;
+  color: #3d4d61;
+  font-size: 11px;
+}
+
+.registry-status-authorized,
+.registry-status-fulfilled {
+  background: #e6f3ed;
+  color: #176448;
+}
+
+.registry-status-rejected,
+.registry-status-annulled {
+  background: #f9eae8;
+  color: #963b33;
+}
+
+.registry-table .registry-empty {
+  padding: 44px 20px;
+  white-space: normal;
+  text-align: center;
+  color: var(--muted);
+}
+
+.registry-pagination {
+  font-size: 12px;
+}
+
+.registry-pagination button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.registry-instruction,
+.registry-action-panel,
+.registry-insert-panel {
+  padding: 25px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+}
+
+.registry-action-panel,
+.registry-insert-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.registry-action-panel p,
+.registry-insert-panel p,
+.registry-insert-panel h3 {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.registry-action-panel > button {
+  justify-self: start;
+}
+
+.registry-action-panel form {
+  display: grid;
+  max-width: 650px;
+  gap: 18px;
+}
+
+.registry-action-panel .confirmation-check {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+}
+
+.registry-source {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  padding: 16px;
+  text-align: left;
+  font: inherit;
+  font-size: 13px;
+  border: 1px solid #cdd3dc;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+}
+
+.registry-source span:last-child {
+  margin-left: auto;
+  font-size: 12px;
+}
+
+.registry-source.selected {
+  background: #edf3fa;
+  border-color: #527695;
+}
+
+.registry-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.registry-selection {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+@media (max-width: 760px) {
+  .registry-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .registry-filters {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .registry-filters label {
+    flex-basis: calc(50% - 12px);
+  }
+
+  .registry-lookup > label,
+  .registry-lookup > button {
+    flex: 1 1 100%;
+  }
+
+  .registry-list-toolbar,
+  .registry-pagination,
+  .registry-selection {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 14px;
+  }
+
+  .registry-table-scroll {
+    max-height: 60vh;
+  }
+
+  .registry-table th input {
+    min-height: 36px;
+    font-size: 16px;
+  }
+
+  .registry-table th {
+    min-width: 150px;
+  }
+
+  .registry-pagination > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .registry-action-panel,
+  .registry-insert-panel {
+    padding: 16px;
+  }
+
+  .registry-source {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .registry-source span:last-child {
+    margin-left: 0;
+  }
+}

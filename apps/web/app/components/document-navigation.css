@@ -1,0 +1,98 @@
+.sidebar.document-navigation {
+  min-height: 0;
+  gap: 22px;
+  overflow: hidden;
+}
+
+.document-navigation .brand,
+.document-navigation .sidebar-foot {
+  flex-shrink: 0;
+}
+
+.document-navigation .nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cab-line) transparent;
+  padding-right: 3px;
+}
+
+.document-navigation .nav-group {
+  min-width: 0;
+}
+
+.document-navigation .nav-group-toggle {
+  width: 100%;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.document-navigation .nav-group-toggle:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.document-navigation .nav-group-toggle.active {
+  background: rgba(255, 199, 44, 0.1);
+}
+
+.document-navigation .nav-group-toggle > span {
+  flex: 1;
+}
+
+.document-navigation .nav-group-chevron {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: transform 160ms ease;
+}
+
+.document-navigation .nav-group-toggle[aria-expanded="true"] .nav-group-chevron {
+  transform: rotate(90deg);
+}
+
+.document-navigation .nav-subitems[hidden] {
+  display: none;
+}
+
+.document-navigation .nav-subitems a {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.document-navigation .nav-item:focus-visible,
+.document-navigation .nav-subitems a:focus-visible {
+  outline-offset: -2px;
+}
+
+@media (max-width: 760px) {
+  .sidebar.document-navigation {
+    height: 100dvh;
+  }
+
+  .sidebar.document-navigation .nav {
+    flex: 1 1 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .document-navigation .nav-item,
+  .document-navigation .nav-subitems a {
+    min-height: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .document-navigation .nav-group-chevron {
+    transition: none;
+  }
+}

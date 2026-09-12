@@ -6,8 +6,9 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useDemoUser } from "../providers";
-import { documentSections, resolveDocumentSection } from "../lib/document-workspace";
+import { resolveDocumentSection } from "../lib/document-workspace";
 import { jobTitleLabels } from "../../convex/model/userAccounts";
+import "./document-navigation.css";
 
 type PageMeta = {
   title: string;
@@ -56,6 +57,16 @@ const pageMeta: Record<string, PageMeta> = {
   }
 };
 
+const actionLabels: Record<string, string> = {
+  insertar: "Insertar",
+  listar: "Listar",
+  actualizar: "Actualizar",
+  eliminar: "Eliminar",
+  anular: "Anular",
+  imprimir: "Imprimir",
+  duplicar: "Duplicar"
+};
+
 const navItems: NavItem[] = [
   {
     href: "/",
@@ -80,18 +91,55 @@ const navItems: NavItem[] = [
     )
   },
   {
-    href: "/documentos",
-    label: "Documentos",
+    href: "/documentos/ordenes",
+    label: "Orden de carga",
+    icon: (
+      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+        <rect x="3" y="2.5" width="10" height="12" rx="1" />
+        <path d="M6 1.5h4v3H6zM5.5 7.5h5M5.5 10.5h5" strokeLinejoin="round" />
+      </svg>
+    ),
+    children: ["insertar", "listar", "actualizar", "eliminar", "anular", "imprimir"].map((action) => ({
+      href: `/documentos/ordenes/${action}`,
+      label: actionLabels[action]
+    }))
+  },
+  {
+    href: "/documentos/remesas",
+    label: "Remesas",
+    icon: (
+      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+        <path d="M2 4.5 8 1.5l6 3v7l-6 3-6-3v-7Z" strokeLinejoin="round" />
+        <path d="m2 4.5 6 3 6-3M8 7.5v7M5 3l6 3v3" strokeLinejoin="round" />
+      </svg>
+    ),
+    children: ["insertar", "listar", "actualizar", "anular", "eliminar", "imprimir"].map((action) => ({
+      href: `/documentos/remesas/${action}`,
+      label: actionLabels[action]
+    }))
+  },
+  {
+    href: "/documentos/manifiestos",
+    label: "Manifiestos",
     icon: (
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <path d="M4 1.5h5.5L13 5v9.5H4v-13Z" strokeLinejoin="round" />
         <path d="M9.5 1.5V5H13M6 8h4.5M6 10.5h4.5" />
       </svg>
     ),
-    children: documentSections.filter((section) => section.slug !== "todos").map((section) => ({
-      href: `/documentos/${section.slug}`,
-      label: section.label
+    children: ["insertar", "listar", "actualizar", "anular", "imprimir", "duplicar"].map((action) => ({
+      href: `/documentos/manifiestos/${action}`,
+      label: actionLabels[action]
     }))
+  },
+  {
+    href: "/documentos/cumplidos",
+    label: "Cumplidos",
+    icon: (
+      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+        <path d="M13.5 7.5v6h-11v-11h7M6 6.5l2.5 2.5L14 3.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    )
   },
   {
     href: "/control/seguimiento",
@@ -140,11 +188,27 @@ export function AppShell({ children }: { children: ReactNode }) {
   const unread = useQuery(api.notifications.unreadCount, user ? {} : "skip");
   const [mode, setMode] = useState<RndcMode>("offline");
   const [navOpen, setNavOpen] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(() =>
+    navItems.filter((item) => item.children && isActiveNavItem(pathname, item)).map((item) => item.href)
+  );
   const meta = resolvePageMeta(pathname);
 
   useEffect(() => {
     setNavOpen(false);
+    setExpandedGroups((current) => {
+      const activeGroup = navItems.find((item) => item.children && isActiveNavItem(pathname, item));
+      return activeGroup && !current.includes(activeGroup.href) ? [...current, activeGroup.href] : current;
+    });
   }, [pathname]);
+
+  useEffect(() => {
+    if (!navOpen) return;
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setNavOpen(false);
+    }
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [navOpen]);
 
   useEffect(() => {
     if (pathname === "/login" || !user) {
@@ -180,7 +244,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="app">
-      <aside className={navOpen ? "sidebar open" : "sidebar"} aria-label="Navegacion principal">
+      <aside className={navOpen ? "sidebar document-navigation open" : "sidebar document-navigation"} aria-label="Navegación principal" id="app-navigation">
         <div className="brand">
           <span className="brand-plate">MTM</span>
           <div className="brand-name">
@@ -190,20 +254,45 @@ export function AppShell({ children }: { children: ReactNode }) {
           <button className="mobile-nav-close" aria-label="Cerrar menú" onClick={() => setNavOpen(false)} type="button">×</button>
         </div>
 
-        <nav className="nav">
-          <span className="nav-label">Operacion</span>
-          {navItems.map((item) => (
-            <div className={item.children ? "nav-group" : "nav-group single"} key={item.href}>
-              <Link
-                className={isActivePath(pathname, item.href) ? "nav-item active" : "nav-item"}
-                href={item.href}
-              >
-                {item.icon}
-                {item.label}
-              </Link>
-              {item.children ? <div className="nav-subitems">{item.children.map((child) => <Link aria-current={pathname === child.href ? "page" : undefined} className={pathname === child.href ? "active" : ""} href={child.href} key={child.href}>{child.label}</Link>)}</div> : null}
-            </div>
-          ))}
+        <nav className="nav" aria-label="Módulos de operación">
+          <span className="nav-label">Operación</span>
+          {navItems.map((item) => {
+            const active = isActiveNavItem(pathname, item);
+            const expanded = expandedGroups.includes(item.href);
+            const groupId = `nav-${item.href.split("/").filter(Boolean).join("-")}`;
+            return (
+              <div className={item.children ? "nav-group" : "nav-group single"} key={item.href}>
+                {item.children ? (
+                  <button
+                    aria-controls={groupId}
+                    aria-expanded={expanded}
+                    className={active ? "nav-item nav-group-toggle active" : "nav-item nav-group-toggle"}
+                    onClick={() => setExpandedGroups((current) => current.includes(item.href) ? current.filter((href) => href !== item.href) : [...current, item.href])}
+                    type="button"
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                    <svg className="nav-group-chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                      <path d="m4.5 2.5 3.5 3.5-3.5 3.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                ) : (
+                  <Link aria-current={active ? "page" : undefined} className={active ? "nav-item active" : "nav-item"} href={item.href} onClick={() => setNavOpen(false)}>
+                    {item.icon}
+                    {item.label}
+                  </Link>
+                )}
+                {item.children ? (
+                  <div className="nav-subitems" hidden={!expanded} id={groupId}>
+                    {item.children.map((child) => {
+                      const childActive = isActivePath(pathname, child.href);
+                      return <Link aria-current={childActive ? "page" : undefined} className={childActive ? "active" : ""} href={child.href} key={child.href} onClick={() => setNavOpen(false)}>{child.label}</Link>;
+                    })}
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
         </nav>
 
         <div className="sidebar-foot">
@@ -216,7 +305,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <div className="content">
         <header className="topbar">
-          <button className="mobile-nav-trigger" aria-expanded={navOpen} aria-label="Abrir menú" onClick={() => setNavOpen(true)} type="button"><span /><span /><span /></button>
+          <button className="mobile-nav-trigger" aria-controls="app-navigation" aria-expanded={navOpen} aria-label="Abrir menú" onClick={() => setNavOpen(true)} type="button"><span /><span /><span /></button>
           <div className="topbar-title">
             <h1>{meta.title}</h1>
             <p>{meta.subtitle}</p>
@@ -268,11 +357,25 @@ function resolvePageMeta(pathname: string): PageMeta {
   }
 
   if (pathname.startsWith("/documentos/")) {
-    const section = resolveDocumentSection(pathname.split("/")[2] ?? "");
-    if (section) return { title: section.label, subtitle: section.description };
+    const [, , slug, action, documentId] = pathname.split("/");
+    const section = resolveDocumentSection(slug ?? "");
+    if (section) {
+      if (action === "imprimir" && documentId) {
+        return { title: `Vista previa de ${section.singular.toLowerCase()}`, subtitle: "Revisa el documento antes de imprimir" };
+      }
+      if (action && actionLabels[action]) {
+        const plural = action === "listar" || action === "imprimir";
+        return { title: `${actionLabels[action]} ${plural ? section.label.toLowerCase() : section.singular.toLowerCase()}`, subtitle: section.description };
+      }
+      return { title: section.label, subtitle: section.description };
+    }
   }
 
   return pageMeta[pathname] ?? pageMeta["/"];
+}
+
+function isActiveNavItem(pathname: string, item: NavItem): boolean {
+  return isActivePath(pathname, item.href) || Boolean(item.children?.some((child) => isActivePath(pathname, child.href)));
 }
 
 function isActivePath(pathname: string, href: string): boolean {

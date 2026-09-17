@@ -46,3 +46,19 @@ describe("monitoring model", () => {
     assert.throws(() => validateTripInput({ ...base, waypoints: [" "] }), /intermedios/);
   });
 });
+
+describe("report compliance", () => {
+  it("flags gaps beyond the interval plus tolerance", async () => {
+    const { reportCompliance } = await import("./monitoring");
+    const hour = 60 * 60 * 1000;
+    const result = reportCompliance(
+      [{ at: 0, kind: "inicio" }, { at: 3 * hour, kind: "control" }, { at: 7 * hour, kind: "control" }, { at: 9 * hour, kind: "entrega" }],
+      180,
+    );
+    assert.deepEqual(result.rows.map((r) => r.onTime), [null, true, false, true]);
+    assert.equal(result.onTime, 2);
+    assert.equal(result.late, 1);
+    assert.equal(result.maxGapMinutes, 240);
+    assert.equal(result.averageGapMinutes, 180);
+  });
+});

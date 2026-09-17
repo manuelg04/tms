@@ -564,12 +564,17 @@
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
   padding: 34px 40px 40px;
-  max-width: 900px;
+  max-width: 940px;
   width: 100%;
   margin: 0 auto;
   color: #111;
   font-size: 12px;
+  line-height: 1.45;
 }
+.bm-print-sheet .ok { color: #17784b; }
+.bm-print-sheet .late { color: #bd3838; font-weight: 700; }
+.bm-print-sheet .muted { color: #777; }
+.bm-print-sheet .mono { font-family: var(--font-mono); }
 .bm-print-head {
   display: flex;
   justify-content: space-between;
@@ -577,34 +582,84 @@
   gap: 20px;
   border-bottom: 2px solid #17202e;
   padding-bottom: 14px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
-.bm-print-head h1 { font-size: 20px; margin: 0 0 3px; letter-spacing: -0.02em; }
-.bm-print-head .org { font-weight: 700; font-size: 13px; }
-.bm-print-head .meta { text-align: right; font-size: 11.5px; color: #444; line-height: 1.5; }
-.bm-print-head .meta strong { font-family: var(--font-mono); font-size: 14px; color: #111; }
-.bm-print-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 16px; margin-bottom: 18px; }
-.bm-print-grid div { border-left: 2px solid #d8dee4; padding-left: 8px; }
+.bm-print-head h1 { font-size: 21px; margin: 2px 0 4px; letter-spacing: -0.02em; }
+.bm-print-head .org { font-weight: 800; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: #17202e; }
+.bm-print-head .sub { font-size: 11.5px; color: #555; max-width: 520px; }
+.bm-print-head .meta { text-align: right; font-size: 11.5px; color: #444; line-height: 1.6; white-space: nowrap; }
+.bm-print-head .meta strong { font-family: var(--font-mono); font-size: 16px; color: #111; }
+.bm-print-kpis {
+  break-inside: avoid;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.bm-print-kpis > div { border: 1px solid #d8dee4; border-radius: 6px; padding: 8px 10px; min-width: 0; }
+.bm-print-kpis > div.ok { border-color: #9ec9b1; background: #f4fbf7; }
+.bm-print-kpis > div.warn { border-color: #efc2c2; background: #fff6f6; }
+.bm-print-kpis dt { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; color: #666; font-weight: 700; }
+.bm-print-kpis dd { margin: 2px 0 0; font-weight: 700; font-size: 12.5px; line-height: 1.25; overflow-wrap: anywhere; }
+.bm-print-kpis small { display: block; margin-top: 2px; font-size: 10px; color: #666; }
+.bm-print-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 16px; margin: 0 0 6px; break-inside: avoid; }
+.bm-print-grid div { border-left: 2px solid #d8dee4; padding-left: 8px; min-width: 0; }
 .bm-print-grid dt { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; color: #666; font-weight: 700; }
-.bm-print-grid dd { margin: 1px 0 0; font-weight: 600; font-size: 12px; }
-.bm-print-sheet h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; margin: 20px 0 8px; color: #17202e; }
+.bm-print-grid dd { margin: 1px 0 0; font-weight: 600; font-size: 12px; overflow-wrap: anywhere; }
+.bm-print-sheet h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 22px 0 8px;
+  color: #17202e;
+  border-bottom: 1px solid #d8dee4;
+  padding-bottom: 5px;
+  break-after: avoid;
+}
+.bm-print-sheet h2 span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #17202e;
+  color: #fff;
+  font-size: 11px;
+  font-family: var(--font-mono);
+}
 .bm-print-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
-.bm-print-table th { text-align: left; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 8px; border-bottom: 1.5px solid #17202e; }
+.bm-print-table th { text-align: left; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 8px; border-bottom: 1.5px solid #17202e; background: #f7f9fa; }
 .bm-print-table td { padding: 7px 8px; border-bottom: 1px solid #dfe3e8; vertical-align: top; }
-.bm-print-table td.mono { font-family: var(--font-mono); white-space: nowrap; }
-.bm-print-table th:nth-child(1) { width: 3%; }
-.bm-print-table th:nth-child(2) { width: 10%; }
-.bm-print-table th:nth-child(3) { width: 6%; }
-.bm-print-table th:nth-child(4) { width: 15%; }
-.bm-print-table th:nth-child(5) { width: 12%; }
-.bm-print-table th:nth-child(6) { width: 10%; }
-.bm-print-table th:nth-child(8) { width: 12%; }
+.bm-print-table td.mono { font-family: var(--font-mono); white-space: nowrap; font-size: 11px; }
 .bm-print-table tr.novedad td { background: #fff8e6; }
 .bm-print-table tr.entrega td { background: #f2f9f4; }
-.bm-print-signatures { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 44px; }
+.bm-print-table tr.pending td { color: #888; }
+.bm-print-log th:nth-child(1) { width: 3%; }
+.bm-print-log th:nth-child(2) { width: 9%; }
+.bm-print-log th:nth-child(3) { width: 8%; }
+.bm-print-log th:nth-child(4) { width: 13%; }
+.bm-print-log th:nth-child(5) { width: 11%; }
+.bm-print-log th:nth-child(6) { width: 12%; }
+.bm-print-log th:nth-child(8) { width: 11%; }
+.bm-print-note { font-size: 10.5px; color: #666; margin: 6px 0 0; }
+.bm-print-novelties { display: flex; flex-direction: column; gap: 8px; }
+.bm-print-novelty { border: 1px solid #eed9a3; border-left: 4px solid #96690a; background: #fffbf0; border-radius: 6px; padding: 8px 12px; break-inside: avoid; }
+.bm-print-novelty header { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 12px; }
+.bm-print-novelty header strong { color: #96690a; text-transform: uppercase; letter-spacing: 0.04em; font-size: 11px; }
+.bm-print-novelty p { margin: 5px 0; font-size: 12px; }
+.bm-print-novelty footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 10.5px; color: #666; }
+.bm-print-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+.bm-print-photos figure { margin: 0; break-inside: avoid; }
+.bm-print-photos img { width: 100%; max-height: 300px; object-fit: contain; border: 1px solid #d8dee4; border-radius: 6px; background: #fafafa; }
+.bm-print-photos figcaption { font-size: 10.5px; color: #555; margin-top: 4px; text-align: center; }
+.bm-print-signatures { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 48px; break-inside: avoid; }
 .bm-print-signatures div { border-top: 1px solid #111; padding-top: 6px; font-size: 11px; color: #444; text-align: center; }
 .bm-print-signatures strong { display: block; color: #111; }
-.bm-print-foot { margin-top: 20px; font-size: 10px; color: #777; display: flex; justify-content: space-between; }
+.bm-print-foot { margin-top: 20px; font-size: 10px; color: #777; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 
 @media (max-width: 1100px) {
   .bm-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -616,16 +671,22 @@
   .bm-form-grid { grid-template-columns: 1fr; }
   .bm-entry { grid-template-columns: 46px 22px minmax(0, 1fr); }
   .bm-print-grid { grid-template-columns: 1fr 1fr; }
+  .bm-print-kpis { grid-template-columns: 1fr 1fr; }
+  .bm-print-photos { grid-template-columns: 1fr; }
   .bm-print-sheet { padding: 20px; }
   .bm-heading h2, .bm-route-title { font-size: 20px; }
 }
 @media print {
-  .sidebar, .topbar, .bm-print-toolbar, .mobile-nav-trigger { display: none !important; }
+  @page { size: A4; margin: 14mm 12mm; }
+  .sidebar, .topbar, .bm-print-toolbar, .mobile-nav-trigger, .notif-pill { display: none !important; }
   .app { display: block; }
   .page { padding: 0; }
-  body { background: #fff; }
-  .bm-print-sheet { border: 0; box-shadow: none; padding: 0; max-width: none; }
+  body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .bm-print-sheet { border: 0; box-shadow: none; padding: 0; max-width: none; font-size: 11px; }
   .bm-print-table tr { break-inside: avoid; }
+  .bm-print-table thead { display: table-header-group; }
+  .bm-print-kpis { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .bm-print-photos { grid-template-columns: 1fr 1fr; }
 }
 
 .bm-side .panel { overflow: visible; }

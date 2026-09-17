@@ -103,3 +103,35 @@ export function validateTripInput(input: {
   if (input.waypoints.some((w) => !w.trim()))
     throw new Error("Los puntos intermedios no pueden estar vacíos.");
 }
+
+export const COMPLIANCE_TOLERANCE_MINUTES = 15;
+
+export type ComplianceRow = {
+  gapMinutes: number | null;
+  onTime: boolean | null;
+};
+
+export function reportCompliance(
+  reports: Array<{ at: number; kind: string }>,
+  intervalMinutes: number,
+): { rows: ComplianceRow[]; onTime: number; late: number; maxGapMinutes: number; averageGapMinutes: number } {
+  const sorted = [...reports].sort((a, b) => a.at - b.at);
+  const limit = intervalMinutes + COMPLIANCE_TOLERANCE_MINUTES;
+  let onTime = 0,
+    late = 0,
+    maxGap = 0,
+    totalGap = 0,
+    gaps = 0;
+  const rows = sorted.map((report, index) => {
+    if (index === 0) return { gapMinutes: null, onTime: null };
+    const gap = Math.round((report.at - sorted[index - 1].at) / 60000);
+    const ok = gap <= limit;
+    if (ok) onTime++;
+    else late++;
+    maxGap = Math.max(maxGap, gap);
+    totalGap += gap;
+    gaps++;
+    return { gapMinutes: gap, onTime: ok };
+  });
+  return { rows, onTime, late, maxGapMinutes: maxGap, averageGapMinutes: gaps ? Math.round(totalGap / gaps) : 0 };
+}

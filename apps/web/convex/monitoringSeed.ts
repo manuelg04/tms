@@ -9,7 +9,7 @@ const MINUTE = 60 * 1000;
 
 type SeedReport = {
   offsetMinutes: number;
-  kind: "inicio" | "control" | "novedad" | "entrega";
+  kind: "inicio" | "control" | "novedad" | "entrega_parcial" | "entrega";
   location: string;
   channel: "llamada" | "whatsapp" | "presencial" | "otro";
   contacted?: boolean;
@@ -27,6 +27,7 @@ type SeedTrip = {
   origin: string;
   destination: string;
   waypoints: string[];
+  deliveryWaypoints?: string[];
   plate: string;
   trailerPlate?: string;
   driverName: string;
@@ -74,13 +75,14 @@ const trips: SeedTrip[] = [
     origin: "Cúcuta, Norte de Santander",
     destination: "Barranquilla, Atlántico",
     waypoints: ["Pamplona", "Bucaramanga", "San Alberto", "Aguachica", "Bosconia", "Fundación"],
+    deliveryWaypoints: ["Aguachica"],
     plate: "WGN437",
     trailerPlate: "S27719",
     driverName: "Luis Fernando Contreras Ortiz",
     driverDocument: "88.204.113",
     driverPhone: "301 887 2210",
     customer: "Distribuidora Caribe Ltda.",
-    cargo: "Calzado en cajas · 12.400 kg",
+    cargo: "Calzado en cajas · 12.400 kg (entrega parcial en Aguachica)",
     departureOffsetHours: -9.6,
     expectedHours: 18,
     intervalMinutes: 180,
@@ -102,7 +104,7 @@ const trips: SeedTrip[] = [
     driverPhone: "314 209 6634",
     customer: "Agroinsumos del Cesar S.A.",
     cargo: "Fertilizante en bultos · 28.500 kg",
-    departureOffsetHours: -14.2,
+    departureOffsetHours: -16,
     expectedHours: 16,
     intervalMinutes: 180,
     observations: "Mercancía sensible a humedad. Carpa verificada en cargue.",
@@ -111,6 +113,7 @@ const trips: SeedTrip[] = [
       { offsetMinutes: 190, kind: "control", location: "Puerto Berrío", channel: "llamada", observation: "Reporte en Puerto Berrío. Lluvia moderada, carpa en buen estado. Sin novedad.", operator: "Andrés Pinilla" },
       { offsetMinutes: 370, kind: "control", location: "Barrancabermeja", channel: "llamada", observation: "Paso por Barrancabermeja. Parada breve por control de la Policía de Carreteras, documentos en regla.", operator: "Laura Cárdenas" },
       { offsetMinutes: 560, kind: "novedad", location: "San Alberto", channel: "llamada", noveltyType: "Vía cerrada / clima", observation: "Cierre temporal de la Ruta del Sol por derrumbe a la altura de La Mata. Conductor detenido en zona segura (estación de servicio). Se informa al cliente y se mantiene contacto cada hora.", operator: "Laura Cárdenas" },
+      { offsetMinutes: 700, kind: "novedad", location: "Ocaña, Norte de Santander", channel: "llamada", noveltyType: "Desvío de ruta", observation: "Autorizado por el jefe de seguridad tomar la vía alterna por Ocaña mientras habilitan la Ruta del Sol. Conductor confirma paso por Ocaña, carga y carpa sin novedad. Se recalcula llegada.", operator: "Laura Cárdenas" },
     ],
   },
 ];
@@ -127,6 +130,7 @@ async function insertSeedTrip(ctx: MutationCtx, organizationId: Id<"organization
     origin: seed.origin,
     destination: seed.destination,
     waypoints: seed.waypoints,
+    deliveryWaypoints: seed.deliveryWaypoints,
     plate: seed.plate,
     trailerPlate: seed.trailerPlate,
     driverName: seed.driverName,

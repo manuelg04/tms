@@ -11,11 +11,13 @@ import { DateField } from "../../../components/fields/date-field";
 const MAX = 1000;
 const MAX_FILES = 6;
 
-export function DeliveryForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; onSaved: () => void }) {
+export function DeliveryForm({ trip, deliveredSites = [], onSaved }: { trip: Doc<"monitoringTrips">; deliveredSites?: string[]; onSaved: () => void }) {
   const save = useMutation(api.monitoring.registerDelivery);
   const generateUploadUrl = useMutation(api.monitoring.generateUploadUrl);
+  const pendingSites = (trip.deliveryWaypoints ?? []).filter((site) => !deliveredSites.some((done) => done.toLocaleLowerCase("es").includes(site.toLocaleLowerCase("es"))));
+  const [partial, setPartial] = useState(pendingSites.length > 0);
   const [at, setAt] = useState(() => bogotaLocalInput(Date.now()));
-  const [location, setLocation] = useState(trip.destination);
+  const [location, setLocation] = useState(pendingSites[0] ?? trip.destination);
   const [receivedBy, setReceivedBy] = useState("");
   const [weight, setWeight] = useState("");
   const [condition, setCondition] = useState<"conforme" | "con_novedad">("conforme");
@@ -70,6 +72,7 @@ export function DeliveryForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; 
         documents,
         attachments: uploaded.current,
         observation,
+        partial,
       });
       onSaved();
     } catch (reason) {
@@ -84,6 +87,14 @@ export function DeliveryForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; 
     <form className="bm-form" onSubmit={(e) => void submit(e)}>
       <fieldset disabled={busy} style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: "contents" }}>
         <div className="bm-form-grid">
+          <div className="field wide">
+            <span>Tipo de entrega</span>
+            <div className="bm-segment" role="group" aria-label="Tipo de entrega">
+              <button type="button" aria-pressed={partial} onClick={() => { setPartial(true); if (pendingSites[0] && location === trip.destination) setLocation(pendingSites[0]); requestKey.current = null; }}>Parcial · el viaje continúa</button>
+              <button type="button" className="good" aria-pressed={!partial} onClick={() => { setPartial(false); if (pendingSites.includes(location)) setLocation(trip.destination); requestKey.current = null; }}>Final · cierra el viaje</button>
+            </div>
+            {partial && pendingSites.length ? <small className="counter" style={{ textAlign: "left" }}>Sitios de entrega pendientes: {pendingSites.join(", ")}</small> : null}
+          </div>
           <DateField className="field wide" label="Fecha y hora de la entrega" name="deliveredAt" required value={at} withTime onChange={(value) => { setAt(value); requestKey.current = null; }} />
           <label className="field wide">
             <span>Lugar de descargue</span>
@@ -139,7 +150,7 @@ export function DeliveryForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; 
         {progress ? <p className="bm-message success" role="status">{progress}</p> : null}
         {error ? <p className="bm-message error" role="alert">{error}</p> : null}
         <div className="bm-form-actions">
-          <button className="primary-action" type="submit">{busy ? "Guardando…" : "Registrar entrega y cerrar viaje"}</button>
+          <button className="primary-action" type="submit">{busy ? "Guardando…" : partial ? "Registrar entrega parcial" : "Registrar entrega y cerrar viaje"}</button>
         </div>
       </fieldset>
     </form>

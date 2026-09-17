@@ -47,6 +47,7 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
   const lastVisited = visited.lastIndexOf(true);
   const due = trip.status === "en_ruta" && trip.nextDueAt ? relativeDue(trip.nextDueAt, now) : null;
   const delivery = reports.find((r) => r.kind === "entrega");
+  const partialDeliveries = reports.filter((r) => r.kind === "entrega_parcial");
   const elapsed = (trip.deliveredAt ?? now) - trip.departureAt;
   const novelties = reports.filter((r) => r.hasNovelty).length;
   const grouped = reports.reduce<Array<{ day: string; items: Report[] }>>((acc, report) => {
@@ -135,6 +136,8 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
                 visited[index] ? "visited" : "",
                 index === lastVisited && trip.status === "en_ruta" ? "current" : "",
                 index === route.length - 1 && trip.status === "entregado" ? "delivered" : "",
+                partialDeliveries.some((r) => stopMatches(stop, r.location)) ? "delivered" : "",
+                (trip.deliveryWaypoints ?? []).includes(stop) ? "delivery-site" : "",
                 visited[index] && !visited[index + 1] && index < route.length - 1 ? "next-pending" : "",
                 isEnd ? "endpoint" : "",
               ]
@@ -195,7 +198,7 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
               {mode === "reporte" ? (
                 <ReportForm trip={trip} onSaved={() => setNotice("Reporte registrado en la bitácora.")} />
               ) : (
-                <DeliveryForm trip={trip} onSaved={() => setNotice("Entrega registrada. El viaje quedó cerrado.")} />
+                <DeliveryForm key={partialDeliveries.length} trip={trip} deliveredSites={partialDeliveries.map((r) => r.location)} onSaved={() => setNotice("Entrega registrada en la bitácora.")} />
               )}
             </section>
           ) : trip.status === "entregado" ? (
@@ -283,7 +286,7 @@ function ReportEntry({ report, last }: { report: Report; last: boolean }) {
           </span>
         </div>
         <p>{report.observation}</p>
-        {report.kind === "entrega" ? (
+        {report.kind === "entrega" || report.kind === "entrega_parcial" ? (
           <>
             <dl className="bm-delivery-grid">
               <div><dt>Recibido por</dt><dd>{report.receivedBy ?? "—"}</dd></div>

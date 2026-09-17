@@ -64,5 +64,6 @@ export const kindLabels: Record<string, string> = {
   inicio: "Inicio de viaje",
   control: "Reporte de control",
   novedad: "Novedad",
-  entrega: "Entrega",
+  entrega_parcial: "Entrega parcial",
+  entrega: "Entrega final",
 };

@@ -26,6 +26,7 @@ export default function NewMonitoringTrip() {
   const [destination, setDestination] = useState<{ code?: string; name: string }>({ name: "" });
   const [waypoints, setWaypoints] = useState<string[]>([]);
   const [waypointText, setWaypointText] = useState("");
+  const [deliveryWaypoints, setDeliveryWaypoints] = useState<string[]>([]);
   const [vehicle, setVehicle] = useState<VehiclePick | null>(null);
   const [driver, setDriver] = useState<DriverPick | null>(null);
   const [plate, setPlate] = useState("");
@@ -68,6 +69,7 @@ export default function NewMonitoringTrip() {
         origin: origin.name,
         destination: destination.name,
         waypoints,
+        deliveryWaypoints: deliveryWaypoints.filter((w) => waypoints.includes(w)),
         plate,
         trailerPlate: trailerPlate || undefined,
         driverName,
@@ -122,14 +124,29 @@ export default function NewMonitoringTrip() {
                   <button className="ghost-button" type="button" onClick={() => addWaypoint(waypointText)}>Agregar</button>
                 </div>
                 {waypoints.length ? (
-                  <div className="bm-chips" style={{ marginTop: 8 }}>
-                    {waypoints.map((w, i) => (
-                      <span className="bm-chip" key={w}>
-                        {i + 1}. {w}
-                        <button aria-label={`Quitar ${w}`} type="button" onClick={() => setWaypoints(waypoints.filter((x) => x !== w))}>×</button>
-                      </span>
-                    ))}
-                  </div>
+                  <>
+                    <div className="bm-chips" style={{ marginTop: 8 }}>
+                      {waypoints.map((w, i) => {
+                        const delivery = deliveryWaypoints.includes(w);
+                        return (
+                          <span className={`bm-chip ${delivery ? "delivery" : ""}`} key={w}>
+                            {i + 1}. {w}
+                            <button
+                              type="button"
+                              className="bm-chip-toggle"
+                              aria-pressed={delivery}
+                              title={delivery ? "Quitar entrega en este punto" : "Marcar como sitio de entrega parcial"}
+                              onClick={() => setDeliveryWaypoints(delivery ? deliveryWaypoints.filter((x) => x !== w) : [...deliveryWaypoints, w])}
+                            >
+                              {delivery ? "Entrega" : "+ entrega"}
+                            </button>
+                            <button aria-label={`Quitar ${w}`} type="button" onClick={() => { setWaypoints(waypoints.filter((x) => x !== w)); setDeliveryWaypoints(deliveryWaypoints.filter((x) => x !== w)); }}>×</button>
+                          </span>
+                        );
+                      })}
+                    </div>
+                    <small style={{ display: "block", marginTop: 6, color: "var(--ink-faint)", fontSize: 11 }}>Marca "+ entrega" en los puntos donde el conductor deja parte de la carga antes del destino final.</small>
+                  </>
                 ) : null}
               </div>
               <DateField className="field span-4" label="Fecha y hora de salida" name="departureAt" required value={departure} withTime onChange={setDeparture} />

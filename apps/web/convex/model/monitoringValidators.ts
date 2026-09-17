@@ -8,6 +8,7 @@ export const monitoringReportKind = v.union(
   v.literal("inicio"),
   v.literal("control"),
   v.literal("novedad"),
+  v.literal("entrega_parcial"),
   v.literal("entrega"),
 );
 export const monitoringChannel = v.union(
@@ -39,6 +40,7 @@ export const monitoringTripFields = {
   origin: v.string(),
   destination: v.string(),
   waypoints: v.array(v.string()),
+  deliveryWaypoints: v.optional(v.array(v.string())),
   plate: v.string(),
   trailerPlate: v.optional(v.string()),
   driverName: v.string(),
@@ -58,6 +60,7 @@ export const monitoringTripFields = {
   reportCount: v.number(),
   deliveredAt: v.optional(v.number()),
   routeGeometry: v.optional(monitoringRouteGeometry),
+  actualGeometry: v.optional(monitoringRouteGeometry),
   createdBy: v.optional(v.id("users")),
   createdByName: v.string(),
   createdAt: v.number(),

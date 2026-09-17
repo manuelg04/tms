@@ -45,6 +45,7 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
   if (data === null) return <MissingTrip />;
   const { trip, reports } = data;
   const delivery = reports.find((r) => r.kind === "entrega");
+  const partialDeliveries = reports.filter((r) => r.kind === "entrega_parcial");
   const novelties = reports.filter((r) => r.hasNovelty);
   const route = [trip.origin, ...trip.waypoints, trip.destination];
   const visited = routeProgress(route, reports.map((r) => r.location));
@@ -55,8 +56,34 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
   const operators = [...reports.reduce((map, r) => map.set(r.operatorName, (map.get(r.operatorName) ?? 0) + 1), new Map<string, number>())];
   const organization = data.organizationName || "Transportes MTM";
   const noContact = reports.filter((r) => !r.contacted).length;
-  const images = delivery?.attachmentUrls.filter((f) => f.url && f.contentType.startsWith("image/")) ?? [];
-  const files = delivery?.attachmentUrls.filter((f) => !f.contentType.startsWith("image/")) ?? [];
+  const imagesOf = (r: (typeof reports)[number] | undefined) => r?.attachmentUrls.filter((f) => f.url && f.contentType.startsWith("image/")) ?? [];
+  const filesOf = (r: (typeof reports)[number] | undefined) => r?.attachmentUrls.filter((f) => !f.contentType.startsWith("image/")) ?? [];
+  const renderDelivery = (r: (typeof reports)[number], title: string) => (
+    <div key={r._id} className="bm-print-delivery">
+      <h3>{title}</h3>
+      <dl className="bm-print-grid">
+        <div><dt>Fecha y hora</dt><dd>{formatDateTime(r.at)}</dd></div>
+        <div><dt>Lugar de descargue</dt><dd>{r.location}</dd></div>
+        <div><dt>Recibido por</dt><dd>{r.receivedBy ?? "—"}</dd></div>
+        <div><dt>Peso entregado</dt><dd>{r.deliveredWeightKg ? formatWeight(r.deliveredWeightKg) : "—"}</dd></div>
+        <div><dt>Estado de la carga</dt><dd className={r.cargoCondition === "conforme" ? "ok" : "late"}>{r.cargoCondition === "conforme" ? "Conforme" : "Con novedad"}</dd></div>
+        <div><dt>Registró</dt><dd>{r.operatorName}</dd></div>
+        <div style={{ gridColumn: "span 2" }}><dt>Documentos de soporte recibidos</dt><dd>{r.documents?.length ? r.documents.join(" · ") : "—"}</dd></div>
+        <div style={{ gridColumn: "1 / -1" }}><dt>Observación del descargue</dt><dd style={{ fontWeight: 400 }}>{r.observation}</dd></div>
+      </dl>
+      {imagesOf(r).length ? (
+        <div className="bm-print-photos">
+          {imagesOf(r).map((file, index) => (
+            <figure key={file.url ?? index}>
+              <img src={file.url!} alt={file.fileName} />
+              <figcaption>Anexo {index + 1} · {file.fileName}</figcaption>
+            </figure>
+          ))}
+        </div>
+      ) : null}
+      {filesOf(r).length ? <p className="bm-print-note">Archivos adjuntos adicionales: {filesOf(r).map((f) => f.fileName).join(" · ")} (disponibles en el sistema).</p> : null}
+    </div>
+  );
 
   return (
     <div className="bm-workspace">
@@ -110,7 +137,7 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
           <div>
             <dt>Reportes</dt>
             <dd>{reports.length}</dd>
-            <small>{novelties.length} con novedad · {noContact} sin contacto</small>
+            <small>{novelties.length} con novedad · {partialDeliveries.length ? `${partialDeliveries.length} entrega${partialDeliveries.length === 1 ? "" : "s"} parcial${partialDeliveries.length === 1 ? "" : "es"}` : `${noContact} sin contacto`}</small>
           </div>
           <div className={compliance.late ? "warn" : "ok"}>
             <dt>Cumplimiento</dt>
@@ -187,7 +214,7 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
             {reports.map((report, index) => {
               const row = compliance.rows[index];
               return (
-                <tr key={report._id} className={report.hasNovelty ? "novedad" : report.kind === "entrega" ? "entrega" : ""}>
+                <tr key={report._id} className={report.hasNovelty ? "novedad" : report.kind === "entrega" || report.kind === "entrega_parcial" ? "entrega" : ""}>
                   <td className="mono">{index + 1}</td>
                   <td className="mono">{shortDate(report.at)}<br />{formatTime(report.at)}</td>
                   <td className="mono">
@@ -230,33 +257,12 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
           <p className="bm-print-note">No se registraron novedades durante el viaje. Todos los reportes se recibieron sin incidentes.</p>
         )}
 
-        <h2><span>6</span>Cierre de entrega</h2>
+        <h2><span>6</span>Entregas{partialDeliveries.length ? ` (${partialDeliveries.length + (delivery ? 1 : 0)})` : ""}</h2>
+        {partialDeliveries.map((r, index) => renderDelivery(r, `Entrega parcial ${index + 1} · ${r.location}`))}
         {delivery ? (
-          <>
-            <dl className="bm-print-grid">
-              <div><dt>Fecha y hora</dt><dd>{formatDateTime(delivery.at)}</dd></div>
-              <div><dt>Lugar de descargue</dt><dd>{delivery.location}</dd></div>
-              <div><dt>Recibido por</dt><dd>{delivery.receivedBy ?? "—"}</dd></div>
-              <div><dt>Peso entregado</dt><dd>{delivery.deliveredWeightKg ? formatWeight(delivery.deliveredWeightKg) : "—"}</dd></div>
-              <div><dt>Estado de la carga</dt><dd className={delivery.cargoCondition === "conforme" ? "ok" : "late"}>{delivery.cargoCondition === "conforme" ? "Conforme" : "Con novedad"}</dd></div>
-              <div><dt>Registró</dt><dd>{delivery.operatorName}</dd></div>
-              <div style={{ gridColumn: "span 2" }}><dt>Documentos de soporte recibidos</dt><dd>{delivery.documents?.length ? delivery.documents.join(" · ") : "—"}</dd></div>
-              <div style={{ gridColumn: "1 / -1" }}><dt>Observación del descargue</dt><dd style={{ fontWeight: 400 }}>{delivery.observation}</dd></div>
-            </dl>
-            {images.length ? (
-              <div className="bm-print-photos">
-                {images.map((file, index) => (
-                  <figure key={file.url ?? index}>
-                    <img src={file.url!} alt={file.fileName} />
-                    <figcaption>Anexo {index + 1} · {file.fileName}</figcaption>
-                  </figure>
-                ))}
-              </div>
-            ) : null}
-            {files.length ? <p className="bm-print-note">Archivos adjuntos adicionales: {files.map((f) => f.fileName).join(" · ")} (disponibles en el sistema).</p> : null}
-          </>
+          renderDelivery(delivery, partialDeliveries.length ? `Entrega final · ${delivery.location}` : "Cierre de entrega")
         ) : (
-          <p className="bm-print-note">El viaje aún no tiene entrega registrada. Este documento refleja la bitácora hasta {formatDateTime(printedAt)}.</p>
+          <p className="bm-print-note">El viaje aún no tiene entrega final registrada. Este documento refleja la bitácora hasta {formatDateTime(printedAt)}.</p>
         )}
 
         <h2><span>7</span>Trazabilidad del registro</h2>

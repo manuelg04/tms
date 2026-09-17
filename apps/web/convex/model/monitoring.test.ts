@@ -30,6 +30,7 @@ describe("monitoring model", () => {
     assert.equal(describeReport({ kind: "control", location: "San Gil", hasNovelty: false }), "Sin novedad · San Gil");
     assert.equal(describeReport({ kind: "novedad", location: "Socorro", hasNovelty: true, noveltyType: "Retraso en ruta" }), "Retraso en ruta · Socorro");
     assert.equal(describeReport({ kind: "entrega", location: "Planta", hasNovelty: false }), "Entrega en Planta");
+    assert.equal(describeReport({ kind: "entrega_parcial", location: "Oiba", hasNovelty: false }), "Entrega parcial en Oiba");
   });
 
   it("marks route stops visited from report locations, ignoring accents and departments", () => {

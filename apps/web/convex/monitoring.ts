@@ -137,6 +137,7 @@ export const createTrip = mutation({
     origin: v.string(),
     destination: v.string(),
     waypoints: v.array(v.string()),
+    deliveryWaypoints: v.optional(v.array(v.string())),
     plate: v.string(),
     trailerPlate: v.optional(v.string()),
     driverName: v.string(),
@@ -178,6 +179,7 @@ export const createTrip = mutation({
       origin: args.origin.trim(),
       destination: args.destination.trim(),
       waypoints: args.waypoints.map((w) => w.trim()).filter(Boolean),
+      deliveryWaypoints: (args.deliveryWaypoints ?? []).map((w) => w.trim()).filter((w) => w && args.waypoints.includes(w)),
       plate: args.plate.trim().toUpperCase(),
       trailerPlate: clean(args.trailerPlate)?.toUpperCase(),
       driverName: args.driverName.trim(),
@@ -225,7 +227,7 @@ export const createTrip = mutation({
 
 type ReportInput = {
   requestKey: string;
-  kind: "inicio" | "control" | "novedad" | "entrega";
+  kind: "inicio" | "control" | "novedad" | "entrega_parcial" | "entrega";
   at: number;
   location: string;
   channel: "llamada" | "whatsapp" | "presencial" | "otro";
@@ -359,6 +361,7 @@ export const registerDelivery = mutation({
     documents: v.array(v.string()),
     attachments: v.array(monitoringAttachment),
     observation: v.string(),
+    partial: v.optional(v.boolean()),
   },
   returns: v.id("monitoringReports"),
   handler: async (ctx, args) => {
@@ -378,14 +381,14 @@ export const registerDelivery = mutation({
       throw new ConvexError("El peso entregado debe ser un número mayor que cero.");
     return await insertReport(ctx, actor, trip._id, {
       requestKey: args.requestKey,
-      kind: "entrega",
+      kind: args.partial ? "entrega_parcial" : "entrega",
       at: args.at,
       location: args.location,
       channel: "presencial",
       contacted: true,
       hasNovelty: args.cargoCondition === "con_novedad",
       noveltyType:
-        args.cargoCondition === "con_novedad" ? "Novedad en la entrega" : undefined,
+        args.cargoCondition === "con_novedad" ? (args.partial ? "Novedad en entrega parcial" : "Novedad en la entrega") : undefined,
       observation: args.observation,
       receivedBy: args.receivedBy,
       deliveredWeightKg: args.deliveredWeightKg,
@@ -477,6 +480,7 @@ const mapStop = v.object({
   index: v.number(),
   name: v.string(),
   role: v.union(v.literal("origin"), v.literal("waypoint"), v.literal("destination")),
+  deliverySite: v.boolean(),
   lat: v.union(v.number(), v.null()),
   lng: v.union(v.number(), v.null()),
 });
@@ -504,6 +508,8 @@ export const mapData = query({
       reports: v.array(mapReport),
       routeGeometry: v.union(monitoringRouteGeometry, v.null()),
       stopsKey: v.string(),
+      actualGeometry: v.union(monitoringRouteGeometry, v.null()),
+      reportsKey: v.string(),
     }),
     v.null(),
   ),
@@ -522,6 +528,7 @@ export const mapData = query({
           index,
           name,
           role: (index === 0 ? "origin" : index === names.length - 1 ? "destination" : "waypoint") as "origin" | "waypoint" | "destination",
+          deliverySite: index === names.length - 1 || (trip.deliveryWaypoints ?? []).includes(name),
           lat: place?.lat ?? null,
           lng: place?.lng ?? null,
         };
@@ -566,11 +573,14 @@ export const mapData = query({
       void index;
     }
     const stopsKey = stops.map((s) => (s.lat === null ? "x" : `${s.lng!.toFixed(4)},${s.lat.toFixed(4)}`)).join(";");
+    const reportsKey = reports.filter((r) => r.lat !== null).map((r) => `${r.lng!.toFixed(4)},${r.lat!.toFixed(4)}`).join(";");
     return {
       stops,
       reports,
       routeGeometry: trip.routeGeometry && trip.routeGeometry.stopsKey === stopsKey ? trip.routeGeometry : null,
       stopsKey,
+      actualGeometry: trip.actualGeometry && trip.actualGeometry.stopsKey === reportsKey ? trip.actualGeometry : null,
+      reportsKey,
     };
   },
 });
@@ -582,15 +592,17 @@ export const saveRouteGeometry = mutation({
     coordinates: v.array(v.array(v.number())),
     distanceKm: v.number(),
     durationMin: v.number(),
+    target: v.optional(v.union(v.literal("planned"), v.literal("actual"))),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     const { trip } = await getTrip(ctx, args.tripId);
     if (args.coordinates.length < 2 || args.coordinates.length > 6000 || args.coordinates.some((c) => c.length !== 2))
       throw new ConvexError("La geometría de la ruta no es válida.");
-    if (trip.routeGeometry?.stopsKey === args.stopsKey) return null;
+    const field = args.target === "actual" ? "actualGeometry" : "routeGeometry";
+    if (trip[field]?.stopsKey === args.stopsKey) return null;
     await ctx.db.patch("monitoringTrips", trip._id, {
-      routeGeometry: {
+      [field]: {
         coordinates: args.coordinates,
         distanceKm: args.distanceKm,
         durationMin: args.durationMin,

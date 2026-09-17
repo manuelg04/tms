@@ -2,6 +2,7 @@ export const BOGOTA_OFFSET_MS = 5 * 60 * 60 * 1000;
 export const DEFAULT_INTERVAL_MINUTES = 180;
 export const NOVELTY_TYPES = [
   "Retraso en ruta",
+  "Desvío de ruta",
   "Parada autorizada",
   "Falla mecánica",
   "Vía cerrada / clima",
@@ -52,6 +53,7 @@ export function describeReport(input: {
   kind: string;
 }): string {
   if (input.kind === "entrega") return `Entrega en ${input.location}`;
+  if (input.kind === "entrega_parcial") return `Entrega parcial en ${input.location}`;
   if (input.kind === "inicio") return `Inicio de viaje en ${input.location}`;
   return input.hasNovelty
     ? `${input.noveltyType ?? "Novedad"} · ${input.location}`

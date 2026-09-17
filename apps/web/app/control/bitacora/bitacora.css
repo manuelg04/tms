@@ -700,6 +700,12 @@
 .bm-map-canvas .ol-attribution { font-size: 9px; background: rgba(255,255,255,0.7); }
 .bm-map-canvas .ol-attribution ul { font-size: 9px; color: #666; }
 .bm-map-canvas .ol-attribution button { display: none; }
+.bm-map-canvas .ol-zoom { top: 12px; left: 12px; background: none; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.bm-map-canvas .ol-zoom button {
+  width: 30px; height: 30px; margin: 0; border-radius: 6px; border: 1px solid var(--line-strong);
+  background: #fff; color: var(--ink); font: 700 16px/1 var(--font-body); cursor: pointer; box-shadow: 0 1px 3px rgba(23,32,46,0.15);
+}
+.bm-map-canvas .ol-zoom button:hover { background: var(--surface-alt); }
 .bm-map-legend {
   display: flex;
   flex-wrap: wrap;

@@ -14,6 +14,8 @@ import OSM from "ol/source/OSM";
 import VectorSource from "ol/source/Vector";
 import { fromLonLat } from "ol/proj";
 import { defaults as defaultInteractions } from "ol/interaction/defaults";
+import Zoom from "ol/control/Zoom";
+import Attribution from "ol/control/Attribution";
 import { Circle, Fill, Stroke, Style, Text } from "ol/style";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
@@ -177,8 +179,8 @@ export function TripMap({ tripId, tripStatus, interactive = true, height = 420, 
         pinLayer,
       ],
       overlays: [overlay],
-      controls: [],
-      interactions: interactive ? defaultInteractions({ mouseWheelZoom: false }) : [],
+      controls: interactive ? [new Zoom({ zoomInTipLabel: "Acercar", zoomOutTipLabel: "Alejar" }), new Attribution({ collapsible: false })] : [new Attribution({ collapsible: false })],
+      interactions: interactive ? defaultInteractions() : [],
       view: new View({ center: fromLonLat([-74, 5]), zoom: 6 }),
     });
     const extent = (lineSource.getFeatures().length ? lineSource : pinSource).getExtent();

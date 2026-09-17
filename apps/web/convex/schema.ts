@@ -1,5 +1,6 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { monitoringReportFields, monitoringTripFields } from "./model/monitoringValidators";
 import { trackingDispatchFields, checkpointFields, reportFields, incidentFields, alarmFields, locationFields, positionFields, noteFields } from "./model/trackingValidators";
 import {
   consignmentDraftValidator,
@@ -215,6 +216,12 @@ export const masterSyncValidator = v.object({
 });
 
 export default defineSchema({
+  monitoringTrips: defineTable(monitoringTripFields)
+    .index("by_org_status", ["organizationId", "status"])
+    .index("by_org_code", ["organizationId", "code"]),
+  monitoringReports: defineTable(monitoringReportFields)
+    .index("by_trip", ["tripId"])
+    .index("by_trip_request", ["tripId", "requestKey"]),
   trackingDispatches: defineTable(trackingDispatchFields)
     .index("by_org_code", ["organizationId", "externalCode"])
     .index("by_org_queue", ["organizationId", "queue"])

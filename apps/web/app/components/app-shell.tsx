@@ -23,6 +23,8 @@ type NavItem = {
 };
 
 const pageMeta: Record<string, PageMeta> = {
+  "/control/bitacora": { title: "Bitácora de monitoreo", subtitle: "Control de tráfico · Reportes de seguridad en ruta" },
+  "/control/bitacora/nuevo": { title: "Nuevo viaje monitoreado", subtitle: "Ruta, vehículo y conductor para abrir la bitácora" },
   "/control/seguimiento": { title: "Seguimiento", subtitle: "Control de tráfico · Despachos y puntos de control" },
   "/configuracion/alertas-visuales": { title: "Alertas visuales", subtitle: "Configuración de alarmas de seguimiento" },
   "/configuracion/usuarios": { title: "Usuarios", subtitle: "Cuentas de acceso y cargos de la empresa" },
@@ -142,10 +144,13 @@ const navItems: NavItem[] = [
     )
   },
   {
-    href: "/control/seguimiento",
+    href: "/control/bitacora",
     label: "Control",
     icon: <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden><circle cx="8" cy="8" r="6" /><circle cx="8" cy="8" r="2" /><path d="M8 0v4M8 12v4M0 8h4M12 8h4" /></svg>,
-    children: [{ href: "/control/seguimiento", label: "Seguimiento" }]
+    children: [
+      { href: "/control/bitacora", label: "Bitácora de monitoreo" },
+      { href: "/control/seguimiento", label: "Seguimiento" }
+    ]
   },
   {
     href: "/configuracion/alertas-visuales",
@@ -341,6 +346,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 }
 
 function resolvePageMeta(pathname: string): PageMeta {
+  if (pathname.startsWith("/control/bitacora/") && pathname.endsWith("/imprimir")) return { title: "Impresión de bitácora", subtitle: "Documento de soporte del monitoreo en ruta" };
+  if (pathname.startsWith("/control/bitacora/") && pathname !== "/control/bitacora/nuevo") return { title: "Bitácora del viaje", subtitle: "Reportes de control, novedades y cierre de entrega" };
   if (pathname.startsWith("/control/seguimiento/")) return { title: "Seguimiento del despacho", subtitle: "Plan de ruta, novedades y notas de controlador" };
   if (pathname.startsWith("/maestros/nuevo/")) {
     const resource = pathname.split("/")[3];

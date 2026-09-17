@@ -44,6 +44,8 @@ import type * as model_fulfillmentWorkflow from "../model/fulfillmentWorkflow.js
 import type * as model_loadingOrderReservation from "../model/loadingOrderReservation.js";
 import type * as model_masterData from "../model/masterData.js";
 import type * as model_masterSync from "../model/masterSync.js";
+import type * as model_monitoring from "../model/monitoring.js";
+import type * as model_monitoringValidators from "../model/monitoringValidators.js";
 import type * as model_officialDocumentIdentity from "../model/officialDocumentIdentity.js";
 import type * as model_operationIntent from "../model/operationIntent.js";
 import type * as model_operationState from "../model/operationState.js";
@@ -54,6 +56,8 @@ import type * as model_tracking from "../model/tracking.js";
 import type * as model_trackingValidators from "../model/trackingValidators.js";
 import type * as model_userAccounts from "../model/userAccounts.js";
 import type * as model_volumeFixtures from "../model/volumeFixtures.js";
+import type * as monitoring from "../monitoring.js";
+import type * as monitoringSeed from "../monitoringSeed.js";
 import type * as notifications from "../notifications.js";
 import type * as officialDocuments from "../officialDocuments.js";
 import type * as rndc from "../rndc.js";
@@ -106,6 +110,8 @@ declare const fullApi: ApiFromModules<{
   "model/loadingOrderReservation": typeof model_loadingOrderReservation;
   "model/masterData": typeof model_masterData;
   "model/masterSync": typeof model_masterSync;
+  "model/monitoring": typeof model_monitoring;
+  "model/monitoringValidators": typeof model_monitoringValidators;
   "model/officialDocumentIdentity": typeof model_officialDocumentIdentity;
   "model/operationIntent": typeof model_operationIntent;
   "model/operationState": typeof model_operationState;
@@ -116,6 +122,8 @@ declare const fullApi: ApiFromModules<{
   "model/trackingValidators": typeof model_trackingValidators;
   "model/userAccounts": typeof model_userAccounts;
   "model/volumeFixtures": typeof model_volumeFixtures;
+  monitoring: typeof monitoring;
+  monitoringSeed: typeof monitoringSeed;
   notifications: typeof notifications;
   officialDocuments: typeof officialDocuments;
   rndc: typeof rndc;

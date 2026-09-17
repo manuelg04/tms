@@ -613,3 +613,57 @@ export const saveRouteGeometry = mutation({
     return null;
   },
 });
+
+export const municipalityPoints = query({
+  args: {},
+  returns: v.array(v.object({ name: v.string(), department: v.string(), lat: v.number(), lng: v.number(), onRoad: v.boolean() })),
+  handler: async (ctx) => {
+    await requireActor(ctx, undefined, [...readers]);
+    const rows = await ctx.db
+      .query("rndcDivisions")
+      .withIndex("by_is_municipality", (q) => q.eq("isMunicipality", true))
+      .collect();
+    return rows
+      .filter((row) => row.latitude && row.longitude)
+      .map((row) => ({ name: row.name, department: row.departmentName, lat: Number(row.latitude), lng: Number(row.longitude), onRoad: row.onRoad }))
+      .filter((row) => Number.isFinite(row.lat) && Number.isFinite(row.lng));
+  },
+});
+
+export const previousRoutes = query({
+  args: { origin: v.string(), destination: v.string() },
+  returns: v.array(
+    v.object({
+      waypoints: v.array(v.string()),
+      deliveryWaypoints: v.array(v.string()),
+      uses: v.number(),
+      lastUsedAt: v.number(),
+      lastCode: v.string(),
+    }),
+  ),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, [...readers]);
+    const originKey = placeName(args.origin), destinationKey = placeName(args.destination);
+    if (!originKey || !destinationKey) return [];
+    const trips = await ctx.db
+      .query("monitoringTrips")
+      .withIndex("by_org_status", (q) => q.eq("organizationId", actor.organizationId))
+      .collect();
+    const groups = new Map<string, { waypoints: string[]; deliveryWaypoints: string[]; uses: number; lastUsedAt: number; lastCode: string }>();
+    for (const trip of trips) {
+      if (placeName(trip.origin) !== originKey || placeName(trip.destination) !== destinationKey || trip.waypoints.length === 0) continue;
+      const key = trip.waypoints.map(placeName).join("|");
+      const current = groups.get(key);
+      if (current) {
+        current.uses++;
+        if (trip.createdAt > current.lastUsedAt) {
+          current.lastUsedAt = trip.createdAt;
+          current.lastCode = trip.code;
+          current.waypoints = trip.waypoints;
+          current.deliveryWaypoints = trip.deliveryWaypoints ?? [];
+        }
+      } else groups.set(key, { waypoints: trip.waypoints, deliveryWaypoints: trip.deliveryWaypoints ?? [], uses: 1, lastUsedAt: trip.createdAt, lastCode: trip.code });
+    }
+    return [...groups.values()].sort((a, b) => b.uses - a.uses || b.lastUsedAt - a.lastUsedAt).slice(0, 2);
+  },
+});

@@ -6,6 +6,7 @@ import { useState, type FormEvent } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { DateField } from "../../../components/fields/date-field";
+import { RouteSuggestions } from "../components/route-suggestions";
 import { DriverField, MunicipalityField, VehicleField, divisionLabel, type DriverPick, type VehiclePick } from "../../../components/fields/lookup-fields";
 import { convexErrorMessage } from "../../../lib/convex-error";
 import { bogotaLocalInput, parseBogotaLocalInput } from "../../../../convex/model/monitoring";
@@ -107,6 +108,16 @@ export default function NewMonitoringTrip() {
             <div className="field-grid semantic">
               <MunicipalityField className="field span-6" label="Origen" name="origin" required code={origin.code} onSelect={(d) => setOrigin({ code: d.code, name: divisionLabel(d) })} onClear={() => setOrigin({ name: "" })} />
               <MunicipalityField className="field span-6" label="Destino" name="destination" required code={destination.code} onSelect={(d) => setDestination({ code: d.code, name: divisionLabel(d) })} onClear={() => setDestination({ name: "" })} />
+              <div className="field wide">
+                <RouteSuggestions
+                  origin={origin.name}
+                  destination={destination.name}
+                  onUse={(points, deliveries) => {
+                    setWaypoints(points);
+                    setDeliveryWaypoints((deliveries ?? []).filter((d) => points.includes(d)));
+                  }}
+                />
+              </div>
               <div className="field wide">
                 <span>Puntos de control en la ruta <small>municipios donde se espera el reporte</small></span>
                 <div className="bm-inline-add">

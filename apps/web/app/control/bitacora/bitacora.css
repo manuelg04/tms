@@ -758,3 +758,20 @@
 .bm-print-delivery h3 { font-size: 11.5px; margin: 8px 0 6px; color: #17202e; }
 .bm-map-legend .bm-line { display: inline-block; width: 18px; height: 0; border-top: 3px solid var(--cab); vertical-align: 2px; margin-right: 5px; border-radius: 2px; }
 .bm-map-legend .bm-line.planned { border-top-style: dashed; border-top-color: var(--ink-faint); }
+
+.bm-suggestions { display: flex; flex-direction: column; gap: 8px; }
+.bm-suggestions-head { display: flex; flex-direction: column; gap: 2px; }
+.bm-suggestions-head small { font-size: 11.5px; color: var(--ink-faint); }
+.bm-suggestion { border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; background: var(--surface-alt); display: flex; flex-direction: column; gap: 8px; }
+.bm-suggestion.previous { background: #f3f7fb; border-color: #cfdcec; }
+.bm-suggestion header { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: baseline; }
+.bm-suggestion header strong { font-size: 12.5px; }
+.bm-suggestion header span { font-size: 11.5px; color: var(--ink-soft); }
+.bm-suggestion-stops { display: flex; flex-wrap: wrap; gap: 5px; }
+.bm-stop { font: inherit; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 3px 10px; border: 1px solid var(--line-strong); background: #fff; color: var(--ink); }
+button.bm-stop { cursor: pointer; }
+.bm-stop.on { background: var(--cab); color: #fff; border-color: var(--cab); }
+.bm-stop.off { color: var(--ink-soft); border-style: dashed; font-weight: 500; }
+.bm-stop.delivery { background: var(--plate-soft); border-color: #e5cf8a; }
+.bm-suggestion-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.bm-suggestion-note { margin: 0; font-size: 12px; color: var(--ink-soft); }

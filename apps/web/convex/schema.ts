@@ -644,6 +644,7 @@ export default defineSchema({
   })
     .index("by_code", ["code"])
     .index("by_municipality", ["municipalityCode", "isMunicipality"])
+    .index("by_is_municipality", ["isMunicipality"])
     .searchIndex("search_text", { searchField: "searchText", filterFields: ["isMunicipality"] }),
 
   rndcReferenceImportBatches: defineTable({

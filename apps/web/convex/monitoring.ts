@@ -16,6 +16,7 @@ import {
   monitoringTripDoc,
 } from "./model/monitoringValidators";
 import {
+  composeLocation,
   describeReport,
   formatTripCode,
   nextDueAt,
@@ -230,6 +231,9 @@ type ReportInput = {
   kind: "inicio" | "control" | "novedad" | "entrega_parcial" | "entrega";
   at: number;
   location: string;
+  municipality?: string;
+  municipalityCode?: string;
+  reference?: string;
   channel: "llamada" | "whatsapp" | "presencial" | "otro";
   contacted: boolean;
   hasNovelty: boolean;
@@ -273,6 +277,9 @@ async function insertReport(
     kind: input.kind,
     at: input.at,
     location: input.location.trim(),
+    municipality: input.municipality?.trim() || undefined,
+    municipalityCode: input.municipalityCode?.trim() || undefined,
+    reference: input.reference?.trim() || undefined,
     channel: input.channel,
     contacted: input.contacted,
     hasNovelty: input.hasNovelty,
@@ -324,7 +331,10 @@ export const addReport = mutation({
     tripId: v.id("monitoringTrips"),
     requestKey: v.string(),
     at: v.number(),
-    location: v.string(),
+    location: v.optional(v.string()),
+    municipality: v.optional(v.string()),
+    municipalityCode: v.optional(v.string()),
+    reference: v.optional(v.string()),
     channel: monitoringChannel,
     contacted: v.boolean(),
     hasNovelty: v.boolean(),
@@ -336,6 +346,8 @@ export const addReport = mutation({
     const { actor, trip } = await getTrip(ctx, args.tripId);
     if (!canWrite(actor))
       throw new ConvexError("Tu cargo no permite registrar reportes.");
+    const location = args.municipality ? composeLocation(args.municipality, args.reference) : (args.location ?? "");
+    if (!location.trim()) throw new ConvexError("Selecciona el municipio desde donde reporta el conductor.");
     if (trip.status !== "en_ruta")
       throw new ConvexError("El viaje ya fue entregado; no admite más reportes.");
     if (args.at < trip.departureAt - 60 * 60 * 1000)
@@ -344,6 +356,7 @@ export const addReport = mutation({
       throw new ConvexError("El reporte no puede tener una hora futura.");
     return await insertReport(ctx, actor, trip._id, {
       ...args,
+      location,
       kind: args.hasNovelty ? "novedad" : "control",
     });
   },
@@ -354,7 +367,10 @@ export const registerDelivery = mutation({
     tripId: v.id("monitoringTrips"),
     requestKey: v.string(),
     at: v.number(),
-    location: v.string(),
+    location: v.optional(v.string()),
+    municipality: v.optional(v.string()),
+    municipalityCode: v.optional(v.string()),
+    reference: v.optional(v.string()),
     receivedBy: v.string(),
     deliveredWeightKg: v.optional(v.number()),
     cargoCondition: monitoringCargoCondition,
@@ -372,6 +388,8 @@ export const registerDelivery = mutation({
       throw new ConvexError("El viaje ya tiene una entrega registrada.");
     if (!args.receivedBy.trim())
       throw new ConvexError("Indica quién recibió la carga.");
+    const location = args.municipality ? composeLocation(args.municipality, args.reference) : (args.location ?? "");
+    if (!location.trim()) throw new ConvexError("Selecciona el municipio de la entrega.");
     if (args.at > Date.now() + 10 * 60 * 1000)
       throw new ConvexError("La entrega no puede tener una hora futura.");
     if (
@@ -383,7 +401,10 @@ export const registerDelivery = mutation({
       requestKey: args.requestKey,
       kind: args.partial ? "entrega_parcial" : "entrega",
       at: args.at,
-      location: args.location,
+      location,
+      municipality: args.municipality,
+      municipalityCode: args.municipalityCode,
+      reference: args.reference,
       channel: "presencial",
       contacted: true,
       hasNovelty: args.cargoCondition === "con_novedad",
@@ -542,7 +563,7 @@ export const mapData = query({
     const stopKey = placeName;
     const reports = [];
     for (const [index, report] of rows.entries()) {
-      const location = normalizeMonitoringText(report.location);
+      const location = normalizeMonitoringText(report.municipality ?? report.location);
       let stopIndex: number | null = null;
       if (report.kind === "inicio") stopIndex = 0;
       else if (report.kind === "entrega") stopIndex = stops.length - 1;
@@ -554,7 +575,15 @@ export const mapData = query({
         stopIndex = match >= 0 ? match : null;
       }
       const stop = stopIndex !== null ? stops[stopIndex] : null;
-      const place = stop?.lat !== null && stop?.lat !== undefined ? { lat: stop.lat, lng: stop.lng! } : await resolvePlace(ctx, report.location, [trip.destination, trip.origin], corridor);
+      const coded = report.municipalityCode
+        ? await ctx.db.query("rndcDivisions").withIndex("by_code", (q) => q.eq("code", report.municipalityCode!)).unique()
+        : null;
+      const place =
+        coded?.latitude && coded.longitude
+          ? { lat: Number(coded.latitude), lng: Number(coded.longitude) }
+          : stop?.lat !== null && stop?.lat !== undefined
+            ? { lat: stop.lat, lng: stop.lng! }
+            : await resolvePlace(ctx, report.municipality ?? report.location, [trip.destination, trip.origin], corridor);
       reports.push({
         _id: report._id,
         at: report.at,

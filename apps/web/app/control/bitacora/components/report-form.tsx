@@ -7,6 +7,7 @@ import type { Doc } from "../../../../convex/_generated/dataModel";
 import { NOVELTY_TYPES, bogotaLocalInput, parseBogotaLocalInput } from "../../../../convex/model/monitoring";
 import { convexErrorMessage } from "../../../lib/convex-error";
 import { DateField } from "../../../components/fields/date-field";
+import { PlaceField, type PlacePick } from "./place-field";
 
 const MAX = 1000;
 
@@ -14,7 +15,8 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
   const save = useMutation(api.monitoring.addReport);
   const [at, setAt] = useState(() => bogotaLocalInput(Date.now()));
   const [formKey, setFormKey] = useState(0);
-  const [location, setLocation] = useState("");
+  const [place, setPlace] = useState<PlacePick | null>(null);
+  const [reference, setReference] = useState("");
   const [channel, setChannel] = useState<"llamada" | "whatsapp" | "otro">("llamada");
   const [contacted, setContacted] = useState(true);
   const [hasNovelty, setHasNovelty] = useState(false);
@@ -23,7 +25,7 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const requestKey = useRef<string | null>(null);
-  const suggestions = [...trip.waypoints, trip.destination.split(",")[0]];
+  const routeStops = [...trip.waypoints, trip.destination, trip.origin];
 
   function setContact(value: boolean) {
     setContacted(value);
@@ -39,7 +41,8 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
   function reset() {
     setAt(bogotaLocalInput(Date.now()));
     setFormKey((k) => k + 1);
-    setLocation("");
+    setPlace(null);
+    setReference("");
     setChannel("llamada");
     setContacted(true);
     setHasNovelty(false);
@@ -56,7 +59,7 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
     try {
       if (!at) throw new Error("Indica la fecha y hora del reporte.");
       const ms = parseBogotaLocalInput(at);
-      if (!location.trim()) throw new Error("Indica el lugar o municipio desde donde reporta el conductor.");
+      if (!place) throw new Error("Selecciona el municipio desde donde reporta el conductor.");
       if (!observation.trim()) throw new Error("Escribe qué se conversó en el reporte.");
       requestKey.current ??= crypto.randomUUID();
       setBusy(true);
@@ -64,7 +67,9 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
         tripId: trip._id,
         requestKey: requestKey.current,
         at: ms,
-        location,
+        municipality: place.name,
+        municipalityCode: place.code,
+        reference: reference || undefined,
         channel,
         contacted,
         hasNovelty,
@@ -85,12 +90,12 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
       <fieldset disabled={busy} style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: "contents" }}>
         <div className="bm-form-grid">
           <DateField key={formKey} className="field wide" label="Fecha y hora del reporte" name="reportAt" required value={at} withTime onChange={(value) => { setAt(value); requestKey.current = null; }} />
+          <div className="field wide" key={`place-${formKey}`}>
+            <PlaceField label="Municipio" name="municipality" required routeStops={routeStops} value={place} onSelect={(p) => { setPlace(p); requestKey.current = null; }} onClear={() => { setPlace(null); requestKey.current = null; }} />
+          </div>
           <label className="field wide">
-            <span>Lugar o municipio <small>¿por dónde va?</small></span>
-            <input list="bm-route-suggestions" required placeholder="Ej. San Gil" value={location} onChange={(e) => { setLocation(e.target.value); requestKey.current = null; }} />
-            <datalist id="bm-route-suggestions">
-              {suggestions.map((s) => <option key={s} value={s} />)}
-            </datalist>
+            <span>Punto de referencia <small>opcional: estación, peaje, hotel, kilómetro</small></span>
+            <input placeholder="Ej. Estación Terpel a la salida" value={reference} onChange={(e) => { setReference(e.target.value); requestKey.current = null; }} maxLength={120} />
           </label>
           <div className="field wide">
             <span>Medio de contacto</span>

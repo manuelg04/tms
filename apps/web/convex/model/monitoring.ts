@@ -137,3 +137,9 @@ export function reportCompliance(
   });
   return { rows, onTime, late, maxGapMinutes: maxGap, averageGapMinutes: gaps ? Math.round(totalGap / gaps) : 0 };
 }
+
+export function composeLocation(municipality: string, reference?: string): string {
+  const town = municipality.split(",")[0].trim();
+  const detail = reference?.trim();
+  return detail ? `${town} · ${detail}` : town;
+}

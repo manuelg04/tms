@@ -7,6 +7,7 @@ import type { Doc, Id } from "../../../../convex/_generated/dataModel";
 import { DELIVERY_DOCUMENTS, bogotaLocalInput, parseBogotaLocalInput } from "../../../../convex/model/monitoring";
 import { convexErrorMessage } from "../../../lib/convex-error";
 import { DateField } from "../../../components/fields/date-field";
+import { PlaceField, type PlacePick } from "./place-field";
 
 const MAX = 1000;
 const MAX_FILES = 6;
@@ -17,7 +18,9 @@ export function DeliveryForm({ trip, deliveredSites = [], onSaved }: { trip: Doc
   const pendingSites = (trip.deliveryWaypoints ?? []).filter((site) => !deliveredSites.some((done) => done.toLocaleLowerCase("es").includes(site.toLocaleLowerCase("es"))));
   const [partial, setPartial] = useState(pendingSites.length > 0);
   const [at, setAt] = useState(() => bogotaLocalInput(Date.now()));
-  const [location, setLocation] = useState(pendingSites[0] ?? trip.destination);
+  const [place, setPlace] = useState<PlacePick | null>({ name: pendingSites[0] ?? trip.destination });
+  const [reference, setReference] = useState("");
+  const routeStops = [trip.destination, ...trip.waypoints, trip.origin];
   const [receivedBy, setReceivedBy] = useState("");
   const [weight, setWeight] = useState("");
   const [condition, setCondition] = useState<"conforme" | "con_novedad">("conforme");
@@ -42,6 +45,7 @@ export function DeliveryForm({ trip, deliveredSites = [], onSaved }: { trip: Doc
     try {
       if (!at) throw new Error("Indica la fecha y hora de la entrega.");
       const ms = parseBogotaLocalInput(at);
+      if (!place) throw new Error("Selecciona el municipio de la entrega.");
       if (!receivedBy.trim()) throw new Error("Indica quién recibió la carga en el destino.");
       if (!observation.trim()) throw new Error("Describe cómo terminó el descargue.");
       const kg = weight.trim() ? Number(weight.replace(/\./g, "").replace(",", ".")) : undefined;
@@ -65,7 +69,9 @@ export function DeliveryForm({ trip, deliveredSites = [], onSaved }: { trip: Doc
         tripId: trip._id,
         requestKey: requestKey.current,
         at: ms,
-        location,
+        municipality: place.name,
+        municipalityCode: place.code,
+        reference: reference || undefined,
         receivedBy,
         deliveredWeightKg: kg,
         cargoCondition: condition,
@@ -90,15 +96,18 @@ export function DeliveryForm({ trip, deliveredSites = [], onSaved }: { trip: Doc
           <div className="field wide">
             <span>Tipo de entrega</span>
             <div className="bm-segment" role="group" aria-label="Tipo de entrega">
-              <button type="button" aria-pressed={partial} onClick={() => { setPartial(true); if (pendingSites[0] && location === trip.destination) setLocation(pendingSites[0]); requestKey.current = null; }}>Parcial · el viaje continúa</button>
-              <button type="button" className="good" aria-pressed={!partial} onClick={() => { setPartial(false); if (pendingSites.includes(location)) setLocation(trip.destination); requestKey.current = null; }}>Final · cierra el viaje</button>
+              <button type="button" aria-pressed={partial} onClick={() => { setPartial(true); if (pendingSites[0] && place?.name === trip.destination) setPlace({ name: pendingSites[0] }); requestKey.current = null; }}>Parcial · el viaje continúa</button>
+              <button type="button" className="good" aria-pressed={!partial} onClick={() => { setPartial(false); if (place && pendingSites.includes(place.name)) setPlace({ name: trip.destination }); requestKey.current = null; }}>Final · cierra el viaje</button>
             </div>
             {partial && pendingSites.length ? <small className="counter" style={{ textAlign: "left" }}>Sitios de entrega pendientes: {pendingSites.join(", ")}</small> : null}
           </div>
           <DateField className="field wide" label="Fecha y hora de la entrega" name="deliveredAt" required value={at} withTime onChange={(value) => { setAt(value); requestKey.current = null; }} />
+          <div className="field wide">
+            <PlaceField label="Municipio de la entrega" name="deliveryMunicipality" required routeStops={routeStops} value={place} onSelect={(p) => { setPlace(p); requestKey.current = null; }} onClear={() => { setPlace(null); requestKey.current = null; }} />
+          </div>
           <label className="field wide">
-            <span>Lugar de descargue</span>
-            <input required value={location} onChange={(e) => { setLocation(e.target.value); requestKey.current = null; }} />
+            <span>Lugar de descargue <small>bodega, planta, dirección</small></span>
+            <input placeholder="Ej. Planta Bogotá · Cementos del Oriente" value={reference} onChange={(e) => { setReference(e.target.value); requestKey.current = null; }} maxLength={120} />
           </label>
           <label className="field wide">
             <span>Recibido por <small>nombre y cargo</small></span>

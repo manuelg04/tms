@@ -7,10 +7,13 @@ import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { routeProgress } from "../../../../convex/model/monitoring";
+import dynamic from "next/dynamic";
 import { ReportForm } from "../components/report-form";
 import { DeliveryForm } from "../components/delivery-form";
 import { channelLabels, dayKey, formatDate, formatDateTime, formatDuration, formatLongDate, formatTime, formatWeight, kindLabels, relativeDue, relativePast, useNow } from "../components/format";
 import "../bitacora.css";
+
+const TripMap = dynamic(() => import("../components/trip-map").then((m) => m.TripMap), { ssr: false, loading: () => <div className="skeleton" style={{ height: 420 }}>Cargando mapa…</div> });
 
 type Report = NonNullable<ReturnType<typeof useQuery<typeof api.monitoring.detail>>>["reports"][number];
 
@@ -147,6 +150,14 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
             })}
           </ol>
         </div>
+      </section>
+
+      <section className="panel" aria-label="Mapa de la ruta">
+        <div className="tracking-section-title" style={{ padding: "14px 22px" }}>
+          <h3 style={{ margin: 0, fontSize: 15 }}>Ruta y reportes en el mapa</h3>
+          <span style={{ color: "var(--ink-soft)", fontSize: 12 }}>Pines numerados en el orden de la ruta · clic en un pin para ver el reporte</span>
+        </div>
+        <TripMap tripId={trip._id} tripStatus={trip.status} />
       </section>
 
       <div className="bm-layout">

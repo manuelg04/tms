@@ -6,9 +6,12 @@ import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
 import { reportCompliance, routeProgress } from "../../../../../convex/model/monitoring";
+import dynamic from "next/dynamic";
 import { useDemoUser } from "../../../../providers";
 import { channelLabels, formatDateTime, formatDuration, formatTime, formatWeight, kindLabels } from "../../components/format";
 import "../../bitacora.css";
+
+const TripMap = dynamic(() => import("../../components/trip-map").then((m) => m.TripMap), { ssr: false });
 
 const shortDate = (ms: number) => new Intl.DateTimeFormat("es-CO", { timeZone: "America/Bogota", day: "2-digit", month: "2-digit", year: "numeric" }).format(ms);
 const norm = (v: string) => v.normalize("NFD").replace(/[̀-ͯ]/g, "").toLocaleLowerCase("es").trim();
@@ -161,7 +164,12 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
           </tbody>
         </table>
 
-        <h2><span>3</span>Cronología completa de reportes</h2>
+        <h2><span>3</span>Mapa de la ruta y los reportes</h2>
+        <div className="bm-print-map">
+          <TripMap tripId={trip._id} tripStatus={trip.status} interactive={false} height={380} />
+        </div>
+
+        <h2><span>4</span>Cronología completa de reportes</h2>
         <table className="bm-print-table bm-print-log">
           <thead>
             <tr>
@@ -198,7 +206,7 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
         </table>
         <p className="bm-print-note">Intervalo: tiempo transcurrido desde el reporte anterior. Se marca como tardío cuando supera la frecuencia acordada más 15 minutos de tolerancia.</p>
 
-        <h2><span>4</span>Novedades registradas</h2>
+        <h2><span>5</span>Novedades registradas</h2>
         {novelties.length ? (
           <div className="bm-print-novelties">
             {novelties.map((report) => {
@@ -222,7 +230,7 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
           <p className="bm-print-note">No se registraron novedades durante el viaje. Todos los reportes se recibieron sin incidentes.</p>
         )}
 
-        <h2><span>5</span>Cierre de entrega</h2>
+        <h2><span>6</span>Cierre de entrega</h2>
         {delivery ? (
           <>
             <dl className="bm-print-grid">
@@ -251,7 +259,7 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
           <p className="bm-print-note">El viaje aún no tiene entrega registrada. Este documento refleja la bitácora hasta {formatDateTime(printedAt)}.</p>
         )}
 
-        <h2><span>6</span>Trazabilidad del registro</h2>
+        <h2><span>7</span>Trazabilidad del registro</h2>
         <dl className="bm-print-grid">
           <div><dt>Identificador interno</dt><dd className="mono">{trip._id}</dd></div>
           <div><dt>Registros en la bitácora</dt><dd>{reports.length}</dd></div>

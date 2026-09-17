@@ -25,6 +25,13 @@ export const monitoringAttachment = v.object({
   fileName: v.string(),
   contentType: v.string(),
 });
+export const monitoringRouteGeometry = v.object({
+  coordinates: v.array(v.array(v.number())),
+  distanceKm: v.number(),
+  durationMin: v.number(),
+  stopsKey: v.string(),
+  computedAt: v.number(),
+});
 export const monitoringTripFields = {
   organizationId: v.id("organizations"),
   code: v.string(),
@@ -50,6 +57,7 @@ export const monitoringTripFields = {
   nextDueAt: v.optional(v.number()),
   reportCount: v.number(),
   deliveredAt: v.optional(v.number()),
+  routeGeometry: v.optional(monitoringRouteGeometry),
   createdBy: v.optional(v.id("users")),
   createdByName: v.string(),
   createdAt: v.number(),

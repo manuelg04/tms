@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { DateField } from "../../../components/fields/date-field";
 import { DriverField, MunicipalityField, VehicleField, divisionLabel, type DriverPick, type VehiclePick } from "../../../components/fields/lookup-fields";
 import { convexErrorMessage } from "../../../lib/convex-error";
 import { bogotaLocalInput, parseBogotaLocalInput } from "../../../../convex/model/monitoring";
@@ -57,6 +58,7 @@ export default function NewMonitoringTrip() {
     try {
       if (!origin.name.trim()) throw new Error("Selecciona o escribe el origen del viaje.");
       if (!destination.name.trim()) throw new Error("Selecciona o escribe el destino del viaje.");
+      if (!departure) throw new Error("Indica la fecha y hora de salida.");
       const departureAt = parseBogotaLocalInput(departure);
       const expectedArrivalAt = expected ? parseBogotaLocalInput(expected) : undefined;
       if (expectedArrivalAt !== undefined && expectedArrivalAt <= departureAt) throw new Error("La llegada estimada debe ser posterior a la salida.");
@@ -130,14 +132,8 @@ export default function NewMonitoringTrip() {
                   </div>
                 ) : null}
               </div>
-              <label className="field span-4">
-                <span>Fecha y hora de salida</span>
-                <input type="datetime-local" required value={departure} onChange={(e) => setDeparture(e.target.value)} />
-              </label>
-              <label className="field span-4">
-                <span>Llegada estimada <small>opcional</small></span>
-                <input type="datetime-local" value={expected} onChange={(e) => setExpected(e.target.value)} />
-              </label>
+              <DateField className="field span-4" label="Fecha y hora de salida" name="departureAt" required value={departure} withTime onChange={setDeparture} />
+              <DateField className="field span-4" label="Llegada estimada" name="expectedArrivalAt" value={expected} withTime min={departure.slice(0, 10)} onChange={setExpected} />
               <label className="field span-4">
                 <span>Frecuencia de reporte</span>
                 <select value={interval} onChange={(e) => setInterval(Number(e.target.value))}>

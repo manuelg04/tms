@@ -6,12 +6,14 @@ import { api } from "../../../../convex/_generated/api";
 import type { Doc } from "../../../../convex/_generated/dataModel";
 import { NOVELTY_TYPES, bogotaLocalInput, parseBogotaLocalInput } from "../../../../convex/model/monitoring";
 import { convexErrorMessage } from "../../../lib/convex-error";
+import { DateField } from "../../../components/fields/date-field";
 
 const MAX = 1000;
 
 export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; onSaved: () => void }) {
   const save = useMutation(api.monitoring.addReport);
   const [at, setAt] = useState(() => bogotaLocalInput(Date.now()));
+  const [formKey, setFormKey] = useState(0);
   const [location, setLocation] = useState("");
   const [channel, setChannel] = useState<"llamada" | "whatsapp" | "otro">("llamada");
   const [contacted, setContacted] = useState(true);
@@ -36,6 +38,7 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
 
   function reset() {
     setAt(bogotaLocalInput(Date.now()));
+    setFormKey((k) => k + 1);
     setLocation("");
     setChannel("llamada");
     setContacted(true);
@@ -51,6 +54,7 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
     if (busy) return;
     setError("");
     try {
+      if (!at) throw new Error("Indica la fecha y hora del reporte.");
       const ms = parseBogotaLocalInput(at);
       if (!location.trim()) throw new Error("Indica el lugar o municipio desde donde reporta el conductor.");
       if (!observation.trim()) throw new Error("Escribe qué se conversó en el reporte.");
@@ -80,10 +84,7 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
     <form className="bm-form" onSubmit={(e) => void submit(e)}>
       <fieldset disabled={busy} style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: "contents" }}>
         <div className="bm-form-grid">
-          <label className="field wide">
-            <span>Fecha y hora del reporte</span>
-            <input type="datetime-local" required value={at} onChange={(e) => { setAt(e.target.value); requestKey.current = null; }} />
-          </label>
+          <DateField key={formKey} className="field wide" label="Fecha y hora del reporte" name="reportAt" required value={at} withTime onChange={(value) => { setAt(value); requestKey.current = null; }} />
           <label className="field wide">
             <span>Lugar o municipio <small>¿por dónde va?</small></span>
             <input list="bm-route-suggestions" required placeholder="Ej. San Gil" value={location} onChange={(e) => { setLocation(e.target.value); requestKey.current = null; }} />

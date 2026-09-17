@@ -627,3 +627,8 @@
   .bm-print-sheet { border: 0; box-shadow: none; padding: 0; max-width: none; }
   .bm-print-table tr { break-inside: avoid; }
 }
+
+.bm-side .panel { overflow: visible; }
+.bm-side-tabs { border-radius: var(--radius) var(--radius) 0 0; }
+.bm-form .date-popover, .bm-new-layout .date-popover { z-index: 60; }
+.bm-form .date-field-trigger { min-height: 34px; }

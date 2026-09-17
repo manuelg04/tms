@@ -88,6 +88,12 @@ export function DateField({ className = "", label, name, value, withTime, requir
     });
   }
 
+  function now() {
+    const current = new Date();
+    setView({ year: current.getFullYear(), month: current.getMonth() });
+    commit(isoDate(current), `${pad(current.getHours())}:${pad(current.getMinutes())}`);
+  }
+
   function quick(daysAhead: number) {
     const target = new Date();
     target.setDate(target.getDate() + daysAhead);
@@ -147,6 +153,7 @@ export function DateField({ className = "", label, name, value, withTime, requir
             </div>
           ) : null}
           <div className="date-popover-foot">
+            {withTime ? <button onClick={now} type="button">Ahora</button> : null}
             <button onClick={() => quick(0)} type="button">Hoy</button>
             <button onClick={() => quick(1)} type="button">Mañana</button>
             <button className="muted" onClick={() => { commit("", withTime ? "08:00" : ""); setOpen(false); }} type="button">Limpiar</button>

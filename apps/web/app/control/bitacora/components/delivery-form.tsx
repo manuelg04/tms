@@ -6,6 +6,7 @@ import { api } from "../../../../convex/_generated/api";
 import type { Doc, Id } from "../../../../convex/_generated/dataModel";
 import { DELIVERY_DOCUMENTS, bogotaLocalInput, parseBogotaLocalInput } from "../../../../convex/model/monitoring";
 import { convexErrorMessage } from "../../../lib/convex-error";
+import { DateField } from "../../../components/fields/date-field";
 
 const MAX = 1000;
 const MAX_FILES = 6;
@@ -37,6 +38,7 @@ export function DeliveryForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; 
     if (busy) return;
     setError("");
     try {
+      if (!at) throw new Error("Indica la fecha y hora de la entrega.");
       const ms = parseBogotaLocalInput(at);
       if (!receivedBy.trim()) throw new Error("Indica quién recibió la carga en el destino.");
       if (!observation.trim()) throw new Error("Describe cómo terminó el descargue.");
@@ -82,10 +84,7 @@ export function DeliveryForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; 
     <form className="bm-form" onSubmit={(e) => void submit(e)}>
       <fieldset disabled={busy} style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: "contents" }}>
         <div className="bm-form-grid">
-          <label className="field wide">
-            <span>Fecha y hora de la entrega</span>
-            <input type="datetime-local" required value={at} onChange={(e) => { setAt(e.target.value); requestKey.current = null; }} />
-          </label>
+          <DateField className="field wide" label="Fecha y hora de la entrega" name="deliveredAt" required value={at} withTime onChange={(value) => { setAt(value); requestKey.current = null; }} />
           <label className="field wide">
             <span>Lugar de descargue</span>
             <input required value={location} onChange={(e) => { setLocation(e.target.value); requestKey.current = null; }} />

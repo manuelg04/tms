@@ -16,6 +16,7 @@ import type * as dashboard from "../dashboard.js";
 import type * as dispatchExceptions from "../dispatchExceptions.js";
 import type * as dispatchSearch from "../dispatchSearch.js";
 import type * as dispatches from "../dispatches.js";
+import type * as divisionMaintenance from "../divisionMaintenance.js";
 import type * as documentDraftActions from "../documentDraftActions.js";
 import type * as documentRegistry from "../documentRegistry.js";
 import type * as evidence from "../evidence.js";
@@ -82,6 +83,7 @@ declare const fullApi: ApiFromModules<{
   dispatchExceptions: typeof dispatchExceptions;
   dispatchSearch: typeof dispatchSearch;
   dispatches: typeof dispatches;
+  divisionMaintenance: typeof divisionMaintenance;
   documentDraftActions: typeof documentDraftActions;
   documentRegistry: typeof documentRegistry;
   evidence: typeof evidence;

@@ -775,3 +775,69 @@ button.bm-stop { cursor: pointer; }
 .bm-stop.delivery { background: var(--plate-soft); border-color: #e5cf8a; }
 .bm-suggestion-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .bm-suggestion-note { margin: 0; font-size: 12px; color: var(--ink-soft); }
+
+/* Vista del viaje: distribución centrada en el operador */
+.bm-trip-facts { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 0; font-size: 13px; color: var(--ink-soft); }
+.bm-trip-facts b { color: var(--ink); font-weight: 700; }
+.bm-trip-layout { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 18px; align-items: start; }
+.bm-trip-main { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.bm-trip-side { display: flex; flex-direction: column; gap: 12px; position: sticky; top: 76px; }
+.bm-focus { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.bm-focus-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 18px 13px; min-width: 0; }
+.bm-focus-card .eyebrow { display: block; }
+.bm-focus-card strong { display: block; font-size: 30px; font-weight: 700; font-stretch: 115%; letter-spacing: -0.02em; line-height: 1.05; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.bm-focus-card small { display: block; margin-top: 5px; font-size: 13px; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bm-focus-card.late { border-color: #efc2c2; background: #fff6f6; }
+.bm-focus-card.late strong, .bm-focus-card.late small { color: var(--bad); }
+.bm-focus-card.soon { border-color: #eed9a3; background: #fffbf0; }
+.bm-focus-card.soon strong { color: var(--wait); }
+.bm-focus-card.ok strong { color: var(--ok); }
+.bm-card-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 18px; border-bottom: 1px solid var(--line); }
+.bm-card-toolbar h3 { margin: 0; font-size: 15px; font-weight: 700; }
+.bm-card-toolbar h3 .count { font-weight: 500; font-size: 12.5px; color: var(--ink-soft); margin-left: 8px; }
+.bm-card-toolbar > div > span { display: block; font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+.bm-card-toolbar > div > span b { color: var(--ink); font-weight: 600; }
+.bm-toolbar-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bm-segment.small { display: inline-grid; }
+.bm-segment.small button { padding: 5px 10px; font-size: 12px; }
+.bm-map-card .bm-map-legend { border-bottom: 1px solid var(--line); }
+.bm-stepper.compact { padding: 12px 18px 14px; }
+.bm-stepper.compact ol { grid-auto-columns: minmax(84px, 1fr); }
+.bm-stepper.compact .dot { width: 15px; height: 15px; border-width: 2.5px; margin-bottom: 6px; }
+.bm-stepper.compact li::before { top: 6px; height: 2.5px; }
+.bm-stepper.compact .stop { font-size: 11.5px; }
+.bm-stepper.compact .stop-time { font-size: 10px; }
+.bm-driver-strip { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: var(--cab); color: #fff; border-radius: var(--radius); padding: 10px 16px; }
+.bm-driver-strip .eyebrow { color: var(--cab-text); display: block; }
+.bm-driver-strip strong { display: block; font-size: 14px; margin-top: 2px; }
+.bm-phone { font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: var(--plate); text-decoration: none; letter-spacing: 0.02em; white-space: nowrap; }
+.bm-phone:hover { text-decoration: underline; }
+.bm-form-panel { overflow: visible; }
+.bm-instructions { padding: 12px 16px; border-left: 4px solid var(--plate); }
+.bm-instructions p { margin: 4px 0 0; font-size: 13.5px; line-height: 1.5; }
+.bm-details { padding: 0; }
+.bm-details summary { cursor: pointer; padding: 12px 16px; font-size: 13px; font-weight: 700; color: var(--ink-soft); list-style: none; display: flex; align-items: center; gap: 8px; }
+.bm-details summary::before { content: "▸"; font-size: 11px; transition: transform 0.15s; }
+.bm-details[open] summary::before { transform: rotate(90deg); }
+.bm-details dl { margin: 0; padding: 0 16px 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+.bm-details dt { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); font-weight: 600; }
+.bm-details dd { margin: 2px 0 0; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.bm-details dd.muted { font-weight: 400; color: var(--ink-soft); }
+.bm-details .wide { grid-column: 1 / -1; }
+.bm-field-error { display: block; margin-top: 4px; font-size: 12px; color: var(--bad); }
+.bm-trip .bm-card p { font-size: 14px; line-height: 1.55; }
+.bm-trip .bm-card-title { font-size: 14.5px; }
+.bm-trip .bm-card-title .place { font-weight: 700; }
+.bm-trip .bm-card-foot { font-size: 12px; }
+.bm-trip .bm-entry-time { font-size: 13.5px; }
+.bm-latest { font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); border: 1px dashed var(--line-strong); border-radius: 4px; padding: 1px 6px; }
+.bm-entry.latest .bm-card { box-shadow: 0 0 0 2px var(--plate-soft); }
+.bm-trip .bm-form .field > span { font-size: 12.5px; }
+.bm-trip .bm-form input, .bm-trip .bm-form select, .bm-trip .bm-form textarea { font-size: 13.5px; }
+@media (max-width: 1180px) {
+  .bm-trip-layout { grid-template-columns: 1fr; }
+  .bm-trip-side { position: static; }
+}
+@media (max-width: 720px) {
+  .bm-focus { grid-template-columns: 1fr; }
+}

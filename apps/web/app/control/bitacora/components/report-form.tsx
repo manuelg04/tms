@@ -11,7 +11,7 @@ import { PlaceField, type PlacePick } from "./place-field";
 
 const MAX = 1000;
 
-export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; onSaved: () => void }) {
+export function ReportForm({ trip, onSaved, onAttempt }: { trip: Doc<"monitoringTrips">; onSaved: () => void; onAttempt?: () => void }) {
   const save = useMutation(api.monitoring.addReport);
   const [at, setAt] = useState(() => bogotaLocalInput(Date.now()));
   const [formKey, setFormKey] = useState(0);
@@ -56,6 +56,7 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
     event.preventDefault();
     if (busy) return;
     setError("");
+    onAttempt?.();
     try {
       if (!at) throw new Error("Indica la fecha y hora del reporte.");
       const ms = parseBogotaLocalInput(at);
@@ -89,7 +90,10 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
     <form className="bm-form" onSubmit={(e) => void submit(e)}>
       <fieldset disabled={busy} style={{ border: 0, padding: 0, margin: 0, minWidth: 0, display: "contents" }}>
         <div className="bm-form-grid">
-          <DateField key={formKey} className="field wide" label="Fecha y hora del reporte" name="reportAt" required value={at} withTime onChange={(value) => { setAt(value); requestKey.current = null; }} />
+          <div className="field wide">
+            <DateField key={formKey} className="field" label="Fecha y hora del reporte" name="reportAt" required value={at} withTime onChange={(value) => { setAt(value); setError(""); requestKey.current = null; }} />
+            {error && /hora|fecha/i.test(error) ? <small className="bm-field-error" role="alert">{error}. Corrige la hora y vuelve a guardar; lo demás se conserva.</small> : null}
+          </div>
           <div className="field wide" key={`place-${formKey}`}>
             <PlaceField label="Municipio" name="municipality" required routeStops={routeStops} value={place} onSelect={(p) => { setPlace(p); requestKey.current = null; }} onClear={() => { setPlace(null); requestKey.current = null; }} />
           </div>
@@ -139,7 +143,7 @@ export function ReportForm({ trip, onSaved }: { trip: Doc<"monitoringTrips">; on
             <small className="counter">{MAX - observation.length} caracteres disponibles</small>
           </label>
         </div>
-        {error ? <p className="bm-message error" role="alert">{error}</p> : null}
+        {error && !/hora|fecha/i.test(error) ? <p className="bm-message error" role="alert">{error}</p> : null}
         <div className="bm-form-actions">
           <button className="primary-action" type="submit">{busy ? "Guardando…" : "Guardar reporte"}</button>
           <button className="ghost-button" type="button" onClick={reset}>Limpiar</button>

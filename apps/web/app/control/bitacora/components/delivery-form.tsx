@@ -12,7 +12,7 @@ import { PlaceField, type PlacePick } from "./place-field";
 const MAX = 1000;
 const MAX_FILES = 6;
 
-export function DeliveryForm({ trip, deliveredSites = [], onSaved }: { trip: Doc<"monitoringTrips">; deliveredSites?: string[]; onSaved: () => void }) {
+export function DeliveryForm({ trip, deliveredSites = [], onSaved, onAttempt }: { trip: Doc<"monitoringTrips">; deliveredSites?: string[]; onSaved: () => void; onAttempt?: () => void }) {
   const save = useMutation(api.monitoring.registerDelivery);
   const generateUploadUrl = useMutation(api.monitoring.generateUploadUrl);
   const pendingSites = (trip.deliveryWaypoints ?? []).filter((site) => !deliveredSites.some((done) => done.toLocaleLowerCase("es").includes(site.toLocaleLowerCase("es"))));
@@ -42,6 +42,7 @@ export function DeliveryForm({ trip, deliveredSites = [], onSaved }: { trip: Doc
     event.preventDefault();
     if (busy) return;
     setError("");
+    onAttempt?.();
     try {
       if (!at) throw new Error("Indica la fecha y hora de la entrega.");
       const ms = parseBogotaLocalInput(at);
@@ -101,7 +102,10 @@ export function DeliveryForm({ trip, deliveredSites = [], onSaved }: { trip: Doc
             </div>
             {partial && pendingSites.length ? <small className="counter" style={{ textAlign: "left" }}>Sitios de entrega pendientes: {pendingSites.join(", ")}</small> : null}
           </div>
-          <DateField className="field wide" label="Fecha y hora de la entrega" name="deliveredAt" required value={at} withTime onChange={(value) => { setAt(value); requestKey.current = null; }} />
+          <div className="field wide">
+            <DateField className="field" label="Fecha y hora de la entrega" name="deliveredAt" required value={at} withTime onChange={(value) => { setAt(value); setError(""); requestKey.current = null; }} />
+            {error && /hora|fecha/i.test(error) ? <small className="bm-field-error" role="alert">{error}. Corrige la hora y vuelve a guardar; lo demás se conserva.</small> : null}
+          </div>
           <div className="field wide">
             <PlaceField label="Municipio de la entrega" name="deliveryMunicipality" required routeStops={routeStops} value={place} onSelect={(p) => { setPlace(p); requestKey.current = null; }} onClear={() => { setPlace(null); requestKey.current = null; }} />
           </div>
@@ -157,7 +161,7 @@ export function DeliveryForm({ trip, deliveredSites = [], onSaved }: { trip: Doc
           </label>
         </div>
         {progress ? <p className="bm-message success" role="status">{progress}</p> : null}
-        {error ? <p className="bm-message error" role="alert">{error}</p> : null}
+        {error && !/hora|fecha/i.test(error) ? <p className="bm-message error" role="alert">{error}</p> : null}
         <div className="bm-form-actions">
           <button className="primary-action" type="submit">{busy ? "Guardando…" : partial ? "Registrar entrega parcial" : "Registrar entrega y cerrar viaje"}</button>
         </div>

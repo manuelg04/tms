@@ -4,8 +4,9 @@ import { useState, type FormEvent } from "react";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
-import { jobTitleLabels, jobTitles, type JobTitle } from "../../../convex/model/userAccounts";
+import { jobTitleDescriptions, jobTitleLabels, jobTitles, requiresCustomer, type JobTitle } from "../../../convex/model/userAccounts";
 import { convexErrorMessage } from "../../lib/convex-error";
+import { CustomerField, type CustomerPick } from "../../components/fields/customer-field";
 import "../../control/tracking.css";
 
 type Account = {
@@ -13,6 +14,8 @@ type Account = {
   name: string;
   email: string;
   jobTitle?: JobTitle;
+  customerId?: Id<"customers">;
+  customerName?: string;
   roles: string[];
   status: "active" | "disabled";
   hasPassword: boolean;
@@ -25,6 +28,7 @@ export default function UsersPage() {
   const update = useMutation(api.userAccounts.update);
   const [creating, setCreating] = useState(false);
   const [resetting, setResetting] = useState<Account | null>(null);
+  const [assigning, setAssigning] = useState<Account | null>(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -60,11 +64,27 @@ export default function UsersPage() {
   async function changeJobTitle(account: Account, jobTitle: JobTitle) {
     setError("");
     setMessage("");
+    if (requiresCustomer(jobTitle) && !account.customerId) {
+      setAssigning({ ...account, jobTitle });
+      return;
+    }
     try {
       await update({ userId: account._id, jobTitle });
       setMessage(`${account.name} ahora es ${jobTitleLabels[jobTitle].toLowerCase()}.`);
     } catch (reason) {
       setError(convexErrorMessage(reason, "No fue posible cambiar el cargo"));
+    }
+  }
+
+  async function assignCustomer(account: Account, customer: CustomerPick) {
+    setError("");
+    setMessage("");
+    try {
+      await update({ userId: account._id, jobTitle: "empresa", customerId: customer._id });
+      setAssigning(null);
+      setMessage(`${account.name} quedó vinculado a ${customer.name}.`);
+    } catch (reason) {
+      setError(convexErrorMessage(reason, "No fue posible vincular la empresa"));
     }
   }
 
@@ -74,7 +94,7 @@ export default function UsersPage() {
         <div>
           <span className="eyebrow">Configuración</span>
           <h2>Usuarios</h2>
-          <p>Quién puede entrar al sistema y con qué cargo</p>
+          <p>Quién puede entrar al sistema y con qué cargo. Los usuarios de empresa cliente solo ven los viajes y estudios de su empresa.</p>
         </div>
         {data.canManage ? (
           <button type="button" className="primary-action" onClick={() => { setCreating(true); setMessage(""); setError(""); }}>
@@ -96,6 +116,7 @@ export default function UsersPage() {
                 <th>Nombre</th>
                 <th>Correo</th>
                 <th>Cargo</th>
+                <th>Empresa</th>
                 <th>Estado</th>
                 <th>Contraseña</th>
                 {data.canManage ? <th>Acciones</th> : null}
@@ -120,6 +141,14 @@ export default function UsersPage() {
                         </select>
                       ) : account.jobTitle ? jobTitleLabels[account.jobTitle] : legacyRole(account.roles)}
                     </td>
+                    <td>
+                      {requiresCustomer(account.jobTitle) || account.roles.includes("client") ? (
+                        <span style={{ display: "inline-flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                          <span style={{ color: account.customerName ? "inherit" : "var(--bad)" }}>{account.customerName ?? "Sin empresa asignada"}</span>
+                          {data.canManage ? <button type="button" className="text-button" onClick={() => { setAssigning(account); setMessage(""); setError(""); }}>Cambiar</button> : null}
+                        </span>
+                      ) : <span style={{ color: "var(--ink-faint)" }}>—</span>}
+                    </td>
                     <td>{account.status === "active" ? "Activo" : "Desactivado"}</td>
                     <td>{account.hasPassword ? (account.passwordUpdatedAt ? `Actualizada ${formatDate(account.passwordUpdatedAt)}` : "Definida") : "Sin definir"}</td>
                     {data.canManage ? (
@@ -140,7 +169,7 @@ export default function UsersPage() {
                 );
               })}
               {!data.accounts.length ? (
-                <tr><td className="tracking-empty" colSpan={data.canManage ? 6 : 5}>No hay usuarios registrados.</td></tr>
+                <tr><td className="tracking-empty" colSpan={data.canManage ? 7 : 6}>No hay usuarios registrados.</td></tr>
               ) : null}
             </tbody>
           </table>
@@ -151,6 +180,18 @@ export default function UsersPage() {
           onCancel={() => setCreating(false)}
           onCreated={(name) => { setCreating(false); setMessage(`Usuario ${name} creado.`); }}
         />
+      ) : null}
+      {assigning && data.canManage ? (
+        <section className="panel alarm-form">
+          <div className="tracking-section-title"><h3>Empresa cliente de {assigning.name}</h3></div>
+          <p className="login-note">El usuario verá únicamente la bitácora y los estudios de seguridad de la empresa que elijas aquí.</p>
+          <div className="tracking-form-grid">
+            <CustomerField className="field" label="Empresa cliente" required selected={assigning.customerId && assigning.customerName ? { _id: assigning.customerId, name: assigning.customerName } : null} onSelect={(customer) => void assignCustomer(assigning, customer)} />
+          </div>
+          <div className="tracking-form-actions">
+            <button type="button" className="ghost-button" onClick={() => setAssigning(null)}>Cancelar</button>
+          </div>
+        </section>
       ) : null}
       {resetting && data.canManage ? (
         <ResetPasswordForm
@@ -165,18 +206,23 @@ export default function UsersPage() {
 
 function CreateUserForm({ onCancel, onCreated }: { onCancel: () => void; onCreated: (name: string) => void }) {
   const [values, setValues] = useState({ name: "", email: "", jobTitle: "auxiliar_seguridad" as JobTitle, password: "" });
+  const [customer, setCustomer] = useState<CustomerPick | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    setBusy(true);
     setError("");
+    if (requiresCustomer(values.jobTitle) && !customer) {
+      setError("Selecciona la empresa cliente a la que pertenece el usuario");
+      return;
+    }
+    setBusy(true);
     try {
       const response = await fetch("/api/auth/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values)
+        body: JSON.stringify({ ...values, customerId: requiresCustomer(values.jobTitle) ? customer?._id : undefined })
       });
       const body = await response.json() as { error?: string };
       if (!response.ok) {
@@ -211,7 +257,11 @@ function CreateUserForm({ onCancel, onCreated }: { onCancel: () => void; onCreat
               <select value={values.jobTitle} onChange={(e) => setValues({ ...values, jobTitle: e.target.value as JobTitle })}>
                 {jobTitles.map((title) => <option key={title} value={title}>{jobTitleLabels[title]}</option>)}
               </select>
+              <small style={{ display: "block", marginTop: 4, color: "var(--ink-faint)", fontSize: 11.5 }}>{jobTitleDescriptions[values.jobTitle]}</small>
             </label>
+            {requiresCustomer(values.jobTitle) ? (
+              <CustomerField className="field" label="Empresa cliente" required selected={customer} onSelect={setCustomer} onClear={() => setCustomer(null)} />
+            ) : null}
             <label>
               <span>Contraseña inicial</span>
               <input required type="password" autoComplete="new-password" minLength={10} value={values.password} onChange={(e) => setValues({ ...values, password: e.target.value })} />

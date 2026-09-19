@@ -40,6 +40,20 @@ test("enforces the provisional role permissions", () => {
   assert.equal(canPerform("operator", "override_rndc"), false);
   assert.equal(canPerform("auditor", "view_audit"), true);
   assert.equal(canPerform("auditor", "edit_expediente"), false);
+  assert.equal(canPerform("client", "view_expediente"), false);
+  assert.equal(canPerform("client", "download_evidence"), false);
+});
+
+test("limits client company users to the monitoring and security study pages", async () => {
+  const { clientCanVisit } = await import("./auth.js");
+  assert.equal(clientCanVisit("/control/bitacora"), true);
+  assert.equal(clientCanVisit("/control/bitacora/abc/imprimir"), true);
+  assert.equal(clientCanVisit("/seguridad/estudios/xyz"), true);
+  assert.equal(clientCanVisit("/configuracion/mi-clave"), true);
+  assert.equal(clientCanVisit("/"), false);
+  assert.equal(clientCanVisit("/maestros"), false);
+  assert.equal(clientCanVisit("/configuracion/usuarios"), false);
+  assert.equal(clientCanVisit("/control/seguimiento"), false);
 });
 
 test("issues an RS256 Convex token and publishes its matching JWKS", () => {

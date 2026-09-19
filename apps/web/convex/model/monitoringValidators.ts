@@ -13,6 +13,7 @@ export const monitoringReportKind = v.union(
 );
 export const monitoringChannel = v.union(
   v.literal("llamada"),
+  v.literal("gps"),
   v.literal("whatsapp"),
   v.literal("presencial"),
   v.literal("otro"),
@@ -33,6 +34,17 @@ export const monitoringRouteGeometry = v.object({
   stopsKey: v.string(),
   computedAt: v.number(),
 });
+export const monitoringScheduleChange = v.object({
+  at: v.number(),
+  previousIntervalMinutes: v.number(),
+  intervalMinutes: v.number(),
+  previousNextDueAt: v.optional(v.number()),
+  nextDueAt: v.number(),
+  reasonType: v.string(),
+  reason: v.string(),
+  operatorName: v.string(),
+  createdBy: v.optional(v.id("users")),
+});
 export const monitoringTripFields = {
   organizationId: v.id("organizations"),
   code: v.string(),
@@ -47,10 +59,12 @@ export const monitoringTripFields = {
   driverDocument: v.optional(v.string()),
   driverPhone: v.string(),
   customer: v.string(),
+  customerId: v.optional(v.id("customers")),
   cargo: v.string(),
   departureAt: v.number(),
   expectedArrivalAt: v.optional(v.number()),
   intervalMinutes: v.number(),
+  scheduleChanges: v.optional(v.array(monitoringScheduleChange)),
   status: monitoringTripStatus,
   observations: v.optional(v.string()),
   lastReportAt: v.optional(v.number()),

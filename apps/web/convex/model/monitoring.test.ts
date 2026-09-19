@@ -61,5 +61,39 @@ describe("report compliance", () => {
     assert.equal(result.late, 1);
     assert.equal(result.maxGapMinutes, 240);
     assert.equal(result.averageGapMinutes, 180);
+    assert.equal(result.adjusted, 0);
+  });
+
+  it("honours an agreed overnight pause and the new frequency after it", async () => {
+    const { reportCompliance, intervalInEffect } = await import("./monitoring");
+    const hour = 60 * 60 * 1000;
+    const reports = [
+      { at: 0, kind: "inicio" },
+      { at: 3 * hour, kind: "control" },
+      { at: 5 * hour, kind: "novedad" },
+      { at: 13 * hour, kind: "control" },
+      { at: 15 * hour, kind: "control" },
+      { at: 18.5 * hour, kind: "control" },
+    ];
+    const changes = [{ at: 5 * hour + 4 * 60000, previousIntervalMinutes: 180, intervalMinutes: 120, nextDueAt: 13 * hour }];
+    const result = reportCompliance(reports, 120, changes);
+    assert.deepEqual(result.rows.map((r) => r.onTime), [null, true, true, true, true, false]);
+    assert.equal(result.rows[3].adjusted, true);
+    assert.equal(result.rows[3].expectedAt, 13 * hour);
+    assert.equal(result.adjusted, 1);
+    assert.equal(intervalInEffect(2 * hour, 180, changes), 180);
+    assert.equal(intervalInEffect(14 * hour, 180, changes), 120);
+  });
+
+  it("validates schedule adjustments", async () => {
+    const { validateScheduleChange } = await import("./monitoring");
+    const now = 1_000_000_000;
+    const base = { now, nextDueAt: now + 8 * 3600_000, intervalMinutes: 120, reasonType: "Pernocta / descanso del conductor", reason: "Conductor pernocta en parqueadero vigilado.", tripStatus: "en_ruta" };
+    assert.doesNotThrow(() => validateScheduleChange(base));
+    assert.throws(() => validateScheduleChange({ ...base, tripStatus: "entregado" }), /entregado/);
+    assert.throws(() => validateScheduleChange({ ...base, nextDueAt: now - 3600_000 }), /pasado/);
+    assert.throws(() => validateScheduleChange({ ...base, nextDueAt: now + 30 * 3600_000 }), /24 horas/);
+    assert.throws(() => validateScheduleChange({ ...base, intervalMinutes: 10 }), /frecuencia/);
+    assert.throws(() => validateScheduleChange({ ...base, reason: "corto" }), /motivo/);
   });
 });

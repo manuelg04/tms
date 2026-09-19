@@ -17,7 +17,7 @@ export function ReportForm({ trip, onSaved, onAttempt }: { trip: Doc<"monitoring
   const [formKey, setFormKey] = useState(0);
   const [place, setPlace] = useState<PlacePick | null>(null);
   const [reference, setReference] = useState("");
-  const [channel, setChannel] = useState<"llamada" | "whatsapp" | "otro">("llamada");
+  const [channel, setChannel] = useState<"llamada" | "gps" | "whatsapp" | "otro">("llamada");
   const [contacted, setContacted] = useState(true);
   const [hasNovelty, setHasNovelty] = useState(false);
   const [noveltyType, setNoveltyType] = useState<string>(NOVELTY_TYPES[0]);
@@ -26,6 +26,12 @@ export function ReportForm({ trip, onSaved, onAttempt }: { trip: Doc<"monitoring
   const [error, setError] = useState("");
   const requestKey = useRef<string | null>(null);
   const routeStops = [...trip.waypoints, trip.destination, trip.origin];
+
+  function pickChannel(value: "llamada" | "gps" | "whatsapp" | "otro") {
+    setChannel(value);
+    requestKey.current = null;
+    if (value === "gps" && !contacted) setContact(true);
+  }
 
   function setContact(value: boolean) {
     setContacted(value);
@@ -60,8 +66,8 @@ export function ReportForm({ trip, onSaved, onAttempt }: { trip: Doc<"monitoring
     try {
       if (!at) throw new Error("Indica la fecha y hora del reporte.");
       const ms = parseBogotaLocalInput(at);
-      if (!place) throw new Error("Selecciona el municipio desde donde reporta el conductor.");
-      if (!observation.trim()) throw new Error("Escribe qué se conversó en el reporte.");
+      if (!place) throw new Error(channel === "gps" ? "Selecciona el municipio donde el GPS ubica el vehículo." : "Selecciona el municipio desde donde reporta el conductor.");
+      if (!observation.trim()) throw new Error(channel === "gps" ? "Describe qué muestra la plataforma GPS (ubicación, velocidad, estado)." : "Escribe qué se conversó en el reporte.");
       requestKey.current ??= crypto.randomUUID();
       setBusy(true);
       await save({
@@ -95,7 +101,7 @@ export function ReportForm({ trip, onSaved, onAttempt }: { trip: Doc<"monitoring
             {error && /hora|fecha/i.test(error) ? <small className="bm-field-error" role="alert">{error}. Corrige la hora y vuelve a guardar; lo demás se conserva.</small> : null}
           </div>
           <div className="field wide" key={`place-${formKey}`}>
-            <PlaceField label="Municipio" name="municipality" required routeStops={routeStops} value={place} onSelect={(p) => { setPlace(p); requestKey.current = null; }} onClear={() => { setPlace(null); requestKey.current = null; }} />
+            <PlaceField label={channel === "gps" ? "Municipio según el GPS" : "Municipio"} name="municipality" required routeStops={routeStops} value={place} onSelect={(p) => { setPlace(p); requestKey.current = null; }} onClear={() => { setPlace(null); requestKey.current = null; }} />
           </div>
           <label className="field wide">
             <span>Punto de referencia <small>opcional: estación, peaje, hotel, kilómetro</small></span>
@@ -104,18 +110,28 @@ export function ReportForm({ trip, onSaved, onAttempt }: { trip: Doc<"monitoring
           <div className="field wide">
             <span>Medio de contacto</span>
             <div className="bm-segment" role="group" aria-label="Medio de contacto">
-              {([["llamada", "Llamada"], ["whatsapp", "WhatsApp"], ["otro", "Otro"]] as const).map(([value, label]) => (
-                <button key={value} type="button" aria-pressed={channel === value} onClick={() => { setChannel(value); requestKey.current = null; }}>{label}</button>
+              {([["llamada", "Llamada"], ["gps", "GPS"], ["whatsapp", "WhatsApp"], ["otro", "Otro"]] as const).map(([value, label]) => (
+                <button key={value} type="button" aria-pressed={channel === value} onClick={() => pickChannel(value)}>{label}</button>
               ))}
             </div>
+            {channel === "gps" ? <small className="bm-field-hint">Posición consultada en la plataforma GPS del vehículo, sin llamada al conductor.</small> : null}
           </div>
-          <div className="field">
-            <span>¿Contestó el conductor?</span>
-            <div className="bm-segment" role="group" aria-label="Contacto con el conductor">
-              <button type="button" className="good" aria-pressed={contacted} onClick={() => { setContact(true); requestKey.current = null; }}>Sí</button>
-              <button type="button" className="warn" aria-pressed={!contacted} onClick={() => { setContact(false); requestKey.current = null; }}>No</button>
+          {channel === "gps" ? (
+            <div className="field">
+              <span>Posición en el GPS</span>
+              <div className="bm-segment" role="group" aria-label="Posición en el GPS">
+                <button type="button" className="good" aria-pressed disabled>Verificada</button>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="field">
+              <span>¿Contestó el conductor?</span>
+              <div className="bm-segment" role="group" aria-label="Contacto con el conductor">
+                <button type="button" className="good" aria-pressed={contacted} onClick={() => { setContact(true); requestKey.current = null; }}>Sí</button>
+                <button type="button" className="warn" aria-pressed={!contacted} onClick={() => { setContact(false); requestKey.current = null; }}>No</button>
+              </div>
+            </div>
+          )}
           <div className="field">
             <span>Estado del viaje</span>
             <div className="bm-segment" role="group" aria-label="Estado del viaje">
@@ -132,11 +148,11 @@ export function ReportForm({ trip, onSaved, onAttempt }: { trip: Doc<"monitoring
             </label>
           ) : null}
           <label className="field wide">
-            <span>Observación <small>qué se conversó</small></span>
+            <span>Observación <small>{channel === "gps" ? "qué muestra la plataforma" : "qué se conversó"}</small></span>
             <textarea
               required
               maxLength={MAX}
-              placeholder="Ej. Conductor reporta paso por San Gil. Vía en buen estado, carga sin novedad."
+              placeholder={channel === "gps" ? "Ej. GPS ubica el vehículo en la vía San Gil–Socorro a 62 km/h, en movimiento, sin paradas." : "Ej. Conductor reporta paso por San Gil. Vía en buen estado, carga sin novedad."}
               value={observation}
               onChange={(e) => { setObservation(e.target.value.slice(0, MAX)); requestKey.current = null; }}
             />

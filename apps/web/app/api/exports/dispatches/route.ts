@@ -37,7 +37,7 @@ export async function handleDispatchExport(
     return jsonResponse({ error: "Debes iniciar sesión para exportar." }, 401);
   }
 
-  if (!canPerform(user.role, "view_expediente")) {
+  if (user.role === "client" || !canPerform(user.role, "view_expediente")) {
     return jsonResponse({ error: "No tienes permiso para exportar despachos." }, 403);
   }
 

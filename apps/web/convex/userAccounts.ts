@@ -1,13 +1,31 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query, type MutationCtx } from "./_generated/server";
 import { appendAudit, requireActor, requireServiceKey } from "./model/access";
-import { assertPasswordHash, normalizeEmail, normalizeName, rolesForJobTitle } from "./model/userAccounts";
+import { assertPasswordHash, normalizeEmail, normalizeName, requiresCustomer, rolesForJobTitle, type JobTitle } from "./model/userAccounts";
+import type { Doc, Id } from "./_generated/dataModel";
+import type { QueryCtx } from "./_generated/server";
 
 const jobTitleValidator = v.union(
   v.literal("administrador"),
   v.literal("jefe_seguridad"),
-  v.literal("auxiliar_seguridad")
+  v.literal("auxiliar_seguridad"),
+  v.literal("empresa")
 );
+
+async function resolveAccountCustomer(
+  ctx: QueryCtx | MutationCtx,
+  actor: Doc<"users">,
+  jobTitle: JobTitle | undefined,
+  customerId: Id<"customers"> | undefined
+): Promise<Id<"customers"> | undefined> {
+  if (!requiresCustomer(jobTitle)) return undefined;
+  if (!customerId) throw new ConvexError({ code: "INVALID_ARGUMENT", message: "Selecciona la empresa cliente a la que pertenece el usuario" });
+  const customer = await ctx.db.get("customers", customerId);
+  if (!customer || customer.organizationId !== actor.organizationId || customer.status !== "active") {
+    throw new ConvexError({ code: "NOT_FOUND", message: "La empresa cliente no existe o está inactiva" });
+  }
+  return customer._id;
+}
 
 const statusValidator = v.union(v.literal("active"), v.literal("disabled"));
 
@@ -16,6 +34,8 @@ const accountValidator = v.object({
   name: v.string(),
   email: v.string(),
   jobTitle: v.optional(jobTitleValidator),
+  customerId: v.optional(v.id("customers")),
+  customerName: v.optional(v.string()),
   roles: v.array(v.string()),
   status: statusValidator,
   hasPassword: v.boolean(),
@@ -81,6 +101,13 @@ export const list = query({
       .withIndex("by_organization_and_email", (q) => q.eq("organizationId", actor.organizationId))
       .collect();
 
+    const customerIds = [...new Set(users.map((user) => user.customerId).filter((id): id is Id<"customers"> => Boolean(id)))];
+    const customers = new Map<Id<"customers">, string>();
+    for (const id of customerIds) {
+      const customer = await ctx.db.get("customers", id);
+      if (customer) customers.set(id, customer.name);
+    }
+
     return {
       accounts: users
         .map((user) => ({
@@ -88,6 +115,8 @@ export const list = query({
           name: user.name,
           email: user.email,
           jobTitle: user.jobTitle,
+          customerId: user.customerId,
+          customerName: user.customerId ? customers.get(user.customerId) : undefined,
           roles: user.roles,
           status: user.status,
           hasPassword: Boolean(user.passwordHash),
@@ -108,6 +137,7 @@ export const create = mutation({
     name: v.string(),
     email: v.string(),
     jobTitle: jobTitleValidator,
+    customerId: v.optional(v.id("customers")),
     passwordHash: v.string(),
     authSubject: v.string(),
     actorToken: v.string()
@@ -119,6 +149,7 @@ export const create = mutation({
     const email = normalizeEmail(args.email);
     const name = normalizeName(args.name);
     assertPasswordHash(args.passwordHash);
+    const customerId = await resolveAccountCustomer(ctx, actor, args.jobTitle, args.customerId);
     await assertUniqueIdentity(ctx, email, args.authSubject, args.actorToken);
 
     const userId = await ctx.db.insert("users", {
@@ -130,6 +161,7 @@ export const create = mutation({
       roles: rolesForJobTitle(args.jobTitle),
       status: "active",
       jobTitle: args.jobTitle,
+      customerId,
       passwordHash: args.passwordHash,
       passwordUpdatedAt: now,
       createdAt: now,
@@ -143,7 +175,7 @@ export const create = mutation({
       action: "user.created",
       entityType: "user",
       entityId: userId,
-      detailsJson: JSON.stringify({ email, jobTitle: args.jobTitle }),
+      detailsJson: JSON.stringify({ email, jobTitle: args.jobTitle, customerId }),
       createdAt: now
     });
 
@@ -172,6 +204,10 @@ export const createWithServiceKey = mutation({
 
     if (!organization || organization.status !== "active") {
       throw new ConvexError({ code: "NOT_FOUND", message: "La organización no existe o está inactiva" });
+    }
+
+    if (requiresCustomer(args.jobTitle)) {
+      throw new ConvexError({ code: "INVALID_ARGUMENT", message: "Los usuarios de empresa cliente se crean desde Configuración > Usuarios" });
     }
 
     const now = Date.now();
@@ -244,6 +280,7 @@ export const update = mutation({
     userId: v.id("users"),
     name: v.optional(v.string()),
     jobTitle: v.optional(jobTitleValidator),
+    customerId: v.optional(v.id("customers")),
     status: v.optional(statusValidator)
   },
   returns: v.null(),
@@ -258,6 +295,7 @@ export const update = mutation({
     const nextStatus = args.status ?? target.status;
     const nextJobTitle = args.jobTitle ?? target.jobTitle;
     const nextRoles = args.jobTitle ? rolesForJobTitle(args.jobTitle) : target.roles;
+    const nextCustomerId = await resolveAccountCustomer(ctx, actor, nextJobTitle, args.customerId ?? target.customerId);
     const losesAdmin = target.roles.includes("admin") && (nextStatus !== "active" || !nextRoles.includes("admin"));
 
     if (target._id === actor._id && losesAdmin) {
@@ -281,6 +319,7 @@ export const update = mutation({
       ...(args.name ? { name: normalizeName(args.name) } : {}),
       ...(args.jobTitle ? { jobTitle: args.jobTitle, roles: nextRoles } : {}),
       ...(args.status ? { status: args.status } : {}),
+      customerId: nextCustomerId,
       updatedAt: now
     });
 
@@ -291,7 +330,7 @@ export const update = mutation({
       action: "user.updated",
       entityType: "user",
       entityId: target._id,
-      detailsJson: JSON.stringify({ name: args.name, jobTitle: nextJobTitle, status: nextStatus }),
+      detailsJson: JSON.stringify({ name: args.name, jobTitle: nextJobTitle, status: nextStatus, customerId: nextCustomerId }),
       createdAt: now
     });
 

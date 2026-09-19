@@ -44,6 +44,7 @@ export function sessionRole(roles: string[]): DemoRole | null {
   if (roles.includes("admin")) return "admin";
   if (roles.includes("operator")) return "operator";
   if (roles.includes("auditor")) return "auditor";
+  if (roles.includes("client")) return "client";
   return null;
 }
 

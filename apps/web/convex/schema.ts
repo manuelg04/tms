@@ -1,6 +1,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { monitoringReportFields, monitoringTripFields } from "./model/monitoringValidators";
+import { driverDossierFields, securityStudyFields } from "./model/securityStudyValidators";
 import { trackingDispatchFields, checkpointFields, reportFields, incidentFields, alarmFields, locationFields, positionFields, noteFields } from "./model/trackingValidators";
 import {
   consignmentDraftValidator,
@@ -38,7 +39,8 @@ const userRole = v.union(
   v.literal("admin"),
   v.literal("operator"),
   v.literal("auditor"),
-  v.literal("finance")
+  v.literal("finance"),
+  v.literal("client")
 );
 
 const userStatus = v.union(v.literal("active"), v.literal("disabled"));
@@ -46,7 +48,8 @@ const userStatus = v.union(v.literal("active"), v.literal("disabled"));
 const userJobTitle = v.union(
   v.literal("administrador"),
   v.literal("jefe_seguridad"),
-  v.literal("auxiliar_seguridad")
+  v.literal("auxiliar_seguridad"),
+  v.literal("empresa")
 );
 
 const serviceOrderStatus = v.union(
@@ -218,7 +221,16 @@ export const masterSyncValidator = v.object({
 export default defineSchema({
   monitoringTrips: defineTable(monitoringTripFields)
     .index("by_org_status", ["organizationId", "status"])
-    .index("by_org_code", ["organizationId", "code"]),
+    .index("by_org_code", ["organizationId", "code"])
+    .index("by_org_customer", ["organizationId", "customerId"]),
+  driverDossiers: defineTable(driverDossierFields)
+    .index("by_org_document", ["organizationId", "document"])
+    .searchIndex("search_dossier", { searchField: "searchText", filterFields: ["organizationId"] }),
+  securityStudies: defineTable(securityStudyFields)
+    .index("by_org_status", ["organizationId", "status"])
+    .index("by_org_code", ["organizationId", "code"])
+    .index("by_org_customer", ["organizationId", "customerId"])
+    .index("by_dossier", ["dossierId"]),
   monitoringReports: defineTable(monitoringReportFields)
     .index("by_trip", ["tripId"])
     .index("by_trip_request", ["tripId", "requestKey"]),
@@ -768,6 +780,7 @@ export default defineSchema({
     roles: v.array(userRole),
     status: userStatus,
     jobTitle: v.optional(userJobTitle),
+    customerId: v.optional(v.id("customers")),
     passwordHash: v.optional(v.string()),
     passwordUpdatedAt: v.optional(v.number()),
     createdAt: v.number(),
@@ -799,7 +812,8 @@ export default defineSchema({
   })
     .index("by_organization_and_code", ["organizationId", "code"])
     .index("by_organization_and_identification", ["organizationId", "identificationNumber"])
-    .index("by_organization_and_status", ["organizationId", "status"]),
+    .index("by_organization_and_status", ["organizationId", "status"])
+    .searchIndex("search_customer_name", { searchField: "name", filterFields: ["organizationId"] }),
 
   customerLocations: defineTable({
     organizationId: v.id("organizations"),

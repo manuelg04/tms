@@ -8,7 +8,7 @@ import type { Id } from "../../../../../convex/_generated/dataModel";
 import { reportCompliance, routeProgress } from "../../../../../convex/model/monitoring";
 import dynamic from "next/dynamic";
 import { useDemoUser } from "../../../../providers";
-import { channelLabels, formatDateTime, formatDuration, formatTime, formatWeight, kindLabels } from "../../components/format";
+import { channelLabels, formatDateTime, formatDuration, formatInterval, formatTime, formatWeight, kindLabels } from "../../components/format";
 import "../../bitacora.css";
 
 const TripMap = dynamic(() => import("../../components/trip-map").then((m) => m.TripMap), { ssr: false });
@@ -50,7 +50,8 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
   const route = [trip.origin, ...trip.waypoints, trip.destination];
   const visited = routeProgress(route, reports.map((r) => r.location));
   if (trip.status === "entregado") visited[visited.length - 1] = true;
-  const compliance = reportCompliance(reports, trip.intervalMinutes);
+  const scheduleChanges = trip.scheduleChanges ?? [];
+  const compliance = reportCompliance(reports, trip.intervalMinutes, scheduleChanges);
   const gaps = compliance.onTime + compliance.late;
   const endAt = trip.deliveredAt ?? reports[reports.length - 1]?.at ?? trip.departureAt;
   const operators = [...reports.reduce((map, r) => map.set(r.operatorName, (map.get(r.operatorName) ?? 0) + 1), new Map<string, number>())];
@@ -154,7 +155,7 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
           <div><dt>Celular de contacto</dt><dd>{trip.driverPhone}</dd></div>
           <div><dt>Cliente</dt><dd>{trip.customer}</dd></div>
           <div><dt>Mercancía</dt><dd>{trip.cargo}</dd></div>
-          <div><dt>Frecuencia acordada</dt><dd>Reporte cada {trip.intervalMinutes / 60} h</dd></div>
+          <div><dt>Frecuencia acordada</dt><dd>Reporte {formatInterval(scheduleChanges[0]?.previousIntervalMinutes ?? trip.intervalMinutes)}{scheduleChanges.length ? ` · ${scheduleChanges.length} ajuste${scheduleChanges.length === 1 ? "" : "s"} en ruta` : ""}</dd></div>
           <div><dt>Bitácora abierta por</dt><dd>{trip.createdByName} · {formatDateTime(trip.createdAt)}</dd></div>
           {trip.observations ? <div style={{ gridColumn: "1 / -1" }}><dt>Observaciones e instrucciones del viaje</dt><dd style={{ fontWeight: 400 }}>{trip.observations}</dd></div> : null}
         </dl>
@@ -219,7 +220,7 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
                   <td className="mono">{shortDate(report.at)}<br />{formatTime(report.at)}</td>
                   <td className="mono">
                     {row?.gapMinutes === null || row === undefined ? "—" : formatDuration(row.gapMinutes * 60000)}
-                    {row?.onTime === false ? <><br /><b className="late">tardío</b></> : null}
+                    {row?.onTime === false ? <><br /><b className="late">tardío</b></> : row?.adjusted ? <><br /><span className="muted">pactado</span></> : null}
                   </td>
                   <td>{report.location}</td>
                   <td>{report.kind === "novedad" ? <b>{report.noveltyType ?? "Novedad"}</b> : kindLabels[report.kind]}</td>
@@ -231,7 +232,25 @@ export default function PrintMonitoringTrip({ params }: { params: Promise<{ trip
             })}
           </tbody>
         </table>
-        <p className="bm-print-note">Intervalo: tiempo transcurrido desde el reporte anterior. Se marca como tardío cuando supera la frecuencia acordada más 15 minutos de tolerancia.</p>
+        <p className="bm-print-note">Intervalo: tiempo transcurrido desde el reporte anterior. Se marca como tardío cuando supera la frecuencia acordada más 15 minutos de tolerancia. Los intervalos marcados como pactados corresponden a un ajuste de frecuencia justificado (ver sección de ajustes).</p>
+
+        {scheduleChanges.length ? (
+          <>
+            <h2><span>4b</span>Ajustes de frecuencia en ruta</h2>
+            {scheduleChanges.map((change, index) => (
+              <article key={`${change.at}-${index}`} className="bm-print-schedule">
+                <header>
+                  <span>{change.reasonType}</span>
+                  <span>{formatDateTime(change.at)} · ajustó {change.operatorName}</span>
+                </header>
+                <p>{change.reason}</p>
+                <footer>
+                  Próximo reporte pactado: {formatDateTime(change.nextDueAt)}{change.previousNextDueAt ? ` (antes ${formatDateTime(change.previousNextDueAt)})` : ""} · Frecuencia posterior: {formatInterval(change.intervalMinutes)}{change.previousIntervalMinutes !== change.intervalMinutes ? ` (antes ${formatInterval(change.previousIntervalMinutes)})` : ""}
+                </footer>
+              </article>
+            ))}
+          </>
+        ) : null}
 
         <h2><span>5</span>Novedades registradas</h2>
         {novelties.length ? (

@@ -11,6 +11,16 @@ export const NOVELTY_TYPES = [
   "Inspección de autoridad",
   "Otra novedad",
 ] as const;
+export const SCHEDULE_REASONS = [
+  "Pernocta / descanso del conductor",
+  "Descanso reglamentario en ruta",
+  "Espera de cargue o descargue",
+  "Zona sin cobertura de señal",
+  "Instrucción del cliente",
+  "Zona de riesgo: reforzar control",
+  "Otro motivo",
+] as const;
+export const MAX_SCHEDULE_AHEAD_HOURS = 24;
 export const DELIVERY_DOCUMENTS = [
   "Remesa firmada por el cliente",
   "Ticket de báscula",
@@ -106,36 +116,82 @@ export function validateTripInput(input: {
     throw new Error("Los puntos intermedios no pueden estar vacíos.");
 }
 
+export function validateScheduleChange(input: {
+  now: number;
+  nextDueAt: number;
+  intervalMinutes: number;
+  reasonType: string;
+  reason: string;
+  tripStatus: string;
+}): void {
+  if (input.tripStatus !== "en_ruta") throw new Error("El viaje ya fue entregado; no admite ajustes de frecuencia.");
+  if (!Number.isFinite(input.nextDueAt)) throw new Error("Indica la hora del próximo reporte.");
+  if (input.nextDueAt < input.now - 5 * 60 * 1000) throw new Error("El próximo reporte no puede quedar en el pasado.");
+  if (input.nextDueAt > input.now + MAX_SCHEDULE_AHEAD_HOURS * 60 * 60 * 1000)
+    throw new Error(`El próximo reporte no puede programarse a más de ${MAX_SCHEDULE_AHEAD_HOURS} horas.`);
+  if (!Number.isInteger(input.intervalMinutes) || input.intervalMinutes < 30 || input.intervalMinutes > 720)
+    throw new Error("La frecuencia de reporte debe estar entre 30 y 720 minutos.");
+  if (!input.reasonType.trim()) throw new Error("Selecciona el motivo del ajuste.");
+  if (input.reason.trim().length < 10) throw new Error("Explica el motivo del ajuste (mínimo 10 caracteres).");
+  if (input.reason.length > 500) throw new Error("La justificación no puede superar 500 caracteres.");
+}
+
 export const COMPLIANCE_TOLERANCE_MINUTES = 15;
 
 export type ComplianceRow = {
   gapMinutes: number | null;
   onTime: boolean | null;
+  expectedAt: number | null;
+  adjusted: boolean;
 };
+
+export type ScheduleChangeLike = { at: number; intervalMinutes: number; nextDueAt: number; previousIntervalMinutes?: number };
+
+export function intervalInEffect(at: number, baseInterval: number, changes: ScheduleChangeLike[]): number {
+  let interval = baseInterval;
+  for (const change of [...changes].sort((a, b) => a.at - b.at)) {
+    if (change.at <= at) interval = change.intervalMinutes;
+  }
+  return interval;
+}
 
 export function reportCompliance(
   reports: Array<{ at: number; kind: string }>,
   intervalMinutes: number,
-): { rows: ComplianceRow[]; onTime: number; late: number; maxGapMinutes: number; averageGapMinutes: number } {
+  scheduleChanges: ScheduleChangeLike[] = [],
+): { rows: ComplianceRow[]; onTime: number; late: number; maxGapMinutes: number; averageGapMinutes: number; adjusted: number } {
   const sorted = [...reports].sort((a, b) => a.at - b.at);
-  const limit = intervalMinutes + COMPLIANCE_TOLERANCE_MINUTES;
+  const changes = [...scheduleChanges].sort((a, b) => a.at - b.at);
+  const initialInterval = changes.length ? findInitialInterval(intervalMinutes, changes) : intervalMinutes;
+  const tolerance = COMPLIANCE_TOLERANCE_MINUTES * 60000;
   let onTime = 0,
     late = 0,
     maxGap = 0,
     totalGap = 0,
-    gaps = 0;
+    gaps = 0,
+    adjusted = 0;
   const rows = sorted.map((report, index) => {
-    if (index === 0) return { gapMinutes: null, onTime: null };
-    const gap = Math.round((report.at - sorted[index - 1].at) / 60000);
-    const ok = gap <= limit;
+    if (index === 0) return { gapMinutes: null, onTime: null, expectedAt: null, adjusted: false };
+    const previous = sorted[index - 1];
+    const gap = Math.round((report.at - previous.at) / 60000);
+    const between = changes.filter((c) => c.at > previous.at && c.at <= report.at);
+    const explicit = between.length ? between[between.length - 1] : undefined;
+    const expectedAt = explicit ? explicit.nextDueAt : previous.at + intervalInEffect(previous.at, initialInterval, changes) * 60000;
+    const ok = report.at <= expectedAt + tolerance;
     if (ok) onTime++;
     else late++;
+    if (explicit) adjusted++;
     maxGap = Math.max(maxGap, gap);
     totalGap += gap;
     gaps++;
-    return { gapMinutes: gap, onTime: ok };
+    return { gapMinutes: gap, onTime: ok, expectedAt, adjusted: Boolean(explicit) };
   });
-  return { rows, onTime, late, maxGapMinutes: maxGap, averageGapMinutes: gaps ? Math.round(totalGap / gaps) : 0 };
+  return { rows, onTime, late, maxGapMinutes: maxGap, averageGapMinutes: gaps ? Math.round(totalGap / gaps) : 0, adjusted };
+}
+
+function findInitialInterval(currentInterval: number, changes: Array<{ intervalMinutes: number; previousIntervalMinutes?: number }>): number {
+  const first = changes[0] as { previousIntervalMinutes?: number };
+  return first.previousIntervalMinutes ?? currentInterval;
 }
 
 export function composeLocation(municipality: string, reference?: string): string {

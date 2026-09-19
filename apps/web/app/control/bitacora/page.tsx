@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Doc } from "../../../convex/_generated/dataModel";
-import { dayKey, formatDateTime, formatTime, relativeDue, relativePast, useNow } from "./components/format";
+import { dayKey, formatDateTime, formatInterval, formatTime, relativeDue, relativePast, useNow } from "./components/format";
 import "./bitacora.css";
 
 type Tab = "en_ruta" | "entregado" | "todos";
@@ -48,9 +48,9 @@ export default function MonitoringBoard() {
     <div className="bm-workspace">
       <div className="bm-heading">
         <div>
-          <span className="eyebrow">Control de tráfico</span>
-          <h2>Bitácora de monitoreo en ruta</h2>
-          <p>Reportes periódicos de seguridad con el conductor, novedades y cierre de entrega de cada viaje.</p>
+          <span className="eyebrow">{data.viewer === "client" ? "Vista de empresa cliente" : "Control de tráfico"}</span>
+          <h2>{data.viewer === "client" ? `Viajes de ${data.customerName ?? "su empresa"}` : "Bitácora de monitoreo en ruta"}</h2>
+          <p>{data.viewer === "client" ? "Reportes de seguridad en ruta de los vehículos que transportan su carga. Vista de solo lectura." : "Reportes periódicos de seguridad con el conductor, novedades y cierre de entrega de cada viaje."}</p>
         </div>
         {data.canReport ? (
           <div className="bm-heading-actions">
@@ -173,7 +173,7 @@ function TripRow({ trip, now, onOpen }: { trip: Doc<"monitoringTrips">; now: num
         {due ? (
           <>
             <span className={`bm-status ${due.state}`}>{due.label}</span>
-            <span className="secondary">{formatTime(trip.nextDueAt!)} · cada {trip.intervalMinutes / 60} h</span>
+            <span className="secondary">{formatTime(trip.nextDueAt!)} · {formatInterval(trip.intervalMinutes)}{trip.scheduleChanges?.length && (!trip.lastReportAt || trip.scheduleChanges[trip.scheduleChanges.length - 1].at >= trip.lastReportAt) ? " · ajustado" : ""}</span>
           </>
         ) : trip.deliveredAt ? (
           <span className="secondary">Entregado {formatDateTime(trip.deliveredAt)}</span>

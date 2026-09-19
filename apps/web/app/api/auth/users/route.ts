@@ -1,5 +1,6 @@
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../convex/_generated/api";
+import type { Id } from "../../../../convex/_generated/dataModel";
 import { createConvexToken, getAuthSettings, jsonResponse, readRequestSession } from "../../../lib/auth-server";
 import { convexErrorMessage } from "../../../lib/convex-error";
 import { hashPassword } from "../../../lib/password";
@@ -13,7 +14,7 @@ export async function POST(request: Request): Promise<Response> {
   if (!session) return jsonResponse({ error: "Sesión no válida" }, 401);
   if (session.role !== "admin") return jsonResponse({ error: "Solo un administrador puede crear usuarios" }, 403);
 
-  const body = await request.json().catch(() => ({})) as { name?: unknown; email?: unknown; jobTitle?: unknown; password?: unknown };
+  const body = await request.json().catch(() => ({})) as { name?: unknown; email?: unknown; jobTitle?: unknown; password?: unknown; customerId?: unknown };
 
   if (typeof body.name !== "string" || typeof body.email !== "string" || typeof body.password !== "string" || !isJobTitle(body.jobTitle)) {
     return jsonResponse({ error: "Nombre, correo, cargo y contraseña son obligatorios" }, 400);
@@ -33,6 +34,7 @@ export async function POST(request: Request): Promise<Response> {
       name: body.name,
       email: body.email,
       jobTitle: body.jobTitle,
+      customerId: typeof body.customerId === "string" && body.customerId ? (body.customerId as Id<"customers">) : undefined,
       passwordHash: await hashPassword(body.password),
       ...newIdentity()
     });

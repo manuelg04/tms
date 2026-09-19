@@ -3,13 +3,16 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { useMutation } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { DateField } from "../../../components/fields/date-field";
 import { RouteSuggestions } from "../components/route-suggestions";
 import { DriverField, MunicipalityField, VehicleField, divisionLabel, type DriverPick, type VehiclePick } from "../../../components/fields/lookup-fields";
+import { CustomerField, type CustomerPick } from "../../../components/fields/customer-field";
 import { convexErrorMessage } from "../../../lib/convex-error";
 import { bogotaLocalInput, parseBogotaLocalInput } from "../../../../convex/model/monitoring";
+import { STUDY_STATUS_LABELS } from "../../../../convex/model/securityStudies";
+import { formatDate } from "../components/format";
 import "../bitacora.css";
 
 const intervals = [
@@ -35,8 +38,10 @@ export default function NewMonitoringTrip() {
   const [driverName, setDriverName] = useState("");
   const [driverDocument, setDriverDocument] = useState("");
   const [driverPhone, setDriverPhone] = useState("");
-  const [customer, setCustomer] = useState("");
+  const [customer, setCustomer] = useState<CustomerPick | null>(null);
   const [cargo, setCargo] = useState("");
+  const { isAuthenticated } = useConvexAuth();
+  const study = useQuery(api.securityStudies.driverStatus, isAuthenticated && driverDocument.replace(/\D/g, "").length >= 5 ? { document: driverDocument, customerId: customer?._id } : "skip");
   const [manifest, setManifest] = useState("");
   const [departure, setDeparture] = useState(() => bogotaLocalInput(Date.now()));
   const [expected, setExpected] = useState("");
@@ -60,6 +65,7 @@ export default function NewMonitoringTrip() {
     try {
       if (!origin.name.trim()) throw new Error("Selecciona o escribe el origen del viaje.");
       if (!destination.name.trim()) throw new Error("Selecciona o escribe el destino del viaje.");
+      if (!customer) throw new Error("Selecciona la empresa cliente dueña de la carga.");
       if (!departure) throw new Error("Indica la fecha y hora de salida.");
       const departureAt = parseBogotaLocalInput(departure);
       const expectedArrivalAt = expected ? parseBogotaLocalInput(expected) : undefined;
@@ -76,7 +82,8 @@ export default function NewMonitoringTrip() {
         driverName,
         driverDocument: driverDocument || undefined,
         driverPhone,
-        customer,
+        customer: customer.name,
+        customerId: customer._id,
         cargo,
         departureAt,
         expectedArrivalAt,
@@ -223,16 +230,18 @@ export default function NewMonitoringTrip() {
                 <span>Celular del conductor</span>
                 <input required inputMode="tel" placeholder="300 000 0000" value={driverPhone} onChange={(e) => setDriverPhone(e.target.value)} />
               </label>
+              {driverDocument.replace(/\D/g, "").length >= 5 ? (
+                <div className="field wide">
+                  <StudyBadge study={study} customerName={customer?.name} />
+                </div>
+              ) : null}
             </div>
           </fieldset>
 
           <fieldset className="field-section" disabled={busy}>
             <legend>Cliente y carga</legend>
             <div className="field-grid semantic">
-              <label className="field span-6">
-                <span>Cliente</span>
-                <input required value={customer} onChange={(e) => setCustomer(e.target.value)} />
-              </label>
+              <CustomerField className="field span-6" label="Empresa cliente" name="customerId" required selected={customer} onSelect={setCustomer} onClear={() => setCustomer(null)} hint="Los usuarios de esta empresa verán el viaje en su bitácora" />
               <label className="field span-6">
                 <span>Mercancía</span>
                 <input required placeholder="Ej. Cemento gris en sacos · 34.000 kg" value={cargo} onChange={(e) => setCargo(e.target.value)} />
@@ -272,5 +281,45 @@ export default function NewMonitoringTrip() {
         </aside>
       </form>
     </div>
+  );
+}
+
+type DriverStudy = ReturnType<typeof useQuery<typeof api.securityStudies.driverStatus>>;
+
+function StudyBadge({ study, customerName }: { study: DriverStudy; customerName?: string }) {
+  if (study === undefined) return <p className="bm-study-badge muted">Consultando estudios de seguridad del conductor…</p>;
+  if (study === null)
+    return (
+      <p className="bm-study-badge warn">
+        <b>Sin estudio de seguridad.</b> Este conductor no tiene expediente. <Link href="/seguridad/estudios/nuevo">Abrir estudio</Link>
+      </p>
+    );
+  const forCustomer = study.forCustomer;
+  if (forCustomer?.status === "aprobado")
+    return (
+      <p className="bm-study-badge ok">
+        <b>Aprobado para {forCustomer.customer}</b> ({forCustomer.code}{forCustomer.validUntil ? `, vigente hasta ${formatDate(forCustomer.validUntil)}` : ""}). <Link href={`/seguridad/estudios/${forCustomer._id}`}>Ver estudio</Link>
+      </p>
+    );
+  if (forCustomer?.status === "rechazado")
+    return (
+      <p className="bm-study-badge bad">
+        <b>Rechazado para {forCustomer.customer}</b> ({forCustomer.code}). {forCustomer.decisionReason ? `Motivo: ${forCustomer.decisionReason}` : ""} <Link href={`/seguridad/estudios/${forCustomer._id}`}>Ver estudio</Link>
+      </p>
+    );
+  if (forCustomer)
+    return (
+      <p className="bm-study-badge warn">
+        <b>Estudio {STUDY_STATUS_LABELS[forCustomer.status].toLowerCase()} para {forCustomer.customer}</b> ({forCustomer.code}). <Link href={`/seguridad/estudios/${forCustomer._id}`}>Ver estudio</Link>
+      </p>
+    );
+  return (
+    <p className={`bm-study-badge ${study.rejectedFor.length ? "bad" : study.approvedFor.length ? "muted" : "warn"}`}>
+      <b>{study.driverName}</b>: {customerName ? `sin estudio para ${customerName}. ` : "selecciona la empresa para validar el estudio. "}
+      {study.approvedFor.length ? `Aprobado para ${study.approvedFor.join(", ")}. ` : ""}
+      {study.rejectedFor.length ? `Rechazado para ${study.rejectedFor.join(", ")}. ` : ""}
+      {study.openCount ? `${study.openCount} estudio${study.openCount === 1 ? "" : "s"} en curso. ` : ""}
+      <Link href="/seguridad/estudios/nuevo">Abrir estudio</Link>
+    </p>
   );
 }

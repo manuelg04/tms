@@ -841,3 +841,31 @@ button.bm-stop { cursor: pointer; }
 @media (max-width: 720px) {
   .bm-focus { grid-template-columns: 1fr; }
 }
+.bm-field-hint { display: block; margin-top: 4px; font-size: 11.5px; color: var(--ink-faint); }
+.bm-form-intro { margin: 0; font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
+.bm-form-intro b { color: var(--ink); }
+.bm-presets { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 6px; }
+.bm-presets .text-button { font-size: 12px; }
+.bm-side-tabs.three { grid-template-columns: 1fr 1fr 1fr; }
+.bm-side-tabs.three button { font-size: 12px; padding: 12px 6px; }
+.bm-adjusted { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--wait); }
+.bm-entry.ajuste .bm-entry-dot { background: var(--surface); border-color: var(--wait); }
+.bm-entry.ajuste .bm-card { background: #fffbf0; border-color: #eed9a3; }
+.bm-entry.ajuste .bm-card p { font-size: 13px; }
+.bm-schedule-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 6px 0 0; font-size: 12px; color: var(--ink-soft); }
+.bm-schedule-meta b { color: var(--ink); }
+.bm-client-banner { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--surface-alt); border: 1px solid var(--line); border-radius: var(--radius); font-size: 13px; color: var(--ink-soft); }
+.bm-client-banner b { color: var(--ink); }
+.bm-print-schedule { border: 1px solid #d8dee4; border-left: 4px solid #96690a; background: #fffbf0; border-radius: 6px; padding: 8px 12px; margin-bottom: 8px; break-inside: avoid; font-size: 11.5px; }
+.bm-print-schedule header { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-weight: 700; }
+.bm-print-schedule p { margin: 4px 0; }
+.bm-print-schedule footer { font-size: 10.5px; color: #666; }
+.bm-study-badge { margin: 0; padding: 9px 12px; border-radius: var(--radius-sm); font-size: 12.5px; line-height: 1.5; border: 1px solid var(--line); background: var(--surface-alt); color: var(--ink-soft); }
+.bm-study-badge b { color: var(--ink); }
+.bm-study-badge a { color: inherit; font-weight: 600; }
+.bm-study-badge.ok { background: var(--ok-bg); color: var(--ok); border-color: transparent; }
+.bm-study-badge.ok b { color: var(--ok); }
+.bm-study-badge.bad { background: var(--bad-bg); color: var(--bad); border-color: transparent; }
+.bm-study-badge.bad b { color: var(--bad); }
+.bm-study-badge.warn { background: #fffbf0; color: #7a5200; border-color: #eed9a3; }
+.bm-study-badge.warn b { color: #7a5200; }

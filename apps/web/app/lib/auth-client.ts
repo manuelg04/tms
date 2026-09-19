@@ -41,5 +41,5 @@ function isDemoUser(value: unknown): value is DemoUser {
   return typeof candidate.id === "string"
     && typeof candidate.email === "string"
     && typeof candidate.name === "string"
-    && (candidate.role === "admin" || candidate.role === "operator" || candidate.role === "auditor");
+    && (candidate.role === "admin" || candidate.role === "operator" || candidate.role === "auditor" || candidate.role === "client");
 }

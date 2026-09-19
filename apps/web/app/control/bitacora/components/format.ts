@@ -56,10 +56,17 @@ export function formatWeight(kg: number): string {
 }
 export const channelLabels: Record<string, string> = {
   llamada: "Llamada telefónica",
+  gps: "Consulta GPS",
   whatsapp: "WhatsApp",
   presencial: "Presencial",
   otro: "Otro medio",
 };
+export function formatInterval(minutes: number): string {
+  if (minutes % 60 === 0) return minutes === 60 ? "cada hora" : `cada ${minutes / 60} h`;
+  if (minutes < 60) return `cada ${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  return `cada ${hours} h ${minutes % 60} min`;
+}
 export const kindLabels: Record<string, string> = {
   inicio: "Inicio de viaje",
   control: "Reporte de control",

@@ -41,6 +41,7 @@ test("derives the session role from the stored roles", () => {
   assert.equal(sessionRole(["admin", "operator"]), "admin");
   assert.equal(sessionRole(["operator"]), "operator");
   assert.equal(sessionRole(["auditor"]), "auditor");
+  assert.equal(sessionRole(["client"]), "client");
   assert.equal(sessionRole(["finance"]), null);
 });
 

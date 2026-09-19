@@ -1,18 +1,32 @@
 import { ConvexError } from "convex/values";
 
-export type JobTitle = "administrador" | "jefe_seguridad" | "auxiliar_seguridad";
-export type AccountRole = "admin" | "operator" | "auditor" | "finance";
+export type JobTitle = "administrador" | "jefe_seguridad" | "auxiliar_seguridad" | "empresa";
+export type AccountRole = "admin" | "operator" | "auditor" | "finance" | "client";
 
-export const jobTitles: readonly JobTitle[] = ["administrador", "jefe_seguridad", "auxiliar_seguridad"];
+export const jobTitles: readonly JobTitle[] = ["administrador", "jefe_seguridad", "auxiliar_seguridad", "empresa"];
 
 export const jobTitleLabels: Record<JobTitle, string> = {
-  administrador: "Administrador",
+  administrador: "Superadministrador",
   jefe_seguridad: "Jefe de seguridad",
-  auxiliar_seguridad: "Auxiliar de seguridad"
+  auxiliar_seguridad: "Auxiliar de seguridad",
+  empresa: "Empresa cliente"
+};
+
+export const jobTitleDescriptions: Record<JobTitle, string> = {
+  administrador: "Gerencia: ve y gestiona todo, incluidos usuarios y eliminaciones.",
+  jefe_seguridad: "Opera la bitácora, los estudios de seguridad y los maestros.",
+  auxiliar_seguridad: "Registra reportes, monitorea viajes y realiza estudios de seguridad.",
+  empresa: "Consulta en solo lectura los viajes y estudios de su propia empresa."
 };
 
 export function rolesForJobTitle(jobTitle: JobTitle): AccountRole[] {
-  return jobTitle === "administrador" ? ["admin"] : ["operator"];
+  if (jobTitle === "administrador") return ["admin"];
+  if (jobTitle === "empresa") return ["client"];
+  return ["operator"];
+}
+
+export function requiresCustomer(jobTitle: JobTitle | undefined): boolean {
+  return jobTitle === "empresa";
 }
 
 export function isJobTitle(value: unknown): value is JobTitle {

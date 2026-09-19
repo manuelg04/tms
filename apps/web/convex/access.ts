@@ -6,7 +6,8 @@ const roleValidator = v.union(
   v.literal("admin"),
   v.literal("operator"),
   v.literal("auditor"),
-  v.literal("finance")
+  v.literal("finance"),
+  v.literal("client")
 );
 
 const statusValidator = v.union(v.literal("active"), v.literal("disabled"));

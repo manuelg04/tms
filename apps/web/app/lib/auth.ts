@@ -1,6 +1,6 @@
 import { createHash, createHmac, createPublicKey, sign, timingSafeEqual } from "node:crypto";
 
-export type DemoRole = "admin" | "operator" | "auditor";
+export type DemoRole = "admin" | "operator" | "auditor" | "client";
 
 export type Permission =
   | "view_expediente"
@@ -11,7 +11,7 @@ export type Permission =
   | "view_audit"
   | "download_evidence";
 
-export type JobTitle = "administrador" | "jefe_seguridad" | "auxiliar_seguridad";
+export type JobTitle = "administrador" | "jefe_seguridad" | "auxiliar_seguridad" | "empresa";
 
 export type DemoUser = {
   id: string;
@@ -24,13 +24,15 @@ export type DemoUser = {
 export const demoUsers: DemoUser[] = [
   { id: "demo-admin", email: "admin@mtm.local", name: "Administrador MTM", role: "admin" },
   { id: "demo-operator", email: "operador@mtm.local", name: "Operador MTM", role: "operator" },
-  { id: "demo-auditor", email: "auditor@mtm.local", name: "Auditor MTM", role: "auditor" }
+  { id: "demo-auditor", email: "auditor@mtm.local", name: "Auditor MTM", role: "auditor" },
+  { id: "demo-client", email: "empresa@mtm.local", name: "Cementos del Oriente", role: "client", jobTitle: "empresa" }
 ];
 
 const rolePermissions: Record<DemoRole, ReadonlySet<Permission>> = {
   admin: new Set(["view_expediente", "edit_expediente", "submit_rndc", "manage_official_documents", "override_rndc", "view_audit", "download_evidence"]),
   operator: new Set(["view_expediente", "edit_expediente", "submit_rndc", "manage_official_documents", "download_evidence"]),
-  auditor: new Set(["view_expediente", "view_audit", "download_evidence"])
+  auditor: new Set(["view_expediente", "view_audit", "download_evidence"]),
+  client: new Set([])
 };
 
 export function authenticateDemoUser(email: string, password: string, configuredPassword: string): DemoUser | null {
@@ -87,6 +89,8 @@ export function canPerform(role: DemoRole, permission: Permission): boolean {
   return rolePermissions[role].has(permission);
 }
 
+export { clientAllowedPrefixes, clientCanVisit } from "./client-access";
+
 export function signConvexAccessToken(input: {
   user: DemoUser;
   privateKey: string;
@@ -136,7 +140,7 @@ function isSessionPayload(value: Record<string, unknown>): value is DemoUser & {
   return typeof value.id === "string"
     && typeof value.email === "string"
     && typeof value.name === "string"
-    && (value.role === "admin" || value.role === "operator" || value.role === "auditor")
-    && (value.jobTitle === undefined || value.jobTitle === "administrador" || value.jobTitle === "jefe_seguridad" || value.jobTitle === "auxiliar_seguridad")
+    && (value.role === "admin" || value.role === "operator" || value.role === "auditor" || value.role === "client")
+    && (value.jobTitle === undefined || value.jobTitle === "administrador" || value.jobTitle === "jefe_seguridad" || value.jobTitle === "auxiliar_seguridad" || value.jobTitle === "empresa")
     && typeof value.expiresAt === "number";
 }

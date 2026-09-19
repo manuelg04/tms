@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useDemoUser } from "../providers";
 import { resolveDocumentSection } from "../lib/document-workspace";
 import { jobTitleLabels } from "../../convex/model/userAccounts";
+import { clientCanVisit } from "../lib/client-access";
 import "./document-navigation.css";
 
 type PageMeta = {
@@ -25,6 +26,8 @@ type NavItem = {
 const pageMeta: Record<string, PageMeta> = {
   "/control/bitacora": { title: "Bitácora de monitoreo", subtitle: "Control de tráfico · Reportes de seguridad en ruta" },
   "/control/bitacora/nuevo": { title: "Nuevo viaje monitoreado", subtitle: "Ruta, vehículo y conductor para abrir la bitácora" },
+  "/seguridad/estudios": { title: "Estudios de seguridad", subtitle: "Expedientes de conductores, consultas de antecedentes y decisión por empresa" },
+  "/seguridad/estudios/nuevo": { title: "Nuevo estudio de seguridad", subtitle: "Expediente del conductor y empresa que solicita el estudio" },
   "/control/seguimiento": { title: "Seguimiento", subtitle: "Control de tráfico · Despachos y puntos de control" },
   "/configuracion/alertas-visuales": { title: "Alertas visuales", subtitle: "Configuración de alarmas de seguimiento" },
   "/configuracion/usuarios": { title: "Usuarios", subtitle: "Cuentas de acceso y cargos de la empresa" },
@@ -149,6 +152,7 @@ const navItems: NavItem[] = [
     icon: <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden><circle cx="8" cy="8" r="6" /><circle cx="8" cy="8" r="2" /><path d="M8 0v4M8 12v4M0 8h4M12 8h4" /></svg>,
     children: [
       { href: "/control/bitacora", label: "Bitácora de monitoreo" },
+      { href: "/seguridad/estudios", label: "Estudios de seguridad" },
       { href: "/control/seguimiento", label: "Seguimiento" }
     ]
   },
@@ -187,16 +191,34 @@ const navItems: NavItem[] = [
 
 type RndcMode = "dry-run" | "live" | "offline";
 
+const clientNavItems: NavItem[] = navItems.flatMap((item) => {
+  if (item.href === "/control/bitacora") {
+    return [{ ...item, children: item.children?.filter((child) => clientCanVisit(child.href)) }];
+  }
+  if (item.href === "/configuracion/alertas-visuales") {
+    return [{ ...item, href: "/configuracion/mi-clave", children: item.children?.filter((child) => clientCanVisit(child.href)) }];
+  }
+  return [];
+});
+
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { loading, user } = useDemoUser();
-  const unread = useQuery(api.notifications.unreadCount, user ? {} : "skip");
+  const isClient = user?.role === "client";
+  const unread = useQuery(api.notifications.unreadCount, user && !isClient ? {} : "skip");
   const [mode, setMode] = useState<RndcMode>("offline");
   const [navOpen, setNavOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>(() =>
     navItems.filter((item) => item.children && isActiveNavItem(pathname, item)).map((item) => item.href)
   );
   const meta = resolvePageMeta(pathname);
+  const items = isClient ? clientNavItems : navItems;
+  const clientBlocked = isClient && pathname !== "/login" && !clientCanVisit(pathname);
+
+  useEffect(() => {
+    if (clientBlocked) router.replace("/control/bitacora");
+  }, [clientBlocked, router]);
 
   useEffect(() => {
     setNavOpen(false);
@@ -216,7 +238,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [navOpen]);
 
   useEffect(() => {
-    if (pathname === "/login" || !user) {
+    if (pathname === "/login" || !user || user.role === "client") {
       return;
     }
 
@@ -247,6 +269,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     return <div className="full-page-state">Validando sesion…</div>;
   }
 
+  if (clientBlocked) {
+    return <div className="full-page-state">Redirigiendo a la bitácora de su empresa…</div>;
+  }
+
   return (
     <div className="app">
       <aside className={navOpen ? "sidebar document-navigation open" : "sidebar document-navigation"} aria-label="Navegación principal" id="app-navigation">
@@ -260,8 +286,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
 
         <nav className="nav" aria-label="Módulos de operación">
-          <span className="nav-label">Operación</span>
-          {navItems.map((item) => {
+          <span className="nav-label">{isClient ? "Su empresa" : "Operación"}</span>
+          {items.map((item) => {
             const active = isActiveNavItem(pathname, item);
             const expanded = expandedGroups.includes(item.href);
             const groupId = `nav-${item.href.split("/").filter(Boolean).join("-")}`;
@@ -321,9 +347,13 @@ export function AppShell({ children }: { children: ReactNode }) {
                 Notificaciones <span className="count">{unread}</span>
               </Link>
             ) : null}
-            <span className={mode === "live" ? "mode-chip live" : mode === "offline" ? "mode-chip offline" : "mode-chip"}>
-              {mode === "live" ? "En vivo" : mode === "offline" ? "API sin conexion" : "Modo prueba"}
-            </span>
+            {isClient ? (
+              <span className="mode-chip">Solo lectura</span>
+            ) : (
+              <span className={mode === "live" ? "mode-chip live" : mode === "offline" ? "mode-chip offline" : "mode-chip"}>
+                {mode === "live" ? "En vivo" : mode === "offline" ? "API sin conexion" : "Modo prueba"}
+              </span>
+            )}
             {user ? (
               <div className="user-menu">
                 <span className="user-avatar" aria-hidden>{user.name.slice(0, 1)}</span>
@@ -346,6 +376,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 }
 
 function resolvePageMeta(pathname: string): PageMeta {
+  if (pathname.startsWith("/seguridad/estudios/") && pathname !== "/seguridad/estudios/nuevo") return { title: "Estudio de seguridad", subtitle: "Expediente, consultas de antecedentes y decisión" };
   if (pathname.startsWith("/control/bitacora/") && pathname.endsWith("/imprimir")) return { title: "Impresión de bitácora", subtitle: "Documento de soporte del monitoreo en ruta" };
   if (pathname.startsWith("/control/bitacora/") && pathname !== "/control/bitacora/nuevo") return { title: "Bitácora del viaje", subtitle: "Reportes de control, novedades y cierre de entrega" };
   if (pathname.startsWith("/control/seguimiento/")) return { title: "Seguimiento del despacho", subtitle: "Plan de ruta, novedades y notas de controlador" };
@@ -389,8 +420,8 @@ function isActivePath(pathname: string, href: string): boolean {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function roleLabel(role: "admin" | "operator" | "auditor"): string {
-  return role === "admin" ? "Administrador" : role === "auditor" ? "Auditor" : "Operador";
+function roleLabel(role: "admin" | "operator" | "auditor" | "client"): string {
+  return role === "admin" ? "Superadministrador" : role === "auditor" ? "Auditor" : role === "client" ? "Empresa cliente" : "Auxiliar de seguridad";
 }
 
 async function logout(): Promise<void> {

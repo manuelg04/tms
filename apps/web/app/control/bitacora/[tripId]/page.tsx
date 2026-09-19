@@ -10,12 +10,15 @@ import { routeProgress } from "../../../../convex/model/monitoring";
 import dynamic from "next/dynamic";
 import { ReportForm } from "../components/report-form";
 import { DeliveryForm } from "../components/delivery-form";
-import { channelLabels, dayKey, formatDate, formatDateTime, formatDuration, formatLongDate, formatTime, formatWeight, kindLabels, relativeDue, relativePast, useNow } from "../components/format";
+import { ScheduleForm } from "../components/schedule-form";
+import { channelLabels, dayKey, formatDate, formatDateTime, formatDuration, formatInterval, formatLongDate, formatTime, formatWeight, kindLabels, relativeDue, relativePast, useNow } from "../components/format";
 import "../bitacora.css";
 
 const TripMap = dynamic(() => import("../components/trip-map").then((m) => m.TripMap), { ssr: false, loading: () => <div className="skeleton" style={{ height: 320 }}>Cargando mapa…</div> });
 
 type Report = NonNullable<ReturnType<typeof useQuery<typeof api.monitoring.detail>>>["reports"][number];
+type ScheduleChange = NonNullable<NonNullable<ReturnType<typeof useQuery<typeof api.monitoring.detail>>>["trip"]["scheduleChanges"]>[number];
+type TimelineItem = { at: number; key: string; report?: Report; change?: ScheduleChange };
 
 export default function MonitoringTripDetail({ params }: { params: Promise<{ tripId: string }> }) {
   const { tripId } = use(params);
@@ -24,7 +27,7 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
   const deleteTrip = useMutation(api.monitoring.deleteTrip);
   const router = useRouter();
   const now = useNow();
-  const [mode, setMode] = useState<"reporte" | "entrega">("reporte");
+  const [mode, setMode] = useState<"reporte" | "entrega" | "frecuencia">("reporte");
   const [notice, setNotice] = useState("");
   const [order, setOrder] = useState<"recent" | "chronological">("recent");
   const [filter, setFilter] = useState<"all" | "novelties">("all");
@@ -54,13 +57,19 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
   const elapsed = (trip.deliveredAt ?? now) - trip.departureAt;
   const novelties = reports.filter((r) => r.hasNovelty).length;
   const lastReport = reports[reports.length - 1];
+  const changes = trip.scheduleChanges ?? [];
+  const activeChange = trip.status === "en_ruta" && changes.length && (!trip.lastReportAt || changes[changes.length - 1].at >= trip.lastReportAt) ? changes[changes.length - 1] : null;
   const visibleReports = (filter === "novelties" ? reports.filter((r) => r.hasNovelty) : reports).slice();
-  if (order === "recent") visibleReports.reverse();
-  const grouped = visibleReports.reduce<Array<{ day: string; items: Report[] }>>((acc, report) => {
-    const key = dayKey(report.at);
+  const timeline: TimelineItem[] = [
+    ...visibleReports.map((report) => ({ at: report.at, key: report._id, report })),
+    ...(filter === "novelties" ? [] : changes.map((change, index) => ({ at: change.at, key: `change-${index}`, change }))),
+  ].sort((a, b) => a.at - b.at);
+  if (order === "recent") timeline.reverse();
+  const grouped = timeline.reduce<Array<{ day: string; items: TimelineItem[] }>>((acc, item) => {
+    const key = dayKey(item.at);
     const last = acc[acc.length - 1];
-    if (last && last.day === key) last.items.push(report);
-    else acc.push({ day: key, items: [report] });
+    if (last && last.day === key) last.items.push(item);
+    else acc.push({ day: key, items: [item] });
     return acc;
   }, []);
   const phoneHref = `tel:${trip.driverPhone.replace(/[^\d+]/g, "")}`;
@@ -116,9 +125,9 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
               <small>{trip.lastReportAt && lastReport ? `${relativePast(trip.lastReportAt, now)} · ${lastReport.location}` : "Sin reportes todavía"}</small>
             </div>
             <div className={`bm-focus-card ${due?.state ?? ""}`}>
-              <span className="eyebrow">Próximo reporte</span>
+              <span className="eyebrow">Próximo reporte {activeChange ? <span className="bm-adjusted">· ajustado</span> : null}</span>
               <strong>{due ? formatTime(trip.nextDueAt!) : trip.status === "entregado" ? "Cerrado" : "—"}</strong>
-              <small>{due ? `${due.label} · frecuencia cada ${trip.intervalMinutes / 60} h` : trip.deliveredAt ? `Entregado ${formatDateTime(trip.deliveredAt)}` : ""}</small>
+              <small title={activeChange ? `${activeChange.reasonType}: ${activeChange.reason}` : undefined}>{due ? (activeChange ? `${due.label} · ${activeChange.reasonType}` : `${due.label} · frecuencia ${formatInterval(trip.intervalMinutes)}`) : trip.deliveredAt ? `Entregado ${formatDateTime(trip.deliveredAt)}` : ""}</small>
             </div>
           </div>
 
@@ -178,12 +187,16 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
               {grouped.map((group) => (
                 <div key={group.day}>
                   <div className="bm-day">{formatLongDate(group.items[0].at)}</div>
-                  {group.items.map((report, index) => (
-                    <ReportEntry key={report._id} report={report} last={index === group.items.length - 1} highlight={order === "recent" && report._id === lastReport?._id} />
-                  ))}
+                  {group.items.map((item, index) =>
+                    item.report ? (
+                      <ReportEntry key={item.key} report={item.report} last={index === group.items.length - 1} highlight={order === "recent" && item.report._id === lastReport?._id} />
+                    ) : item.change ? (
+                      <ScheduleEntry key={item.key} change={item.change} last={index === group.items.length - 1} />
+                    ) : null,
+                  )}
                 </div>
               ))}
-              {!visibleReports.length ? (
+              {!timeline.length ? (
                 <div className="bm-empty">
                   <strong>{filter === "novelties" ? "Sin novedades registradas" : "Aún no hay reportes"}</strong>
                   {filter === "novelties" ? "Todos los reportes del viaje fueron sin novedad." : "Registra la primera llamada de control con el conductor."}
@@ -202,16 +215,24 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
             <a className="bm-phone" href={phoneHref}>{trip.driverPhone}</a>
           </div>
           {notice ? <p className="bm-message success" role="status">{notice}</p> : null}
-          {data.canReport ? (
+          {data.viewer === "client" ? (
+            <section className="panel bm-closed">
+              <strong>{trip.status === "entregado" ? "Viaje entregado y cerrado" : "Viaje en monitoreo"}</strong>
+              Vista de solo lectura para su empresa. Los reportes los registra el equipo de seguridad; puede imprimir la bitácora como soporte.
+            </section>
+          ) : data.canReport ? (
             <section className="panel bm-form-panel" aria-label="Registrar en la bitácora">
-              <div className="bm-side-tabs" role="tablist">
-                <button role="tab" type="button" aria-selected={mode === "reporte"} onClick={() => setMode("reporte")}>Reporte de control</button>
-                <button role="tab" type="button" aria-selected={mode === "entrega"} onClick={() => setMode("entrega")}>Registrar entrega</button>
+              <div className="bm-side-tabs three" role="tablist">
+                <button role="tab" type="button" aria-selected={mode === "reporte"} onClick={() => setMode("reporte")}>Reporte</button>
+                <button role="tab" type="button" aria-selected={mode === "entrega"} onClick={() => setMode("entrega")}>Entrega</button>
+                <button role="tab" type="button" aria-selected={mode === "frecuencia"} onClick={() => setMode("frecuencia")}>Frecuencia</button>
               </div>
               {mode === "reporte" ? (
                 <ReportForm trip={trip} onAttempt={() => setNotice("")} onSaved={() => setNotice("Reporte registrado en la bitácora.")} />
-              ) : (
+              ) : mode === "entrega" ? (
                 <DeliveryForm key={partialDeliveries.length} trip={trip} deliveredSites={partialDeliveries.map((r) => r.location)} onAttempt={() => setNotice("")} onSaved={() => setNotice("Entrega registrada en la bitácora.")} />
+              ) : (
+                <ScheduleForm key={changes.length} trip={trip} onAttempt={() => setNotice("")} onSaved={() => { setNotice("Frecuencia ajustada. El motivo quedó registrado en la bitácora."); setMode("reporte"); }} />
               )}
             </section>
           ) : trip.status === "entregado" ? (
@@ -244,7 +265,7 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
               <div className="wide"><dt>Cliente</dt><dd>{trip.customer}</dd></div>
               <div className="wide"><dt>Mercancía</dt><dd>{trip.cargo}</dd></div>
               <div><dt>Manifiesto</dt><dd className={trip.manifest ? "" : "muted"}>{trip.manifest ?? "—"}</dd></div>
-              <div><dt>Frecuencia</dt><dd>Cada {trip.intervalMinutes / 60} h</dd></div>
+              <div><dt>Frecuencia</dt><dd>{formatInterval(trip.intervalMinutes).replace(/^cada /, "Cada ")}{changes.length ? <span className="muted"> · {changes.length} ajuste{changes.length === 1 ? "" : "s"}</span> : null}</dd></div>
               <div className="wide"><dt>Ruta completa</dt><dd className="muted">{route.map((s) => s.split(",")[0]).join(" → ")}</dd></div>
               <div className="wide"><dt>Bitácora abierta por</dt><dd className="muted">{trip.createdByName} · {formatDateTime(trip.createdAt)}</dd></div>
             </dl>
@@ -263,6 +284,14 @@ function stopMatches(stop: string, location: string): boolean {
 }
 
 function ChannelIcon({ channel }: { channel: string }) {
+  if (channel === "gps")
+    return (
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+        <circle cx="8" cy="8" r="2.2" />
+        <circle cx="8" cy="8" r="5.5" strokeDasharray="2.5 2" />
+        <path d="M8 1v2M8 13v2M1 8h2M13 8h2" strokeLinecap="round" />
+      </svg>
+    );
   if (channel === "whatsapp")
     return (
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
@@ -335,6 +364,35 @@ function ReportEntry({ report, last, highlight }: { report: Report; last: boolea
             <ChannelIcon channel={report.channel} />
             {channelLabels[report.channel]}
             {!report.contacted ? " · sin respuesta" : ""}
+          </span>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function ScheduleEntry({ change, last }: { change: ScheduleChange; last: boolean }) {
+  return (
+    <article className={`bm-entry ajuste ${last ? "last" : ""}`}>
+      <div className="bm-entry-time">{formatTime(change.at)}</div>
+      <div className="bm-entry-rail">
+        <span className="bm-entry-dot" aria-hidden />
+      </div>
+      <div className="bm-card">
+        <div className="bm-card-head">
+          <div className="bm-card-title">
+            <span className="place">Ajuste de frecuencia</span>
+            <span className="bm-kind">{change.reasonType}</span>
+          </div>
+        </div>
+        <p>{change.reason}</p>
+        <div className="bm-schedule-meta">
+          <span>Próximo reporte <b>{formatDateTime(change.nextDueAt)}</b>{change.previousNextDueAt ? ` (antes ${formatTime(change.previousNextDueAt)})` : ""}</span>
+          <span>Frecuencia <b>{formatInterval(change.intervalMinutes)}</b>{change.previousIntervalMinutes !== change.intervalMinutes ? ` (antes ${formatInterval(change.previousIntervalMinutes)})` : " (sin cambio)"}</span>
+        </div>
+        <div className="bm-card-foot">
+          <span>
+            Ajustó <strong>{change.operatorName}</strong>
           </span>
         </div>
       </div>

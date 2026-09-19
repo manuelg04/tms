@@ -1,13 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { assertPasswordHash, isJobTitle, normalizeEmail, normalizeName, rolesForJobTitle, validatePasswordStrength } from "./userAccounts.js";
+import { assertPasswordHash, isJobTitle, normalizeEmail, normalizeName, requiresCustomer, rolesForJobTitle, validatePasswordStrength } from "./userAccounts.js";
 
 test("maps job titles to internal roles", () => {
   assert.deepEqual(rolesForJobTitle("administrador"), ["admin"]);
   assert.deepEqual(rolesForJobTitle("jefe_seguridad"), ["operator"]);
   assert.deepEqual(rolesForJobTitle("auxiliar_seguridad"), ["operator"]);
+  assert.deepEqual(rolesForJobTitle("empresa"), ["client"]);
   assert.equal(isJobTitle("jefe_seguridad"), true);
+  assert.equal(isJobTitle("empresa"), true);
   assert.equal(isJobTitle("gerente"), false);
+  assert.equal(requiresCustomer("empresa"), true);
+  assert.equal(requiresCustomer("auxiliar_seguridad"), false);
 });
 
 test("normalizes and validates email and name", () => {

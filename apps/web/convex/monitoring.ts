@@ -21,17 +21,30 @@ import {
   formatTripCode,
   nextDueAt,
   normalizeMonitoringText,
+  validateScheduleChange,
   validateTripInput,
 } from "./model/monitoring";
+import { resolveCustomer } from "./clientCompanies";
 
-const readers = ["admin", "operator", "auditor"] as const;
+const readers = ["admin", "operator", "auditor", "client"] as const;
 const writers = ["admin", "operator"] as const;
+
+function isClient(actor: Doc<"users">): boolean {
+  return actor.roles.includes("client");
+}
+
+function canSeeTrip(actor: Doc<"users">, trip: Doc<"monitoringTrips">): boolean {
+  if (trip.organizationId !== actor.organizationId) return false;
+  if (!isClient(actor)) return true;
+  return Boolean(actor.customerId) && trip.customerId === actor.customerId;
+}
 
 async function getTrip(ctx: QueryCtx | MutationCtx, tripId: Id<"monitoringTrips">) {
   const actor = await requireActor(ctx, undefined, [...readers]);
   const trip = await ctx.db.get("monitoringTrips", tripId);
   if (!trip) throw new ConvexError("El viaje no está disponible.");
   requireSameOrganization(actor, trip.organizationId);
+  if (!canSeeTrip(actor, trip)) throw new ConvexError("El viaje no está disponible.");
   return { actor, trip };
 }
 
@@ -56,15 +69,26 @@ export const board = query({
     trips: v.array(monitoringTripDoc),
     canReport: v.boolean(),
     isAdmin: v.boolean(),
+    viewer: v.union(v.literal("staff"), v.literal("client")),
+    customerName: v.optional(v.string()),
   }),
   handler: async (ctx) => {
     const actor = await requireActor(ctx, undefined, [...readers]);
-    const trips = await ctx.db
-      .query("monitoringTrips")
-      .withIndex("by_org_status", (q) =>
-        q.eq("organizationId", actor.organizationId),
-      )
-      .collect();
+    const client = isClient(actor);
+    const trips = client
+      ? actor.customerId
+        ? await ctx.db
+            .query("monitoringTrips")
+            .withIndex("by_org_customer", (q) => q.eq("organizationId", actor.organizationId).eq("customerId", actor.customerId))
+            .collect()
+        : []
+      : await ctx.db
+          .query("monitoringTrips")
+          .withIndex("by_org_status", (q) =>
+            q.eq("organizationId", actor.organizationId),
+          )
+          .collect();
+    const customer = client && actor.customerId ? await ctx.db.get("customers", actor.customerId) : null;
     trips.sort((a, b) => {
       if (a.status !== b.status) return a.status === "en_ruta" ? -1 : 1;
       if (a.status === "en_ruta")
@@ -75,6 +99,8 @@ export const board = query({
       trips,
       canReport: canWrite(actor),
       isAdmin: actor.roles.includes("admin"),
+      viewer: client ? ("client" as const) : ("staff" as const),
+      customerName: customer?.name,
     };
   },
 });
@@ -86,7 +112,9 @@ export const detail = query({
       trip: monitoringTripDoc,
       reports: v.array(reportWithUrls),
       canReport: v.boolean(),
+      canAdjust: v.boolean(),
       isAdmin: v.boolean(),
+      viewer: v.union(v.literal("staff"), v.literal("client")),
       organizationName: v.string(),
     }),
     v.null(),
@@ -94,7 +122,7 @@ export const detail = query({
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx, undefined, [...readers]);
     const trip = await ctx.db.get("monitoringTrips", args.tripId);
-    if (!trip || trip.organizationId !== actor.organizationId) return null;
+    if (!trip || !canSeeTrip(actor, trip)) return null;
     const organization = await ctx.db.get("organizations", trip.organizationId);
     const rows = await ctx.db
       .query("monitoringReports")
@@ -117,7 +145,9 @@ export const detail = query({
       trip,
       reports,
       canReport: canWrite(actor) && trip.status === "en_ruta",
+      canAdjust: canWrite(actor) && trip.status === "en_ruta",
       isAdmin: actor.roles.includes("admin"),
+      viewer: isClient(actor) ? ("client" as const) : ("staff" as const),
       organizationName: organization?.name ?? "",
     };
   },
@@ -145,6 +175,7 @@ export const createTrip = mutation({
     driverDocument: v.optional(v.string()),
     driverPhone: v.string(),
     customer: v.string(),
+    customerId: v.optional(v.id("customers")),
     cargo: v.string(),
     departureAt: v.number(),
     expectedArrivalAt: v.optional(v.number()),
@@ -161,6 +192,7 @@ export const createTrip = mutation({
       throw new ConvexError((error as Error).message);
     }
     const now = Date.now();
+    const customer = await resolveCustomer(ctx, actor, { customerId: args.customerId, name: args.customer });
     const existing = await ctx.db
       .query("monitoringTrips")
       .withIndex("by_org_code", (q) =>
@@ -186,7 +218,8 @@ export const createTrip = mutation({
       driverName: args.driverName.trim(),
       driverDocument: clean(args.driverDocument),
       driverPhone: args.driverPhone.trim(),
-      customer: args.customer.trim(),
+      customer: customer.name,
+      customerId: customer._id,
       cargo: args.cargo.trim(),
       departureAt: args.departureAt,
       expectedArrivalAt: args.expectedArrivalAt,
@@ -234,7 +267,7 @@ type ReportInput = {
   municipality?: string;
   municipalityCode?: string;
   reference?: string;
-  channel: "llamada" | "whatsapp" | "presencial" | "otro";
+  channel: "llamada" | "gps" | "whatsapp" | "presencial" | "otro";
   contacted: boolean;
   hasNovelty: boolean;
   noveltyType?: string;
@@ -450,6 +483,56 @@ export const deleteTrip = mutation({
   },
 });
 
+export const adjustSchedule = mutation({
+  args: {
+    tripId: v.id("monitoringTrips"),
+    nextDueAt: v.number(),
+    intervalMinutes: v.number(),
+    reasonType: v.string(),
+    reason: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const { actor, trip } = await getTrip(ctx, args.tripId);
+    if (!canWrite(actor)) throw new ConvexError("Tu cargo no permite ajustar la frecuencia.");
+    const now = Date.now();
+    try {
+      validateScheduleChange({ ...args, now, tripStatus: trip.status });
+    } catch (error) {
+      throw new ConvexError((error as Error).message);
+    }
+    const change = {
+      at: now,
+      previousIntervalMinutes: trip.intervalMinutes,
+      intervalMinutes: args.intervalMinutes,
+      previousNextDueAt: trip.nextDueAt,
+      nextDueAt: args.nextDueAt,
+      reasonType: args.reasonType.trim(),
+      reason: args.reason.trim(),
+      operatorName: actor.name,
+      createdBy: actor._id,
+    };
+    await ctx.db.patch("monitoringTrips", trip._id, {
+      intervalMinutes: args.intervalMinutes,
+      nextDueAt: args.nextDueAt,
+      scheduleChanges: [...(trip.scheduleChanges ?? []), change],
+      updatedAt: now,
+    });
+    await appendAudit(ctx, {
+      organizationId: trip.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "monitoring.schedule.adjusted",
+      entityType: "monitoringTrip",
+      entityId: trip._id,
+      reason: change.reasonType,
+      detailsJson: JSON.stringify({ nextDueAt: args.nextDueAt, intervalMinutes: args.intervalMinutes, previousIntervalMinutes: trip.intervalMinutes }),
+      createdAt: now,
+    });
+    return null;
+  },
+});
+
 type Place = { lat: number; lng: number; name: string };
 
 function placeTokens(text: string): string[] {
@@ -537,7 +620,7 @@ export const mapData = query({
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx, undefined, [...readers]);
     const trip = await ctx.db.get("monitoringTrips", args.tripId);
-    if (!trip || trip.organizationId !== actor.organizationId) return null;
+    if (!trip || !canSeeTrip(actor, trip)) return null;
     const names = [trip.origin, ...trip.waypoints, trip.destination];
     const originPlace = await resolvePlace(ctx, trip.origin, [trip.destination]);
     const destinationPlace = await resolvePlace(ctx, trip.destination, [trip.origin]);
@@ -647,7 +730,7 @@ export const municipalityPoints = query({
   args: {},
   returns: v.array(v.object({ name: v.string(), department: v.string(), lat: v.number(), lng: v.number(), onRoad: v.boolean() })),
   handler: async (ctx) => {
-    await requireActor(ctx, undefined, [...readers]);
+    await requireActor(ctx, undefined, [...writers]);
     const rows = await ctx.db
       .query("rndcDivisions")
       .withIndex("by_is_municipality", (q) => q.eq("isMunicipality", true))
@@ -671,7 +754,7 @@ export const previousRoutes = query({
     }),
   ),
   handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, undefined, [...readers]);
+    const actor = await requireActor(ctx, undefined, [...writers]);
     const originKey = placeName(args.origin), destinationKey = placeName(args.destination);
     if (!originKey || !destinationKey) return [];
     const trips = await ctx.db

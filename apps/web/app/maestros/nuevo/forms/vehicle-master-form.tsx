@@ -12,9 +12,9 @@ import { requestMasterSync } from "../../components/master-sync";
 type PhotoSlot = "front" | "left" | "right" | "rear";
 
 export function VehicleMasterForm() {
-  const createVehicle = useMutation(api.fleet.createVehicleMaster);
-  const generateUploadUrl = useMutation(api.fleet.generateMasterUploadUrl);
-  const discardUploads = useMutation(api.fleet.discardMasterUploads);
+  const createVehicle = useMutation(api.fleetMasters.createVehicleMaster);
+  const generateUploadUrl = useMutation(api.fleetMasters.generateMasterUploadUrl);
+  const discardUploads = useMutation(api.fleetMasters.discardMasterUploads);
   const [line, setLine] = useState<VehicleLinePick | null>(null);
   const [bodyType, setBodyType] = useState<BodyTypePick | null>(null);
   const [owner, setOwner] = useState<PartyPick | null>(null);

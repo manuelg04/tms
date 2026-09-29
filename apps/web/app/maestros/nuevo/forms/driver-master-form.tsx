@@ -10,9 +10,9 @@ import { readWorkReferences, WorkReferencesFields } from "./work-references-fiel
 import { requestMasterSync } from "../../components/master-sync";
 
 export function DriverMasterForm() {
-  const createDriver = useMutation(api.fleet.createDriverMaster);
-  const generateUploadUrl = useMutation(api.fleet.generateMasterUploadUrl);
-  const discardUploads = useMutation(api.fleet.discardMasterUploads);
+  const createDriver = useMutation(api.fleetMasters.createDriverMaster);
+  const generateUploadUrl = useMutation(api.fleetMasters.generateMasterUploadUrl);
+  const discardUploads = useMutation(api.fleetMasters.discardMasterUploads);
   const [city, setCity] = useState<DivisionPick | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);

@@ -1,15 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { linkDriverVehicle, unlinkDriverVehicle, upsertFleetBatch } from "./fleet";
 import {
   createDriverMaster,
   discardMasterUploads,
   createThirdPartyMaster,
   createTrailerMaster,
-  createVehicleMaster,
-  linkDriverVehicle,
-  unlinkDriverVehicle,
-  upsertFleetBatch
-} from "./fleet";
+  createVehicleMaster
+} from "./fleetMasters";
 
 type Row = Record<string, unknown> & { _id: string; _creationTime: number };
 

@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { ConvexError } from "convex/values";
 import type { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
-import type { MasterSyncBundle } from "../../convex/fleet";
+import type { MasterSyncBundle } from "../../convex/model/fleetRecords";
 import { MASTER_SYNC_GATEWAY_PATHS, MASTER_SYNC_OPERATION_TYPES, MASTER_SYNC_PROCESS_IDS, type MasterSyncKind } from "../../convex/model/masterSync";
 import { buildDurableEvidenceHeaders, durableEvidenceWasStored, forwardRndcRequest, safeRndcMode } from "./rndc-gateway";
 import { resolveActionOutcome } from "./rndc-action-outcome";

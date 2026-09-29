@@ -8,9 +8,9 @@ import { MasterPhotoPicker, MasterSection, MasterSubmitBar, SelectField, TextAre
 import { discardUploadedMasterPhotos, optionalNumber, optionalText, readableError, requiredNumber, requiredText, uploadMasterPhoto, type UploadedMasterPhoto } from "./master-form-utils";
 
 export function TrailerMasterForm() {
-  const createTrailer = useMutation(api.fleet.createTrailerMaster);
-  const generateUploadUrl = useMutation(api.fleet.generateMasterUploadUrl);
-  const discardUploads = useMutation(api.fleet.discardMasterUploads);
+  const createTrailer = useMutation(api.fleetMasters.createTrailerMaster);
+  const generateUploadUrl = useMutation(api.fleetMasters.generateMasterUploadUrl);
+  const discardUploads = useMutation(api.fleetMasters.discardMasterUploads);
   const [owner, setOwner] = useState<PartyPick | null>(null);
   const [vehicle, setVehicle] = useState<VehiclePick | null>(null);
   const [bodyType, setBodyType] = useState<BodyTypePick | null>(null);

@@ -11,7 +11,7 @@ import { requestMasterSync } from "../../components/master-sync";
 type PersonType = "natural" | "legal";
 
 export function ThirdPartyMasterForm() {
-  const createThirdParty = useMutation(api.fleet.createThirdPartyMaster);
+  const createThirdParty = useMutation(api.fleetMasters.createThirdPartyMaster);
   const [personType, setPersonType] = useState<PersonType>("natural");
   const [city, setCity] = useState<DivisionPick | null>(null);
   const [saving, setSaving] = useState(false);

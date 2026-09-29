@@ -78,42 +78,40 @@ export const list = query({
     if (args.organizationId)
       requireSameOrganization(actor, args.organizationId);
     const organizationId = actor.organizationId;
-    const [expedientes, scopedDocuments, trips] = await Promise.all([
-      ctx.db
-        .query("expedientes")
-        .withIndex("by_organization_and_updated_at", (q) =>
-          q.eq("organizationId", organizationId),
-        )
-        .collect(),
-      ctx.db
-        .query("documents")
-        .withIndex("by_organization_and_kind", (q) =>
-          q.eq("organizationId", organizationId).eq("kind", args.kind),
-        )
-        .collect(),
-      ctx.db
-        .query("trips")
-        .withIndex("by_organization", (q) =>
-          q.eq("organizationId", organizationId),
-        )
-        .collect(),
-    ]);
+    const [expedientes, scopedDocuments, unscopedDocuments] = await Promise.all(
+      [
+        ctx.db
+          .query("expedientes")
+          .withIndex("by_organization_and_updated_at", (q) =>
+            q.eq("organizationId", organizationId),
+          )
+          .collect(),
+        ctx.db
+          .query("documents")
+          .withIndex("by_organization_and_kind", (q) =>
+            q.eq("organizationId", organizationId).eq("kind", args.kind),
+          )
+          .collect(),
+        ctx.db
+          .query("documents")
+          .withIndex("by_organization_and_kind", (q) =>
+            q.eq("organizationId", undefined).eq("kind", args.kind),
+          )
+          .collect(),
+      ],
+    );
+    const get = cachedGet(ctx);
     const legacyDocuments = (
       await Promise.all(
-        trips.map((trip) =>
-          ctx.db
-            .query("documents")
-            .withIndex("by_trip", (q) => q.eq("tripId", trip._id))
-            .collect(),
+        unscopedDocuments.map(async (document) =>
+          (await get("trips", document.tripId))?.organizationId ===
+          organizationId
+            ? document
+            : null,
         ),
       )
-    )
-      .flat()
-      .filter(
-        (document) => !document.organizationId && document.kind === args.kind,
-      );
+    ).filter((document): document is Doc<"documents"> => document !== null);
     const documents = [...scopedDocuments, ...legacyDocuments];
-    const get = cachedGet(ctx);
     const associated = new Map<string, Doc<"documents">[]>();
     const orphans: Doc<"documents">[] = [];
     const expedienteIds = new Set(
@@ -136,84 +134,153 @@ export const list = query({
       }
     }
     const rows: RegistryRow[] = [];
-    for (const expediente of expedientes) {
-      const [order, vehicle, trip] = await Promise.all([
-        get("serviceOrders", expediente.serviceOrderId),
-        expediente.vehicleId ? get("vehicles", expediente.vehicleId) : null,
-        expediente.tripId ? get("trips", expediente.tripId) : null,
-      ]);
-      const scopedOrder =
-        order?.organizationId === organizationId ? order : null;
-      const [customer, origin, destination] = await Promise.all([
-        scopedOrder
-          ? get(
-              "customers",
-              expediente.loadingOrderDraft?.customerId ??
-                scopedOrder.customerId,
+    await Promise.all(
+      expedientes.map(async (expediente) => {
+        const [order, vehicle, trip] = await Promise.all([
+          get("serviceOrders", expediente.serviceOrderId),
+          expediente.vehicleId ? get("vehicles", expediente.vehicleId) : null,
+          expediente.tripId ? get("trips", expediente.tripId) : null,
+        ]);
+        const scopedOrder =
+          order?.organizationId === organizationId ? order : null;
+        const [customer, origin, destination] = await Promise.all([
+          scopedOrder
+            ? get(
+                "customers",
+                expediente.loadingOrderDraft?.customerId ??
+                  scopedOrder.customerId,
+              )
+            : null,
+          scopedOrder
+            ? get("customerLocations", scopedOrder.loadingLocationId)
+            : null,
+          scopedOrder
+            ? get("customerLocations", scopedOrder.unloadingLocationId)
+            : null,
+        ]);
+        const base = {
+          kind: args.kind,
+          expedienteId: expediente._id,
+          plate:
+            (vehicle?.organizationId === organizationId
+              ? vehicle.plate
+              : undefined) ??
+            (trip?.organizationId === organizationId
+              ? trip.vehiclePlate
+              : undefined) ??
+            "",
+          customer:
+            customer?.organizationId === organizationId ? customer.name : "",
+          origin: origin?.organizationId === organizationId ? origin.city : "",
+          destination:
+            destination?.organizationId === organizationId
+              ? destination.city
+              : "",
+        };
+        const matches = associated.get(expediente._id) ?? [];
+        if (args.kind === "remesa") {
+          const remesas = await ctx.db
+            .query("expedienteRemesas")
+            .withIndex("by_expediente_and_sequence", (q) =>
+              q.eq("expedienteId", expediente._id),
             )
-          : null,
-        scopedOrder
-          ? get("customerLocations", scopedOrder.loadingLocationId)
-          : null,
-        scopedOrder
-          ? get("customerLocations", scopedOrder.unloadingLocationId)
-          : null,
-      ]);
-      const base = {
-        kind: args.kind,
-        expedienteId: expediente._id,
-        plate:
-          (vehicle?.organizationId === organizationId
-            ? vehicle.plate
-            : undefined) ??
-          (trip?.organizationId === organizationId
-            ? trip.vehiclePlate
-            : undefined) ??
-          "",
-        customer:
-          customer?.organizationId === organizationId ? customer.name : "",
-        origin: origin?.organizationId === organizationId ? origin.city : "",
-        destination:
-          destination?.organizationId === organizationId
-            ? destination.city
-            : "",
-      };
-      const matches = associated.get(expediente._id) ?? [];
-      if (args.kind === "remesa") {
-        const remesas = await ctx.db
-          .query("expedienteRemesas")
-          .withIndex("by_expediente_and_sequence", (q) =>
-            q.eq("expedienteId", expediente._id),
-          )
-          .collect();
-        const consumed = new Set<string>();
-        for (const remesa of remesas.filter(
-          (candidate) => candidate.organizationId === organizationId,
-        )) {
-          const linked = matches.filter(
-            (document) =>
-              document._id === remesa.documentId ||
-              document.expedienteRemesaId === remesa._id ||
-              Boolean(remesa.number && document.number === remesa.number),
-          );
-          for (const document of linked) consumed.add(document._id);
-          for (const document of linked.length ? linked : [undefined]) {
+            .collect();
+          const consumed = new Set<string>();
+          for (const remesa of remesas.filter(
+            (candidate) => candidate.organizationId === organizationId,
+          )) {
+            const linked = matches.filter(
+              (document) =>
+                document._id === remesa.documentId ||
+                document.expedienteRemesaId === remesa._id ||
+                Boolean(remesa.number && document.number === remesa.number),
+            );
+            for (const document of linked) consumed.add(document._id);
+            for (const document of linked.length ? linked : [undefined]) {
+              rows.push(
+                await makeRow(
+                  {
+                    ...base,
+                    remesaId: remesa._id,
+                    number: document?.number ?? remesa.number ?? "",
+                    date: remesa.draft?.expeditionDate,
+                    agency:
+                      remesa.draft?.agencyCode ?? expediente.agencyCode ?? "",
+                    origin: remesa.draft?.loading?.cityName ?? base.origin,
+                    destination:
+                      remesa.draft?.unloading?.cityName ?? base.destination,
+                    status: remesa.officialState,
+                    createdById: remesa.createdBy,
+                    createdAt: remesa.createdAt,
+                    key: `remesa:${remesa._id}`,
+                  },
+                  document,
+                  get,
+                  organizationId,
+                ),
+              );
+            }
+          }
+          for (const document of matches.filter(
+            (candidate) => !consumed.has(candidate._id),
+          )) {
             rows.push(
               await makeRow(
                 {
                   ...base,
-                  remesaId: remesa._id,
-                  number: document?.number ?? remesa.number ?? "",
-                  date: remesa.draft?.expeditionDate,
-                  agency:
-                    remesa.draft?.agencyCode ?? expediente.agencyCode ?? "",
-                  origin: remesa.draft?.loading?.cityName ?? base.origin,
+                  number: document.number ?? "",
+                  agency: expediente.agencyCode ?? "",
+                  status: "draft",
+                  createdById: expediente.createdBy,
+                  createdAt: document.createdAt,
+                  key: document._id,
+                },
+                document,
+                get,
+                organizationId,
+              ),
+            );
+          }
+        } else {
+          const draft =
+            args.kind === "orden_cargue"
+              ? expediente.loadingOrderDraft
+              : expediente.manifestDraft;
+          const number =
+            args.kind === "orden_cargue"
+              ? (expediente.loadingOrderDraft?.orderNumber ??
+                expediente.cargoNumber)
+              : (expediente.manifestDraft?.manifestNumber ??
+                expediente.manifestNumber);
+          if (!draft && !number && !matches.length) return;
+          for (const document of matches.length ? matches : [undefined]) {
+            rows.push(
+              await makeRow(
+                {
+                  ...base,
+                  number: document?.number ?? number ?? "",
+                  date:
+                    args.kind === "orden_cargue"
+                      ? expediente.loadingOrderDraft?.expeditionDate
+                      : expediente.manifestDraft?.issueDate,
+                  agency: draft?.agencyCode ?? expediente.agencyCode ?? "",
+                  origin:
+                    args.kind === "orden_cargue"
+                      ? (expediente.loadingOrderDraft?.loading?.cityName ??
+                        base.origin)
+                      : (expediente.manifestDraft?.originCityName ??
+                        base.origin),
                   destination:
-                    remesa.draft?.unloading?.cityName ?? base.destination,
-                  status: remesa.officialState,
-                  createdById: remesa.createdBy,
-                  createdAt: remesa.createdAt,
-                  key: `remesa:${remesa._id}`,
+                    args.kind === "orden_cargue"
+                      ? (expediente.loadingOrderDraft?.unloading?.cityName ??
+                        base.destination)
+                      : (expediente.manifestDraft?.destinationCityName ??
+                        base.destination),
+                  status:
+                    expediente.status === "cancelled" ? "cancelled" : "draft",
+                  createdById: expediente.createdBy,
+                  createdAt: expediente.createdAt,
+                  key: `${args.kind}:${expediente._id}`,
                 },
                 document,
                 get,
@@ -222,97 +289,34 @@ export const list = query({
             );
           }
         }
-        for (const document of matches.filter(
-          (candidate) => !consumed.has(candidate._id),
-        )) {
-          rows.push(
-            await makeRow(
-              {
-                ...base,
-                number: document.number ?? "",
-                agency: expediente.agencyCode ?? "",
-                status: "draft",
-                createdById: expediente.createdBy,
-                createdAt: document.createdAt,
-                key: document._id,
-              },
-              document,
-              get,
-              organizationId,
-            ),
-          );
-        }
-      } else {
-        const draft =
-          args.kind === "orden_cargue"
-            ? expediente.loadingOrderDraft
-            : expediente.manifestDraft;
-        const number =
-          args.kind === "orden_cargue"
-            ? (expediente.loadingOrderDraft?.orderNumber ??
-              expediente.cargoNumber)
-            : (expediente.manifestDraft?.manifestNumber ??
-              expediente.manifestNumber);
-        if (!draft && !number && !matches.length) continue;
-        for (const document of matches.length ? matches : [undefined]) {
-          rows.push(
-            await makeRow(
-              {
-                ...base,
-                number: document?.number ?? number ?? "",
-                date:
-                  args.kind === "orden_cargue"
-                    ? expediente.loadingOrderDraft?.expeditionDate
-                    : expediente.manifestDraft?.issueDate,
-                agency: draft?.agencyCode ?? expediente.agencyCode ?? "",
-                origin:
-                  args.kind === "orden_cargue"
-                    ? (expediente.loadingOrderDraft?.loading?.cityName ??
-                      base.origin)
-                    : (expediente.manifestDraft?.originCityName ?? base.origin),
-                destination:
-                  args.kind === "orden_cargue"
-                    ? (expediente.loadingOrderDraft?.unloading?.cityName ??
-                      base.destination)
-                    : (expediente.manifestDraft?.destinationCityName ??
-                      base.destination),
-                status:
-                  expediente.status === "cancelled" ? "cancelled" : "draft",
-                createdById: expediente.createdBy,
-                createdAt: expediente.createdAt,
-                key: `${args.kind}:${expediente._id}`,
-              },
-              document,
-              get,
-              organizationId,
-            ),
-          );
-        }
-      }
-    }
-    for (const document of orphans) {
-      const trip = await get("trips", document.tripId);
-      const scopedTrip = trip?.organizationId === organizationId ? trip : null;
-      rows.push(
-        await makeRow(
-          {
-            kind: args.kind,
-            key: document._id,
-            number: document.number ?? "",
-            plate: scopedTrip?.vehiclePlate ?? "",
-            customer: "",
-            agency: "",
-            origin: scopedTrip?.originCity ?? "",
-            destination: scopedTrip?.destinationCity ?? "",
-            status: document.status,
-            createdAt: document.createdAt,
-          },
-          document,
-          get,
-          organizationId,
-        ),
-      );
-    }
+      }),
+    );
+    await Promise.all(
+      orphans.map(async (document) => {
+        const trip = await get("trips", document.tripId);
+        const scopedTrip =
+          trip?.organizationId === organizationId ? trip : null;
+        rows.push(
+          await makeRow(
+            {
+              kind: args.kind,
+              key: document._id,
+              number: document.number ?? "",
+              plate: scopedTrip?.vehiclePlate ?? "",
+              customer: "",
+              agency: "",
+              origin: scopedTrip?.originCity ?? "",
+              destination: scopedTrip?.destinationCity ?? "",
+              status: document.status,
+              createdAt: document.createdAt,
+            },
+            document,
+            get,
+            organizationId,
+          ),
+        );
+      }),
+    );
     const result = paginateRegistryRows(
       filterRegistryRows(rows, args.filters),
       args.page,

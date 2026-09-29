@@ -85,6 +85,12 @@ export const monitoringTripDoc = v.object({
   _creationTime: v.number(),
   ...monitoringTripFields,
 });
+const { routeGeometry: _routeGeometry, actualGeometry: _actualGeometry, ...monitoringTripSummaryFields } = monitoringTripFields;
+export const monitoringTripSummary = v.object({
+  _id: v.id("monitoringTrips"),
+  _creationTime: v.number(),
+  ...monitoringTripSummaryFields,
+});
 export const monitoringReportFields = {
   organizationId: v.id("organizations"),
   tripId: v.id("monitoringTrips"),

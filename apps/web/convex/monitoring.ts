@@ -13,7 +13,7 @@ import {
   monitoringChannel,
   monitoringReportDoc,
   monitoringRouteGeometry,
-  monitoringTripDoc,
+  monitoringTripSummary,
 } from "./model/monitoringValidators";
 import {
   composeLocation,
@@ -63,10 +63,14 @@ const reportWithUrls = v.object({
   ),
 });
 
+function tripSummary({ routeGeometry: _routeGeometry, actualGeometry: _actualGeometry, ...trip }: Doc<"monitoringTrips">) {
+  return trip;
+}
+
 export const board = query({
   args: {},
   returns: v.object({
-    trips: v.array(monitoringTripDoc),
+    trips: v.array(monitoringTripSummary),
     canReport: v.boolean(),
     isAdmin: v.boolean(),
     viewer: v.union(v.literal("staff"), v.literal("client")),
@@ -96,7 +100,7 @@ export const board = query({
       return (b.deliveredAt ?? 0) - (a.deliveredAt ?? 0);
     });
     return {
-      trips,
+      trips: trips.map(tripSummary),
       canReport: canWrite(actor),
       isAdmin: actor.roles.includes("admin"),
       viewer: client ? ("client" as const) : ("staff" as const),
@@ -109,7 +113,7 @@ export const detail = query({
   args: { tripId: v.id("monitoringTrips") },
   returns: v.union(
     v.object({
-      trip: monitoringTripDoc,
+      trip: monitoringTripSummary,
       reports: v.array(reportWithUrls),
       canReport: v.boolean(),
       canAdjust: v.boolean(),
@@ -142,7 +146,7 @@ export const detail = query({
       })),
     );
     return {
-      trip,
+      trip: tripSummary(trip),
       reports,
       canReport: canWrite(actor) && trip.status === "en_ruta",
       canAdjust: canWrite(actor) && trip.status === "en_ruta",
@@ -760,7 +764,8 @@ export const previousRoutes = query({
     const trips = await ctx.db
       .query("monitoringTrips")
       .withIndex("by_org_status", (q) => q.eq("organizationId", actor.organizationId))
-      .collect();
+      .order("desc")
+      .take(300);
     const groups = new Map<string, { waypoints: string[]; deliveryWaypoints: string[]; uses: number; lastUsedAt: number; lastCode: string }>();
     for (const trip of trips) {
       if (placeName(trip.origin) !== originKey || placeName(trip.destination) !== destinationKey || trip.waypoints.length === 0) continue;

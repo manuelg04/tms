@@ -383,3 +383,8 @@
     margin-left: 0;
   }
 }
+
+.registry-results[data-busy="true"] .registry-table tbody {
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}

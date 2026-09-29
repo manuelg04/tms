@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useDeferredValue, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useConvex, useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -10,6 +10,7 @@ import type {
   RegistryRow,
 } from "../../convex/model/documentRegistry";
 import { useDemoUser } from "../providers";
+import { useDebounced, useLastDefined } from "../lib/hooks";
 import NuevoDespachoPage from "../expedientes/nuevo/page";
 import { DispatchDetail } from "../expedientes/[id]/dispatch-detail";
 import { DocumentPrintPreview } from "./document-print-preview";
@@ -34,20 +35,26 @@ export function DocumentRegistry({
   const [searched, setSearched] = useState(false);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
-  const deferredFilters = useDeferredValue(filters);
+  const debouncedFilters = useDebounced(filters, 300);
   const { user } = useDemoUser();
   const lookup = !["listar", "imprimir", "insertar"].includes(action);
   const invalidDates = Boolean(
     filters.dateFrom && filters.dateTo && filters.dateFrom > filters.dateTo,
   );
-  const result = useQuery(
+  const enabled =
+    user && action !== "insertar" && (!lookup || searched) && !invalidDates;
+  const liveResult = useQuery(
     api.documentRegistry.list,
-    user && action !== "insertar" && (!lookup || searched) && !invalidDates
-      ? { kind: module.kind, filters: deferredFilters, page, pageSize }
+    enabled
+      ? { kind: module.kind, filters: debouncedFilters, page, pageSize }
       : "skip",
   );
+  const { value: result } = useLastDefined(
+    enabled ? liveResult : undefined,
+    `${module.kind}:${action}`,
+  );
   const columns = registryColumns(module);
-  const busy = filters !== deferredFilters || result === undefined;
+  const busy = filters !== debouncedFilters || liveResult === undefined;
 
   function updateFilter(key: string, value: string) {
     setFilters((current) => ({ ...current, [key]: value }));
@@ -226,6 +233,7 @@ export function DocumentRegistry({
           className="registry-results"
           aria-label={`Listado de ${module.label}`}
           aria-busy={busy}
+          data-busy={busy && result ? "true" : undefined}
         >
           <div className="registry-list-toolbar">
             <div>

@@ -5,24 +5,13 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { formatTimestamp } from "../lib/labels";
+import { isEmptyText, useDebounced } from "../lib/hooks";
 import { MasterSyncAction, MasterSyncBadge, type MasterSyncOutcome, type MasterSyncSummaryView } from "./components/master-sync";
 
 type Tab = "conductores" | "vehiculos" | "remolques" | "terceros";
 
 const PAGE_SIZE = 50;
 
-function useDebounced(value: string, delayMs: number): string {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    if (value === "") {
-      setDebounced("");
-      return;
-    }
-    const handle = window.setTimeout(() => setDebounced(value), delayMs);
-    return () => window.clearTimeout(handle);
-  }, [value, delayMs]);
-  return debounced;
-}
 type DriverRow = {
   _id: string;
   document: string;
@@ -196,10 +185,10 @@ export default function MaestrosPage() {
       throw error;
     }
   }
-  const documentSearchPrefix = useDebounced(documentFilter.trim(), 250);
-  const plateSearchPrefix = useDebounced(plateFilter.trim().toUpperCase(), 250);
-  const trailerSearchPrefix = useDebounced(trailerFilter.trim().toUpperCase(), 250);
-  const thirdPartySearchPrefix = useDebounced(thirdPartyFilter.trim(), 250);
+  const documentSearchPrefix = useDebounced(documentFilter.trim(), 250, isEmptyText);
+  const plateSearchPrefix = useDebounced(plateFilter.trim().toUpperCase(), 250, isEmptyText);
+  const trailerSearchPrefix = useDebounced(trailerFilter.trim().toUpperCase(), 250, isEmptyText);
+  const thirdPartySearchPrefix = useDebounced(thirdPartyFilter.trim(), 250, isEmptyText);
   const activeFilter = tab === "conductores" ? documentSearchPrefix : tab === "vehiculos" ? plateSearchPrefix : tab === "remolques" ? trailerSearchPrefix : thirdPartySearchPrefix;
   const isFiltering = activeFilter !== "";
   const driversPage = usePaginatedQuery(api.fleet.driversPage, tab === "conductores" ? { prefix: documentSearchPrefix || undefined } : "skip", { initialNumItems: PAGE_SIZE });

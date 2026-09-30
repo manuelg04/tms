@@ -5,12 +5,14 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { SearchSelect } from "./search-select";
+import { useDebounced } from "../../lib/hooks";
 
 export type CustomerPick = { _id: Id<"customers">; name: string; identificationNumber?: string };
 
 export function CustomerField({ className, label = "Empresa cliente", name = "customerId", required, disabled, selected, allowCreate = true, onSelect, onClear, hint }: { className?: string; label?: string; name?: string; required?: boolean; disabled?: boolean; selected?: CustomerPick | null; allowCreate?: boolean; onSelect: (customer: CustomerPick) => void; onClear?: () => void; hint?: string }) {
   const [term, setTerm] = useState("");
-  const results = useQuery(api.clientCompanies.search, term.trim().length >= 2 ? { term } : "skip");
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.clientCompanies.search, query.length >= 2 ? { term: query } : "skip");
   const create = useMutation(api.clientCompanies.create);
   const [creating, setCreating] = useState(false);
   const cleanTerm = term.trim();

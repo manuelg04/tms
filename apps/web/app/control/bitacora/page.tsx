@@ -101,7 +101,7 @@ export default function MonitoringBoard() {
             </thead>
             <tbody>
               {visible.map((trip) => (
-                <TripRow key={trip._id} trip={trip} now={now} onOpen={() => router.push(`/control/bitacora/${trip._id}`)} />
+                <TripRow href={`/control/bitacora/${trip._id}`} key={trip._id} trip={trip} now={now} onOpen={() => router.push(`/control/bitacora/${trip._id}`)} />
               ))}
               {!visible.length ? (
                 <tr>
@@ -131,7 +131,7 @@ function Metric({ label, value, foot, tone }: { label: string; value: number; fo
   );
 }
 
-function TripRow({ trip, now, onOpen }: { trip: Doc<"monitoringTrips">; now: number; onOpen: () => void }) {
+function TripRow({ href, trip, now, onOpen }: { href: string; trip: Doc<"monitoringTrips">; now: number; onOpen: () => void }) {
   const due = trip.status === "en_ruta" && trip.nextDueAt ? relativeDue(trip.nextDueAt, now) : null;
   return (
     <tr
@@ -142,7 +142,7 @@ function TripRow({ trip, now, onOpen }: { trip: Doc<"monitoringTrips">; now: num
       tabIndex={0}
     >
       <td>
-        <span className="primary mono">{trip.code}</span>
+        <Link className="primary mono row-link" href={href} onClick={(event) => event.stopPropagation()}>{trip.code}</Link>
         <span className="secondary">{trip.manifest ? `Manifiesto ${trip.manifest}` : "Sin manifiesto"}</span>
       </td>
       <td>

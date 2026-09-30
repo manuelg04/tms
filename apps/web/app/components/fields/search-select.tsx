@@ -46,7 +46,10 @@ export function SearchSelect({ name, validationValue, label, className = "", pla
   }, [options]);
 
   const searching = term.trim().length >= minLength;
-  const list = open && searching ? options : undefined;
+  const lastOptions = useRef<SearchOption[] | undefined>(options);
+  if (options !== undefined) lastOptions.current = options;
+  const pending = searching && options === undefined;
+  const list = open && searching ? options ?? lastOptions.current : undefined;
   const shown = open ? term : (selectedLabel ?? term);
 
   function choose(key: string) {
@@ -111,7 +114,7 @@ export function SearchSelect({ name, validationValue, label, className = "", pla
         )}
         {list ? (
           <ul className="search-select-list" id={`${id}-list`} role="listbox">
-            {list.length === 0 ? <li className="search-select-empty">{emptyText}</li> : null}
+            {list.length === 0 ? <li className="search-select-empty">{pending ? "Buscando…" : emptyText}</li> : null}
             {list.map((option, index) => (
               <li
                 aria-selected={index === active}
@@ -127,6 +130,8 @@ export function SearchSelect({ name, validationValue, label, className = "", pla
               </li>
             ))}
           </ul>
+        ) : open && pending ? (
+          <ul className="search-select-list" id={`${id}-list`} role="listbox"><li className="search-select-empty">Buscando…</li></ul>
         ) : open && !searching && !selectedLabel ? (
           <ul className="search-select-list" id={`${id}-list`} role="listbox"><li className="search-select-empty">Escribe al menos {minLength} caracteres</li></ul>
         ) : null}

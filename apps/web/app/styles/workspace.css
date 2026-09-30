@@ -509,7 +509,7 @@
   .mobile-nav-close { display: block; margin-left: auto; border: 0; background: transparent; color: #fff; font-size: 26px; }
   .mobile-nav-backdrop { display: block; position: fixed; inset: 0; z-index: 35; border: 0; background: rgba(12,18,25,.56); }
   .topbar { position: sticky; top: 0; z-index: 20; align-items: center; }
-  .page { padding: 14px 12px 90px; overflow: hidden; }
+  .page { padding: 14px 12px 90px; overflow-x: clip; }
   .dispatch-queue-intro,
   .dispatch-detail-hero { align-items: stretch; flex-direction: column; gap: 12px; }
   .base-dispatch-intro { align-items: stretch; flex-direction: column; }
@@ -627,4 +627,28 @@
 
 .login-copy {
   padding: 24px 0 18px;
+}
+
+.app-error {
+  max-width: 560px;
+  margin: 48px auto;
+  padding: 28px;
+  text-align: center;
+}
+
+.app-error h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.app-error p {
+  margin: 0 0 18px;
+  color: var(--ink-soft);
+}
+
+.app-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 }

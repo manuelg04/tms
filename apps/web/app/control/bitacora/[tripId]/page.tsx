@@ -7,6 +7,7 @@ import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { routeProgress } from "../../../../convex/model/monitoring";
+import { convexErrorMessage } from "../../../lib/convex-error";
 import dynamic from "next/dynamic";
 import { ReportForm } from "../components/report-form";
 import { DeliveryForm } from "../components/delivery-form";
@@ -76,8 +77,12 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
 
   async function removeTrip() {
     if (!window.confirm(`¿Eliminar el viaje ${trip.code} y toda su bitácora? Esta acción no se puede deshacer.`)) return;
-    await deleteTrip({ tripId: trip._id });
-    router.push("/control/bitacora");
+    try {
+      await deleteTrip({ tripId: trip._id });
+      router.push("/control/bitacora");
+    } catch (cause) {
+      window.alert(convexErrorMessage(cause, "No fue posible eliminar el viaje."));
+    }
   }
 
   return (

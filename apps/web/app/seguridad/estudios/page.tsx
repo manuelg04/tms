@@ -84,7 +84,7 @@ export default function SecurityStudiesBoard() {
             </thead>
             <tbody>
               {visible.map((study) => (
-                <StudyRow key={study._id} study={study} now={now} onOpen={() => router.push(`/seguridad/estudios/${study._id}`)} />
+                <StudyRow href={`/seguridad/estudios/${study._id}`} key={study._id} study={study} now={now} onOpen={() => router.push(`/seguridad/estudios/${study._id}`)} />
               ))}
               {!visible.length ? (
                 <tr>
@@ -114,12 +114,12 @@ function Metric({ label, value, foot, tone }: { label: string; value: number; fo
   );
 }
 
-function StudyRow({ study, now, onOpen }: { study: Doc<"securityStudies">; now: number; onOpen: () => void }) {
+function StudyRow({ href, study, now, onOpen }: { href: string; study: Doc<"securityStudies">; now: number; onOpen: () => void }) {
   const progress = studyProgress(study);
   return (
     <tr onClick={onOpen} onKeyDown={(e) => { if (e.key === "Enter") onOpen(); }} tabIndex={0}>
       <td>
-        <span className="primary mono">{study.code}</span>
+        <Link className="primary mono row-link" href={href} onClick={(event) => event.stopPropagation()}>{study.code}</Link>
         <span className="secondary">{study.plate ? `Placa ${study.plate}` : "Sin vehículo asignado"}</span>
       </td>
       <td>

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useQuery } from "convex/react";
+import { useDebounced } from "../../../lib/hooks";
 import { api } from "../../../../convex/_generated/api";
 import { SearchSelect } from "../../../components/fields/search-select";
 
@@ -11,7 +12,8 @@ const norm = (v: string) => v.normalize("NFD").replace(/[̀-ͯ]/g, "").toLocaleL
 
 export function PlaceField({ label, name, required, routeStops, value, onSelect, onClear, hint }: { label: string; name: string; required?: boolean; routeStops: string[]; value: PlacePick | null; onSelect: (place: PlacePick) => void; onClear: () => void; hint?: string }) {
   const [term, setTerm] = useState("");
-  const results = useQuery(api.lookups.divisionsSearch, term.trim().length >= 2 ? { term } : "skip");
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.lookups.divisionsSearch, query.length >= 2 ? { term: query } : "skip");
   const options = useMemo(() => {
     const needle = norm(term);
     const stops = routeStops

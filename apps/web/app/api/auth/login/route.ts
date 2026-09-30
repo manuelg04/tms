@@ -14,7 +14,7 @@ export async function POST(request: Request): Promise<Response> {
   const body = await request.json().catch(() => ({})) as { email?: unknown; password?: unknown };
 
   if (typeof body.email !== "string" || typeof body.password !== "string") {
-    return jsonResponse({ error: "Correo y contrasena son obligatorios" }, 400);
+    return jsonResponse({ error: "Correo y contraseña son obligatorios" }, 400);
   }
 
   let user;
@@ -28,7 +28,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   if (!user) {
-    return jsonResponse({ error: "Credenciales invalidas" }, 401);
+    return jsonResponse({ error: "Credenciales inválidas" }, 401);
   }
 
   const response = jsonResponse({ user });

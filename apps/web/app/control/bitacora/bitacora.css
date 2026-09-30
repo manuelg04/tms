@@ -851,3 +851,13 @@ button.bm-stop { cursor: pointer; }
 .bm-study-badge.bad b { color: var(--bad); }
 .bm-study-badge.warn { background: #fffbf0; color: #7a5200; border-color: #eed9a3; }
 .bm-study-badge.warn b { color: #7a5200; }
+
+.bm-table .row-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.bm-table .row-link:hover,
+.bm-table .row-link:focus-visible {
+  text-decoration: underline;
+}

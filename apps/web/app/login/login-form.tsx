@@ -24,14 +24,14 @@ export function LoginForm({ mode }: { mode: "demo" | "local" }) {
       const body = await response.json() as { error?: string };
 
       if (!response.ok) {
-        setError(body.error ?? "No fue posible iniciar sesion");
+        setError(body.error ?? "No fue posible iniciar sesión");
         return;
       }
 
       const next = searchParams.get("next");
       window.location.assign(next?.startsWith("/") && !next.startsWith("//") ? next : "/expedientes");
     } catch {
-      setError("No fue posible conectar con el servicio de autenticacion");
+      setError("No fue posible conectar con el servicio de autenticación");
     } finally {
       setSubmitting(false);
     }
@@ -43,7 +43,7 @@ export function LoginForm({ mode }: { mode: "demo" | "local" }) {
         <span className="brand-plate">MTM</span>
         <div>
           <strong>TMS RNDC</strong>
-          <span>Operacion de transporte</span>
+          <span>Operación de transporte</span>
         </div>
       </div>
       <div className="login-copy">
@@ -65,7 +65,7 @@ export function LoginForm({ mode }: { mode: "demo" | "local" }) {
           />
         </label>
         <label>
-          <span>Contrasena</span>
+          <span>Contraseña</span>
           <input
             autoComplete="current-password"
             autoFocus={mode === "demo"}
@@ -82,7 +82,7 @@ export function LoginForm({ mode }: { mode: "demo" | "local" }) {
         </button>
       </form>
       <p className="login-note">
-        {mode === "local" ? "Cada acción queda registrada a nombre del usuario que ingresa." : "Este acceso es local y el envio real al RNDC permanece bloqueado."}
+        {mode === "local" ? "Cada acción queda registrada a nombre del usuario que ingresa." : "Este acceso es local y el envío real al RNDC permanece bloqueado."}
       </p>
     </section>
   );

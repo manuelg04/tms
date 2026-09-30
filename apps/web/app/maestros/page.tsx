@@ -316,7 +316,7 @@ export default function MaestrosPage() {
           document={selectedDocument}
           onClose={() => setSelectedDocument(null)}
           onLink={(plate) => runLink(() => linkDriverVehicle({ plate, document: selectedDocument }), `Vehículo ${plate.toUpperCase()} asociado al conductor.`)}
-          onUnlink={(plate) => runLink(() => unlinkDriverVehicle({ plate, document: selectedDocument }), `Vehículo ${plate} desasociado del conductor.`)}
+          onUnlink={(plate) => window.confirm(`¿Desasociar el vehículo ${plate} de este conductor?`) ? runLink(() => unlinkDriverVehicle({ plate, document: selectedDocument }), `Vehículo ${plate} desasociado del conductor.`) : Promise.resolve()}
           onSync={showSyncOutcome}
         />
       ) : null}
@@ -326,7 +326,7 @@ export default function MaestrosPage() {
           detail={selectedVehicle as VehicleDetail | null | undefined}
           onClose={() => setSelectedPlate(null)}
           onLink={(document) => runLink(() => linkDriverVehicle({ plate: selectedPlate, document }), `Conductor ${document} asociado al vehículo.`)}
-          onUnlink={(document) => runLink(() => unlinkDriverVehicle({ plate: selectedPlate, document }), `Conductor ${document} desasociado del vehículo.`)}
+          onUnlink={(document) => window.confirm(`¿Desasociar al conductor ${document} de este vehículo?`) ? runLink(() => unlinkDriverVehicle({ plate: selectedPlate, document }), `Conductor ${document} desasociado del vehículo.`) : Promise.resolve()}
           onSync={showSyncOutcome}
           plate={selectedPlate}
         />

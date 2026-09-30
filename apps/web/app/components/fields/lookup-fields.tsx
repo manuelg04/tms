@@ -4,6 +4,7 @@ import { FormField } from "./form-validation";
 
 import { useState } from "react";
 import { useQuery } from "convex/react";
+import { useDebounced } from "../../lib/hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { SearchSelect } from "./search-select";
@@ -34,7 +35,8 @@ export function divisionLabel(division: DivisionPick | null | undefined): string
 
 export function PartyField({ className, name, label, role, required, disabled, selected, typedName, onType, onSelect, onClear, hint }: { className?: string; name?: string; label: string; role?: "sender" | "recipient" | "owner" | "possessor" | "holder"; required?: boolean; disabled?: boolean; selected?: { name?: string; document?: string; documentType?: string } | null; typedName?: string; onType?: (name: string) => void; onSelect: (party: PartyPick) => void; onClear?: () => void; hint?: string }) {
   const [term, setTerm] = useState("");
-  const results = useQuery(api.lookups.partiesSearch, term.trim().length >= 2 ? { term, role } : "skip");
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.lookups.partiesSearch, query.length >= 2 ? { term: query, role } : "skip");
   const selectedLabel = selected?.name ? selected.name : undefined;
   const fallbackHint = selected?.document ? `${idTypeLabel(selected.documentType)} ${formatDocument(selected.document)} · tomado del RNDC` : typedName ? "No está en el RNDC: se registrará con los datos que escribas" : undefined;
   return (
@@ -104,7 +106,8 @@ export function SiteField({ className = "", name, label, thirdPartyId, required,
 
 export function MunicipalityField({ className, label, name, required, disabled, code, onSelect, onClear }: { className?: string; label: string; name: string; required?: boolean; disabled?: boolean; code?: string; onSelect: (division: DivisionPick) => void; onClear?: () => void }) {
   const [term, setTerm] = useState("");
-  const results = useQuery(api.lookups.divisionsSearch, term.trim().length >= 2 ? { term } : "skip");
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.lookups.divisionsSearch, query.length >= 2 ? { term: query } : "skip");
   const current = useQuery(api.lookups.divisionByCode, code ? { code } : "skip");
   const selectedLabel = code ? divisionLabel(current) || code : undefined;
   return (
@@ -135,7 +138,8 @@ export function MunicipalityField({ className, label, name, required, disabled, 
 
 export function PackagingField({ className, label, name, required, disabled, code, description, onSelect, onClear }: { className?: string; label: string; name: string; required?: boolean; disabled?: boolean; code?: string; description?: string; onSelect: (option: { code: string; description: string }) => void; onClear?: () => void }) {
   const [term, setTerm] = useState("");
-  const results = useQuery(api.lookups.packagingSearch, { term });
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.lookups.packagingSearch, { term: query });
   const known = results?.find((row) => row.code === code);
   const selectedLabel = code ? `${known?.description ?? description ?? "Empaque"} (${code})` : undefined;
   return (
@@ -166,7 +170,8 @@ export function PackagingField({ className, label, name, required, disabled, cod
 
 export function InsurerField({ className, label, name, required, disabled, nit, insurerName, onSelect, onClear }: { className?: string; label: string; name: string; required?: boolean; disabled?: boolean; nit?: string; insurerName?: string; onSelect: (option: { insurerNit: string; name: string }) => void; onClear?: () => void }) {
   const [term, setTerm] = useState("");
-  const results = useQuery(api.lookups.insurersSearch, term.trim() ? { term } : "skip");
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.lookups.insurersSearch, query ? { term: query } : "skip");
   const selectedLabel = nit ? `${insurerName ?? "Aseguradora"} · NIT ${formatDocument(nit)}` : undefined;
   return (
     <>
@@ -195,7 +200,8 @@ export function InsurerField({ className, label, name, required, disabled, nit, 
 
 export function DriverField({ className, label, required, disabled, selected, onSelect, onClear }: { className?: string; label: string; required?: boolean; disabled?: boolean; selected?: DriverPick | null; onSelect: (driver: DriverPick) => void; onClear?: () => void }) {
   const [term, setTerm] = useState("");
-  const results = useQuery(api.lookups.driversLookup, term.trim().length >= 2 ? { term } : "skip");
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.lookups.driversLookup, query.length >= 2 ? { term: query } : "skip");
   return (
     <SearchSelect
       name="driverId"
@@ -221,7 +227,8 @@ export function DriverField({ className, label, required, disabled, selected, on
 
 export function VehicleField({ className, label, required, disabled, selected, onSelect, onClear }: { className?: string; label: string; required?: boolean; disabled?: boolean; selected?: VehiclePick | null; onSelect: (vehicle: VehiclePick) => void; onClear?: () => void }) {
   const [term, setTerm] = useState("");
-  const results = useQuery(api.lookups.vehiclesWithDriversSearch, term.trim().length >= 2 ? { term } : "skip");
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.lookups.vehiclesWithDriversSearch, query.length >= 2 ? { term: query } : "skip");
   return (
     <SearchSelect
       name="vehicleId"
@@ -248,7 +255,8 @@ export function VehicleField({ className, label, required, disabled, selected, o
 
 export function TrailerField({ className, label, required, disabled, selected, onSelect, onClear }: { className?: string; label: string; required?: boolean; disabled?: boolean; selected?: TrailerPick | null; onSelect: (trailer: TrailerPick) => void; onClear?: () => void }) {
   const [term, setTerm] = useState("");
-  const results = useQuery(api.lookups.trailersSearch, term.trim().length >= 2 ? { term } : "skip");
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.lookups.trailersSearch, query.length >= 2 ? { term: query } : "skip");
   return (
     <SearchSelect
       className={className}
@@ -273,7 +281,8 @@ export function TrailerField({ className, label, required, disabled, selected, o
 
 export function VehicleLineField({ className, required, disabled, selected, onSelect, onClear }: { className?: string; required?: boolean; disabled?: boolean; selected?: VehicleLinePick | null; onSelect: (line: VehicleLinePick) => void; onClear?: () => void }) {
   const [term, setTerm] = useState("");
-  const results = useQuery(api.lookups.vehicleLinesSearch, term.trim().length >= 2 ? { term } : "skip");
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.lookups.vehicleLinesSearch, query.length >= 2 ? { term: query } : "skip");
   const selectedLabel = selected ? [selected.makeName ?? selected.makeCode, selected.lineName ?? selected.lineCode].join(" · ") : undefined;
   return (
     <SearchSelect
@@ -298,7 +307,8 @@ export function VehicleLineField({ className, required, disabled, selected, onSe
 
 export function BodyTypeField({ className, required, disabled, selected, onSelect, onClear }: { className?: string; required?: boolean; disabled?: boolean; selected?: BodyTypePick | null; onSelect: (bodyType: BodyTypePick) => void; onClear?: () => void }) {
   const [term, setTerm] = useState("");
-  const results = useQuery(api.lookups.bodyTypesSearch, term.trim().length >= 1 ? { term } : "skip");
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.lookups.bodyTypesSearch, query.length >= 1 ? { term: query } : "skip");
   return (
     <SearchSelect
       className={className}

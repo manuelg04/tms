@@ -33,7 +33,7 @@ const pageMeta: Record<string, PageMeta> = {
   "/configuracion/usuarios": { title: "Usuarios", subtitle: "Cuentas de acceso y cargos de la empresa" },
   "/configuracion/mi-clave": { title: "Mi contraseña", subtitle: "Cambio de la contraseña de acceso" },
   "/": {
-    title: "Panel de operacion",
+    title: "Panel de operación",
     subtitle: "Estado en vivo de tus documentos RNDC"
   },
   "/expedientes": {
@@ -233,36 +233,40 @@ export function AppShell({ children }: { children: ReactNode }) {
     return () => document.removeEventListener("keydown", closeOnEscape);
   }, [navOpen]);
 
+  const healthEnabled = pathname !== "/login" && Boolean(user) && user?.role !== "client";
+
   useEffect(() => {
-    if (pathname === "/login" || !user || user.role === "client") {
-      return;
-    }
-
+    if (!healthEnabled) return;
     let cancelled = false;
-    fetch("/api/rndc/health", { cache: "no-store" })
-      .then((response) => response.json())
-      .then((body: { mode?: RndcMode }) => {
-        if (!cancelled && (body.mode === "dry-run" || body.mode === "live")) {
-          setMode(body.mode);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setMode("offline");
-        }
-      });
-
+    function check() {
+      fetch("/api/rndc/health", { cache: "no-store" })
+        .then((response) => response.json())
+        .then((body: { mode?: RndcMode }) => {
+          if (!cancelled && (body.mode === "dry-run" || body.mode === "live")) setMode(body.mode);
+        })
+        .catch(() => {
+          if (!cancelled) setMode("offline");
+        });
+    }
+    function checkWhenVisible() {
+      if (document.visibilityState === "visible") check();
+    }
+    check();
+    const timer = window.setInterval(check, 60_000);
+    document.addEventListener("visibilitychange", checkWhenVisible);
     return () => {
       cancelled = true;
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", checkWhenVisible);
     };
-  }, [pathname, user]);
+  }, [healthEnabled]);
 
   if (pathname === "/login") {
     return <main className="login-shell">{children}</main>;
   }
 
   if (loading) {
-    return <div className="full-page-state">Validando sesion…</div>;
+    return <div className="full-page-state">Validando sesión…</div>;
   }
 
   if (clientBlocked) {

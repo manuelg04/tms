@@ -61,8 +61,12 @@ export default function SecurityStudyDetail({ params }: { params: Promise<{ stud
 
   async function removeStudy() {
     if (!window.confirm(`¿Eliminar el estudio ${study.code}? El expediente del conductor se conserva.`)) return;
-    await deleteStudy({ studyId: study._id });
-    router.push("/seguridad/estudios");
+    try {
+      await deleteStudy({ studyId: study._id });
+      router.push("/seguridad/estudios");
+    } catch (cause) {
+      window.alert(convexErrorMessage(cause, "No fue posible eliminar el estudio."));
+    }
   }
 
   async function reopenStudy() {

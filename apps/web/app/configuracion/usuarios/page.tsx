@@ -31,6 +31,7 @@ export default function UsersPage() {
   const [assigning, setAssigning] = useState<Account | null>(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [busyId, setBusyId] = useState<Account["_id"] | null>(null);
 
   if (!data) {
     return <div className="skeleton" role="status">Cargando usuarios…</div>;
@@ -53,11 +54,15 @@ export default function UsersPage() {
   async function toggleStatus(account: Account) {
     setError("");
     setMessage("");
+    if (account.status === "active" && !window.confirm(`¿Desactivar el acceso de ${account.name}? No podrá ingresar hasta que lo reactives.`)) return;
+    setBusyId(account._id);
     try {
       await update({ userId: account._id, status: account.status === "active" ? "disabled" : "active" });
       setMessage(account.status === "active" ? `Acceso de ${account.name} desactivado.` : `Acceso de ${account.name} reactivado.`);
     } catch (reason) {
       setError(convexErrorMessage(reason, "No fue posible actualizar el usuario"));
+    } finally {
+      setBusyId(null);
     }
   }
 
@@ -68,11 +73,15 @@ export default function UsersPage() {
       setAssigning({ ...account, jobTitle });
       return;
     }
+    if ((jobTitle === "administrador" || account.jobTitle === "administrador") && !window.confirm(`¿Cambiar el cargo de ${account.name} a ${jobTitleLabels[jobTitle].toLowerCase()}? Esto cambia sus permisos de administración.`)) return;
+    setBusyId(account._id);
     try {
       await update({ userId: account._id, jobTitle });
       setMessage(`${account.name} ahora es ${jobTitleLabels[jobTitle].toLowerCase()}.`);
     } catch (reason) {
       setError(convexErrorMessage(reason, "No fue posible cambiar el cargo"));
+    } finally {
+      setBusyId(null);
     }
   }
 
@@ -133,6 +142,7 @@ export default function UsersPage() {
                       {data.canManage && !isSelf ? (
                         <select
                           aria-label={`Cargo de ${account.name}`}
+                          disabled={busyId === account._id}
                           value={account.jobTitle ?? ""}
                           onChange={(event) => void changeJobTitle(account, event.target.value as JobTitle)}
                         >
@@ -158,7 +168,7 @@ export default function UsersPage() {
                             Restablecer contraseña
                           </button>
                           {!isSelf ? (
-                            <button type="button" className={account.status === "active" ? "text-button alarm-delete" : "text-button"} onClick={() => void toggleStatus(account)}>
+                            <button type="button" className={account.status === "active" ? "text-button alarm-delete" : "text-button"} disabled={busyId === account._id} onClick={() => void toggleStatus(account)}>
                               {account.status === "active" ? "Desactivar" : "Reactivar"}
                             </button>
                           ) : null}

@@ -1,6 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query, type MutationCtx } from "./_generated/server";
-import { appendAudit, requireActor, requireServiceKey } from "./model/access";
+import { ANY_ROLE, appendAudit, requireActor, requireServiceKey } from "./model/access";
 import { assertPasswordHash, normalizeEmail, normalizeName, requiresCustomer, rolesForJobTitle, type JobTitle } from "./model/userAccounts";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
@@ -370,7 +370,7 @@ export const setOwnPassword = mutation({
   args: { passwordHash: v.string() },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const actor = await requireActor(ctx);
+    const actor = await requireActor(ctx, undefined, ANY_ROLE);
     assertPasswordHash(args.passwordHash);
     const now = Date.now();
     await ctx.db.patch("users", actor._id, { passwordHash: args.passwordHash, passwordUpdatedAt: now, updatedAt: now });

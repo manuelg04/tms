@@ -1,6 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { appendAudit, requireActor, requireServiceKey } from "./model/access";
+import { ANY_ROLE, appendAudit, requireActor, requireServiceKey } from "./model/access";
 
 const roleValidator = v.union(
   v.literal("admin"),
@@ -139,7 +139,7 @@ export const me = query({
   args: { actorToken: v.optional(v.string()) },
   returns: userOutputValidator,
   handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken);
+    const actor = await requireActor(ctx, args.actorToken, ANY_ROLE);
     const { actorToken: _actorToken, ...safeActor } = actor;
     return safeActor;
   }

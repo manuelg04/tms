@@ -4,6 +4,9 @@ import type { MutationCtx, QueryCtx } from "../_generated/server";
 
 export type ActorRole = "admin" | "operator" | "auditor" | "finance" | "client";
 
+export const STAFF_ROLES: ActorRole[] = ["admin", "operator", "auditor", "finance"];
+export const ANY_ROLE: ActorRole[] = [...STAFF_ROLES, "client"];
+
 export async function requireActor(
   ctx: QueryCtx | MutationCtx,
   actorToken?: string,
@@ -39,7 +42,8 @@ export async function requireActor(
     throw new ConvexError({ code: "UNAUTHORIZED", message: "Organization is not active" });
   }
 
-  if (allowedRoles && !actor.roles.some((role) => allowedRoles.includes(role))) {
+  const roles = allowedRoles ?? STAFF_ROLES;
+  if (!actor.roles.some((role) => roles.includes(role))) {
     throw new ConvexError({ code: "FORBIDDEN", message: "Actor does not have the required role" });
   }
 

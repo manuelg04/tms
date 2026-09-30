@@ -79,7 +79,8 @@ export default function DespachosPage() {
   useEffect(() => {
     const timer = window.setTimeout(() => {
       const query = dispatchFiltersToSearchParams(filters).toString();
-      window.history.replaceState(null, "", query ? `/expedientes?${query}` : "/expedientes");
+      const target = query ? `/expedientes?${query}` : "/expedientes";
+      if (`${window.location.pathname}${window.location.search}` !== target) window.history.replaceState(null, "", target);
     }, 200);
     return () => window.clearTimeout(timer);
   }, [filters]);

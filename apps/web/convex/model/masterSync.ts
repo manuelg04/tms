@@ -25,6 +25,8 @@ type SyncableRow = {
 
 const IMPORTED_SOURCES = new Set(["rndc-maestro", "rndc", "rndc-import"]);
 
+export const DEFAULT_PARTY_SITE = { siteCode: "0", siteName: "PRINCIPAL" } as const;
+
 export const MASTER_SYNC_KIND_LABELS: Record<MasterSyncKind, string> = {
   driver: "Conductor",
   vehicle: "Vehículo",
@@ -246,12 +248,12 @@ export function buildPartySyncPayloads(party: PartySyncSource, sites: PartySiteS
   };
   if (sites.length === 0) {
     return [{
-      siteCode: "0",
+      siteCode: DEFAULT_PARTY_SITE.siteCode,
       payload: {
         sender: {
           ...base,
-          siteCode: "0",
-          siteName: "PRINCIPAL",
+          siteCode: DEFAULT_PARTY_SITE.siteCode,
+          siteName: DEFAULT_PARTY_SITE.siteName,
           address: requireText(party.address, "dirección del tercero"),
           cityCode: requireText(party.cityCode, "municipio del tercero"),
           latitude: undefined as string | undefined,

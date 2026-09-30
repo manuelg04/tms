@@ -57,7 +57,7 @@ export function ThirdPartyMasterForm() {
       });
       setSuccess(outcomeMessage(result.outcome));
       if (result.outcome !== "unchanged") {
-        const sync = await requestMasterSync("party", requiredText(data, "document", "N.º documento"));
+        const sync = await requestMasterSync("party", result.document);
         if (sync.ok) setSuccess(`${outcomeMessage(result.outcome)} ${sync.message}`);
         else setError(`Se guardó en el TMS, pero el RNDC no lo aceptó todavía. ${sync.message}`);
       }

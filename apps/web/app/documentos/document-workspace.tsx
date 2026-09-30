@@ -40,7 +40,8 @@ export function DocumentWorkspace({ section }: { section: DocumentSection }) {
       if (search.trim()) params.set("q", search.trim());
       if (status) params.set("status", status);
       const query = params.toString();
-      window.history.replaceState(null, "", query ? `${sectionPath}?${query}` : sectionPath);
+      const target = query ? `${sectionPath}?${query}` : sectionPath;
+      if (`${window.location.pathname}${window.location.search}` !== target) window.history.replaceState(null, "", target);
     }, 200);
     return () => window.clearTimeout(timer);
   }, [search, sectionPath, status]);

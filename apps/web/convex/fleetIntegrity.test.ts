@@ -389,6 +389,29 @@ test("legal third-party creation enriches the existing full NIT identity", async
   assert.equal(harness.rows("thirdParties").length, 1);
 });
 
+test("legal third-party creation returns the stored NIT with its verification digit for RNDC sync", async () => {
+  const harness = createHarness();
+
+  const result = await invoke<{ id: string; outcome: string; document: string }>(createThirdPartyMaster, harness.ctx, {
+    input: {
+      personType: "legal",
+      documentType: "N",
+      document: "860009578",
+      verificationDigit: "6",
+      legalName: "TRANSPORTES MTM SAS",
+      address: "CALLE 20",
+      cityCode: "11001000",
+      phone1: "6015552000",
+      taxRegime: "simple",
+      roles: ["sender"]
+    }
+  });
+
+  assert.equal(result.outcome, "created");
+  assert.equal(result.document, "8600095786");
+  assert.equal(harness.rows("thirdParties")[0].document, result.document);
+});
+
 test("trailer creation adds the owner role without replacing existing roles", async () => {
   const harness = createHarness();
   const owner = seedThirdParty(harness, "thirdParties:owner", "900000001", ["commercial"]);

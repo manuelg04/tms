@@ -214,7 +214,7 @@ test("persists the four operational masters, their relationships and an idempote
   });
   expect(rndcRequests, "master creation and read-back must only request the stubbed master sync").toEqual([]);
   expect(masterSyncRequests, "each new or enriched master requests its RNDC registration once").toEqual([
-    { kind: "party", key: data.ownerDocument },
+    { kind: "party", key: `${data.ownerDocument}${data.ownerVerificationDigit}` },
     { kind: "party", key: data.naturalDocument },
     { kind: "driver", key: data.naturalDocument },
     { kind: "vehicle", key: data.vehiclePlate }

@@ -176,6 +176,7 @@ function PartyBlock({ label, role, state, onChange, siteLabel, onSite }: { label
         name={`${prefix}SiteCode`}
         onClear={() => onChange({ ...state, siteCode: "", siteName: "" })}
         onManual={(siteCode) => onChange({ ...state, siteCode, siteName: "" })}
+        onDefault={(site) => onChange({ ...state, siteCode: site.siteCode, siteName: site.siteName })}
         onSelect={(site) => {
           onChange({ ...state, siteCode: site.siteCode, siteName: site.siteName });
           onSite?.(site);

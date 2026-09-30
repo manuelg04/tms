@@ -64,6 +64,7 @@ test("migrate catalogue, copy route, assign schedule, query mirror and retain re
     await page.goto("/rutas");
     await expect(
       page.getByRole("heading", {
+        level: 2,
         name: "Rutas y puestos de control",
         exact: true,
       }),
@@ -150,7 +151,7 @@ test("migrate catalogue, copy route, assign schedule, query mirror and retain re
     });
     await page.goto("/documentos/espejo");
     await expect(
-      page.getByRole("heading", { name: "Espejo RNDC", exact: true }),
+      page.getByRole("heading", { level: 2, name: "Espejo RNDC", exact: true }),
     ).toBeVisible();
     await page.getByLabel("Ingreso RNDC desde").fill("2026-09-01");
     await page.getByLabel("Hasta", { exact: true }).fill("2026-09-29");
@@ -235,6 +236,7 @@ test("auditor sees catalogue and mirror without mutation or synchronization cont
   await page.goto("/rutas");
   await expect(
     page.getByRole("heading", {
+      level: 2,
       name: "Rutas y puestos de control",
       exact: true,
     }),
@@ -243,7 +245,7 @@ test("auditor sees catalogue and mirror without mutation or synchronization cont
   await expect(page.getByLabel("Archivo JSON del catálogo")).toHaveCount(0);
   await page.goto("/documentos/espejo");
   await expect(
-    page.getByRole("heading", { name: "Espejo RNDC", exact: true }),
+    page.getByRole("heading", { level: 2, name: "Espejo RNDC", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Actualizar todos" }),

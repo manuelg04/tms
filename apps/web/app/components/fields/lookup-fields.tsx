@@ -2,10 +2,11 @@
 
 import { FormField } from "./form-validation";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
 import { useDebounced } from "../../lib/hooks";
 import { api } from "../../../convex/_generated/api";
+import { DEFAULT_PARTY_SITE } from "../../../convex/model/masterSync";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { SearchSelect } from "./search-select";
 
@@ -65,9 +66,12 @@ export function PartyField({ className, name, label, role, required, disabled, s
   );
 }
 
-export function SiteField({ className = "", name, label, thirdPartyId, required, disabled, selectedCode, selectedName, onSelect, onClear, onManual }: { className?: string; name?: string; label: string; thirdPartyId?: Id<"thirdParties"> | null; required?: boolean; disabled?: boolean; selectedCode?: string; selectedName?: string; onSelect: (site: SitePick) => void; onClear?: () => void; onManual?: (code: string) => void }) {
+export function SiteField({ className = "", name, label, thirdPartyId, required, disabled, selectedCode, selectedName, onSelect, onClear, onManual, onDefault }: { className?: string; name?: string; label: string; thirdPartyId?: Id<"thirdParties"> | null; required?: boolean; disabled?: boolean; selectedCode?: string; selectedName?: string; onSelect: (site: SitePick) => void; onClear?: () => void; onManual?: (code: string) => void; onDefault?: (site: { siteCode: string; siteName: string }) => void }) {
   const [term, setTerm] = useState("");
   const sites = useQuery(api.lookups.partySites, thirdPartyId ? { thirdPartyId } : "skip");
+  useEffect(() => {
+    if (thirdPartyId && sites?.length === 0 && !selectedCode) onDefault?.(DEFAULT_PARTY_SITE);
+  }, [thirdPartyId, sites, selectedCode, onDefault]);
   if (!thirdPartyId) {
     return (
       <FormField name={name ?? label} required={required} value={selectedCode ?? ""} className={className}>
@@ -79,7 +83,8 @@ export function SiteField({ className = "", name, label, thirdPartyId, required,
   }
   const needle = term.trim().toLowerCase();
   const filtered = sites?.filter((site) => !needle || `${site.siteCode} ${site.siteName} ${site.city ?? ""} ${site.address ?? ""}`.toLowerCase().includes(needle));
-  const selectedLabel = selectedCode ? `${selectedCode} · ${selectedName ?? "Sede"}` : undefined;
+  const knownName = selectedName ?? sites?.find((site) => site.siteCode === selectedCode)?.siteName ?? (sites?.length === 0 && selectedCode === DEFAULT_PARTY_SITE.siteCode ? DEFAULT_PARTY_SITE.siteName : undefined);
+  const selectedLabel = selectedCode ? `${selectedCode} · ${knownName ?? "Sede"}` : undefined;
   return (
     <SearchSelect
       name={name}
@@ -87,7 +92,7 @@ export function SiteField({ className = "", name, label, thirdPartyId, required,
       className={className}
       disabled={disabled}
       emptyText={sites && sites.length === 0 ? "Este tercero no tiene sedes registradas en el RNDC" : "Ninguna sede coincide"}
-      hint={sites ? `${sites.length} sede${sites.length === 1 ? "" : "s"} en el RNDC` : undefined}
+      hint={sites ? sites.length === 0 ? `Sin sedes registradas: se usa la sede ${DEFAULT_PARTY_SITE.siteCode} · ${DEFAULT_PARTY_SITE.siteName}` : `${sites.length} sede${sites.length === 1 ? "" : "s"} en el RNDC` : undefined}
       label={label}
       minLength={0}
       onClear={onClear}

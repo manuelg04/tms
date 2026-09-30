@@ -186,7 +186,7 @@ export const createDriverMaster = mutation({
 
 export const createThirdPartyMaster = mutation({
   args: { input: thirdPartyMasterInputValidator },
-  returns: v.object({ id: v.id("thirdParties"), outcome: creationOutcomeValidator }),
+  returns: v.object({ id: v.id("thirdParties"), outcome: creationOutcomeValidator, document: v.string() }),
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx, undefined, ["admin", "operator"]);
     validateThirdPartyMasterRequired(args.input);
@@ -239,7 +239,7 @@ export const createThirdPartyMaster = mutation({
         createdAt: now
       });
     }
-    return { id, outcome };
+    return { id, outcome, document: normalized.document };
   }
 });
 

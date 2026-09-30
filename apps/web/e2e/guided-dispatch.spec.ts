@@ -276,8 +276,7 @@ test("dispatch documents can be completed and emitted in separate sessions", asy
   await expect(assignmentCard.getByText("Completado")).toBeVisible();
 
   const orderCard = documentCard(page, "Orden de cargue");
-  await page.getByLabel("Sede RNDC remitente").fill("1");
-  await page.getByLabel("Sede RNDC destinatario").fill("1");
+  await expect(page.getByText("Sin sedes registradas: se usa la sede 0 · PRINCIPAL", { exact: true })).toHaveCount(2);
   await page.getByLabel("Código de mercancía").fill("005229");
   await page.getByRole("button", { name: "Guardar cambios" }).click();
   await expect(orderCard.getByRole("button", { name: "Emitir a RNDC" })).toBeEnabled();
@@ -317,7 +316,7 @@ test("dispatch documents can be completed and emitted in separate sessions", asy
   const manifestCard = documentCard(page, "Manifiesto");
   await manifestCard.getByRole("button", { name: "Editar" }).click();
   await pickDate(page, "Fecha estimada de entrega", "Mañana");
-  await page.getByLabel("Tipo de manifiesto").fill("General");
+  await expect(page.getByLabel("Tipo de manifiesto")).toHaveValue("G");
   await page.getByLabel("Valor flete").fill("2500000");
   await expect(page.getByLabel("Neto a pagar")).toHaveValue("2.500.000");
   await page.getByLabel("Responsable de pago").fill("MTM");

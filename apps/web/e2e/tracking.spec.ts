@@ -18,7 +18,7 @@ test("tracking lists, checkpoint reports, historical map, and visual alarms", as
   });
   await page.goto("/control/seguimiento");
   await expect(
-    page.getByRole("heading", { name: "Seguimiento", exact: true }),
+    page.getByRole("heading", { level: 2, name: "Seguimiento", exact: true }),
   ).toBeVisible();
   const filters = page.getByRole("region", {
     name: "Filtros de búsqueda",

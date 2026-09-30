@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
+import { createDispatchFleet, type DispatchFleet } from "../testing/dispatch-fleet";
 
 const password = readPassword();
 
@@ -263,9 +264,10 @@ test("consignment creation mirrors the Avansat field contract", async ({ page })
 });
 
 test("dispatch documents can be completed and emitted in separate sessions", async ({ page }) => {
-  test.setTimeout(90_000);
+  test.setTimeout(240_000);
+  const fleet = await createDispatchFleet(page);
   await page.goto("/expedientes/nuevo");
-  await fillLoadingOrder(page, `ASYNC-${Date.now()}`);
+  await fillLoadingOrder(page, `ASYNC-${Date.now()}`, fleet);
   await page.getByRole("button", { name: "Crear despacho y abrir documentos" }).click();
   await expect(page.getByRole("region", { name: "Documentos del despacho" })).toBeVisible();
   const detailUrl = page.url();
@@ -357,15 +359,20 @@ test("operators can manage official corrections and annulments without structura
   await expect(page.getByRole("button", { name: "Transbordo", exact: true })).toHaveCount(0);
 });
 
-test("document navigation exposes stable queues and opens the related dispatch stage", async ({ page }) => {
+test("document registry lists loading orders and opens the selected order inside its dispatch", async ({ page }) => {
   await page.goto("/documentos/ordenes");
-  await expect(page.getByRole("heading", { level: 1, name: "Órdenes de cargue" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Tipos de documento" }).getByRole("link", { name: "Remesas", exact: true })).toBeVisible();
-  const openLink = page.getByRole("link", { name: "Abrir orden" }).first();
-  await expect(openLink).toBeVisible({ timeout: 15_000 });
-  await openLink.click();
-  await expect(page).toHaveURL(/\?stage=orden_cargue#centro-documental$/);
-  await expect(page.locator("#centro-documental")).toBeVisible();
+  await expect(page).toHaveURL(/\/documentos\/ordenes\/listar$/);
+  await expect(page.getByRole("heading", { level: 2, name: "Listar orden de cargue", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Insertar orden de cargue", exact: true })).toHaveAttribute("href", "/documentos/ordenes/insertar");
+  const openOrder = page.getByRole("button", { name: /^Listar orden de cargue \d+$/ }).first();
+  await expect(openOrder).toBeVisible({ timeout: 15_000 });
+  await openOrder.click();
+  const editor = page.locator(".document-focused-editor");
+  await expect(editor).toBeVisible();
+  await expect(editor.getByRole("button", { name: "Volver al listado", exact: true })).toBeVisible();
+  await editor.getByRole("button", { name: "Volver al listado", exact: true }).click();
+  await expect(openOrder).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 
 test("corrections and annulments are visible from the main navigation", async ({ page }) => {
@@ -431,9 +438,14 @@ test("mobile navigation opens as a compact menu", async ({ page }, testInfo) => 
   await expect(trigger).toBeVisible();
   await trigger.click();
   await expect(page.locator(".sidebar.open")).toBeVisible();
-  await expect(page.locator(".sidebar.open").getByRole("link", { name: "Despachos" })).toBeVisible();
-  await expect(page.locator(".sidebar.open").getByRole("link", { name: "Órdenes de cargue" })).toBeVisible();
-  await expect(page.locator(".sidebar.open").getByRole("link", { name: "Correcciones y anulaciones" })).toBeVisible();
+  const sidebar = page.locator(".sidebar.open");
+  await expect(sidebar.getByRole("link", { name: "Despachos" })).toBeVisible();
+  const orders = sidebar.getByRole("button", { name: "Orden de carga" });
+  await expect(orders).toHaveAttribute("aria-expanded", "false");
+  await orders.click();
+  await expect(orders).toHaveAttribute("aria-expanded", "true");
+  await expect(sidebar.locator('a[href="/documentos/ordenes/listar"]')).toBeVisible();
+  await expect(sidebar.getByRole("link", { name: "Correcciones y anulaciones" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 
@@ -459,7 +471,23 @@ async function pickDate(page: Page, label: string, quick: "Hoy" | "Mañana", wit
   if (withTime) await popover.getByRole("button", { name: "Listo", exact: true }).click();
 }
 
-async function fillLoadingOrder(page: Page, suffix: string) {
+async function fillLoadingOrder(page: Page, suffix: string, fleet?: DispatchFleet) {
+  if (fleet) {
+    await pickOption(page, "Cliente", fleet.senderDocument, new RegExp(fleet.senderName));
+    await pickOption(page, "Nombre del remitente", fleet.senderDocument, new RegExp(fleet.senderName));
+    await pickOption(page, "Nombre del destinatario", fleet.recipientDocument, new RegExp(fleet.recipientName));
+    await pickOption(page, "Placa", fleet.plate, new RegExp(fleet.plate));
+  } else {
+    await fillTypedParties(page, suffix);
+    await pickOption(page, "Placa", "DEM001", /DEM001/);
+  }
+  await page.getByLabel(/^Flete conductor/).fill("2500000");
+  await page.getByLabel("Mercancía", { exact: true }).fill("Carga seca");
+  await page.getByLabel("Peso (TN)").fill("12.5");
+  await pickOption(page, "Tipo de empaque", "paquete", /paquete/i);
+}
+
+async function fillTypedParties(page: Page, suffix: string) {
   const digits = suffix.replace(/\D/g, "").slice(-6).padStart(6, "0");
   await page.getByRole("combobox", { name: "Cliente", exact: true }).fill(`Cliente ${suffix}`);
   await page.getByRole("combobox", { name: "Nombre del remitente", exact: true }).fill(`Remitente ${suffix}`);
@@ -472,11 +500,6 @@ async function fillLoadingOrder(page: Page, suffix: string) {
   await page.getByLabel("Dirección destinatario").fill("Carrera 40 # 50-60");
   await pickOption(page, "Ciudad destinatario", "Medellin", /Medellin/i);
   await page.getByLabel("Teléfono destinatario").fill("6045559876");
-  await pickOption(page, "Placa", "DEM001", /DEM001/);
-  await page.getByLabel(/^Flete conductor/).fill("2500000");
-  await page.getByLabel("Mercancía", { exact: true }).fill("Carga seca");
-  await page.getByLabel("Peso (TN)").fill("12.5");
-  await pickOption(page, "Tipo de empaque", "paquete", /paquete/i);
 }
 
 function documentCard(page: Page, title: string) {

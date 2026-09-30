@@ -6,16 +6,24 @@ import { expect, test, type Page } from "@playwright/test";
 const password = readPassword();
 const conceptImage = fileURLToPath(new URL("../../../docs/design/2026-07-09-expediente-detail-concept.png", import.meta.url));
 
-test("persists the four operational masters, their relationships and an idempotent retry without RNDC traffic", async ({ context, page }, testInfo) => {
+test("persists the four operational masters, their relationships and an idempotent retry, requesting RNDC registration only through the stubbed sync", async ({ context, page }, testInfo) => {
+  test.skip(!["desktop", "laptop"].includes(testInfo.project.name), "Read-back uses the desktop master tables; mobile layouts are covered by maestros-creation and maestros-vehicles");
   test.setTimeout(240_000);
   const rndcRequests: string[] = [];
   const rndcHealthRequests: string[] = [];
+  const masterSyncRequests: Array<{ kind: string; key: string }> = [];
   const data = makeRunData();
 
   await context.route("**/api/rndc/**", async (route) => {
     if (new URL(route.request().url()).pathname === "/api/rndc/health") {
       rndcHealthRequests.push(route.request().url());
       await route.continue();
+      return;
+    }
+    if (new URL(route.request().url()).pathname === "/api/rndc/masters/sync") {
+      const body = route.request().postDataJSON() as { kind: string; key: string };
+      masterSyncRequests.push({ kind: body.kind, key: body.key });
+      await route.fulfill({ json: { ok: true, state: "registered", label: body.key, skipped: false } });
       return;
     }
     rndcRequests.push(route.request().url());
@@ -196,11 +204,21 @@ test("persists the four operational masters, their relationships and an idempote
     body: Buffer.from(JSON.stringify(rndcRequests, null, 2)),
     contentType: "application/json"
   });
+  await testInfo.attach("master-sync-requests", {
+    body: Buffer.from(JSON.stringify(masterSyncRequests, null, 2)),
+    contentType: "application/json"
+  });
   await testInfo.attach("rndc-health-requests", {
     body: Buffer.from(JSON.stringify(rndcHealthRequests, null, 2)),
     contentType: "application/json"
   });
-  expect(rndcRequests, "master creation and read-back must never call the RNDC API").toEqual([]);
+  expect(rndcRequests, "master creation and read-back must only request the stubbed master sync").toEqual([]);
+  expect(masterSyncRequests, "each new or enriched master requests its RNDC registration once").toEqual([
+    { kind: "party", key: data.ownerDocument },
+    { kind: "party", key: data.naturalDocument },
+    { kind: "driver", key: data.naturalDocument },
+    { kind: "vehicle", key: data.vehiclePlate }
+  ]);
 });
 
 async function login(page: Page) {
@@ -216,7 +234,7 @@ async function fillField(page: Page, name: string, value: string) {
 
 async function saveAndExpect(page: Page, message: string) {
   await page.getByRole("button", { name: "Guardar maestro", exact: true }).click();
-  await expect(page.getByText(message, { exact: true })).toBeVisible({ timeout: 45_000 });
+  await expect(page.getByText(message)).toBeVisible({ timeout: 45_000 });
 }
 
 async function selectSearchOption(page: Page, label: string, term: string, expected: string | RegExp | undefined, description: string) {

@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 
 test("vehicle master shows kind, status and SOAT from the RNDC maestro", async ({ page }) => {
   await page.goto("/maestros");
-  await page.getByRole("button", { name: "Vehiculos" }).click();
+  await page.getByRole("button", { name: "Vehículos", exact: true }).click();
   await page.getByPlaceholder("Filtrar por placa").fill("KZL702");
 
   const row = page.locator(".master-desktop-table tr, .master-mobile-card").filter({ hasText: "KZL702" }).filter({ visible: true }).first();

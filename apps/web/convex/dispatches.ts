@@ -746,12 +746,6 @@ export const prepareForEmission = mutation({
   handler: prepareForEmissionHandler
 });
 
-export const prepareEmission = mutation({
-  args: { actorToken: v.optional(v.string()), expedienteId: v.id("expedientes") },
-  returns: preparationResultValidator,
-  handler: (ctx, args) => prepareForEmissionHandler(ctx, { ...args, scope: "todo" })
-});
-
 async function prepareForEmissionHandler(
   ctx: MutationCtx,
   args: { actorToken?: string; expedienteId: Id<"expedientes">; scope: EmissionScope }
@@ -1258,22 +1252,6 @@ function readTripNumber(payloadJson: string): string | undefined {
   } catch {
     return undefined;
   }
-}
-
-function eventTimestamps(site: {
-  arrival?: { occurredAt: number };
-  entry?: { occurredAt: number };
-  start?: { occurredAt: number };
-  end?: { occurredAt: number };
-  exit?: { occurredAt: number };
-}) {
-  return {
-    arrival: site.arrival?.occurredAt,
-    entry: site.entry?.occurredAt,
-    start: site.start?.occurredAt,
-    end: site.end?.occurredAt,
-    exit: site.exit?.occurredAt
-  };
 }
 
 export const stage = query({

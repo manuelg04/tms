@@ -157,34 +157,6 @@ const importRunValidator = v.object({
   finishedAt: v.optional(v.number())
 });
 
-const vehicleLineValidator = v.object({
-  _id: v.id("rndcVehicleLines"),
-  _creationTime: v.number(),
-  makeCode: v.string(),
-  makeName: v.optional(v.string()),
-  lineCode: v.string(),
-  lineName: v.optional(v.string()),
-  grossWeightKg: v.number(),
-  sourceRegisteredAt: v.string(),
-  contentHash: v.string(),
-  sourceImportRunId: v.id("rndcReferenceImportRuns"),
-  createdAt: v.number(),
-  updatedAt: v.number()
-});
-
-const insurerValidator = v.object({
-  _id: v.id("rndcInsurers"),
-  _creationTime: v.number(),
-  insurerNit: v.string(),
-  name: v.string(),
-  insurerType: v.optional(v.string()),
-  sourceRegisteredAt: v.string(),
-  contentHash: v.string(),
-  sourceImportRunId: v.id("rndcReferenceImportRuns"),
-  createdAt: v.number(),
-  updatedAt: v.number()
-});
-
 const packagingValidator = v.object({
   _id: v.id("rndcPackaging"),
   _creationTime: v.number(),
@@ -200,18 +172,6 @@ const packagingValidator = v.object({
   materialCode: v.optional(v.string()),
   materialName: v.optional(v.string()),
   operationType: v.string(),
-  sourceRegisteredAt: v.string(),
-  contentHash: v.string(),
-  sourceImportRunId: v.id("rndcReferenceImportRuns"),
-  createdAt: v.number(),
-  updatedAt: v.number()
-});
-
-const bodyTypeValidator = v.object({
-  _id: v.id("rndcBodyTypes"),
-  _creationTime: v.number(),
-  code: v.string(),
-  description: v.string(),
   sourceRegisteredAt: v.string(),
   contentHash: v.string(),
   sourceImportRunId: v.id("rndcReferenceImportRuns"),
@@ -639,27 +599,6 @@ export const catalogVerificationPage = query({
   }
 });
 
-export const vehicleLineByCode = query({
-  args: { actorToken: v.optional(v.string()), makeCode: v.string(), lineCode: v.string() },
-  returns: v.union(vehicleLineValidator, v.null()),
-  handler: async (ctx, args) => {
-    await requireActor(ctx, args.actorToken);
-    const makeCode = normalizedRequired(args.makeCode, "make code", 80);
-    const lineCode = normalizedRequired(args.lineCode, "line code", 80);
-    return await ctx.db.query("rndcVehicleLines").withIndex("by_make_and_line", (q) => q.eq("makeCode", makeCode).eq("lineCode", lineCode)).unique();
-  }
-});
-
-export const insurerByNit = query({
-  args: { actorToken: v.optional(v.string()), insurerNit: v.string() },
-  returns: v.union(insurerValidator, v.null()),
-  handler: async (ctx, args) => {
-    await requireActor(ctx, args.actorToken);
-    const insurerNit = normalizedRequired(args.insurerNit, "insurer NIT", 80);
-    return await ctx.db.query("rndcInsurers").withIndex("by_nit", (q) => q.eq("insurerNit", insurerNit)).unique();
-  }
-});
-
 export const packagingByCode = query({
   args: { actorToken: v.optional(v.string()), code: v.string() },
   returns: v.union(packagingValidator, v.null()),
@@ -667,16 +606,6 @@ export const packagingByCode = query({
     await requireActor(ctx, args.actorToken);
     const code = normalizedRequired(args.code, "packaging code", 80);
     return await ctx.db.query("rndcPackaging").withIndex("by_code", (q) => q.eq("code", code)).unique();
-  }
-});
-
-export const bodyTypeByCode = query({
-  args: { actorToken: v.optional(v.string()), code: v.string() },
-  returns: v.union(bodyTypeValidator, v.null()),
-  handler: async (ctx, args) => {
-    await requireActor(ctx, args.actorToken);
-    const code = normalizedRequired(args.code, "body type code", 80);
-    return await ctx.db.query("rndcBodyTypes").withIndex("by_code", (q) => q.eq("code", code)).unique();
   }
 });
 

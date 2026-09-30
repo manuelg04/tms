@@ -9,10 +9,8 @@
  */
 
 import type * as access from "../access.js";
-import type * as audit from "../audit.js";
 import type * as avansatCustomers from "../avansatCustomers.js";
 import type * as clientCompanies from "../clientCompanies.js";
-import type * as counters from "../counters.js";
 import type * as dashboard from "../dashboard.js";
 import type * as dispatchExceptions from "../dispatchExceptions.js";
 import type * as dispatchSearch from "../dispatchSearch.js";
@@ -83,10 +81,8 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   access: typeof access;
-  audit: typeof audit;
   avansatCustomers: typeof avansatCustomers;
   clientCompanies: typeof clientCompanies;
-  counters: typeof counters;
   dashboard: typeof dashboard;
   dispatchExceptions: typeof dispatchExceptions;
   dispatchSearch: typeof dispatchSearch;

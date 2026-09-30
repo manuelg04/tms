@@ -44,10 +44,6 @@ const pageMeta: Record<string, PageMeta> = {
     title: "Nuevo despacho",
     subtitle: "Datos base y apertura del centro documental"
   },
-  "/operaciones": {
-    title: "Operaciones RNDC",
-    subtitle: "Consola tecnica de compatibilidad en modo de prueba"
-  },
   "/documentos": {
     title: "Documentos",
     subtitle: "Historial completo emitido desde el TMS"

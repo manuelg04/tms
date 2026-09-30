@@ -1,6 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { appendAudit, requireActor, requireSameOrganization, requireServiceKey } from "./model/access";
+import { appendAudit, requireActor, requireServiceKey } from "./model/access";
 
 const roleValidator = v.union(
   v.literal("admin"),
@@ -135,89 +135,6 @@ export const bootstrapOrganization = mutation({
   }
 });
 
-export const upsertUser = mutation({
-  args: {
-    actorToken: v.optional(v.string()),
-    organizationId: v.id("organizations"),
-    externalId: v.optional(v.string()),
-    authSubject: v.optional(v.string()),
-    newActorToken: v.string(),
-    name: v.string(),
-    email: v.string(),
-    roles: v.array(roleValidator),
-    status: statusValidator
-  },
-  returns: v.id("users"),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken, ["admin"]);
-    requireSameOrganization(actor, args.organizationId);
-    const now = Date.now();
-    const email = args.email.trim().toLowerCase();
-    const tokenOwner = await ctx.db
-      .query("users")
-      .withIndex("by_actor_token", (q) => q.eq("actorToken", args.newActorToken))
-      .unique();
-    const subjectOwner = args.authSubject
-      ? await ctx.db
-          .query("users")
-          .withIndex("by_auth_subject", (q) => q.eq("authSubject", args.authSubject))
-          .unique()
-      : null;
-    const existing = await ctx.db
-      .query("users")
-      .withIndex("by_organization_and_email", (q) => q.eq("organizationId", args.organizationId).eq("email", email))
-      .unique();
-
-    if (tokenOwner && tokenOwner._id !== existing?._id) {
-      throw new ConvexError({ code: "CONFLICT", message: "Actor token is already assigned" });
-    }
-
-    if (subjectOwner && subjectOwner._id !== existing?._id) {
-      throw new ConvexError({ code: "CONFLICT", message: "Authentication subject is already assigned" });
-    }
-
-    let userId;
-
-    if (existing) {
-      await ctx.db.patch("users", existing._id, {
-        externalId: args.externalId,
-        authSubject: args.authSubject,
-        actorToken: args.newActorToken,
-        name: args.name.trim(),
-        roles: args.roles,
-        status: args.status,
-        updatedAt: now
-      });
-      userId = existing._id;
-    } else {
-      userId = await ctx.db.insert("users", {
-        organizationId: args.organizationId,
-        externalId: args.externalId,
-        authSubject: args.authSubject,
-        actorToken: args.newActorToken,
-        name: args.name.trim(),
-        email,
-        roles: args.roles,
-        status: args.status,
-        createdAt: now,
-        updatedAt: now
-      });
-    }
-
-    await appendAudit(ctx, {
-      organizationId: args.organizationId,
-      actorType: "user",
-      actorId: actor._id,
-      action: existing ? "user.updated" : "user.created",
-      entityType: "user",
-      entityId: userId,
-      createdAt: now
-    });
-
-    return userId;
-  }
-});
-
 export const me = query({
   args: { actorToken: v.optional(v.string()) },
   returns: userOutputValidator,
@@ -228,17 +145,3 @@ export const me = query({
   }
 });
 
-export const listUsers = query({
-  args: { actorToken: v.optional(v.string()), organizationId: v.id("organizations") },
-  returns: v.array(userOutputValidator),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken, ["admin", "auditor"]);
-    requireSameOrganization(actor, args.organizationId);
-    const users = await ctx.db
-      .query("users")
-      .withIndex("by_organization_and_email", (q) => q.eq("organizationId", args.organizationId))
-      .collect();
-
-    return users.map(({ actorToken: _actorToken, ...user }) => user);
-  }
-});

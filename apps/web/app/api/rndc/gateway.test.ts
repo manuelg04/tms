@@ -2,9 +2,8 @@ import assert from "node:assert/strict";
 import test, { afterEach, beforeEach } from "node:test";
 import { createSessionToken, demoUsers } from "../../lib/auth.js";
 import { buildEvidenceDownloadHeaders } from "../../lib/evidence-download.js";
-import { buildDurableEvidenceHeaders, durableEvidenceWasStored } from "../../lib/rndc-gateway.js";
+import { authorizeGatewayRequest, buildDurableEvidenceHeaders, durableEvidenceWasStored, forwardRndcRequest } from "../../lib/rndc-gateway.js";
 import { GET as getHealth } from "./health/route.js";
-import { POST as submitLegacyForm } from "./forms/[operation]/route.js";
 
 const originalFetch = globalThis.fetch;
 const originalEnv = { ...process.env };
@@ -51,7 +50,7 @@ test("reports the configured mode once real users are enabled and keeps demo ses
   assert.deepEqual(await localResponse.json(), { ok: true, mode: "live" });
 });
 
-test("allows operators through the typed form gateway and keeps the service secret server-side", async () => {
+test("allows operators through the gateway and keeps the service secret server-side", async () => {
   let authorization = "";
   let backendUrl = "";
   let expectedMode = "";
@@ -62,12 +61,14 @@ test("allows operators through the typed form gateway and keeps the service secr
     expectedMode = headers.get("x-tms-expected-mode") ?? "";
     return Response.json({ ok: true, mode: "dry-run" });
   };
-  const request = authenticatedRequest("http://localhost/api/rndc/forms/remesa", "operator", {
+  const request = authenticatedRequest("http://localhost/api/rndc/actions/emit_remesa", "operator", { method: "POST" });
+  const actor = authorizeGatewayRequest(request, "submit_rndc");
+  assert.ok(!(actor instanceof Response));
+  const response = await forwardRndcRequest("/rndc/forms/remesa", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ remesaNumber: "R-1" })
   });
-  const response = await submitLegacyForm(request, { params: Promise.resolve({ operation: "remesa" }) });
 
   assert.equal(response.status, 200);
   assert.equal(backendUrl, "http://localhost:3017/rndc/forms/remesa");
@@ -75,20 +76,14 @@ test("allows operators through the typed form gateway and keeps the service secr
   assert.equal(expectedMode, "dry-run");
 });
 
-test("rejects auditors and unknown form operations before calling the backend", async () => {
-  let calls = 0;
-  globalThis.fetch = async () => {
-    calls += 1;
-    return Response.json({ ok: true });
-  };
-  const auditor = authenticatedRequest("http://localhost/api/rndc/forms/remesa", "auditor", { method: "POST" });
-  const forbidden = await submitLegacyForm(auditor, { params: Promise.resolve({ operation: "remesa" }) });
-  const operator = authenticatedRequest("http://localhost/api/rndc/forms/xml", "operator", { method: "POST" });
-  const unknown = await submitLegacyForm(operator, { params: Promise.resolve({ operation: "xml" }) });
+test("rejects auditors and anonymous requests before calling the backend", () => {
+  const auditor = authorizeGatewayRequest(authenticatedRequest("http://localhost/api/rndc/actions/emit_remesa", "auditor", { method: "POST" }), "submit_rndc");
+  const anonymous = authorizeGatewayRequest(new Request("http://localhost/api/rndc/actions/emit_remesa", { method: "POST" }), "submit_rndc");
 
-  assert.equal(forbidden.status, 403);
-  assert.equal(unknown.status, 404);
-  assert.equal(calls, 0);
+  assert.ok(auditor instanceof Response);
+  assert.equal(auditor.status, 403);
+  assert.ok(anonymous instanceof Response);
+  assert.equal(anonymous.status, 401);
 });
 
 test("builds server-only durable evidence references and reads the backend storage result", () => {

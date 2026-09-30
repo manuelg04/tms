@@ -6,7 +6,6 @@ import { FormField, ValidatedForm } from "../../components/fields/form-validatio
 import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import type { Id } from "../../../convex/_generated/dataModel";
 import { DateField } from "../../components/fields/date-field";
 import { CargoNatureField, IdTypeField, InsurerField, MunicipalityField, PackagingField, PartyField, SiteField, formatDocument, type PartyPick } from "../../components/fields/lookup-fields";
 import { MoneyField, formatThousands } from "../../components/fields/money-field";

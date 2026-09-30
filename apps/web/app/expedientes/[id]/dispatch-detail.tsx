@@ -288,7 +288,6 @@ export function DispatchDetail({
   async function saveOrder(data: FormData) {
     if (!isEditable) return;
     await run(async () => {
-      const previous = detail.expediente.loadingOrderDraft;
       await saveLoadingOrder({
         expedienteId,
         draft: loadingOrderDraftFromForm(

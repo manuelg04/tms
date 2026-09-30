@@ -27,7 +27,7 @@ COPY packages/rndc-core/package.json packages/rndc-core/package.json
 
 RUN npm ci --omit=dev
 RUN cd apps/rndc-api && node -e "Promise.all([import('express'), import('convex/browser')])"
-RUN cd packages/rndc-core && node -e "Promise.all([import('pdfkit'), import('qrcode')])"
+RUN cd packages/rndc-core && node -e "import('pdfkit')"
 
 FROM node:22-bookworm-slim AS runtime
 

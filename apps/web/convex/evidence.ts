@@ -54,32 +54,12 @@ type FinalizeInput = {
   expectedSha256?: string;
 };
 
-export const generateUploadUrl = mutation({
-  args: { actorToken: v.optional(v.string()) },
-  returns: v.string(),
-  handler: async (ctx, args) => {
-    await requireActor(ctx, args.actorToken, ["admin", "operator"]);
-    return await ctx.storage.generateUploadUrl();
-  }
-});
-
 export const generateServiceUploadUrl = mutation({
   args: { serviceKey: v.string() },
   returns: v.string(),
   handler: async (ctx, args) => {
     requireServiceKey(args.serviceKey);
     return await ctx.storage.generateUploadUrl();
-  }
-});
-
-export const finalizeUpload = mutation({
-  args: { actorToken: v.optional(v.string()), ...finalizeInputValidator },
-  returns: v.id("evidenceArtifacts"),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
-    requireSameOrganization(actor, args.organizationId);
-    const { actorToken: _actorToken, ...input } = args;
-    return await finalizeArtifact(ctx, input, "user", actor._id);
   }
 });
 
@@ -117,22 +97,6 @@ export const getProtected = query({
     }
 
     requireSameOrganization(actor, artifact.organizationId);
-    const url = await ctx.storage.getUrl(artifact.storageId);
-    return { artifact, url };
-  }
-});
-
-export const getForService = query({
-  args: { serviceKey: v.string(), artifactId: v.id("evidenceArtifacts") },
-  returns: v.union(v.null(), v.object({ artifact: artifactValidator, url: v.union(v.string(), v.null()) })),
-  handler: async (ctx, args) => {
-    requireServiceKey(args.serviceKey);
-    const artifact = await ctx.db.get("evidenceArtifacts", args.artifactId);
-
-    if (!artifact) {
-      return null;
-    }
-
     const url = await ctx.storage.getUrl(artifact.storageId);
     return { artifact, url };
   }

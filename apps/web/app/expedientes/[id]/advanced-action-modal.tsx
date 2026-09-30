@@ -623,9 +623,3 @@ function successMessage(modal: AdvancedAction): string {
   return messages[modal];
 }
 
-function formatDate(value: number): string {
-  return new Intl.DateTimeFormat("es-CO", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(value);
-}

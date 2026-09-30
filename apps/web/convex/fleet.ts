@@ -368,40 +368,6 @@ export const thirdPartiesPage = query({
   }
 });
 
-export const driversSearch = query({
-  args: { prefix: v.string() },
-  returns: v.array(driverRowValidator),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx);
-    const prefix = args.prefix.trim();
-    if (prefix === "") {
-      return [];
-    }
-    const drivers = await ctx.db
-      .query("drivers")
-      .withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).gte("document", prefix).lt("document", prefix + "￿"))
-      .take(25);
-    return await Promise.all(drivers.map((driver) => toDriverRow(ctx, driver)));
-  }
-});
-
-export const vehiclesSearch = query({
-  args: { prefix: v.string() },
-  returns: v.array(vehicleRowValidator),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx);
-    const prefix = args.prefix.trim().toUpperCase();
-    if (prefix === "") {
-      return [];
-    }
-    const vehicles = await ctx.db
-      .query("vehicles")
-      .withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).gte("plate", prefix).lt("plate", prefix + "￿"))
-      .take(25);
-    return await Promise.all(vehicles.map((vehicle) => toVehicleRow(ctx, vehicle)));
-  }
-});
-
 export const driverByDocument = query({
   args: { document: v.string() },
   returns: v.union(driverRowValidator, v.null()),
@@ -681,6 +647,46 @@ export const upsertThirdPartyBatch = mutation({
     }
 
     return result;
+  }
+});
+
+export const ingestSnapshot = query({
+  args: {
+    ingestKey: v.string(),
+    organizationId: v.id("organizations"),
+    table: v.union(v.literal("drivers"), v.literal("thirdParties"), v.literal("thirdPartySites")),
+    document: v.optional(v.string())
+  },
+  returns: v.any(),
+  handler: async (ctx, args) => {
+    if (args.ingestKey !== process.env.RNDC_INGEST_KEY) {
+      throw new ConvexError({ code: "UNAUTHORIZED", message: "Invalid ingest key" });
+    }
+    const today = new Date().toISOString().slice(0, 10);
+    if (args.table === "drivers") {
+      const drivers = await ctx.db.query("drivers").collect();
+      const driver = args.document ? drivers.find((item) => item.document === args.document) : undefined;
+      return {
+        total: drivers.length,
+        inOrganization: drivers.filter((item) => item.organizationId === args.organizationId).length,
+        withValidLicense: drivers.filter((item) => (item.licenseExpiresAt ?? "") >= today).length,
+        sample: driver ? { name: driver.name, licenseCategory: driver.licenseCategory, licenseExpiresAt: driver.licenseExpiresAt, city: driver.city, phone1: driver.phone1 } : null
+      };
+    }
+    if (args.table === "thirdParties") {
+      const parties = await ctx.db.query("thirdParties").withIndex("by_organization_and_name", (q) => q.eq("organizationId", args.organizationId)).collect();
+      const roles: Record<string, number> = {};
+      for (const party of parties) {
+        for (const role of party.roles) {
+          roles[role] = (roles[role] ?? 0) + 1;
+        }
+      }
+      const party = args.document ? parties.find((item) => item.document === args.document) : undefined;
+      return { total: parties.length, roles, sample: party ? { name: party.name, roles: party.roles, siteCount: party.siteCount, city: party.city } : null };
+    }
+    const sites = await ctx.db.query("thirdPartySites").collect();
+    const matching = args.document ? sites.filter((item) => item.document === args.document).map((item) => `${item.siteCode}:${item.siteName}`) : [];
+    return { total: sites.length, withCoordinates: sites.filter((item) => item.latitude).length, sample: matching };
   }
 });
 

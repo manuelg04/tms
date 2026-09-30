@@ -86,30 +86,6 @@ const operationValidator = v.object({
   updatedAt: v.number()
 });
 
-const attemptValidator = v.object({
-  _id: v.id("rndcAttempts"),
-  _creationTime: v.number(),
-  organizationId: v.optional(v.id("organizations")),
-  rndcOperationId: v.optional(v.id("rndcOperations")),
-  documentId: v.optional(v.id("documents")),
-  tripId: v.optional(v.id("trips")),
-  operation: v.string(),
-  action: v.string(),
-  attemptNumber: v.optional(v.number()),
-  title: v.optional(v.string()),
-  procesoId: v.optional(v.number()),
-  status: v.string(),
-  mode: v.optional(modeValidator),
-  radicado: v.optional(v.string()),
-  requestXmlStorageId: v.optional(v.id("_storage")),
-  responseXmlStorageId: v.optional(v.id("_storage")),
-  requestPath: v.optional(v.string()),
-  responsePath: v.optional(v.string()),
-  errorText: v.optional(v.string()),
-  createdAt: v.number(),
-  finishedAt: v.optional(v.number())
-});
-
 const enqueueInputValidator = {
   organizationId: v.id("organizations"),
   expedienteId: v.optional(v.id("expedientes")),
@@ -154,22 +130,6 @@ export const enqueue = mutation({
     requireSameOrganization(actor, args.organizationId);
     const { actorToken: _actorToken, ...input } = args;
     return await enqueueOperation(ctx, input, actor._id, "user");
-  }
-});
-
-export const enqueueFromService = mutation({
-  args: { serviceKey: v.string(), createdBy: v.id("users"), ...enqueueInputValidator },
-  returns: enqueueResultValidator,
-  handler: async (ctx, args) => {
-    requireServiceKey(args.serviceKey);
-    const actor = await ctx.db.get("users", args.createdBy);
-
-    if (!actor || actor.organizationId !== args.organizationId || actor.status !== "active") {
-      throw new ConvexError({ code: "FORBIDDEN", message: "Invalid operation actor" });
-    }
-
-    const { serviceKey: _serviceKey, createdBy: _createdBy, ...input } = args;
-    return await enqueueOperation(ctx, input, actor._id, "service");
   }
 });
 
@@ -430,113 +390,6 @@ export const backfillManifestIssuanceRadicadoFromService = mutation({
       createdAt: now
     });
     return issuanceRadicado;
-  }
-});
-
-export const claimNext = mutation({
-  args: { serviceKey: v.string(), workerId: v.string(), leaseMs: v.optional(v.number()) },
-  returns: v.union(operationValidator, v.null()),
-  handler: async (ctx, args) => {
-    requireServiceKey(args.serviceKey);
-    const now = Date.now();
-    const leaseMs = normalizeLeaseMs(args.leaseMs);
-    const expired = await ctx.db
-      .query("rndcOperations")
-      .withIndex("by_status_and_lease_expiration", (q) => q.eq("status", "claimed"))
-      .order("asc")
-      .first();
-
-    if (expired && (!expired.leaseExpiresAt || expired.leaseExpiresAt <= now)) {
-      await ctx.db.patch("rndcOperations", expired._id, {
-        status: "uncertain",
-        uncertainAt: now,
-        leaseOwner: undefined,
-        leaseExpiresAt: undefined,
-        lastError: "Worker lease expired before a final result was recorded",
-        updatedAt: now
-      });
-      await appendAudit(ctx, {
-        organizationId: expired.organizationId,
-        actorType: "service",
-        action: "rndc_operation.lease_expired",
-        entityType: "rndc_operation",
-        entityId: expired._id,
-        createdAt: now
-      });
-    }
-
-    const operation = await ctx.db
-      .query("rndcOperations")
-      .withIndex("by_status_and_available_at", (q) => q.eq("status", "queued").lte("availableAt", now))
-      .order("asc")
-      .first();
-
-    if (!operation) {
-      return null;
-    }
-
-    if (!canClaimOperation(operation, now)) {
-      return null;
-    }
-
-    if (lifecyclePlanForOperation(operation.operationType)) {
-      return await claimPersistedDocumentOperation(ctx, operation, args.workerId, args.leaseMs);
-    }
-
-    if (operation.mode === "live" && officialLiveWriteBlocked(operation.operationType)) {
-      await failUnclaimableOperation(ctx, operation, "Official write actions remain disabled in live mode");
-      return null;
-    }
-
-    if (operation.attemptCount >= operation.maxAttempts) {
-      await ctx.db.patch("rndcOperations", operation._id, {
-        status: "failed",
-        completedAt: now,
-        lastError: "Maximum operation attempts reached",
-        updatedAt: now
-      });
-      return null;
-    }
-
-    await ctx.db.patch("rndcOperations", operation._id, {
-      status: nextOperationState(operation.status, "claim"),
-      attemptCount: operation.attemptCount + 1,
-      leaseOwner: args.workerId,
-      leaseExpiresAt: now + leaseMs,
-      claimedAt: now,
-      completedAt: undefined,
-      updatedAt: now
-    });
-
-    await appendAudit(ctx, {
-      organizationId: operation.organizationId,
-      actorType: "service",
-      action: "rndc_operation.claimed",
-      entityType: "rndc_operation",
-      entityId: operation._id,
-      detailsJson: JSON.stringify({ workerId: args.workerId, leaseExpiresAt: now + leaseMs }),
-      createdAt: now
-    });
-
-    const claimed = await ctx.db.get("rndcOperations", operation._id);
-    return claimed;
-  }
-});
-
-export const renewLease = mutation({
-  args: {
-    serviceKey: v.string(),
-    operationId: v.id("rndcOperations"),
-    workerId: v.string(),
-    leaseMs: v.optional(v.number())
-  },
-  returns: v.number(),
-  handler: async (ctx, args) => {
-    requireServiceKey(args.serviceKey);
-    const operation = await requireWorkerLease(ctx, args.operationId, args.workerId, ["claimed", "reconciling"]);
-    const leaseExpiresAt = Date.now() + normalizeLeaseMs(args.leaseMs);
-    await ctx.db.patch("rndcOperations", operation._id, { leaseExpiresAt, updatedAt: Date.now() });
-    return leaseExpiresAt;
   }
 });
 
@@ -995,120 +848,6 @@ export const confirmExactReconciliationFromService = mutation({
   }
 });
 
-export const retryFailed = mutation({
-  args: {
-    actorToken: v.optional(v.string()),
-    operationId: v.id("rndcOperations"),
-    reason: v.string(),
-    availableAt: v.optional(v.number())
-  },
-  returns: statusValidator,
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
-    const operation = await ctx.db.get("rndcOperations", args.operationId);
-
-    if (!operation) {
-      throw new ConvexError({ code: "NOT_FOUND", message: "Operation not found" });
-    }
-
-    requireSameOrganization(actor, operation.organizationId);
-
-    if (operation.status !== "failed" || operation.attemptCount >= operation.maxAttempts) {
-      throw new ConvexError({ code: "INVALID_STATE", message: "Operation cannot be retried" });
-    }
-
-    if (operation.mode === "live" && officialLiveWriteBlocked(operation.operationType)) {
-      throw new ConvexError({ code: "UNSUPPORTED_LIVE_OPERATION", message: "This operation cannot be retried in live mode" });
-    }
-
-    if (operation.documentId && lifecyclePlanForOperation(operation.operationType)) {
-      const active = await findBlockingDocumentOperation(ctx, operation.documentId, operation._id, true);
-
-      if (active) {
-        throw new ConvexError({ code: "OPERATION_IN_PROGRESS", message: "Another official action is active for this document" });
-      }
-    }
-
-    const now = Date.now();
-    const status = nextOperationState(operation.status, "retry");
-    await ctx.db.patch("rndcOperations", operation._id, {
-      status,
-      availableAt: args.availableAt ?? now,
-      completedAt: undefined,
-      lastError: undefined,
-      updatedAt: now
-    });
-    await appendAudit(ctx, {
-      organizationId: operation.organizationId,
-      actorType: "user",
-      actorId: actor._id,
-      action: "rndc_operation.retry_requested",
-      entityType: "rndc_operation",
-      entityId: operation._id,
-      reason: args.reason,
-      createdAt: now
-    });
-    return status;
-  }
-});
-
-export const cancel = mutation({
-  args: { actorToken: v.optional(v.string()), operationId: v.id("rndcOperations"), reason: v.string() },
-  returns: statusValidator,
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken, ["admin"]);
-    const operation = await ctx.db.get("rndcOperations", args.operationId);
-
-    if (!operation) {
-      throw new ConvexError({ code: "NOT_FOUND", message: "Operation not found" });
-    }
-
-    requireSameOrganization(actor, operation.organizationId);
-
-    const lifecyclePlan = lifecyclePlanForOperation(operation.operationType);
-
-    if (lifecyclePlan && operation.status !== "queued" && operation.status !== "failed") {
-      const canDiscardDryRun = operation.mode === "dry-run"
-        && operation.status === "uncertain"
-        && operation.documentId;
-
-      if (!canDiscardDryRun) {
-        throw new ConvexError({ code: "INVALID_STATE", message: "Sent document operations must be reconciled instead of cancelled" });
-      }
-
-      await applyLifecycle(ctx, {
-        documentId: operation.documentId as Id<"documents">,
-        rndcOperationId: operation._id,
-        event: lifecyclePlan.rejected === "attempt_rejected" ? "submission_abandoned" : lifecyclePlan.rejected,
-        reason: args.reason,
-        actorType: "user",
-        actorId: actor._id
-      });
-    }
-
-    const status = nextOperationState(operation.status, "cancel");
-    const now = Date.now();
-    await ctx.db.patch("rndcOperations", operation._id, {
-      status,
-      completedAt: now,
-      leaseOwner: undefined,
-      leaseExpiresAt: undefined,
-      updatedAt: now
-    });
-    await appendAudit(ctx, {
-      organizationId: operation.organizationId,
-      actorType: "user",
-      actorId: actor._id,
-      action: "rndc_operation.cancelled",
-      entityType: "rndc_operation",
-      entityId: operation._id,
-      reason: args.reason,
-      createdAt: now
-    });
-    return status;
-  }
-});
-
 export const get = query({
   args: { actorToken: v.optional(v.string()), operationId: v.id("rndcOperations") },
   returns: v.union(operationValidator, v.null()),
@@ -1122,15 +861,6 @@ export const get = query({
 
     requireSameOrganization(actor, operation.organizationId);
     return operation;
-  }
-});
-
-export const getForService = query({
-  args: { serviceKey: v.string(), operationId: v.id("rndcOperations") },
-  returns: v.union(operationValidator, v.null()),
-  handler: async (ctx, args) => {
-    requireServiceKey(args.serviceKey);
-    return await ctx.db.get("rndcOperations", args.operationId);
   }
 });
 
@@ -1164,19 +894,6 @@ export const validateDurableContextForService = query({
       && operation.leaseExpiresAt
       && operation.leaseExpiresAt > Date.now()
     );
-  }
-});
-
-export const listByStatusForService = query({
-  args: { serviceKey: v.string(), status: statusValidator, limit: v.optional(v.number()) },
-  returns: v.array(operationValidator),
-  handler: async (ctx, args) => {
-    requireServiceKey(args.serviceKey);
-    return await ctx.db
-      .query("rndcOperations")
-      .withIndex("by_status_and_available_at", (q) => q.eq("status", args.status))
-      .order("asc")
-      .take(Math.min(Math.max(args.limit ?? 100, 1), 250));
   }
 });
 
@@ -1218,39 +935,6 @@ export const listUncertainForExpediente = query({
       .order("desc")
       .collect();
     return operations.filter((operation) => Boolean(lifecyclePlanForOperation(operation.operationType)));
-  }
-});
-
-export const listAttempts = query({
-  args: { actorToken: v.optional(v.string()), operationId: v.id("rndcOperations") },
-  returns: v.array(attemptValidator),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken);
-    const operation = await ctx.db.get("rndcOperations", args.operationId);
-
-    if (!operation) {
-      throw new ConvexError({ code: "NOT_FOUND", message: "Operation not found" });
-    }
-
-    requireSameOrganization(actor, operation.organizationId);
-    return await ctx.db
-      .query("rndcAttempts")
-      .withIndex("by_rndc_operation", (q) => q.eq("rndcOperationId", operation._id))
-      .order("desc")
-      .take(100);
-  }
-});
-
-export const listAttemptsForService = query({
-  args: { serviceKey: v.string(), operationId: v.id("rndcOperations") },
-  returns: v.array(attemptValidator),
-  handler: async (ctx, args) => {
-    requireServiceKey(args.serviceKey);
-    return await ctx.db
-      .query("rndcAttempts")
-      .withIndex("by_rndc_operation", (q) => q.eq("rndcOperationId", args.operationId))
-      .order("desc")
-      .take(100);
   }
 });
 

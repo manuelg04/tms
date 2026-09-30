@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation } from "./_generated/server";
 import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
 
 const activeStatusValidator = v.union(v.literal("active"), v.literal("inactive"));
@@ -13,110 +13,12 @@ const serviceOrderStatusValidator = v.union(
   v.literal("cancelled")
 );
 
-const customerValidator = v.object({
-  _id: v.id("customers"),
-  _creationTime: v.number(),
-  organizationId: v.id("organizations"),
-  code: v.string(),
-  name: v.string(),
-  identificationType: v.optional(v.string()),
-  identificationNumber: v.optional(v.string()),
-  email: v.optional(v.string()),
-  phone: v.optional(v.string()),
-  status: activeStatusValidator,
-  source: v.optional(v.string()),
-  sourceContentHash: v.optional(v.string()),
-  sourceCapturedAt: v.optional(v.string()),
-  sourceImportRunId: v.optional(v.id("avansatCustomerImportRuns")),
-  createdBy: v.id("users"),
-  updatedBy: v.id("users"),
-  createdAt: v.number(),
-  updatedAt: v.number()
-});
-
-const locationValidator = v.object({
-  _id: v.id("customerLocations"),
-  _creationTime: v.number(),
-  organizationId: v.id("organizations"),
-  customerId: v.id("customers"),
-  code: v.string(),
-  name: v.string(),
-  kind: v.union(v.literal("loading"), v.literal("unloading"), v.literal("both")),
-  address: v.string(),
-  city: v.string(),
-  municipalityCode: v.optional(v.string()),
-  contactName: v.optional(v.string()),
-  contactPhone: v.optional(v.string()),
-  status: activeStatusValidator,
-  createdBy: v.id("users"),
-  updatedBy: v.id("users"),
-  createdAt: v.number(),
-  updatedAt: v.number()
-});
-
-const serviceOrderValidator = v.object({
-  _id: v.id("serviceOrders"),
-  _creationTime: v.number(),
-  organizationId: v.id("organizations"),
-  code: v.string(),
-  customerId: v.id("customers"),
-  loadingLocationId: v.id("customerLocations"),
-  unloadingLocationId: v.id("customerLocations"),
-  status: serviceOrderStatusValidator,
-  customerReference: v.optional(v.string()),
-  cargoDescription: v.string(),
-  cargoQuantity: v.optional(v.number()),
-  cargoUnit: v.optional(v.string()),
-  cargoWeightKg: v.optional(v.number()),
-  agreedRate: v.number(),
-  currency: v.string(),
-  scheduledLoadingAt: v.optional(v.number()),
-  scheduledUnloadingAt: v.optional(v.number()),
-  notes: v.optional(v.string()),
-  createdBy: v.id("users"),
-  updatedBy: v.id("users"),
-  createdAt: v.number(),
-  updatedAt: v.number()
-});
-
 const trailerStatusValidator = v.union(
   v.literal("available"),
   v.literal("assigned"),
   v.literal("maintenance"),
   v.literal("inactive")
 );
-
-const trailerValidator = v.object({
-  _id: v.id("trailers"),
-  _creationTime: v.number(),
-  organizationId: v.id("organizations"),
-  plate: v.string(),
-  trailerType: v.optional(v.string()),
-  linkedVehicleId: v.optional(v.id("vehicles")),
-  make: v.optional(v.string()),
-  modelYear: v.optional(v.string()),
-  configuration: v.optional(v.string()),
-  capacityKg: v.optional(v.number()),
-  emptyWeightKg: v.optional(v.number()),
-  widthM: v.optional(v.number()),
-  heightM: v.optional(v.number()),
-  lengthM: v.optional(v.number()),
-  rearVolumeM3: v.optional(v.number()),
-  ownerThirdPartyId: v.optional(v.id("thirdParties")),
-  ownerDocumentType: v.optional(v.string()),
-  ownerDocument: v.optional(v.string()),
-  ownerName: v.optional(v.string()),
-  bodyType: v.optional(v.string()),
-  procedureType: v.optional(v.string()),
-  chassisSerial: v.optional(v.string()),
-  color: v.optional(v.string()),
-  observations: v.optional(v.string()),
-  status: trailerStatusValidator,
-  createdBy: v.id("users"),
-  updatedBy: v.id("users"),
-  createdAt: v.number(),
-  updatedAt: v.number()
-});
 
 export const upsertCustomer = mutation({
   args: {
@@ -410,87 +312,6 @@ export const upsertTrailer = mutation({
       createdAt: now
     });
     return trailerId;
-  }
-});
-
-export const listCustomers = query({
-  args: { actorToken: v.optional(v.string()), organizationId: v.id("organizations"), status: v.optional(activeStatusValidator) },
-  returns: v.array(customerValidator),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken);
-    requireSameOrganization(actor, args.organizationId);
-    const q = ctx.db
-      .query("customers")
-      .withIndex("by_organization_and_status", (index) =>
-        args.status
-          ? index.eq("organizationId", args.organizationId).eq("status", args.status)
-          : index.eq("organizationId", args.organizationId)
-      );
-    return await q.take(250);
-  }
-});
-
-export const listCustomerLocations = query({
-  args: { actorToken: v.optional(v.string()), customerId: v.id("customers") },
-  returns: v.array(locationValidator),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken);
-    const customer = await ctx.db.get("customers", args.customerId);
-
-    if (!customer) {
-      throw new ConvexError({ code: "NOT_FOUND", message: "Customer not found" });
-    }
-
-    requireSameOrganization(actor, customer.organizationId);
-    return await ctx.db
-      .query("customerLocations")
-      .withIndex("by_organization_and_customer", (q) =>
-        q.eq("organizationId", customer.organizationId).eq("customerId", customer._id)
-      )
-      .take(250);
-  }
-});
-
-export const listServiceOrders = query({
-  args: {
-    actorToken: v.optional(v.string()),
-    organizationId: v.id("organizations"),
-    status: v.optional(serviceOrderStatusValidator),
-    limit: v.optional(v.number())
-  },
-  returns: v.array(serviceOrderValidator),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken);
-    requireSameOrganization(actor, args.organizationId);
-    const q = ctx.db
-      .query("serviceOrders")
-      .withIndex("by_organization_and_status", (index) =>
-        args.status
-          ? index.eq("organizationId", args.organizationId).eq("status", args.status)
-          : index.eq("organizationId", args.organizationId)
-      );
-    return await q.order("desc").take(Math.min(Math.max(args.limit ?? 100, 1), 250));
-  }
-});
-
-export const listTrailers = query({
-  args: {
-    actorToken: v.optional(v.string()),
-    organizationId: v.id("organizations"),
-    status: v.optional(trailerStatusValidator)
-  },
-  returns: v.array(trailerValidator),
-  handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken);
-    requireSameOrganization(actor, args.organizationId);
-    const q = ctx.db
-      .query("trailers")
-      .withIndex("by_organization_and_status", (index) =>
-        args.status
-          ? index.eq("organizationId", args.organizationId).eq("status", args.status)
-          : index.eq("organizationId", args.organizationId)
-      );
-    return await q.take(250);
   }
 });
 

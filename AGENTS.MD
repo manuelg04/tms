@@ -86,12 +86,6 @@ npm run rndc:fulfill
 npm run rndc:fulfill -- <path-to-evidence-json>
 ```
 
-Ingest the Avansat drivers/vehicles consolidado into Convex (idempotent; add `--dry-run` to only parse and report):
-
-```bash
-npm run ingest:fleet -- <path-to-consolidado-csv>
-```
-
 Check RNDC endpoint reachability:
 
 ```bash

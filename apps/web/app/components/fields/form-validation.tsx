@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useId, useLayoutEffect, useRef, useState, type ComponentProps, type FormEvent, type HTMLAttributes, type ReactNode, type Ref } from "react";
+import { HelpTip, useFieldHelp } from "./field-help";
 
 type FieldIssue = { name: string; message: string; label?: string };
 type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -55,12 +56,21 @@ function focusField(form: HTMLFormElement, name: string) {
   control?.focus({ preventScroll: true });
 }
 
-export function FormField({ as: Tag = "label", children, name, label, required, value, className = "", ref, ...props }: HTMLAttributes<HTMLElement> & { as?: "label" | "div"; name?: string; label?: string; required?: boolean; value?: string; ref?: Ref<HTMLElement> }) {
+export function FormField({ as: Tag = "label", children, name, label, required, value, help, className = "", ref, ...props }: HTMLAttributes<HTMLElement> & { as?: "label" | "div"; name?: string; label?: string; required?: boolean; value?: string; help?: string | null; ref?: Ref<HTMLElement> }) {
   const issues = useContext(FieldIssues);
   const fieldRef = useRef<HTMLElement | null>(null);
   const errorId = useId();
-  const resolvedName = name || (fieldRef.current ? fieldName(fieldRef.current) : "");
+  const [dom, setDom] = useState({ name: "", label: "" });
+  const resolvedName = name || dom.name;
   const issue = issues.find((item) => item.name === resolvedName);
+  const dictionaryHelp = useFieldHelp(resolvedName);
+  const helpText = help === null ? undefined : help ?? dictionaryHelp;
+
+  useLayoutEffect(() => {
+    if (!fieldRef.current) return;
+    const next = { name: fieldName(fieldRef.current), label: fieldLabel(fieldRef.current) };
+    if (next.name !== dom.name || next.label !== dom.label) setDom(next);
+  });
 
   useLayoutEffect(() => {
     const control = fieldRef.current?.querySelector<HTMLElement>(controlSelector);
@@ -77,11 +87,11 @@ export function FormField({ as: Tag = "label", children, name, label, required, 
     else control.removeAttribute("aria-describedby");
   }, [issue, errorId, children]);
 
-  return <Tag {...props} className={`form-field ${className}${issue ? " has-error" : ""}`} data-form-field="" data-field-name={name} data-field-label={label} data-field-required={required} data-field-value={value} ref={(element: HTMLElement | null) => {
+  return <Tag {...props} className={`form-field ${className}${issue ? " has-error" : ""}${helpText ? " has-help" : ""}`} data-form-field="" data-field-name={name} data-field-label={label} data-field-required={required} data-field-value={value} ref={(element: HTMLElement | null) => {
     fieldRef.current = element;
     if (typeof ref === "function") ref(element);
     else if (ref) ref.current = element;
-  }}>{children}{issue ? <small className="field-validation-error" id={errorId}>{issue.message}</small> : null}</Tag>;
+  }}>{children}{issue ? <small className="field-validation-error" id={errorId}>{issue.message}</small> : null}{helpText ? <HelpTip label={label ?? (dom.label || undefined)} text={helpText} /> : null}</Tag>;
 }
 
 export function ValidatedForm({ children, onSubmit, ref, ...props }: Omit<ComponentProps<"form">, "onSubmit"> & { onSubmit: (event: FormEvent<HTMLFormElement>) => void | Promise<void>; children: ReactNode }) {

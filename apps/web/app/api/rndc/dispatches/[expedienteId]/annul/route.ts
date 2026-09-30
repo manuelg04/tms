@@ -78,7 +78,13 @@ function annulmentPayload(action: string, kind: string, documentId: string, deta
     remesaNumber: kind === "remesa" ? document?.number ?? remesa?.number : undefined,
     cargoNumber: kind === "orden_cargue" ? document?.number : undefined,
     tripNumber: action === "annul_trip" ? detail.expediente.tripNumber : undefined,
-    reasonCode: body.reasonCode,
+    reasonCode: annulmentReason(target, body.reasonCode),
     observations: body.observation
   };
+}
+
+function annulmentReason(target: string, reasonCode: string | undefined): string | undefined {
+  if (!reasonCode) return undefined;
+  if (target.endsWith("-compliance")) return reasonCode === "D" ? "D" : "O";
+  return reasonCode;
 }

@@ -223,14 +223,14 @@ export function remesaWithoutOrderPayload(data: FormData) {
     consignmentClass: "terrestre_carga",
     sender: {
       name: required(data, "senderName"),
-      identificationType: "N",
+      identificationType: required(data, "senderIdType"),
       identificationNumber: required(data, "senderId"),
       siteCode: required(data, "senderSiteCode"),
       municipalityCode: required(data, "loadingMunicipality"),
     },
     recipient: {
       name: required(data, "recipientName"),
-      identificationType: "N",
+      identificationType: required(data, "recipientIdType"),
       identificationNumber: required(data, "recipientId"),
       siteCode: required(data, "recipientSiteCode"),
       municipalityCode: required(data, "unloadingMunicipality"),

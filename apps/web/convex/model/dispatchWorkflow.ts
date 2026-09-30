@@ -498,6 +498,14 @@ export function manifestMissingFields(draft: ManifestDraft | null | undefined, c
   return missing;
 }
 
+export function remissionWeightTons(remissions: ConsignmentDraft["remissions"]): string | undefined {
+  const total = (remissions ?? []).reduce((sum, row) => {
+    const tons = Number((row.weightTons ?? "").trim().replace(",", "."));
+    return Number.isFinite(tons) && tons > 0 ? sum + tons : sum;
+  }, 0);
+  return total > 0 ? String(Math.round(total * 1000) / 1000) : undefined;
+}
+
 export function effectiveConsignment(
   draft: ConsignmentDraft,
   order: LoadingOrderDraft | null | undefined

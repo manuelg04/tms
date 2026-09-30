@@ -2,6 +2,8 @@
 
 import { CargoGuidance, cargoHints } from "./cargo-guidance";
 import { FormField, ValidatedForm } from "../../components/fields/form-validation";
+import { FieldHelpProvider } from "../../components/fields/field-help";
+import { loadingOrderDraftFieldHelp, manifestFieldHelp } from "../../lib/rndc-field-help";
 
 import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
@@ -124,8 +126,7 @@ type ManifestContext = {
 const PAID_BY_OPTIONS = [
   { value: "", label: "Selecciona" },
   { value: "Remitente", label: "Remitente" },
-  { value: "Destinatario", label: "Destinatario" },
-  { value: "Empresa de transporte", label: "Empresa de transporte" }
+  { value: "Destinatario", label: "Destinatario" }
 ];
 
 function personLabel(person: { document: string; name?: string } | null | undefined): string {
@@ -198,6 +199,7 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
   const today = new Date().toISOString().slice(0, 10);
 
   return (
+    <FieldHelpProvider help={loadingOrderDraftFieldHelp}>
     <ValidatedForm className="form-compact" id="stage-primary-form" onSubmit={(event) => { return onSubmit(new FormData(event.currentTarget)); }}>
       <StageHeading number="01" title="Orden de cargue" text="Cliente, partes, sitios, citas y mercancía alimentan las siguientes etapas." readOnly={readOnly} />
       <fieldset className="stage-form-fields" disabled={readOnly}>
@@ -253,6 +255,7 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
         <DateField label="Fecha máxima" name="maxLoadingDate" required value={draft.maxLoadingDate ?? today} />
       </fieldset>
     </ValidatedForm>
+    </FieldHelpProvider>
   );
 }
 
@@ -435,10 +438,12 @@ const MONEY_KEYS = ["freightTotal", "advance", "withholdingSource", "withholding
 
 export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: ManifestContext; draft: Manifest; onSubmit: (data: FormData) => void | Promise<void>; readOnly: boolean }) {
   const [money, setMoney] = useState<Record<(typeof MONEY_KEYS)[number], string>>({ freightTotal: draft.freightTotal ?? "", advance: draft.advance ?? "0", withholdingSource: draft.withholdingSource ?? "0", withholdingIca: draft.withholdingIca ?? "0", fopatContribution: draft.fopatContribution ?? "0", adjustments: draft.adjustments ?? "0" });
-  const suggested = String(Math.max(0, Number(money.freightTotal || 0) - Number(money.advance || 0) - Number(money.withholdingSource || 0) - Number(money.withholdingIca || 0) - Number(money.fopatContribution || 0) + Number(money.adjustments || 0)));
+  const icaAmount = icaPesos(money.freightTotal, money.withholdingIca);
+  const suggested = String(Math.max(0, Number(money.freightTotal || 0) - Number(money.advance || 0) - Number(money.withholdingSource || 0) - icaAmount - Number(money.fopatContribution || 0) + Number(money.adjustments || 0)));
   const [net, setNet] = useState<{ value: string; manual: boolean }>({ value: draft.netPayable ?? "", manual: Boolean(draft.netPayable) });
   const netValue = net.manual ? net.value : suggested;
   return (
+    <FieldHelpProvider help={manifestFieldHelp}>
     <ValidatedForm className="form-compact" id="stage-primary-form" onSubmit={(event) => { return onSubmit(new FormData(event.currentTarget)); }}>
       <StageHeading number="04" title="Manifiesto" text="La ruta, flota y remesas ya están vinculadas. Revisa la operación y la liquidación." readOnly={readOnly} />
       <fieldset className="stage-form-fields" disabled={readOnly}>
@@ -477,7 +482,7 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <div className="field-group-note"><strong>Datos del servicio</strong></div>
         <MoneyField label="Valor flete" name="freightTotal" onChange={(value) => setMoney({ ...money, freightTotal: value })} required value={money.freightTotal} />
         <MoneyField label="Retención en la fuente" name="withholdingSource" onChange={(value) => setMoney({ ...money, withholdingSource: value })} value={money.withholdingSource} />
-        <MoneyField label="ICA" name="withholdingIca" onChange={(value) => setMoney({ ...money, withholdingIca: value })} value={money.withholdingIca} />
+        <Field hint={icaAmount ? `Equivale a $${formatThousands(String(icaAmount))} sobre el flete` : "Tarifa por cada $1.000 del flete"} inputMode="decimal" label="ReteICA (por mil)" max="20" min="0" name="withholdingIca" onChange={(event) => setMoney({ ...money, withholdingIca: event.target.value })} step="0.01" type="number" value={money.withholdingIca} />
         <MoneyField label="Anticipo" name="advance" onChange={(value) => setMoney({ ...money, advance: value })} value={money.advance} />
         <MoneyField label="FOPAT" name="fopatContribution" onChange={(value) => setMoney({ ...money, fopatContribution: value })} value={money.fopatContribution} />
         <MoneyField label="Ajustes" name="adjustments" onChange={(value) => setMoney({ ...money, adjustments: value })} value={money.adjustments} />
@@ -492,7 +497,13 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <FormField className="span-2"><span>Observaciones</span><textarea defaultValue={draft.observations} name="observations" rows={4} /></FormField>
       </fieldset>
     </ValidatedForm>
+    </FieldHelpProvider>
   );
+}
+
+function icaPesos(freight: string, perMille: string): number {
+  const amount = Number(freight || 0) * Number(perMille || 0) / 1000;
+  return Number.isFinite(amount) ? Math.round(amount) : 0;
 }
 
 export function ReviewStage({ mode, summary }: { mode: string; summary: Array<{ label: string; value: string; warning?: boolean }> }) {

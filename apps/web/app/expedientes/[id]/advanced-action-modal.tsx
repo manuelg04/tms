@@ -3,8 +3,11 @@
 import { useState, type FormEvent } from "react";
 import type { Id } from "../../../convex/_generated/dataModel";
 import type { AdvancedAction } from "../components/advanced-actions";
+import { MoneyField } from "../../components/fields/money-field";
 import {
+  CargoNatureField,
   DriverField,
+  IdTypeField,
   MunicipalityField,
   VehicleField,
   type DivisionPick,
@@ -274,9 +277,11 @@ function modalFields(
         </label>
         <label>
           <span>Motivo RNDC</span>
-          <select defaultValue="1" name="reasonCode">
-            <option value="1">Ajuste de cita</option>
-            <option value="2">Corrección operativa</option>
+          <select defaultValue="" name="reasonCode" required>
+            <option value="">Selecciona</option>
+            <option value="1">Incumplimiento del generador de la carga</option>
+            <option value="2">Incumplimiento del titular del manifiesto</option>
+            <option value="3">Decisión del generador de la carga</option>
           </select>
         </label>
         <label>
@@ -309,10 +314,10 @@ function modalFields(
         </label>
         <label>
           <span>Motivo RNDC</span>
-          <select defaultValue="A" name="reasonCode">
-            <option value="A">Ajuste autorizado</option>
-            <option value="R">Reemplazo</option>
-            <option value="V">Varada</option>
+          <select defaultValue="" name="reasonCode" required>
+            <option value="">Selecciona</option>
+            <option value="D">Error de digitación</option>
+            <option value="S">Cancelación del servicio</option>
           </select>
         </label>
         <label className="confirmation-check wide">
@@ -367,10 +372,7 @@ function modalFields(
           <span>Entrega estimada</span>
           <input name="estimatedDeliveryDate" required type="date" />
         </label>
-        <label>
-          <span>Flete total</span>
-          <input inputMode="decimal" name="freightTotal" required />
-        </label>
+        <MoneyField label="Flete total" name="freightTotal" required />
         <label>
           <span>Responsable de pago</span>
           <input name="paymentResponsible" required />
@@ -391,6 +393,7 @@ function modalFields(
         <span>Remitente</span>
         <input name="senderName" required />
       </label>
+      <IdTypeField label="Tipo de identificación remitente" name="senderIdType" required />
       <label>
         <span>Identificación remitente</span>
         <input name="senderId" required />
@@ -403,6 +406,7 @@ function modalFields(
         <span>Destinatario</span>
         <input name="recipientName" required />
       </label>
+      <IdTypeField label="Tipo de identificación destinatario" name="recipientIdType" required />
       <label>
         <span>Identificación destinatario</span>
         <input name="recipientId" required />
@@ -451,20 +455,14 @@ function modalFields(
       </label>
       <label>
         <span>Peso (TN)</span>
-        <input name="weightTons" required />
+        <input inputMode="decimal" min="0" name="weightTons" required step="0.001" type="number" />
       </label>
       <label>
         <span>Código empaque</span>
         <input name="packagingCode" required />
       </label>
-      <label>
-        <span>Naturaleza de carga</span>
-        <input defaultValue="1" name="natureOfCargo" required />
-      </label>
-      <label>
-        <span>Valor declarado</span>
-        <input name="declaredValue" required />
-      </label>
+      <CargoNatureField name="natureOfCargo" required />
+      <MoneyField label="Valor declarado" name="declaredValue" required />
       <label>
         <span>Número de póliza</span>
         <input name="policyNumber" required />

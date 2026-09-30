@@ -3,7 +3,7 @@ import type { FunctionReturnType } from "convex/server";
 import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 import { bogotaDateTimeParts, buildFulfillmentPlan, deriveOperationTimes } from "../../../../../../convex/model/fulfillmentWorkflow";
-import { effectiveConsignment, type ConsignmentDraft, type LoadingOrderDraft } from "../../../../../../convex/model/dispatchWorkflow";
+import { effectiveConsignment, remissionWeightTons, type ConsignmentDraft, type LoadingOrderDraft } from "../../../../../../convex/model/dispatchWorkflow";
 import { getAuthSettings, createConvexToken, jsonResponse } from "../../../../../lib/auth-server";
 import { authorizeGatewayRequest } from "../../../../../lib/rndc-gateway";
 import { POST as runRndcAction } from "../../../actions/[action]/route";
@@ -240,7 +240,7 @@ function consignmentPayload(detail: Detail, remesa: Detail["remesas"][number], p
       ...operationTimesPayload(detail, remesa),
       remesaType: remesa.fulfillmentDraft?.suspended ? "S" : "C",
       unitCode: 1,
-      loadedQuantityKg: Number(remesa.fulfillmentDraft?.deliveredQuantity ?? "0"),
+      loadedQuantityKg: loadedQuantityKg(detail, remesa),
       deliveredQuantityKg: Number(remesa.fulfillmentDraft?.deliveredQuantity ?? "0"),
       missingQuantityKg: Number(remesa.fulfillmentDraft?.missingQuantity ?? "0"),
       surplusQuantityKg: Number(remesa.fulfillmentDraft?.surplusQuantity ?? "0"),
@@ -249,6 +249,12 @@ function consignmentPayload(detail: Detail, remesa: Detail["remesas"][number], p
       observations: remesa.fulfillmentDraft?.observation
     }
   };
+}
+
+function loadedQuantityKg(detail: Detail, remesa: Detail["remesas"][number]): number {
+  const effective = effectiveConsignment((remesa.draft ?? {}) as ConsignmentDraft, (detail.expediente.loadingOrderDraft ?? null) as LoadingOrderDraft | null);
+  const tons = Number(remissionWeightTons(effective.remissions) ?? "0");
+  return tons > 0 ? Math.round(tons * 1000) : Number(remesa.fulfillmentDraft?.deliveredQuantity ?? "0");
 }
 
 function manifestPayload(detail: Detail, preparedBy: string): Record<string, unknown> {

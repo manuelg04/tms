@@ -441,3 +441,18 @@ test("empty manifest keeps a manifest-only scope", () => {
   assert.equal(plan.ok, true);
   assert.deepEqual(plan.ok ? plan.steps.map((step) => step.action) : [], ["issue_manifest"]);
 });
+
+test("a remesa with several remissions reports the total loaded weight", () => {
+  const snapshot = {
+    ...consignmentSnapshot,
+    remissions: [
+      { quantity: "600", description: "MAIZ", weightTons: "20", packagingClass: "0" },
+      { quantity: "400", description: "MAIZ", weightTons: "14,5", packagingClass: "0" }
+    ]
+  };
+  const plan = buildEmissionPlan(baseInput({ consignments: [{ remesaId: "rem1", number: "00001", snapshot, officialState: "draft" }] }));
+  assert.equal(plan.ok, true);
+  const remesa = plan.ok ? plan.steps.find((step) => step.action === "emit_remesa") : undefined;
+  const cargo = (remesa?.payload as Record<string, unknown> | undefined)?.cargo as Record<string, unknown> | undefined;
+  assert.equal(cargo?.quantityKg, 34500);
+});

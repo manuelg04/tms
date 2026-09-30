@@ -323,8 +323,12 @@ export function BodyTypeField({ className, required, disabled, selected, onSelec
 
 export const CARGO_NATURES = [
   { code: "1", label: "Carga normal" },
-  { code: "2", label: "Carga extradimensionada" },
-  { code: "3", label: "Carga extrapesada" }
+  { code: "2", label: "Carga peligrosa" },
+  { code: "3", label: "Carga extradimensionada" },
+  { code: "4", label: "Carga extrapesada" },
+  { code: "5", label: "Desechos peligrosos" },
+  { code: "6", label: "Semovientes" },
+  { code: "7", label: "Refrigerada" }
 ];
 
 export function CargoNatureField({ className = "", name, value, required, onChange }: { className?: string; name: string; value?: string; required?: boolean; onChange?: (value: string) => void }) {
@@ -342,7 +346,7 @@ export function IdTypeField({ className = "", label, name, value, onChange, requ
   return (
     <FormField className={className}>
       <span>{label}{required ? <em aria-hidden="true"> *</em> : null}</span>
-      <select name={name} onChange={(event) => onChange?.(event.target.value)} value={value ?? "N"}>
+      <select name={name} {...(onChange ? { onChange: (event: React.ChangeEvent<HTMLSelectElement>) => onChange(event.target.value), value: value ?? "N" } : { defaultValue: value ?? "N" })}>
         <option value="N">NIT</option>
         <option value="C">Cédula de ciudadanía</option>
         <option value="E">Cédula de extranjería</option>

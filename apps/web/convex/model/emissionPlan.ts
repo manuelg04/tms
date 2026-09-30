@@ -3,6 +3,7 @@ import {
   emissionDependencyBlockers,
   emissionScopeTargets,
   normalizeManifestType,
+  remissionWeightTons,
   type ConsignmentDraft,
   type DispatchWorkflowVariant,
   type EmissionScope,
@@ -341,7 +342,7 @@ function buildConsignmentPayload(
         merchandiseCode: snapshot.merchandiseCode,
         packageCode: snapshot.packagingCode ?? firstRemission?.packagingClass,
         natureCode: snapshot.natureOfCargo,
-        weightTons: firstRemission?.weightTons,
+        weightTons: remissionWeightTons(snapshot.remissions),
         declaredValue: snapshot.declaredValue
       },
       missing
@@ -506,7 +507,7 @@ function consignmentSummary(item: EmissionPlanInput["consignments"][number]) {
   const remission = snapshot.remissions?.[0];
   return {
     number: item.number,
-    quantityKg: positiveTons(remission?.weightTons),
+    quantityKg: positiveTons(remissionWeightTons(snapshot.remissions)),
     nature: snapshot.natureOfCargo,
     productName: remission?.description,
     packageName: snapshot.packagingCode ?? remission?.packagingClass,

@@ -1,7 +1,7 @@
 import { ConvexError, v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 import { mutation, type MutationCtx } from "./_generated/server";
-import { claimConsecutive } from "./dispatches";
+import { claimConsecutive } from "./model/dispatchRecords";
 import {
   appendAudit,
   requireActor,

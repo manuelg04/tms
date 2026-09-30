@@ -1,6 +1,6 @@
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
-import { toListRow } from "../expedientes";
+import { toListRow } from "./expedienteRecords";
 import { searchTextForRow } from "../dispatchSearch";
 
 export async function refreshDispatchSearchText(ctx: MutationCtx, expedienteId: Id<"expedientes">): Promise<void> {

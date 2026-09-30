@@ -3,7 +3,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
-import { listRowValidator, toListRow } from "./expedientes";
+import { listRowValidator, toListRow } from "./model/expedienteRecords";
 import { requireActor } from "./model/access";
 import {
   applyDispatchFilters,

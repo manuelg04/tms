@@ -1,4 +1,6 @@
 import { defineSchema, defineTable } from "convex/server";
+import { pointFields, routeFields, planFields } from "./model/routeValidators";
+import { mirrorRecordFields, mirrorRunFields } from "./model/mirrorValidators";
 import { v } from "convex/values";
 import { monitoringReportFields, monitoringTripFields } from "./model/monitoringValidators";
 import { driverDossierFields, securityStudyFields } from "./model/securityStudyValidators";
@@ -35,6 +37,12 @@ import { masterTables } from "./model/schemaMasterTables";
 
 export default defineSchema({
   ...masterTables,
+  rndcMirrorRecords: defineTable(mirrorRecordFields).index("by_org_process_id", ["organizationId", "process", "radicado"]).index("by_org_process_date", ["organizationId", "process", "date"]).index("by_org_manifest", ["organizationId", "manifest"]).index("by_org_remesa", ["organizationId", "remesa"]),
+  rndcMirrorPending: defineTable(mirrorRecordFields).index("by_run", ["runId"]).index("by_run_id", ["runId", "radicado"]),
+  rndcMirrorRuns: defineTable(mirrorRunFields).index("by_org_external", ["organizationId", "externalId"]).index("by_org_date", ["organizationId", "createdAt"]),
+  operationalPoints: defineTable(pointFields).index("by_org_code", ["organizationId", "code"]),
+  operationalRoutes: defineTable(routeFields).index("by_org_code", ["organizationId", "code"]),
+  routePlans: defineTable(planFields).index("by_dispatch", ["dispatchId"]),
   monitoringTrips: defineTable(monitoringTripFields)
     .index("by_org_status", ["organizationId", "status"])
     .index("by_org_code", ["organizationId", "code"])
@@ -51,6 +59,7 @@ export default defineSchema({
     .index("by_trip", ["tripId"])
     .index("by_trip_request", ["tripId", "requestKey"]),
   trackingDispatches: defineTable(trackingDispatchFields)
+    .index("by_org_source", ["organizationId", "sourceKey"])
     .index("by_org_code", ["organizationId", "externalCode"])
     .index("by_org_queue", ["organizationId", "queue"])
     .index("by_expediente", ["expedienteId"]),

@@ -9,6 +9,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./mirror": {
+      "types": "./dist/rndc/mirror.d.ts",
+      "import": "./dist/rndc/mirror.js"
     }
   },
   "scripts": {

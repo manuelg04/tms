@@ -25,6 +25,7 @@ import type * as fleetMasters from "../fleetMasters.js";
 import type * as lookups from "../lookups.js";
 import type * as maintenance from "../maintenance.js";
 import type * as masterData from "../masterData.js";
+import type * as mirror from "../mirror.js";
 import type * as model_access from "../model/access.js";
 import type * as model_actionableNotification from "../model/actionableNotification.js";
 import type * as model_advancedWorkflow from "../model/advancedWorkflow.js";
@@ -49,6 +50,7 @@ import type * as model_fulfillmentWorkflow from "../model/fulfillmentWorkflow.js
 import type * as model_loadingOrderReservation from "../model/loadingOrderReservation.js";
 import type * as model_masterData from "../model/masterData.js";
 import type * as model_masterSync from "../model/masterSync.js";
+import type * as model_mirrorValidators from "../model/mirrorValidators.js";
 import type * as model_monitoring from "../model/monitoring.js";
 import type * as model_monitoringValidators from "../model/monitoringValidators.js";
 import type * as model_officialDocumentIdentity from "../model/officialDocumentIdentity.js";
@@ -58,6 +60,8 @@ import type * as model_reconciliationOutcome from "../model/reconciliationOutcom
 import type * as model_rndcCatalogs from "../model/rndcCatalogs.js";
 import type * as model_rndcOperationRecords from "../model/rndcOperationRecords.js";
 import type * as model_rndcReferenceCatalogRecords from "../model/rndcReferenceCatalogRecords.js";
+import type * as model_routeValidators from "../model/routeValidators.js";
+import type * as model_routes from "../model/routes.js";
 import type * as model_schemaMasterTables from "../model/schemaMasterTables.js";
 import type * as model_schemaValidators from "../model/schemaValidators.js";
 import type * as model_searchText from "../model/searchText.js";
@@ -74,6 +78,7 @@ import type * as officialDocuments from "../officialDocuments.js";
 import type * as rndc from "../rndc.js";
 import type * as rndcOperations from "../rndcOperations.js";
 import type * as rndcReferenceCatalogs from "../rndcReferenceCatalogs.js";
+import type * as routes from "../routes.js";
 import type * as securityStudies from "../securityStudies.js";
 import type * as tracking from "../tracking.js";
 import type * as trackingImport from "../trackingImport.js";
@@ -103,6 +108,7 @@ declare const fullApi: ApiFromModules<{
   lookups: typeof lookups;
   maintenance: typeof maintenance;
   masterData: typeof masterData;
+  mirror: typeof mirror;
   "model/access": typeof model_access;
   "model/actionableNotification": typeof model_actionableNotification;
   "model/advancedWorkflow": typeof model_advancedWorkflow;
@@ -127,6 +133,7 @@ declare const fullApi: ApiFromModules<{
   "model/loadingOrderReservation": typeof model_loadingOrderReservation;
   "model/masterData": typeof model_masterData;
   "model/masterSync": typeof model_masterSync;
+  "model/mirrorValidators": typeof model_mirrorValidators;
   "model/monitoring": typeof model_monitoring;
   "model/monitoringValidators": typeof model_monitoringValidators;
   "model/officialDocumentIdentity": typeof model_officialDocumentIdentity;
@@ -136,6 +143,8 @@ declare const fullApi: ApiFromModules<{
   "model/rndcCatalogs": typeof model_rndcCatalogs;
   "model/rndcOperationRecords": typeof model_rndcOperationRecords;
   "model/rndcReferenceCatalogRecords": typeof model_rndcReferenceCatalogRecords;
+  "model/routeValidators": typeof model_routeValidators;
+  "model/routes": typeof model_routes;
   "model/schemaMasterTables": typeof model_schemaMasterTables;
   "model/schemaValidators": typeof model_schemaValidators;
   "model/searchText": typeof model_searchText;
@@ -152,6 +161,7 @@ declare const fullApi: ApiFromModules<{
   rndc: typeof rndc;
   rndcOperations: typeof rndcOperations;
   rndcReferenceCatalogs: typeof rndcReferenceCatalogs;
+  routes: typeof routes;
   securityStudies: typeof securityStudies;
   tracking: typeof tracking;
   trackingImport: typeof trackingImport;

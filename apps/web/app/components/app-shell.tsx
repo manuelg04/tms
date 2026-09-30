@@ -24,6 +24,8 @@ type NavItem = {
 };
 
 const pageMeta: Record<string, PageMeta> = {
+  "/rutas": { title: "Rutas y puestos de control", subtitle: "Catálogo operativo y planes por despacho" },
+  "/documentos/espejo": { title: "Espejo RNDC", subtitle: "Consulta de documentos oficiales, cumplidos y relaciones" },
   "/control/bitacora": { title: "Bitácora de monitoreo", subtitle: "Control de tráfico · Reportes de seguridad en ruta" },
   "/control/bitacora/nuevo": { title: "Nuevo viaje monitoreado", subtitle: "Ruta, vehículo y conductor para abrir la bitácora" },
   "/seguridad/estudios": { title: "Estudios de seguridad", subtitle: "Expedientes de conductores, consultas de antecedentes y decisión por empresa" },
@@ -69,6 +71,8 @@ const actionLabels: Record<string, string> = {
 };
 
 const navItems: NavItem[] = [
+  { href: "/rutas", label: "Rutas y P. Control", icon: <span className="nav-icon" aria-hidden>↗</span> },
+  { href: "/documentos/espejo", label: "Espejo RNDC", icon: <span className="nav-icon" aria-hidden>▤</span> },
   {
     href: "/",
     label: "Panel",

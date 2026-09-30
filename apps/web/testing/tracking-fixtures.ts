@@ -6,6 +6,8 @@ import type { Id } from "../convex/_generated/dataModel";
 export async function trackingFixture() {
   const t = convexTest(schema, {
     "./_generated/server.ts": () => import("../convex/_generated/server"),
+    "./routes.ts": () => import("../convex/routes"),
+    "./mirror.ts": () => import("../convex/mirror"),
     "./tracking.ts": () => import("../convex/tracking"),
     "./trackingImport.ts": () => import("../convex/trackingImport"),
   });

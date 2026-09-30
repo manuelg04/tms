@@ -1,0 +1,147 @@
+.route-toolbar,
+.route-actions {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+.route-workspace > .panel {
+  padding: 20px;
+}
+.route-workspace .tracking-table td > .text-button + .text-button {
+  margin-left: 12px;
+}
+.route-plan-editor .route-actions {
+  align-items: center;
+}
+.route-toolbar {
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.route-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.route-workspace label,
+.route-plan-editor label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+.route-workspace input,
+.route-workspace select,
+.route-plan-editor input,
+.route-plan-editor select {
+  padding: 9px 10px;
+  border: 1px solid var(--line, #dce3eb);
+  border-radius: 5px;
+  background: var(--panel, #fff);
+  color: inherit;
+  max-width: 100%;
+  min-width: 0;
+}
+.route-workspace fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.route-workspace .route-check {
+  flex-direction: row;
+  align-items: center;
+  display: inline-flex;
+  margin: 0 18px 18px 0;
+}
+.route-check input {
+  width: auto;
+}
+.route-stops select {
+  min-width: 210px;
+}
+.route-stops input {
+  width: 120px;
+}
+.route-editor h4 {
+  margin: 20px 0 12px;
+}
+.route-actions {
+  margin: 18px 0;
+}
+.route-import pre {
+  overflow: auto;
+  font-size: 12px;
+  max-height: 260px;
+}
+.route-import h3 {
+  margin-top: 0;
+}
+.route-import details {
+  margin-top: 18px;
+}
+.route-import input[type="file"] {
+  margin: 8px 0;
+  max-width: 100%;
+}
+.route-workspace .panel {
+  min-width: 0;
+}
+.route-plan-editor form {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+.route-plan-editor {
+  padding-bottom: 18px;
+}
+.route-plan-editor > p,
+.route-plan-editor > form {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.route-plan-editor p {
+  font-size: 13px;
+  color: var(--muted, #657386);
+}
+.mirror-record-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+}
+.mirror-record-fields dt {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.mirror-record-fields dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+.mirror-related {
+  padding: 14px 0;
+}
+.mirror-runs {
+  font-size: 13px;
+}
+.route-editor:focus-within {
+  scroll-margin-top: 90px;
+}
+@media (max-width: 600px) {
+  .route-fields {
+    grid-template-columns: 1fr;
+  }
+  .route-toolbar > label,
+  .route-toolbar > .primary-action {
+    width: 100%;
+  }
+  .route-plan-editor form > label {
+    width: 100%;
+  }
+  .route-workspace .tracking-heading {
+    align-items: start;
+  }
+  .route-editor .primary-action {
+    width: 100%;
+  }
+}

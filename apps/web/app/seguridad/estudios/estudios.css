@@ -70,13 +70,11 @@
 .es-lookup-results li button:hover { background: var(--surface-alt); }
 .es-lookup-results small { color: var(--ink-soft); }
 .es-notes textarea { width: 100%; min-height: 110px; }
-.es-inline-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; padding: 14px 18px 16px; }
-.es-inline-form .wide { grid-column: 1 / -1; }
 @media (max-width: 1180px) {
   .es-layout, .es-new-layout { grid-template-columns: 1fr; }
   .es-side, .es-new-side { position: static; }
 }
 @media (max-width: 720px) {
-  .es-upload, .es-decision .summary, .es-decision-actions, .es-inline-form { grid-template-columns: 1fr; }
+  .es-upload, .es-decision .summary, .es-decision-actions { grid-template-columns: 1fr; }
   .es-checks .bm-segment { min-width: 0; }
 }

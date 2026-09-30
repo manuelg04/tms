@@ -43,7 +43,8 @@ export function HelpTip({ text, label }: { text: string; label?: string }) {
       <button
         aria-describedby={id}
         aria-expanded={open}
-        aria-label={label ? `Ayuda sobre ${label}` : "Ayuda sobre este campo"}
+        aria-label="Ver ayuda"
+        title={label ? `Ayuda: ${label}` : "Ayuda"}
         className="field-help-toggle"
         onClick={(event) => {
           event.preventDefault();

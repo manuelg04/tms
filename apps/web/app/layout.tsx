@@ -4,6 +4,9 @@ import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import { Providers } from "./providers";
 import { AppShell } from "./components/app-shell";
 import "./globals.css";
+import "./styles/workspace.css";
+import "./styles/detail.css";
+import "./styles/fields.css";
 
 const archivo = Archivo({
   subsets: ["latin"],

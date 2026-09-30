@@ -269,20 +269,6 @@
   margin-top: 2px;
 }
 
-.bm-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 380px;
-  gap: 18px;
-  align-items: start;
-}
-.bm-side {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  position: sticky;
-  top: 84px;
-}
-
 .bm-timeline {
   padding: 8px 22px 18px;
 }
@@ -663,8 +649,8 @@
 
 @media (max-width: 1100px) {
   .bm-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .bm-layout, .bm-new-layout { grid-template-columns: 1fr; }
-  .bm-side, .bm-new-side { position: static; }
+  .bm-new-layout { grid-template-columns: 1fr; }
+  .bm-new-side { position: static; }
 }
 @media (max-width: 720px) {
   .bm-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -688,8 +674,6 @@
   .bm-print-kpis { grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .bm-print-photos { grid-template-columns: 1fr 1fr; }
 }
-
-.bm-side .panel { overflow: visible; }
 .bm-side-tabs { border-radius: var(--radius) var(--radius) 0 0; }
 .bm-form .date-popover, .bm-new-layout .date-popover { z-index: 60; }
 .bm-form .date-field-trigger { min-height: 34px; }
@@ -854,8 +838,6 @@ button.bm-stop { cursor: pointer; }
 .bm-entry.ajuste .bm-card p { font-size: 13px; }
 .bm-schedule-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 6px 0 0; font-size: 12px; color: var(--ink-soft); }
 .bm-schedule-meta b { color: var(--ink); }
-.bm-client-banner { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--surface-alt); border: 1px solid var(--line); border-radius: var(--radius); font-size: 13px; color: var(--ink-soft); }
-.bm-client-banner b { color: var(--ink); }
 .bm-print-schedule { border: 1px solid #d8dee4; border-left: 4px solid #96690a; background: #fffbf0; border-radius: 6px; padding: 8px 12px; margin-bottom: 8px; break-inside: avoid; font-size: 11.5px; }
 .bm-print-schedule header { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-weight: 700; }
 .bm-print-schedule p { margin: 4px 0; }

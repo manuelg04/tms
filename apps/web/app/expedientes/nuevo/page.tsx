@@ -13,6 +13,7 @@ import { DateField } from "../../components/fields/date-field";
 import { MoneyField } from "../../components/fields/money-field";
 import { IdTypeField, MunicipalityField, PackagingField, PartyField, VehicleField, type PartyPick, type VehiclePick } from "../../components/fields/lookup-fields";
 import { requiredDriverFreight } from "../components/vehicle-assignment-state";
+import { loadingWindowEnd, optionalNumber, required, value } from "../../lib/form-data";
 
 type BaseState = {
   client: PartyPick | null;
@@ -182,37 +183,37 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
     try {
       if (!state.vehicle) throw new FormValidationError("vehicleId", "Selecciona una placa existente en maestros.");
       const preparedOrder = loadingOrderDraft(data);
-      const senderId = requiredText(data, "senderId");
-      const clientDocument = optionalText(data, "clientDocument") ?? senderId;
-      const clientIdType = optionalText(data, "clientIdType") ?? requiredText(data, "senderIdType");
+      const senderId = required(data, "senderId");
+      const clientDocument = value(data, "clientDocument") ?? senderId;
+      const clientIdType = value(data, "clientIdType") ?? required(data, "senderIdType");
       const customerId = await upsertCustomer({
         organizationId: me.organizationId,
         code: clientDocument,
-        name: requiredText(data, "clientName"),
+        name: required(data, "clientName"),
         identificationType: clientIdType,
         identificationNumber: clientDocument,
-        phone: optionalText(data, "senderPhone"),
+        phone: value(data, "senderPhone"),
         status: "active"
       });
       const [loadingLocationId, unloadingLocationId] = await Promise.all([
         upsertLocation({
           customerId,
           code: `${clientDocument}-${senderId}-ORI`,
-          name: requiredText(data, "senderName"),
+          name: required(data, "senderName"),
           kind: "loading",
-          address: requiredText(data, "senderAddress"),
-          city: requiredText(data, "senderCity"),
-          municipalityCode: requiredText(data, "senderMunicipality"),
+          address: required(data, "senderAddress"),
+          city: required(data, "senderCity"),
+          municipalityCode: required(data, "senderMunicipality"),
           status: "active"
         }),
         upsertLocation({
           customerId,
-          code: `${clientDocument}-${requiredText(data, "recipientId")}-DES`,
-          name: requiredText(data, "recipientName"),
+          code: `${clientDocument}-${required(data, "recipientId")}-DES`,
+          name: required(data, "recipientName"),
           kind: "unloading",
-          address: requiredText(data, "recipientAddress"),
-          city: requiredText(data, "recipientCity"),
-          municipalityCode: requiredText(data, "recipientMunicipality"),
+          address: required(data, "recipientAddress"),
+          city: required(data, "recipientCity"),
+          municipalityCode: required(data, "recipientMunicipality"),
           status: "active"
         })
       ]);
@@ -223,21 +224,21 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
         loadingLocationId,
         unloadingLocationId,
         status: "confirmed",
-        cargoDescription: requiredText(data, "cargoDescription"),
+        cargoDescription: required(data, "cargoDescription"),
         cargoQuantity: optionalNumber(data, "cargoQuantity"),
-        cargoWeightKg: money(requiredText(data, "weightTons")) * 1000,
+        cargoWeightKg: (optionalNumber(data, "weightTons") ?? 0) * 1000,
         agreedRate: 0,
         currency: "COP",
         scheduledLoadingAt: loadingDateTime(data, "minLoadingDate", false),
         scheduledUnloadingAt: loadingDateTime(data, "maxLoadingDate", true),
-        notes: optionalText(data, "orderObservations")
+        notes: value(data, "orderObservations")
       });
       const created = await createDraft({
         serviceOrderId,
         orderReservationId: reservation.reservationId,
         orderReservationToken: reservationToken,
-        agencyCode: optionalText(data, "agencyCode"),
-        notes: optionalText(data, "orderObservations")
+        agencyCode: value(data, "agencyCode"),
+        notes: value(data, "orderObservations")
       });
       await Promise.all([
         saveLoadingOrder({
@@ -390,60 +391,60 @@ function loadingOrderDraft(data: FormData) {
   const loadingAppointment = loadingDateTime(data, "minLoadingDate", false);
   const unloadingAppointment = loadingDateTime(data, "maxLoadingDate", true);
   return {
-    orderNumber: requiredText(data, "orderNumber"),
-    expeditionDate: requiredText(data, "expeditionDate"),
-    agencyCode: optionalText(data, "agencyCode"),
+    orderNumber: required(data, "orderNumber"),
+    expeditionDate: required(data, "expeditionDate"),
+    agencyCode: value(data, "agencyCode"),
     sender: compact({
-      name: requiredText(data, "senderName"),
-      identificationType: requiredText(data, "senderIdType"),
-      identificationNumber: requiredText(data, "senderId"),
-      siteCode: optionalText(data, "senderSiteCode"),
-      municipalityCode: requiredText(data, "senderMunicipality"),
-      address: requiredText(data, "senderAddress"),
-      cityName: requiredText(data, "senderCity"),
-      phone: requiredText(data, "senderPhone"),
-      cellphone: optionalText(data, "senderCellphone")
+      name: required(data, "senderName"),
+      identificationType: required(data, "senderIdType"),
+      identificationNumber: required(data, "senderId"),
+      siteCode: value(data, "senderSiteCode"),
+      municipalityCode: required(data, "senderMunicipality"),
+      address: required(data, "senderAddress"),
+      cityName: required(data, "senderCity"),
+      phone: required(data, "senderPhone"),
+      cellphone: value(data, "senderCellphone")
     }),
     recipient: compact({
-      name: requiredText(data, "recipientName"),
-      identificationType: requiredText(data, "recipientIdType"),
-      identificationNumber: requiredText(data, "recipientId"),
-      siteCode: optionalText(data, "recipientSiteCode"),
-      municipalityCode: requiredText(data, "recipientMunicipality"),
-      address: requiredText(data, "recipientAddress"),
-      cityName: requiredText(data, "recipientCity"),
-      phone: requiredText(data, "recipientPhone"),
-      cellphone: optionalText(data, "recipientCellphone")
+      name: required(data, "recipientName"),
+      identificationType: required(data, "recipientIdType"),
+      identificationNumber: required(data, "recipientId"),
+      siteCode: value(data, "recipientSiteCode"),
+      municipalityCode: required(data, "recipientMunicipality"),
+      address: required(data, "recipientAddress"),
+      cityName: required(data, "recipientCity"),
+      phone: required(data, "recipientPhone"),
+      cellphone: value(data, "recipientCellphone")
     }),
     loading: {
-      siteName: requiredText(data, "senderName"),
-      address: requiredText(data, "senderAddress"),
-      cityName: requiredText(data, "senderCity"),
-      municipalityCode: requiredText(data, "senderMunicipality"),
+      siteName: required(data, "senderName"),
+      address: required(data, "senderAddress"),
+      cityName: required(data, "senderCity"),
+      municipalityCode: required(data, "senderMunicipality"),
       appointmentAt: loadingAppointment
     },
     unloading: {
-      siteName: requiredText(data, "recipientName"),
-      address: requiredText(data, "recipientAddress"),
-      cityName: requiredText(data, "recipientCity"),
-      municipalityCode: requiredText(data, "recipientMunicipality"),
+      siteName: required(data, "recipientName"),
+      address: required(data, "recipientAddress"),
+      cityName: required(data, "recipientCity"),
+      municipalityCode: required(data, "recipientMunicipality"),
       appointmentAt: unloadingAppointment
     },
-    cargoDescription: requiredText(data, "cargoDescription"),
-    cargoQuantity: optionalText(data, "cargoQuantity"),
-    cargoUnit: optionalText(data, "cargoUnit"),
-    optionalCargoField: optionalText(data, "optionalCargoField"),
-    weightTons: requiredText(data, "weightTons"),
-    volumeM3: optionalText(data, "volumeM3"),
-    packagingCode: requiredText(data, "packagingCode"),
-    merchandiseCode: optionalText(data, "merchandiseCode"),
-    natureOfCargo: optionalText(data, "natureOfCargo"),
-    driverFreight: requiredDriverFreight(optionalText(data, "driverFreight")),
-    sealNumbers: optionalText(data, "sealNumbers"),
-    loadingConditions: optionalText(data, "loadingConditions"),
-    specialPackaging: optionalText(data, "specialPackaging"),
-    observations: optionalText(data, "orderObservations"),
-    minLoadingDate: requiredText(data, "minLoadingDate"),
+    cargoDescription: required(data, "cargoDescription"),
+    cargoQuantity: value(data, "cargoQuantity"),
+    cargoUnit: value(data, "cargoUnit"),
+    optionalCargoField: value(data, "optionalCargoField"),
+    weightTons: required(data, "weightTons"),
+    volumeM3: value(data, "volumeM3"),
+    packagingCode: required(data, "packagingCode"),
+    merchandiseCode: value(data, "merchandiseCode"),
+    natureOfCargo: value(data, "natureOfCargo"),
+    driverFreight: requiredDriverFreight(value(data, "driverFreight")),
+    sealNumbers: value(data, "sealNumbers"),
+    loadingConditions: value(data, "loadingConditions"),
+    specialPackaging: value(data, "specialPackaging"),
+    observations: value(data, "orderObservations"),
+    minLoadingDate: required(data, "minLoadingDate"),
     maxLoadingDate: loadingWindowEnd(data),
     generatesConsignment: data.get("generatesConsignment") === "on"
   };
@@ -453,36 +454,8 @@ function compact<T extends Record<string, unknown>>(value: T): T {
   return Object.fromEntries(Object.entries(value).filter(([, entry]) => entry !== undefined)) as T;
 }
 
-function loadingWindowEnd(data: FormData): string {
-  const min = requiredText(data, "minLoadingDate");
-  const max = requiredText(data, "maxLoadingDate");
-  if (max < min) throw new FormValidationError("maxLoadingDate", "La fecha máxima de cargue no puede ser anterior a la fecha mínima.");
-  return max;
-}
-
-function requiredText(data: FormData, key: string): string {
-  const value = String(data.get(key) ?? "").trim();
-  if (!value) throw new FormValidationError(key);
-  return value;
-}
-
-function optionalText(data: FormData, key: string): string | undefined {
-  const value = String(data.get(key) ?? "").trim();
-  return value || undefined;
-}
-
-function optionalNumber(data: FormData, key: string): number | undefined {
-  const value = optionalText(data, key);
-  return value ? money(value) : undefined;
-}
-
-function money(value: string): number {
-  const number = Number(value || "0");
-  return Number.isFinite(number) ? number : 0;
-}
-
 function loadingDateTime(data: FormData, key: string, endOfDay: boolean): number {
-  const value = requiredText(data, key);
+  const value = required(data, key);
   const timestamp = new Date(`${value}T${endOfDay ? "23:59:00" : "00:00:00"}-05:00`).getTime();
   if (!Number.isFinite(timestamp)) throw new FormValidationError(key, "Selecciona una fecha válida.");
   return timestamp;

@@ -16,11 +16,11 @@ import {
 } from "../../components/fields/lookup-fields";
 import { kindLabels, statusLabels } from "../../lib/labels";
 import type { Detail } from "./detail-types";
+import { required } from "../../lib/form-data";
 import {
   appointmentBefore,
   emptyManifestPayload,
   remesaWithoutOrderPayload,
-  required,
 } from "./stage-payloads";
 
 export function AdvancedActionModal({

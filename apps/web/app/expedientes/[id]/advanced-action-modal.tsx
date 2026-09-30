@@ -136,11 +136,14 @@ export function AdvancedActionModal({
                 expedienteRemesaId: remesa?._id,
                 reasonCode: required(data, "reasonCode"),
                 before: appointmentBefore(
-                  remesa?.draft?.unloading?.appointmentAt,
+                  data.get("changeCode") === "2"
+                    ? remesa?.draft?.unloading?.appointmentAt
+                    : remesa?.draft?.loading?.appointmentAt,
                   document.number,
                 ),
                 after: {
                   remesaNumber: document.number,
+                  changeCode: data.get("changeCode") === "2" ? 2 : 1,
                   appointmentDate: required(data, "appointmentDate"),
                   appointmentTime: required(data, "appointmentTime"),
                 },
@@ -291,6 +294,13 @@ function modalFields(
             <option value="1">Incumplimiento del generador de la carga</option>
             <option value="2">Incumplimiento del titular del manifiesto</option>
             <option value="3">Decisión del generador de la carga</option>
+          </select>
+        </label>
+        <label>
+          <span>Cita que cambia</span>
+          <select defaultValue="1" name="changeCode" required>
+            <option value="1">Cita de cargue</option>
+            <option value="2">Cita de descargue</option>
           </select>
         </label>
         <label>

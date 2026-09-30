@@ -18,7 +18,7 @@ export async function POST(request: Request, context: { params: Promise<{ expedi
     payload: {
       remesaNumber: typeof after.remesaNumber === "string" ? after.remesaNumber : undefined,
       reasonCode: Number(body.reasonCode ?? "1"),
-      change: { code: 1, appointmentDate: slashDate(appointmentDate), appointmentTime }
+      change: { code: after.changeCode === 2 ? 2 : 1, appointmentDate: slashDate(appointmentDate), appointmentTime }
     }
   });
 }

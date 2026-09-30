@@ -63,6 +63,7 @@ export function SearchSelect({ name, validationValue, label, className = "", pla
       setOpen(false);
       return;
     }
+    if (event.key === "Enter") event.preventDefault();
     if (!list || list.length === 0) return;
     if (event.key === "ArrowDown") {
       event.preventDefault();

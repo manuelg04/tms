@@ -291,6 +291,7 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
   const [insurer, setInsurer] = useState({ nit: draft.insurerNit ?? "", name: "" });
   const [packaging, setPackaging] = useState({ code: effective.packagingCode ?? "", description: "" });
   const [remissions, setRemissions] = useState<Array<Remission & { rowId: number }>>(() => (effective.remissions?.length ? effective.remissions : [{}]).map((line, index) => ({ ...line, rowId: index })));
+  const [remissionTotal, setRemissionTotal] = useState(() => (effective.remissions ?? []).reduce((sum, line) => sum + (Number(line.weightTons ?? 0) || 0), 0));
   const resolved = useQuery(api.lookups.insurersSearch, insurer.nit && !insurer.name ? { term: insurer.nit } : "skip");
   const packagingDetail = useQuery(api.rndcReferenceCatalogs.packagingByCode, packaging.code ? { code: packaging.code } : "skip");
   const insurerName = insurer.name || resolved?.find((row) => row.insurerNit === insurer.nit)?.name;
@@ -373,21 +374,22 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
       <input name={`${key}_policyHolder`} type="hidden" value="transport_company" />
 
       <div className="field-group-note"><strong>Remisiones</strong></div>
-      <div className="remission-table">
+      <div className="remission-table" onInput={(event) => setRemissionTotal(remissionWeightTotal(event.currentTarget))}>
         <div className="remission-row remission-head" aria-hidden="true"><span>Remisión Nro.</span><span>Cantidad</span><span>Clase de bultos</span><span>Descripción</span><span>Peso (TN)</span><span>Volumen m³</span><span /></div>
         {remissions.map((line, index) => (
           <div className="remission-row" key={line.rowId}>
-            <FormField label={`Remisión ${index + 1} número`}><span className="remission-field-label">Nro. remisión</span><input aria-label={`Remisión ${index + 1} número`} defaultValue={line.remissionNumber} name={`${key}_rem${index}_number`} required /></FormField>
-            <FormField label={`Remisión ${index + 1} cantidad`}><span className="remission-field-label">Cantidad</span><input aria-label={`Remisión ${index + 1} cantidad`} defaultValue={line.quantity} name={`${key}_rem${index}_quantity`} placeholder={inherited(order.cargoQuantity)} required /></FormField>
-            <FormField label={`Remisión ${index + 1} clase de bultos`}><span className="remission-field-label">Clase de bultos</span><input aria-label={`Remisión ${index + 1} clase de bultos`} defaultValue={line.packagingClass} name={`${key}_rem${index}_packagingClass`} placeholder={inherited(order.packagingCode)} required /></FormField>
-            <FormField label={`Remisión ${index + 1} descripción`}><span className="remission-field-label">Descripción</span><input aria-label={`Remisión ${index + 1} descripción`} defaultValue={line.description} name={`${key}_rem${index}_description`} placeholder={inherited(order.cargoDescription)} required /></FormField>
-            <FormField label={`Remisión ${index + 1} peso`}><span className="remission-field-label">Peso (TN)</span><input aria-label={`Remisión ${index + 1} peso`} defaultValue={line.weightTons} min="0" name={`${key}_rem${index}_weightTons`} placeholder={inherited(order.weightTons)} required step="0.001" type="number" /></FormField>
-            <FormField label={`Remisión ${index + 1} volumen`}><span className="remission-field-label">Volumen (m³)</span><input aria-label={`Remisión ${index + 1} volumen`} defaultValue={line.volumeM3} min="0" name={`${key}_rem${index}_volumeM3`} placeholder={inherited(order.volumeM3)} step="0.01" type="number" /></FormField>
+            <FormField help={null} label={`Remisión ${index + 1} número`}><span className="remission-field-label">Nro. remisión</span><input aria-label={`Remisión ${index + 1} número`} defaultValue={line.remissionNumber} name={`${key}_rem${index}_number`} required /></FormField>
+            <FormField help={null} label={`Remisión ${index + 1} cantidad`}><span className="remission-field-label">Cantidad</span><input aria-label={`Remisión ${index + 1} cantidad`} defaultValue={line.quantity} name={`${key}_rem${index}_quantity`} placeholder={inherited(order.cargoQuantity)} required /></FormField>
+            <FormField help={null} label={`Remisión ${index + 1} clase de bultos`}><span className="remission-field-label">Clase de bultos</span><input aria-label={`Remisión ${index + 1} clase de bultos`} defaultValue={line.packagingClass} name={`${key}_rem${index}_packagingClass`} placeholder={inherited(order.packagingCode)} required /></FormField>
+            <FormField help={null} label={`Remisión ${index + 1} descripción`}><span className="remission-field-label">Descripción</span><input aria-label={`Remisión ${index + 1} descripción`} defaultValue={line.description} name={`${key}_rem${index}_description`} placeholder={inherited(order.cargoDescription)} required /></FormField>
+            <FormField help={null} label={`Remisión ${index + 1} peso`}><span className="remission-field-label">Peso (TN)</span><input aria-label={`Remisión ${index + 1} peso`} defaultValue={line.weightTons} min="0" name={`${key}_rem${index}_weightTons`} placeholder={inherited(order.weightTons)} required step="0.001" type="number" /></FormField>
+            <FormField help={null} label={`Remisión ${index + 1} volumen`}><span className="remission-field-label">Volumen (m³)</span><input aria-label={`Remisión ${index + 1} volumen`} defaultValue={line.volumeM3} min="0" name={`${key}_rem${index}_volumeM3`} placeholder={inherited(order.volumeM3)} step="0.01" type="number" /></FormField>
             <button aria-label={`Quitar remisión ${index + 1}`} className="ghost-button" disabled={remissions.length === 1} onClick={() => setRemissions(remissions.filter((row) => row.rowId !== line.rowId))} type="button">×</button>
           </div>
         ))}
         <input name={`${key}_remCount`} type="hidden" value={remissions.length} />
         <button className="ghost-button add-remission" onClick={() => setRemissions([...remissions, { rowId: Date.now() }])} type="button">Agregar remisión</button>
+        <small className="cargo-field-hint remission-total">Al RNDC se reporta la suma del peso de todas las remisiones{remissionTotal ? `: ${remissionTotal.toLocaleString("es-CO", { maximumFractionDigits: 3 })} t` : ""}.</small>
       </div>
 
       <div className="field-group-note"><strong>Resumen que pasa al manifiesto</strong></div>
@@ -499,6 +501,10 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
     </ValidatedForm>
     </FieldHelpProvider>
   );
+}
+
+function remissionWeightTotal(table: HTMLElement): number {
+  return Array.from(table.querySelectorAll<HTMLInputElement>('input[name*="_weightTons"]')).reduce((sum, input) => sum + (Number(input.value) || 0), 0);
 }
 
 function icaPesos(freight: string, perMille: string): number {

@@ -2,6 +2,7 @@ import type { OperationTimes } from "../../../convex/model/fulfillmentWorkflow";
 import { deriveOperationTimes } from "../../../convex/model/fulfillmentWorkflow";
 import {
   effectiveConsignment,
+  remissionWeightTons,
   type DispatchStage,
 } from "../../../convex/model/dispatchWorkflow";
 import {
@@ -128,6 +129,7 @@ export function renderStage(input: {
         onSubmit={input.fulfillRemesas}
         remesas={detail.remesas.map((remesa) => ({
           ...remesa,
+          cargoWeightKg: remesa.cargoWeightKg ?? loadedWeightKg(detail, remesa),
           operationTimes: defaultOperationTimes(detail, remesa),
         }))}
       />
@@ -168,4 +170,16 @@ function defaultOperationTimes(
       unloadingAt: detail.serviceOrder.scheduledUnloadingAt ?? loadingAt,
     },
   );
+}
+
+function loadedWeightKg(
+  detail: Detail,
+  remesa: Detail["remesas"][number],
+): number | undefined {
+  const effective = effectiveConsignment(
+    remesa.draft ?? {},
+    detail.expediente.loadingOrderDraft ?? null,
+  );
+  const tons = Number(remissionWeightTons(effective.remissions) ?? "0");
+  return tons > 0 ? Math.round(tons * 1000) : undefined;
 }

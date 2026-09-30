@@ -27,10 +27,10 @@ export function ConsignmentFulfillmentForm({ onSubmit, remesas }: { onSubmit: (d
         {remesas.map((remesa) => (
           <fieldset className={remesa.fulfillmentState === "fulfilled" ? "fulfillment-card complete" : "fulfillment-card"} disabled={remesa.fulfillmentState === "fulfilled"} key={remesa._id}>
             <legend>Remesa {remesa.number ?? remesa.sequence}</legend>
-            <p>{remesa.cargoDescription} · {remesa.cargoWeightKg ? `${remesa.cargoWeightKg} kg` : "Peso por confirmar"}</p>
+            <p>{remesa.cargoDescription} · {remesa.cargoWeightKg ? `${remesa.cargoWeightKg.toLocaleString("es-CO")} kg cargados` : "Peso por confirmar"}</p>
             <input name="remesaId" type="hidden" value={remesa._id} />
             <div className="fulfillment-quantities">
-              <Quantity label="Entregada" name={`${remesa._id}_delivered`} required value={remesa.fulfillmentDraft?.deliveredQuantity ?? String(remesa.cargoWeightKg ?? "")} />
+              <Quantity label="Entregada (kg)" name={`${remesa._id}_delivered`} required value={remesa.fulfillmentDraft?.deliveredQuantity ?? String(remesa.cargoWeightKg ?? "")} />
               <Quantity label="Faltante" name={`${remesa._id}_missing`} value={remesa.fulfillmentDraft?.missingQuantity ?? "0"} />
               <Quantity label="Sobrante" name={`${remesa._id}_surplus`} value={remesa.fulfillmentDraft?.surplusQuantity ?? "0"} />
               <Quantity label="Devuelta" name={`${remesa._id}_returned`} value={remesa.fulfillmentDraft?.returnedQuantity ?? "0"} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import type { Id } from "../../../convex/_generated/dataModel";
 import type { AdvancedAction } from "../components/advanced-actions";
 import { MoneyField } from "../../components/fields/money-field";
@@ -14,6 +14,7 @@ import {
   type DriverPick,
   type VehiclePick,
 } from "../../components/fields/lookup-fields";
+import { kindLabels, statusLabels } from "../../lib/labels";
 import type { Detail } from "./detail-types";
 import {
   appointmentBefore,
@@ -41,6 +42,14 @@ export function AdvancedActionModal({
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape" && !busy) onClose();
+    }
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [busy, onClose]);
   const eligible = detail.documents.filter(
     (document) =>
       document.kind === "orden_cargue" ||
@@ -590,8 +599,10 @@ function TransshipmentFields({
 function documentOption(document: Detail["documents"][number]) {
   return (
     <option key={document._id} value={document._id}>
-      {document.kind.replaceAll("_", " ")} {document.number ?? "sin número"} ·{" "}
-      {document.officialState ?? document.status}
+      {kindLabels[document.kind] ?? document.kind} {document.number ?? "sin número"} ·{" "}
+      {statusLabels[document.officialState ?? document.status] ??
+        document.officialState ??
+        document.status}
     </option>
   );
 }

@@ -5,7 +5,7 @@ export const kindLabels: Record<string, string> = {
   remesa: "Remesa",
   manifiesto: "Manifiesto",
   cumplido: "Cumplido",
-  anulacion: "Anulacion"
+  anulacion: "Anulación"
 };
 
 export const statusLabels: Record<string, string> = {

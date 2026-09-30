@@ -365,7 +365,7 @@
 
 .advanced-modal-card { width: min(100%, 760px); }
 .advanced-common-fields { display: grid; gap: 12px; border-top: 1px solid var(--line); padding-top: 14px; }
-.confirmation-check { display: flex !important; align-items: flex-start; gap: 9px; }
+.confirmation-check, .modal-form .confirmation-check { display: flex !important; flex-direction: row; align-items: flex-start; gap: 9px; }
 .confirmation-check input { width: 17px; height: 17px; margin-top: 1px; }
 .confirmation-check > span { font-weight: 500 !important; line-height: 1.4; }
 .modal-form fieldset { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 12px; }

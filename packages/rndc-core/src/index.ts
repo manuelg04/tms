@@ -9,5 +9,6 @@ export * from "./rndc/flow.js";
 export * from "./rndc/masterData.js";
 export * from "./rndc/messages.js";
 export * from "./rndc/queries.js";
+export * from "./rndc/mirror.js";
 export * from "./rndc/types.js";
 export * from "./rndc/xml.js";

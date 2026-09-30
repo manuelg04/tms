@@ -41,6 +41,7 @@ export const trackingDispatchFields = {
   externalCode: v.string(),
   expedienteId: v.optional(v.id("expedientes")),
   sourceKey: v.string(),
+  routePlanId: v.optional(v.id("routePlans")),
   queue: trackingQueue,
   summary: trackingSummary,
   revision: v.number(),

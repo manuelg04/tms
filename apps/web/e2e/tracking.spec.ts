@@ -211,7 +211,7 @@ test("tracking lists, checkpoint reports, historical map, and visual alarms", as
   if (testInfo.project.name.startsWith("mobile")) {
     await page.getByRole("button", { name: "Abrir menú", exact: true }).click();
     await page
-      .getByRole("complementary", { name: "Navegacion principal" })
+      .getByRole("complementary", { name: "Navegación principal" })
       .getByRole("link", { name: "Alertas visuales", exact: true })
       .click();
   } else

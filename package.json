@@ -38,7 +38,8 @@
     "ingest:avansat-customers": "npm run ingest:avansat-customers -w @tms/web --",
     "auth:setup-demo": "npm run auth:setup-demo -w @tms/web",
     "auth:create-user": "npm run auth:create-user -w @tms/web --",
-    "demo:bootstrap": "npm run demo:bootstrap -w @tms/web"
+    "demo:bootstrap": "npm run demo:bootstrap -w @tms/web",
+    "ingest:avansat-routes": "npm run ingest:avansat-routes -w @tms/web --"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

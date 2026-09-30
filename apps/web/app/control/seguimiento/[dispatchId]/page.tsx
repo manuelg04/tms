@@ -7,6 +7,7 @@ import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Doc, Id } from "../../../../convex/_generated/dataModel";
 import { CheckpointForm } from "../../components/checkpoint-form";
+import { RoutePlanEditor } from "../../components/route-plan-editor";
 
 const RouteMap = dynamic(() => import("../../components/route-map"), {
   ssr: false,
@@ -92,6 +93,7 @@ export default function TrackingDetail({
           ))}
         </dl>
       </section>
+      <RoutePlanEditor dispatch={dispatch} canAssign={data.canReport} />
       {checkpoint ? (
         <CheckpointForm
           key={checkpoint._id}

@@ -1,4 +1,5 @@
 import express from "express";
+import { registerMirrorRoutes } from "./mirrorRoutes.js";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -108,6 +109,7 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}, hooks: RndcAp
   app.use("/rndc", requireServiceAuthentication);
   app.use("/rndc", createExpectedModeMiddleware(readConfig));
   app.use("/rndc", createDurableEvidenceMiddleware(runtimeSettings, durableContextValidator));
+  registerMirrorRoutes(app, readConfig);
   app.use("/pdf", requireServiceAuthentication, express.static(initialConfig.pdfDir, {
     dotfiles: "deny",
     fallthrough: true,
@@ -1574,7 +1576,7 @@ if (process.argv[1] === currentFile) {
   const runtimeSettings = readRndcRuntimeSettings();
   const logger = createJsonLogger();
   assertRuntimeCanStart(config, runtimeSettings);
-  createRndcApp(config, { logger }).listen(port, () => {
+  createRndcApp({}, { logger }).listen(port, () => {
     logger({
       level: "info",
       event: "server.started",

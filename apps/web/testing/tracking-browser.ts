@@ -27,6 +27,7 @@ export async function trackingBrowser(
   const actor = fixture[role];
   const errors: string[] = [];
   const mutations: string[] = [];
+  const observers = new Set<() => Promise<void>>();
   const epoch = Math.floor(Date.now() / 1000);
   const token = `${Buffer.from(JSON.stringify({ alg: "RS256" })).toString("base64url")}.${Buffer.from(JSON.stringify({ sub: `tracking-${role}`, iat: epoch, exp: epoch + 3600 })).toString("base64url")}.test`;
   await context.addCookies([
@@ -78,7 +79,9 @@ export async function trackingBrowser(
         try {
           if (
             query.udfPath !== "notifications:unreadCount" &&
-            !query.udfPath.startsWith("tracking:")
+            !["tracking:", "routes:", "mirror:"].some((prefix) =>
+              query.udfPath.startsWith(prefix),
+            )
           )
             throw new Error(`Unexpected query ${query.udfPath}`);
           const value =
@@ -120,6 +123,16 @@ export async function trackingBrowser(
       );
       version = endVersion;
     };
+    const invalidate = () => {
+      chain = chain
+        .then(() => transition())
+        .catch((error) => {
+          errors.push(String(error));
+        });
+      return chain;
+    };
+    observers.add(invalidate);
+    socket.onClose(() => observers.delete(invalidate));
     socket.onMessage((raw) => {
       chain = chain
         .then(async () => {
@@ -135,7 +148,11 @@ export async function trackingBrowser(
           }
           if (message.type === "Mutation") {
             try {
-              if (!message.udfPath.startsWith("tracking:"))
+              if (
+                !["tracking:", "routes:", "mirror:"].some((prefix) =>
+                  message.udfPath.startsWith(prefix),
+                )
+              )
                 throw new Error(`Unexpected mutation ${message.udfPath}`);
               const result = await actor.mutation(
                 makeFunctionReference<"mutation">(message.udfPath),
@@ -172,5 +189,12 @@ export async function trackingBrowser(
         .then(() => undefined);
     });
   });
-  return { ...fixture, errors, mutations };
+  return {
+    ...fixture,
+    errors,
+    mutations,
+    invalidate: async () => {
+      await Promise.all(Array.from(observers, (observer) => observer()));
+    },
+  };
 }

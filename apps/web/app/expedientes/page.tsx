@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import {
@@ -12,6 +12,7 @@ import {
   type DispatchFilterKey
 } from "../../convex/model/dispatchSearch";
 import { guidedDispatchStages } from "../../convex/model/dispatchPresentation";
+import { useDebounced } from "../lib/hooks";
 
 const PAGE_SIZE = 40;
 
@@ -60,7 +61,7 @@ export default function DespachosPage() {
   const [filters, setFilters] = useState<DispatchFilters>(emptyFilters);
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const normalizedFilters = useMemo(() => normalizeDispatchFilters(filters), [filters]);
-  const deferredFilters = useDeferredValue(normalizedFilters);
+  const deferredFilters = useDebounced(normalizedFilters, 250);
   const counts = useQuery(api.dispatchSearch.counts, {});
   const { results, status: pageStatus, loadMore } = usePaginatedQuery(
     api.dispatchSearch.page,

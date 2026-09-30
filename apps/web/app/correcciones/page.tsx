@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useDeferredValue, useState } from "react";
+import { useState } from "react";
 import { usePaginatedQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { correctionDetailHref } from "../lib/document-workspace";
 import { formatTimestamp, kindLabels, statusLabels } from "../lib/labels";
+import { isEmptyText, useDebounced } from "../lib/hooks";
 
 export default function CorrectionsPage() {
   const [search, setSearch] = useState("");
-  const deferredSearch = useDeferredValue(search.trim());
+  const deferredSearch = useDebounced(search.trim(), 250, isEmptyText);
   const { results, status, loadMore } = usePaginatedQuery(
     api.dashboard.documentsPage,
     { search: deferredSearch || undefined },
@@ -34,7 +35,7 @@ export default function CorrectionsPage() {
 
       <section className="panel corrections-workspace-list" aria-labelledby="corrections-list-title">
         <div className="section-heading"><div><span className="eyebrow">Documentos</span><h3 id="corrections-list-title">Disponibles para revisión</h3></div><span className="result-count">{results.length} visibles</span></div>
-        {status === "LoadingFirstPage" ? <div className="skeleton">Buscando documentos…</div> : results.length === 0 ? <div className="empty-state">No hay documentos con esta búsqueda.</div> : (
+        {status === "LoadingFirstPage" ? <div className="skeleton">Buscando documentos…</div> : results.length === 0 ? <div className="empty-state">{status === "Exhausted" ? "No hay documentos con esta búsqueda." : "No hay coincidencias en los documentos revisados. Sigue buscando en la siguiente página."}</div> : (
           <div className="correction-document-list">
             <div aria-hidden="true" className="correction-document-header">
               <span>Documento</span>
@@ -61,7 +62,7 @@ export default function CorrectionsPage() {
         )}
       </section>
 
-      {status === "CanLoadMore" || status === "LoadingMore" ? <button className="load-more" disabled={status === "LoadingMore"} onClick={() => loadMore(25)} type="button">{status === "LoadingMore" ? "Cargando…" : "Cargar 25 más"}</button> : null}
+      {status === "CanLoadMore" || status === "LoadingMore" ? <button className="load-more" disabled={status === "LoadingMore"} onClick={() => loadMore(25)} type="button">{status === "LoadingMore" ? "Cargando…" : results.length === 0 ? "Buscar en la siguiente página" : "Cargar 25 más"}</button> : null}
     </>
   );
 }

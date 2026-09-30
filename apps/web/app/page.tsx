@@ -19,24 +19,24 @@ export default function Home() {
       <section className="metric-strip" aria-label="Resumen de documentos">
         <article className="metric ok">
           <span className="eyebrow">Autorizados</span>
-          <strong>{overview?.authorized ?? "—"}</strong>
+          <strong>{overview ? countLabel(overview.authorized, overview.capped) : "—"}</strong>
           <span className="foot">Documentos con radicado RNDC</span>
         </article>
         <article className="metric bad">
           <span className="eyebrow">Rechazados</span>
-          <strong>{overview?.rejected ?? "—"}</strong>
+          <strong>{overview ? countLabel(overview.rejected, overview.capped) : "—"}</strong>
           <span className="foot">Requieren correccion y reenvio</span>
         </article>
         <article className="metric">
           <span className="eyebrow">Cumplidos</span>
-          <strong>{overview?.fulfilled ?? "—"}</strong>
+          <strong>{overview ? countLabel(overview.fulfilled, overview.capped) : "—"}</strong>
           <span className="foot">Viajes cerrados ante el RNDC</span>
         </article>
         <article className="metric">
           <span className="eyebrow">Viajes</span>
-          <strong>{overview?.totalTrips ?? "—"}</strong>
+          <strong>{overview ? countLabel(overview.totalTrips, overview.capped) : "—"}</strong>
           <span className="foot">
-            {overview?.lastActivity ? `Ultima actividad ${formatTimestamp(overview.lastActivity)}` : "Sin actividad todavia"}
+            {overview?.lastActivity ? `Última actividad ${formatTimestamp(overview.lastActivity)}` : "Sin actividad todavía"}
           </span>
         </article>
       </section>
@@ -94,4 +94,8 @@ export default function Home() {
       </div>
     </>
   );
+}
+
+function countLabel(value: number, capped: boolean): string {
+  return `${value.toLocaleString("es-CO")}${capped ? "+" : ""}`;
 }

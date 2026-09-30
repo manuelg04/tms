@@ -1,20 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useDeferredValue, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePaginatedQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { DocumentTable } from "../components/document-table";
 import type { DocumentSection } from "../lib/document-workspace";
 import { documentSections } from "../lib/document-workspace";
 import { statusLabels } from "../lib/labels";
+import { isEmptyText, useDebounced } from "../lib/hooks";
 
 type StatusFilter = "draft" | "pending" | "sent" | "authorized" | "rejected" | "fulfilled" | "annulled" | "";
 
 export function DocumentWorkspace({ section }: { section: DocumentSection }) {
   const [status, setStatus] = useState<StatusFilter>("");
   const [search, setSearch] = useState("");
-  const deferredSearch = useDeferredValue(search.trim());
+  const deferredSearch = useDebounced(search.trim(), 250, isEmptyText);
   const { results, status: pageStatus, loadMore } = usePaginatedQuery(
     api.dashboard.documentsPage,
     {

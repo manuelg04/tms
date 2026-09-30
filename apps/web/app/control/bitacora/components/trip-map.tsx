@@ -93,6 +93,7 @@ export function TripMap({ tripId, tripStatus, interactive = true, height = 420, 
   const requested = useRef<string | null>(null);
   const [actual, setActual] = useState<{ coordinates: number[][]; distanceKm: number; durationMin: number } | null>(null);
   const requestedActual = useRef<string | null>(null);
+  const mapState = useRef<{ map: OlMap; lineSource: VectorSource; actualSource: VectorSource; pinSource: VectorSource; lineLayer: VectorLayer<VectorSource>; fittedKey: string } | null>(null);
 
   const located = data?.stops.filter((s) => s.lat !== null && s.lng !== null) ?? [];
   const stopsKey = data?.stopsKey ?? "";
@@ -151,8 +152,64 @@ export function TripMap({ tripId, tripStatus, interactive = true, height = 420, 
     onSummary?.(route && !route.approximate ? { distanceKm: route.distanceKm, durationMin: route.durationMin } : null);
   }, [route, onSummary]);
 
+  const ready = Boolean(data) && located.length > 0;
+
   useEffect(() => {
-    if (!container.current || !data || located.length === 0) return;
+    if (!ready || !container.current) return;
+    const lineSource = new VectorSource();
+    const actualSource = new VectorSource();
+    const pinSource = new VectorSource();
+    const lineLayer = new VectorLayer({ source: lineSource });
+    const actualLayer = new VectorLayer({
+      source: actualSource,
+      style: [
+        new Style({ stroke: new Stroke({ color: "rgba(255,255,255,0.9)", width: 9 }) }),
+        new Style({ stroke: new Stroke({ color: COLORS.navy, width: 4.5, lineCap: "round", lineJoin: "round" }) }),
+      ],
+    });
+    const pinLayer = new VectorLayer({ source: pinSource, declutter: true });
+    const overlay = new Overlay({ element: popupRef.current ?? undefined, positioning: "bottom-center", offset: [0, -16], stopEvent: true, autoPan: { margin: 24, animation: { duration: 200 } } });
+    const map = new OlMap({
+      target: container.current,
+      layers: [
+        new TileLayer({ className: "bm-basemap", source: new OSM({ crossOrigin: "anonymous" }) }),
+        lineLayer,
+        actualLayer,
+        pinLayer,
+      ],
+      overlays: [overlay],
+      controls: interactive ? [new Zoom({ zoomInTipLabel: "Acercar", zoomOutTipLabel: "Alejar" }), new Attribution({ collapsible: false })] : [new Attribution({ collapsible: false })],
+      interactions: interactive ? defaultInteractions() : [],
+      view: new View({ center: fromLonLat([-74, 5]), zoom: 6 }),
+    });
+    if (interactive) {
+      map.on("pointermove", (event) => {
+        const hit = map.hasFeatureAtPixel(event.pixel);
+        map.getTargetElement().style.cursor = hit ? "pointer" : "";
+      });
+      map.on("singleclick", (event) => {
+        const feature = map.forEachFeatureAtPixel(event.pixel, (f) => f);
+        const report = (feature?.get("report") as MapReport | undefined) ?? null;
+        setSelected(report);
+        overlay.setPosition(report && feature ? (feature.getGeometry() as Point).getCoordinates() : undefined);
+      });
+    }
+    mapState.current = { map, lineSource, actualSource, pinSource, lineLayer, fittedKey: "" };
+    return () => {
+      mapState.current = null;
+      overlay.setElement(undefined);
+      map.setTarget(undefined);
+      map.dispose();
+    };
+  }, [ready, interactive]);
+
+  useEffect(() => {
+    const state = mapState.current;
+    if (!state || !data) return;
+    const { map, lineSource, actualSource, pinSource, lineLayer } = state;
+    lineSource.clear();
+    actualSource.clear();
+    pinSource.clear();
     const stopReports = new Map<number, MapReport>();
     for (const report of data.reports) {
       if (report.stopIndex === null) continue;
@@ -161,12 +218,10 @@ export function TripMap({ tripId, tripStatus, interactive = true, height = 420, 
     }
     const departureDay = data.reports[0] ? dateKey(data.reports[0].at) : "";
 
-    const lineSource = new VectorSource();
     const hasActual = Boolean(actual && actual.coordinates.length >= 2);
     if (route) lineSource.addFeature(new Feature({ geometry: new LineString(route.coordinates.map((c) => fromLonLat(c))) }));
-    const lineLayer = new VectorLayer({
-      source: lineSource,
-      style: hasActual
+    lineLayer.setStyle(
+      hasActual
         ? [
             new Style({ stroke: new Stroke({ color: "rgba(255,255,255,0.9)", width: 8 }) }),
             new Style({ stroke: new Stroke({ color: COLORS.planned, width: 3.5, lineDash: [8, 7], lineCap: "round", lineJoin: "round" }) }),
@@ -175,19 +230,10 @@ export function TripMap({ tripId, tripStatus, interactive = true, height = 420, 
             new Style({ stroke: new Stroke({ color: "rgba(255,255,255,0.9)", width: 9 }) }),
             new Style({ stroke: new Stroke({ color: COLORS.navy, width: 4.5, lineDash: route?.approximate ? [10, 8] : undefined, lineCap: "round", lineJoin: "round" }) }),
           ],
-    });
-    const actualSource = new VectorSource();
+    );
     if (hasActual) actualSource.addFeature(new Feature({ geometry: new LineString(actual!.coordinates.map((c) => fromLonLat(c))) }));
-    const actualLayer = new VectorLayer({
-      source: actualSource,
-      style: [
-        new Style({ stroke: new Stroke({ color: "rgba(255,255,255,0.9)", width: 9 }) }),
-        new Style({ stroke: new Stroke({ color: COLORS.navy, width: 4.5, lineCap: "round", lineJoin: "round" }) }),
-      ],
-    });
     const plannedLine = route && !route.approximate ? route.coordinates : null;
 
-    const pinSource = new VectorSource();
     const total = data.stops.length;
     for (const stop of data.stops) {
       if (stop.lat === null || stop.lng === null) continue;
@@ -241,45 +287,15 @@ export function TripMap({ tripId, tripStatus, interactive = true, height = 420, 
       pinSource.addFeature(feature);
     }
     setOffRouteCount(offRoute.length);
-    const pinLayer = new VectorLayer({ source: pinSource, declutter: true });
-
-    const overlay = new Overlay({ element: popupRef.current ?? undefined, positioning: "bottom-center", offset: [0, -16], stopEvent: true, autoPan: { margin: 24, animation: { duration: 200 } } });
-    const map = new OlMap({
-      target: container.current,
-      layers: [
-        new TileLayer({ className: "bm-basemap", source: new OSM({ crossOrigin: "anonymous" }) }),
-        lineLayer,
-        actualLayer,
-        pinLayer,
-      ],
-      overlays: [overlay],
-      controls: interactive ? [new Zoom({ zoomInTipLabel: "Acercar", zoomOutTipLabel: "Alejar" }), new Attribution({ collapsible: false })] : [new Attribution({ collapsible: false })],
-      interactions: interactive ? defaultInteractions() : [],
-      view: new View({ center: fromLonLat([-74, 5]), zoom: 6 }),
-    });
-    const extentSource = new VectorSource();
-    for (const src of [lineSource, actualSource, pinSource]) extentSource.addFeatures(src.getFeatures().map((f) => f.clone()));
-    const extent = extentSource.getExtent();
-    if (extent && Number.isFinite(extent[0])) map.getView().fit(extent, { padding: [48, 120, 48, 48], maxZoom: 11 });
-    if (interactive) {
-      map.on("pointermove", (event) => {
-        const hit = map.hasFeatureAtPixel(event.pixel);
-        map.getTargetElement().style.cursor = hit ? "pointer" : "";
-      });
-      map.on("singleclick", (event) => {
-        const feature = map.forEachFeatureAtPixel(event.pixel, (f) => f);
-        const report = (feature?.get("report") as MapReport | undefined) ?? null;
-        setSelected(report);
-        overlay.setPosition(report && feature ? (feature.getGeometry() as Point).getCoordinates() : undefined);
-      });
+    const fitKey = `${data.stopsKey}:${route ? "ruta" : "puntos"}`;
+    if (state.fittedKey !== fitKey) {
+      const extentSource = new VectorSource();
+      for (const src of [lineSource, actualSource, pinSource]) extentSource.addFeatures(src.getFeatures().map((f) => f.clone()));
+      const extent = extentSource.getExtent();
+      if (extent && Number.isFinite(extent[0])) map.getView().fit(extent, { padding: [48, 120, 48, 48], maxZoom: 11 });
+      state.fittedKey = fitKey;
     }
-    return () => {
-      overlay.setElement(undefined);
-      map.setTarget(undefined);
-      map.dispose();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, route, actual, interactive, tripStatus]);
+  }, [data, route, actual, tripStatus, ready, interactive]);
 
   if (!data) return <div className="skeleton" style={{ height }}>Cargando mapa…</div>;
   if (located.length === 0)

@@ -63,12 +63,14 @@ export const overview = query({
     fulfilled: v.number(),
     annulled: v.number(),
     inProgress: v.number(),
-    lastActivity: v.union(v.number(), v.null())
+    lastActivity: v.union(v.number(), v.null()),
+    capped: v.boolean()
   }),
   handler: async (ctx) => {
     const actor = await requireActor(ctx);
-    const documents = await ctx.db.query("documents").withIndex("by_organization", (q) => q.eq("organizationId", actor.organizationId)).order("desc").take(1000);
-    const trips = await ctx.db.query("trips").withIndex("by_organization", (q) => q.eq("organizationId", actor.organizationId)).order("desc").take(1000);
+    const limit = 1000;
+    const documents = await ctx.db.query("documents").withIndex("by_organization", (q) => q.eq("organizationId", actor.organizationId)).order("desc").take(limit);
+    const trips = await ctx.db.query("trips").withIndex("by_organization", (q) => q.eq("organizationId", actor.organizationId)).order("desc").take(limit);
     const statuses = documents.map(dashboardStatus);
 
     const countByStatus = (status: DashboardStatus) => statuses.filter((candidate) => candidate === status).length;
@@ -81,7 +83,8 @@ export const overview = query({
       fulfilled: countByStatus("fulfilled"),
       annulled: countByStatus("annulled"),
       inProgress: countByStatus("draft") + countByStatus("pending") + countByStatus("sent"),
-      lastActivity: documents[0]?.updatedAt ?? null
+      lastActivity: documents[0]?.updatedAt ?? null,
+      capped: documents.length === limit || trips.length === limit
     };
   }
 });

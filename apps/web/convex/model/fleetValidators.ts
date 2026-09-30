@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import type { Id } from "../_generated/dataModel";
-import { masterSyncValidator } from "../schema";
+import { masterSyncValidator } from "./schemaValidators";
 
 
 export const masterSyncKindValidator = v.union(v.literal("driver"), v.literal("vehicle"), v.literal("party"));

@@ -58,6 +58,8 @@ import type * as model_reconciliationOutcome from "../model/reconciliationOutcom
 import type * as model_rndcCatalogs from "../model/rndcCatalogs.js";
 import type * as model_rndcOperationRecords from "../model/rndcOperationRecords.js";
 import type * as model_rndcReferenceCatalogRecords from "../model/rndcReferenceCatalogRecords.js";
+import type * as model_schemaMasterTables from "../model/schemaMasterTables.js";
+import type * as model_schemaValidators from "../model/schemaValidators.js";
 import type * as model_searchText from "../model/searchText.js";
 import type * as model_securityStudies from "../model/securityStudies.js";
 import type * as model_securityStudyValidators from "../model/securityStudyValidators.js";
@@ -134,6 +136,8 @@ declare const fullApi: ApiFromModules<{
   "model/rndcCatalogs": typeof model_rndcCatalogs;
   "model/rndcOperationRecords": typeof model_rndcOperationRecords;
   "model/rndcReferenceCatalogRecords": typeof model_rndcReferenceCatalogRecords;
+  "model/schemaMasterTables": typeof model_schemaMasterTables;
+  "model/schemaValidators": typeof model_schemaValidators;
   "model/searchText": typeof model_searchText;
   "model/securityStudies": typeof model_securityStudies;
   "model/securityStudyValidators": typeof model_securityStudyValidators;

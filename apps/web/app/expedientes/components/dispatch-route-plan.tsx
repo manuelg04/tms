@@ -49,7 +49,7 @@ export function DispatchRoutePlan({ expedienteId, origin, destination }: { exped
         <ol className="dispatch-route-plan-stops">
           {plan.stops.map((stop) => (
             <li key={stop.key}>
-              <strong>{stop.kind === "virtual" ? `${stop.label} (Virtual)` : stop.label}</strong>
+              <strong>{stopTitle(stop)}</strong>
               <span>{stop.scheduledAt}</span>
             </li>
           ))}
@@ -139,4 +139,8 @@ function AssignForm({ expedienteId, origin, destination, onAssigned }: { expedie
       ) : null}
     </form>
   );
+}
+
+function stopTitle(stop: { label: string; kind: "physical" | "virtual" | "delivery" }): string {
+  return stop.kind === "virtual" && !/virtual/i.test(stop.label) ? `${stop.label} (Virtual)` : stop.label;
 }

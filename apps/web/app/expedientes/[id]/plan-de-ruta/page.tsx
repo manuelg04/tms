@@ -109,7 +109,7 @@ export default function RoutePlanSheetPage({ params }: { params: Promise<{ id: s
         <ol className="route-plan-stops">
           {plan.stops.map((stop) => (
             <li key={stop.key}>
-              <strong>{stop.kind === "virtual" ? `${stop.label} (Virtual)` : stop.label}</strong>
+              <strong>{stopTitle(stop)}</strong>
               <span>{stop.kind === "delivery" ? "-" : stop.controller || stop.address || "-"}</span>
               <span>{stop.scheduledAt}:00</span>
             </li>
@@ -134,4 +134,8 @@ function Field({ label, value }: { label: string; value: string }) {
       <b>{label}</b> {value}
     </span>
   );
+}
+
+function stopTitle(stop: { label: string; kind: "physical" | "virtual" | "delivery" }): string {
+  return stop.kind === "virtual" && !/virtual/i.test(stop.label) ? `${stop.label} (Virtual)` : stop.label;
 }

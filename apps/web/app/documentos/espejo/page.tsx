@@ -6,6 +6,7 @@ import { useConvexAuth, useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { convexErrorMessage } from "../../lib/convex-error";
+import { optionalModules } from "../../lib/modules";
 import "../../control/tracking.css";
 import "../../rutas/routes.css";
 
@@ -337,7 +338,7 @@ export default function MirrorPage() {
                   un evento no confirma el estado actual del documento.
                 </p>
               </div>
-              {data.canRefresh && detail.record.process === 4 && (
+              {optionalModules.trafficControl && data.canRefresh && detail.record.process === 4 && (
                 <form
                   className="route-actions"
                   onSubmit={async (e) => {

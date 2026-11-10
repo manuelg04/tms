@@ -93,3 +93,25 @@ export const planDoc = v.object({
   _creationTime: v.number(),
   ...planFields,
 });
+export const dispatchPlanFields = {
+  organizationId: v.id("organizations"),
+  expedienteId: v.id("expedientes"),
+  routeId: v.id("operationalRoutes"),
+  routeCode: v.string(),
+  routeRevision: v.number(),
+  origin: v.string(),
+  originCode: v.string(),
+  destination: v.string(),
+  destinationCode: v.string(),
+  via: v.string(),
+  departureAt: v.string(),
+  stops: v.array(plannedStop),
+  createdAt: v.number(),
+  createdBy: v.id("users"),
+  requestKey: v.string(),
+};
+export const dispatchPlanDoc = v.object({
+  _id: v.id("dispatchRoutePlans"),
+  _creationTime: v.number(),
+  ...dispatchPlanFields,
+});

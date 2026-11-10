@@ -1,5 +1,5 @@
 import { defineSchema, defineTable } from "convex/server";
-import { pointFields, routeFields, planFields } from "./model/routeValidators";
+import { pointFields, routeFields, planFields, dispatchPlanFields } from "./model/routeValidators";
 import { mirrorRecordFields, mirrorRunFields } from "./model/mirrorValidators";
 import { v } from "convex/values";
 import { monitoringReportFields, monitoringTripFields } from "./model/monitoringValidators";
@@ -43,6 +43,7 @@ export default defineSchema({
   operationalPoints: defineTable(pointFields).index("by_org_code", ["organizationId", "code"]),
   operationalRoutes: defineTable(routeFields).index("by_org_code", ["organizationId", "code"]),
   routePlans: defineTable(planFields).index("by_dispatch", ["dispatchId"]),
+  dispatchRoutePlans: defineTable(dispatchPlanFields).index("by_expediente", ["expedienteId"]),
   monitoringTrips: defineTable(monitoringTripFields)
     .index("by_org_status", ["organizationId", "status"])
     .index("by_org_code", ["organizationId", "code"])

@@ -13,6 +13,7 @@ import type * as avansatCustomers from "../avansatCustomers.js";
 import type * as clientCompanies from "../clientCompanies.js";
 import type * as dashboard from "../dashboard.js";
 import type * as dispatchExceptions from "../dispatchExceptions.js";
+import type * as dispatchRoutePlans from "../dispatchRoutePlans.js";
 import type * as dispatchSearch from "../dispatchSearch.js";
 import type * as dispatches from "../dispatches.js";
 import type * as divisionMaintenance from "../divisionMaintenance.js";
@@ -96,6 +97,7 @@ declare const fullApi: ApiFromModules<{
   clientCompanies: typeof clientCompanies;
   dashboard: typeof dashboard;
   dispatchExceptions: typeof dispatchExceptions;
+  dispatchRoutePlans: typeof dispatchRoutePlans;
   dispatchSearch: typeof dispatchSearch;
   dispatches: typeof dispatches;
   divisionMaintenance: typeof divisionMaintenance;

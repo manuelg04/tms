@@ -19,6 +19,7 @@ import {
 } from "../components/advanced-actions";
 import { BlockerList } from "../components/blocker-list";
 import { DocumentHub } from "../components/document-hub";
+import { DispatchRoutePlan } from "../components/dispatch-route-plan";
 import { NextActionCard } from "../components/next-action-card";
 import { resolveDispatchEntry } from "../../lib/document-workspace";
 import { AdvancedActionModal } from "./advanced-action-modal";
@@ -757,6 +758,12 @@ export function DispatchDetail({
           onEmit={(scope) => void emitScope(scope)}
         />
       </div>
+
+      <DispatchRoutePlan
+        destination={detail.unloadingLocation.city}
+        expedienteId={detail.expediente._id}
+        origin={detail.loadingLocation.city}
+      />
 
       <div id="correcciones">
         <AdvancedActions

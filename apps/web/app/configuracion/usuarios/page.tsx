@@ -4,7 +4,10 @@ import { useState, type FormEvent } from "react";
 import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
-import { jobTitleDescriptions, jobTitleLabels, jobTitles, requiresCustomer, type JobTitle } from "../../../convex/model/userAccounts";
+import { jobTitleDescriptions, jobTitleLabels, jobTitles as allJobTitles, requiresCustomer, type JobTitle } from "../../../convex/model/userAccounts";
+import { optionalModules } from "../../lib/modules";
+
+const jobTitles = allJobTitles.filter((title) => optionalModules.trafficControl || !requiresCustomer(title));
 import { convexErrorMessage } from "../../lib/convex-error";
 import { CustomerField, type CustomerPick } from "../../components/fields/customer-field";
 import "../../control/tracking.css";

@@ -9,6 +9,7 @@ import { useDemoUser } from "../providers";
 import { resolveDocumentSection } from "../lib/document-workspace";
 import { jobTitleLabels } from "../../convex/model/userAccounts";
 import { clientCanVisit } from "../lib/client-access";
+import { isHiddenModulePath } from "../lib/modules";
 import "./document-navigation.css";
 
 type PageMeta = {
@@ -70,7 +71,7 @@ const actionLabels: Record<string, string> = {
   duplicar: "Duplicar"
 };
 
-const navItems: NavItem[] = [
+const allNavItems: NavItem[] = [
   { href: "/rutas", label: "Rutas y P. Control", icon: <span className="nav-icon" aria-hidden>↗</span> },
   { href: "/documentos/espejo", label: "Espejo RNDC", icon: <span className="nav-icon" aria-hidden>▤</span> },
   {
@@ -189,10 +190,18 @@ const navItems: NavItem[] = [
   }
 ];
 
+const navItems: NavItem[] = allNavItems.flatMap((item) => {
+  const children = item.children?.filter((child) => !isHiddenModulePath(child.href));
+  if (item.children && !children?.length) return [];
+  if (!item.children) return isHiddenModulePath(item.href) ? [] : [item];
+  return [{ ...item, href: isHiddenModulePath(item.href) ? children![0].href : item.href, children }];
+});
+
 type RndcMode = "dry-run" | "live" | "offline";
 
-const clientNavItems: NavItem[] = navItems.flatMap((item) => {
+const clientNavItems: NavItem[] = allNavItems.flatMap((item) => {
   if (item.href === "/control/bitacora") {
+    if (isHiddenModulePath(item.href)) return [];
     return [{ ...item, children: item.children?.filter((child) => clientCanVisit(child.href)) }];
   }
   if (item.href === "/configuracion/alertas-visuales") {
@@ -214,11 +223,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
   const meta = resolvePageMeta(pathname);
   const items = isClient ? clientNavItems : navItems;
-  const clientBlocked = isClient && pathname !== "/login" && !clientCanVisit(pathname);
+  const hiddenModule = pathname !== "/login" && isHiddenModulePath(pathname);
+  const clientHome = isHiddenModulePath("/control/bitacora") ? "/configuracion/mi-clave" : "/control/bitacora";
+  const clientBlocked = isClient && pathname !== "/login" && (hiddenModule || !clientCanVisit(pathname));
 
   useEffect(() => {
-    if (clientBlocked) router.replace("/control/bitacora");
-  }, [clientBlocked, router]);
+    if (clientBlocked) router.replace(clientHome);
+    else if (hiddenModule) router.replace("/");
+  }, [clientBlocked, clientHome, hiddenModule, router]);
 
   useEffect(() => {
     setNavOpen(false);
@@ -273,8 +285,8 @@ export function AppShell({ children }: { children: ReactNode }) {
     return <div className="full-page-state">Validando sesión…</div>;
   }
 
-  if (clientBlocked) {
-    return <div className="full-page-state">Redirigiendo a la bitácora de su empresa…</div>;
+  if (clientBlocked || hiddenModule) {
+    return <div className="full-page-state">Redirigiendo…</div>;
   }
 
   return (

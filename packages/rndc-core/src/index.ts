@@ -12,3 +12,4 @@ export * from "./rndc/queries.js";
 export * from "./rndc/mirror.js";
 export * from "./rndc/types.js";
 export * from "./rndc/xml.js";
+export * from "./documents/manifestPdf.js";

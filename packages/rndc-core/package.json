@@ -23,6 +23,7 @@
   "dependencies": {
     "dotenv": "^16.6.1",
     "fast-xml-parser": "^5.2.5",
-    "pdfkit": "^0.17.2"
+    "pdfkit": "^0.17.2",
+    "qrcode": "^1.5.4"
   }
 }

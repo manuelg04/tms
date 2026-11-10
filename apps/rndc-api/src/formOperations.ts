@@ -6,6 +6,7 @@ import {
   generateLoadingOrderDocument,
   generateManifestDocument,
   generateManifestFulfillmentDocument,
+  manifestRadicationStamp,
   generateRemesaDocument,
   RndcClient
 } from "@tms/rndc-core";
@@ -661,7 +662,8 @@ export async function buildOperationDocuments(operation: FormOperation, scenario
     return [await generateManifestDocument(scenario, {
       manifestAuthorization: manifest?.radicado,
       seguridadQr: manifest?.seguridadQr,
-      observacionesQr: manifest?.observacionesQr
+      observacionesQr: manifest?.observacionesQr,
+      radicatedAt: manifestRadicationStamp(new Date())
     }, config.pdfDir, config.mode)];
   }
 

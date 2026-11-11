@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import { useMutation } from "convex/react";
+import { useMutation } from "../../../lib/convex-hooks";
 import { api } from "../../../../convex/_generated/api";
 import type { Doc } from "../../../../convex/_generated/dataModel";
 import { NOVELTY_TYPES, bogotaLocalInput, parseBogotaLocalInput } from "../../../../convex/model/monitoring";

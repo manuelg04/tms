@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { usePaginatedQuery, useQuery } from "convex/react";
+import { usePaginatedQuery, useQuery } from "../lib/convex-hooks";
 import { api } from "../../convex/_generated/api";
 import {
   dispatchFiltersFromSearchParams,
@@ -13,6 +13,7 @@ import {
 } from "../../convex/model/dispatchSearch";
 import { guidedDispatchStages } from "../../convex/model/dispatchPresentation";
 import { useDebounced } from "../lib/hooks";
+import { Skeleton } from "../components/skeleton";
 
 const PAGE_SIZE = 40;
 
@@ -183,7 +184,7 @@ export default function DespachosPage() {
         ) : null}
 
         {pageStatus === "LoadingFirstPage" ? (
-          <div className="skeleton">Cargando despachos…</div>
+          <Skeleton label="Cargando despachos" />
         ) : rows.length === 0 ? (
           <div className="expediente-empty">
             <strong>No hay despachos {hasFilters ? "con estos filtros" : "todavía"}</strong>

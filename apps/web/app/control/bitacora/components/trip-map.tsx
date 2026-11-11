@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery } from "../../../lib/convex-hooks";
 import OlMap from "ol/Map";
 import View from "ol/View";
 import Overlay from "ol/Overlay";
@@ -21,6 +21,7 @@ import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { channelLabels, formatDate, formatDateTime, formatTime, kindLabels } from "./format";
 import "ol/ol.css";
+import { Skeleton } from "../../../components/skeleton";
 
 type MapData = NonNullable<ReturnType<typeof useQuery<typeof api.monitoring.mapData>>>;
 type MapReport = MapData["reports"][number];
@@ -297,7 +298,7 @@ export function TripMap({ tripId, tripStatus, interactive = true, height = 420, 
     }
   }, [data, route, actual, tripStatus, ready, interactive]);
 
-  if (!data) return <div className="skeleton" style={{ height }}>Cargando mapa…</div>;
+  if (!data) return <Skeleton height={height} label="Cargando mapa" variant="block" />;
   if (located.length === 0)
     return <div className="bm-map-empty" style={{ height: Math.min(height, 140) }}>No fue posible ubicar los municipios de la ruta en el mapa.</div>;
   const unlocated = data.stops.filter((s) => s.lat === null);

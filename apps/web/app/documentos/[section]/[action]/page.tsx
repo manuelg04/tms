@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { DocumentRegistry } from "../../document-registry";
 import { registryModules, type RegistryAction } from "../../registry-config";
+import { Skeleton } from "../../../components/skeleton";
 
 export const dynamicParams = false;
 
@@ -20,7 +21,7 @@ export default async function DocumentActionPage({
   const module = registryModules.find((item) => item.slug === section);
   if (!module || !module.actions.includes(action as RegistryAction)) notFound();
   return (
-    <Suspense fallback={<div className="skeleton">Cargando documentos…</div>}>
+    <Suspense fallback={<Skeleton label="Cargando documentos" />}>
       <DocumentRegistry
         action={action as RegistryAction}
         key={`${section}/${action}`}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
-import { useQuery } from "convex/react";
+import { useQuery } from "../lib/convex-hooks";
 import { api } from "../../convex/_generated/api";
 import { useDemoUser } from "../providers";
 import { resolveDocumentSection } from "../lib/document-workspace";
@@ -11,6 +11,7 @@ import { jobTitleLabels } from "../../convex/model/userAccounts";
 import { clientCanVisit } from "../lib/client-access";
 import { isHiddenModulePath } from "../lib/modules";
 import "./document-navigation.css";
+import { Skeleton } from "./skeleton";
 
 type PageMeta = {
   title: string;
@@ -216,7 +217,12 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { loading, user } = useDemoUser();
   const isClient = user?.role === "client";
   const unread = useQuery(api.notifications.unreadCount, user && !isClient ? {} : "skip");
-  const [mode, setMode] = useState<RndcMode>("offline");
+  const canSubmit = user?.role === "admin" || user?.role === "operator";
+  const pending = useQuery(api.pendingEmissions.list, user && !isClient ? {} : "skip");
+  const waiting = pending?.waiting ?? 0;
+  const queued = pending?.rows.length ?? 0;
+  const [mode, setMode] = useState<RndcMode | null>(null);
+  const [rndcAvailable, setRndcAvailable] = useState(true);
   const [navOpen, setNavOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<string[]>(() =>
     navItems.filter((item) => item.children && isActiveNavItem(pathname, item)).map((item) => item.href)
@@ -257,8 +263,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     function check() {
       fetch("/api/rndc/health", { cache: "no-store" })
         .then((response) => response.json())
-        .then((body: { mode?: RndcMode }) => {
-          if (!cancelled && (body.mode === "dry-run" || body.mode === "live")) setMode(body.mode);
+        .then((body: { mode?: RndcMode; rndcAvailable?: boolean }) => {
+          if (cancelled) return;
+          setMode(body.mode === "dry-run" || body.mode === "live" ? body.mode : "offline");
+          setRndcAvailable(body.rndcAvailable !== false);
         })
         .catch(() => {
           if (!cancelled) setMode("offline");
@@ -277,15 +285,26 @@ export function AppShell({ children }: { children: ReactNode }) {
     };
   }, [healthEnabled]);
 
+  useEffect(() => {
+    if (!canSubmit || waiting === 0) return;
+    let stopped = false;
+    function drain() {
+      if (stopped || document.visibilityState !== "visible") return;
+      void fetch("/api/rndc/pending-emissions/drain", { method: "POST" }).catch(() => undefined);
+    }
+    drain();
+    const timer = window.setInterval(drain, 30_000);
+    return () => {
+      stopped = true;
+      window.clearInterval(timer);
+    };
+  }, [canSubmit, waiting]);
+
   if (pathname === "/login") {
     return <main className="login-shell">{children}</main>;
   }
 
-  if (loading) {
-    return <div className="full-page-state">Validando sesión…</div>;
-  }
-
-  if (clientBlocked || hiddenModule) {
+  if (!loading && (clientBlocked || hiddenModule)) {
     return <div className="full-page-state">Redirigiendo…</div>;
   }
 
@@ -303,7 +322,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <nav className="nav" aria-label="Módulos de operación">
           <span className="nav-label">{isClient ? "Su empresa" : "Operación"}</span>
-          {items.map((item) => {
+          {loading ? <div className="nav-placeholder" aria-hidden>{Array.from({ length: 7 }, (_, index) => <span key={index} />)}</div> : null}
+          {(loading ? [] : items).map((item) => {
             const active = isActiveNavItem(pathname, item);
             const expanded = expandedGroups.includes(item.href);
             const groupId = `nav-${item.href.split("/").filter(Boolean).join("-")}`;
@@ -363,11 +383,16 @@ export function AppShell({ children }: { children: ReactNode }) {
                 Notificaciones <span className="count">{unread}</span>
               </Link>
             ) : null}
+            {queued > 0 ? (
+              <Link className="notif-pill pending" href="/#pendientes-rndc">
+                Pendientes RNDC <span className="count">{queued}</span>
+              </Link>
+            ) : null}
             {isClient ? (
               <span className="mode-chip">Solo lectura</span>
-            ) : (
-              <span className={mode === "live" ? "mode-chip live" : mode === "offline" ? "mode-chip offline" : "mode-chip"}>
-                {mode === "live" ? "En vivo" : mode === "offline" ? "API sin conexion" : "Modo prueba"}
+            ) : mode === null ? null : (
+              <span className={mode === "offline" || !rndcAvailable ? "mode-chip offline" : mode === "live" ? "mode-chip live" : "mode-chip"}>
+                {mode === "offline" ? "API sin conexion" : !rndcAvailable ? "RNDC sin servicio" : mode === "live" ? "En vivo" : "Modo prueba"}
               </span>
             )}
             {user ? (
@@ -385,7 +410,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main className="page">{children}</main>
+        <main className="page">{loading ? <Skeleton label="Validando sesión" variant="detail" /> : children}</main>
       </div>
     </div>
   );

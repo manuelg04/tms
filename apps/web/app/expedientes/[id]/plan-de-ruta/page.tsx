@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { use } from "react";
-import { useConvexAuth, useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "../../../lib/convex-hooks";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { companyProfile } from "../../../lib/company-profile";
 import "./route-plan-sheet.css";
+import { Skeleton } from "../../../components/skeleton";
 
 export default function RoutePlanSheetPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -15,9 +16,7 @@ export default function RoutePlanSheetPage({ params }: { params: Promise<{ id: s
 
   if (data === undefined) {
     return (
-      <div className="skeleton" role="status">
-        Preparando plan de ruta…
-      </div>
+      <Skeleton label="Preparando plan de ruta" variant="detail" />
     );
   }
 

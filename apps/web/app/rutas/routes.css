@@ -145,3 +145,87 @@
     width: 100%;
   }
 }
+.route-heading-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.route-search {
+  flex: 1;
+  max-width: 420px;
+  min-width: 200px;
+}
+.route-table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+.route-table tbody tr:hover {
+  background: var(--surface-alt);
+}
+.route-table tbody tr.route-empty-row {
+  cursor: default;
+}
+.route-pagination {
+  margin-bottom: 0;
+  align-items: center;
+}
+.route-pagination span {
+  margin-right: auto;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+.side-sheet .route-editor label,
+.side-sheet .route-import label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+.side-sheet .route-editor input,
+.side-sheet .route-import input {
+  padding: 9px 10px;
+  border: 1px solid var(--line, #dce3eb);
+  border-radius: 5px;
+  background: var(--panel, #fff);
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  max-width: 100%;
+  min-width: 0;
+}
+.side-sheet .route-editor fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.side-sheet .route-editor .route-check {
+  flex-direction: row;
+  align-items: center;
+  display: inline-flex;
+  margin: 0 18px 18px 0;
+}
+.side-sheet .route-check input {
+  width: auto;
+}
+.side-sheet .route-stops input:not([type="checkbox"]) {
+  width: 110px;
+}
+.side-sheet .route-stops input[list] {
+  width: 150px;
+}
+.route-stop-name {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.side-sheet .route-editor h4 {
+  margin: 8px 0 12px;
+}
+.side-sheet .route-actions {
+  margin-bottom: 0;
+}
+.side-sheet .route-import p {
+  font-size: 13px;
+  color: var(--ink-soft);
+}

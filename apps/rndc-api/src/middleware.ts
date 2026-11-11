@@ -166,6 +166,7 @@ export function durableOperationTypeForRequest(req: express.Request): string | u
     remesa: "annul_remesa",
     manifest: "annul_manifest",
     "remesa-compliance": "annul_remesa_fulfillment",
+    "remesa-initial-compliance": "annul_remesa_initial_fulfillment",
     "manifest-compliance": "annul_manifest_fulfillment"
   };
   return typeof target === "string" ? targets[target] : undefined;

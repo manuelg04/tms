@@ -12,6 +12,7 @@ export type RndcActionName =
   | "annul_remesa"
   | "annul_manifest"
   | "annul_remesa_fulfillment"
+  | "annul_remesa_initial_fulfillment"
   | "annul_manifest_fulfillment"
   | "reconcile"
   | "query_acceptance";
@@ -30,6 +31,7 @@ export type RndcActionConfig = {
     | "annul_remesa"
     | "annul_manifest"
     | "annul_remesa_fulfillment"
+    | "annul_remesa_initial_fulfillment"
     | "annul_manifest_fulfillment"
     | "reconcile"
     | "query_acceptance";
@@ -52,6 +54,7 @@ const actionConfigs: Record<RndcActionName, RndcActionConfig> = {
   annul_remesa: { operationType: "annul_remesa", backendPath: "/rndc/annulments/targeted", processId: 9, lifecycle: "annulment" },
   annul_manifest: { operationType: "annul_manifest", backendPath: "/rndc/annulments/targeted", processId: 32, lifecycle: "annulment" },
   annul_remesa_fulfillment: { operationType: "annul_remesa_fulfillment", backendPath: "/rndc/annulments/targeted", processId: 28, lifecycle: "annulment" },
+  annul_remesa_initial_fulfillment: { operationType: "annul_remesa_initial_fulfillment", backendPath: "/rndc/annulments/targeted", processId: 54, lifecycle: "none" },
   annul_manifest_fulfillment: { operationType: "annul_manifest_fulfillment", backendPath: "/rndc/annulments/targeted", processId: 29, lifecycle: "annulment" },
   reconcile: { operationType: "reconcile", backendPath: "/rndc/reconciliation", processId: 0, lifecycle: "reconciliation" },
   query_acceptance: { operationType: "query_acceptance", backendPath: "/rndc/acceptances/query", processId: 73, lifecycle: "none" }

@@ -8,6 +8,7 @@ import {
 import type { OfficialDocumentState } from "../../../convex/model/documentLifecycle";
 import type { DocumentHubItem } from "../components/document-hub";
 import type { Detail } from "./detail-types";
+import { currentManifestDocument } from "../../../convex/model/currentManifest";
 
 export function buildDocumentHubItems(input: {
   detail: Detail;
@@ -21,7 +22,7 @@ export function buildDocumentHubItems(input: {
 }): DocumentHubItem[] {
   const { detail, evidence, isEditable } = input;
   const orderDocument = latestDocument(detail, "orden_cargue");
-  const manifestDocument = latestDocument(detail, "manifiesto");
+  const manifestDocument = currentManifestDocument(detail.expediente, detail.documents);
   const remesaDocuments = detail.documents.filter(
     (document) => document.kind === "remesa",
   );
@@ -135,7 +136,9 @@ export function buildDocumentHubItems(input: {
     {
       key: "manifest",
       title: "Manifiesto",
-      description: "Documento del viaje",
+      description: detail.expediente.manifestDraft?.sourceManifestNumber
+        ? `Reemplaza al manifiesto ${detail.expediente.manifestDraft.sourceManifestNumber}`
+        : "Documento del viaje",
       number:
         detail.expediente.manifestDraft?.manifestNumber ??
         detail.expediente.manifestNumber,

@@ -3,15 +3,16 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { use, useState } from "react";
-import { useConvexAuth, useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "../../../lib/convex-hooks";
 import { api } from "../../../../convex/_generated/api";
 import type { Doc, Id } from "../../../../convex/_generated/dataModel";
 import { CheckpointForm } from "../../components/checkpoint-form";
 import { RoutePlanEditor } from "../../components/route-plan-editor";
+import { Skeleton } from "../../../components/skeleton";
 
 const RouteMap = dynamic(() => import("../../components/route-map"), {
   ssr: false,
-  loading: () => <div className="skeleton">Cargando recorrido…</div>,
+  loading: () => <Skeleton label="Cargando recorrido" />,
 });
 const sources = [
   { value: "tracking", label: "Seguimiento" },
@@ -41,9 +42,7 @@ export default function TrackingDetail({
     [saved, setSaved] = useState(false);
   if (!data)
     return (
-      <div className="skeleton" role="status">
-        Cargando despacho…
-      </div>
+      <Skeleton label="Cargando despacho" />
     );
   const { dispatch, reports, checkpoints, notes, positions } = data;
   return (

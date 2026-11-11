@@ -9,6 +9,8 @@ import {
   buildRndcDocumentQuery,
   buildRndcXml,
   buildTargetedAnnulmentMessage,
+  MANIFEST_ANNULMENT_REASONS,
+  manifestAnnulmentNeedsReplacement,
   calculateFopat,
   classifyRndcError,
   maskSecrets,
@@ -448,24 +450,66 @@ function parseTargetedAnnulment(payload: unknown, companyRndcNit: string): Parse
   const reverseReasonCode = optionalCode(body, "reverseReasonCode");
   const observations = optionalString(body, "observations");
   const fields: string[] = [];
-  const targets = ["manifest-compliance", "remesa-compliance", "manifest", "remesa", "trip-information", "cargo-information"];
+  const targets = ["manifest-compliance", "remesa-compliance", "remesa-initial-compliance", "manifest", "remesa", "trip-information", "cargo-information"];
+  const allowedReasons: Record<string, readonly string[]> = {
+    "manifest-compliance": ["D", "O"],
+    "remesa-compliance": ["D", "O"],
+    "remesa-initial-compliance": ["D", "O"],
+    manifest: MANIFEST_ANNULMENT_REASONS,
+    remesa: ["D", "S"],
+    "trip-information": ["D", "S"],
+    "cargo-information": ["D", "S"]
+  };
 
   pushInvalid(fields, "target", !target || !targets.includes(target));
   pushInvalid(fields, "reasonCode", body.reasonCode !== undefined && !reasonCode);
   pushInvalid(fields, "reverseReasonCode", body.reverseReasonCode !== undefined && !reverseReasonCode);
   pushInvalid(fields, "observations", observations !== undefined && observations.length > 200);
+  pushInvalid(fields, "reasonCode", Boolean(target && reasonCode && allowedReasons[target] && !allowedReasons[target].includes(reasonCode)));
 
   if (fields.length > 0 || !target) {
-    return { ok: false, fields };
+    return { ok: false, fields: [...new Set(fields)] };
   }
 
-  if (target === "manifest-compliance" || target === "manifest") {
+  if (target === "manifest-compliance") {
     const manifestNumber = requiredString(body, "manifestNumber", 15);
     if (!manifestNumber) {
       return { ok: false, fields: ["manifestNumber"] };
     }
 
     return { ok: true, value: { target, companyRndcNit, manifestNumber, reasonCode, observations } };
+  }
+
+  if (target === "manifest") {
+    const manifestNumber = requiredString(body, "manifestNumber", 15);
+    const replacementManifestNumber = optionalString(body, "replacementManifestNumber");
+    const needsReplacement = manifestAnnulmentNeedsReplacement(reasonCode);
+    const invalid: string[] = [];
+    pushInvalid(invalid, "manifestNumber", !manifestNumber);
+    pushInvalid(invalid, "replacementManifestNumber", needsReplacement !== Boolean(replacementManifestNumber)
+      || (replacementManifestNumber !== undefined && (replacementManifestNumber.length > 15 || replacementManifestNumber === manifestNumber)));
+    pushInvalid(invalid, "observations", !observations);
+
+    if (invalid.length > 0 || !manifestNumber) {
+      return { ok: false, fields: invalid };
+    }
+
+    return { ok: true, value: { target, companyRndcNit, manifestNumber, reasonCode, replacementManifestNumber, observations } };
+  }
+
+  if (target === "remesa-initial-compliance") {
+    const remesaNumber = requiredString(body, "remesaNumber", 15);
+    const manifestNumber = requiredString(body, "manifestNumber", 15);
+    const invalid: string[] = [];
+    pushInvalid(invalid, "remesaNumber", !remesaNumber);
+    pushInvalid(invalid, "manifestNumber", !manifestNumber);
+    pushInvalid(invalid, "observations", !observations || observations.length < 20);
+
+    if (invalid.length > 0 || !remesaNumber || !manifestNumber) {
+      return { ok: false, fields: invalid };
+    }
+
+    return { ok: true, value: { target, companyRndcNit, remesaNumber, manifestNumber, reasonCode, observations } };
   }
 
   if (target === "remesa-compliance") {
@@ -546,7 +590,7 @@ function targetedIdentifier(input: TargetedAnnulmentInput): string {
     return input.manifestNumber;
   }
 
-  if (input.target === "remesa" || input.target === "remesa-compliance") {
+  if (input.target === "remesa" || input.target === "remesa-compliance" || input.target === "remesa-initial-compliance") {
     return input.remesaNumber;
   }
 

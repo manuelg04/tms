@@ -1,4 +1,4 @@
-import { authorizeGatewayRequest, forwardRndcRequest, safeRndcMode } from "../../../lib/rndc-gateway";
+import { authorizeGatewayRequest, forwardRndcRequest, rndcAvailability, safeRndcMode } from "../../../lib/rndc-gateway";
 import { jsonResponse } from "../../../lib/auth-server";
 
 export async function GET(request: Request): Promise<Response> {
@@ -14,5 +14,6 @@ export async function GET(request: Request): Promise<Response> {
     return jsonResponse({ ok: false, mode: "offline" }, 503);
   }
 
-  return jsonResponse({ ok: true, mode: safeRndcMode() });
+  const availability = await rndcAvailability();
+  return jsonResponse({ ok: true, mode: safeRndcMode(), rndcAvailable: availability.available });
 }

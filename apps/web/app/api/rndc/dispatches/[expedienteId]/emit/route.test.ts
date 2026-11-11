@@ -321,3 +321,131 @@ function emitRequest(expedienteId: string, body?: Record<string, unknown>): Requ
 function emitContext(expedienteId: string): { params: Promise<{ expedienteId: string }> } {
   return { params: Promise.resolve({ expedienteId }) };
 }
+
+function statefulRuntime(inputs: EmissionInputs, preparedScopes: string[], executedActions: string[]): EmitRuntime {
+  return {
+    ...emissionRuntime(inputs, preparedScopes, executedActions),
+    executeStep: async (_request, _expedienteId, _organizationId, step, _documentId, body) => {
+      executedActions.push(`${step.action}:${body.preparedBy ?? "sesion"}`);
+      if (step.action === "emit_loading_order") inputs.order.officialState = "authorized";
+      if (step.action === "emit_remesa") inputs.consignments.forEach((item) => { item.officialState = "authorized"; });
+      if (step.action === "register_trip") inputs.tripEmitted = true;
+      if (step.action === "issue_manifest") inputs.manifest.officialState = "authorized";
+      return { key: step.key, action: step.action, documentNumber: step.documentNumber, outcome: "authorized" };
+    }
+  };
+}
+
+test("queues the dispatch without preparing or sending anything when RNDC is unavailable", async () => {
+  const preparedScopes: string[] = [];
+  const executedActions: string[] = [];
+  const queued: Array<{ scope: string; reason?: string }> = [];
+  const response = await handleEmitWithRuntime(
+    emitRequest("exp-1", { scope: "remesas", chain: true, queueIfUnavailable: true }),
+    emitContext("exp-1"),
+    {
+      ...emissionRuntime(fullInputs(), preparedScopes, executedActions),
+      rndcAvailable: async () => ({ available: false, detail: "connect ECONNREFUSED" }),
+      queue: async (_id, scope, reason) => { queued.push({ scope, reason }); }
+    }
+  );
+  const body = await response.json() as { queued?: boolean; reason?: string; nextAction?: string };
+
+  assert.equal(response.status, 202);
+  assert.equal(body.queued, true);
+  assert.equal(body.reason, "rndc_unavailable");
+  assert.equal(body.nextAction, "esperar_rndc");
+  assert.deepEqual(queued, [{ scope: "remesas", reason: "connect ECONNREFUSED" }]);
+  assert.deepEqual(preparedScopes, []);
+  assert.deepEqual(executedActions, []);
+});
+
+test("does not consult availability or queue when the caller did not ask for it", async () => {
+  let checks = 0;
+  const executedActions: string[] = [];
+  const response = await handleEmitWithRuntime(
+    emitRequest("exp-1", { scope: "orden" }),
+    emitContext("exp-1"),
+    {
+      ...emissionRuntime(orderOnlyInputs(), [], executedActions),
+      rndcAvailable: async () => { checks += 1; return { available: false }; },
+      queue: async () => { throw new Error("must not queue"); }
+    }
+  );
+
+  assert.equal(response.status, 200);
+  assert.equal(checks, 0);
+  assert.deepEqual(executedActions, ["emit_loading_order"]);
+});
+
+test("a chained emission sends the missing earlier documents first and closes the queue", async () => {
+  const preparedScopes: string[] = [];
+  const executedActions: string[] = [];
+  const settled: string[] = [];
+  const response = await handleEmitWithRuntime(
+    emitRequest("exp-1", { scope: "manifiesto", chain: true, queueIfUnavailable: true }),
+    emitContext("exp-1"),
+    {
+      ...statefulRuntime(fullInputs(), preparedScopes, executedActions),
+      rndcAvailable: async () => ({ available: true }),
+      queue: async () => { throw new Error("must not queue"); },
+      settleQueue: async (_id, scope) => { settled.push(scope); }
+    }
+  );
+  const body = await response.json() as { ok?: boolean; scope?: string; steps?: Array<{ action: string }> };
+
+  assert.equal(response.status, 200);
+  assert.equal(body.ok, true);
+  assert.equal(body.scope, "manifiesto");
+  assert.deepEqual(preparedScopes, ["orden", "remesas", "manifiesto"]);
+  assert.deepEqual(executedActions, [
+    "emit_loading_order:sesion",
+    "emit_remesa:sesion",
+    "register_trip:sesion",
+    "issue_manifest:sesion"
+  ]);
+  assert.deepEqual(body.steps?.map((step) => step.action), ["emit_loading_order", "emit_remesa", "register_trip", "issue_manifest"]);
+  assert.deepEqual(settled, ["manifiesto"]);
+});
+
+test("a chained emission stops at the first document that is not accepted", async () => {
+  const executedActions: string[] = [];
+  const inputs = fullInputs();
+  const runtime = statefulRuntime(inputs, [], executedActions);
+  const response = await handleEmitWithRuntime(
+    emitRequest("exp-1", { scope: "manifiesto", chain: true }),
+    emitContext("exp-1"),
+    {
+      ...runtime,
+      executeStep: async (request, expedienteId, organizationId, step, documentId, body) => {
+        if (step.action === "emit_remesa") {
+          executedActions.push("emit_remesa:rechazada");
+          return { key: step.key, action: step.action, documentNumber: step.documentNumber, outcome: "rejected", error: "REM100" };
+        }
+        return runtime.executeStep(request, expedienteId, organizationId, step, documentId, body);
+      },
+      settleQueue: async () => { throw new Error("must not close the queue"); }
+    }
+  );
+  const body = await response.json() as { ok?: boolean; scope?: string; requestedScope?: string; nextAction?: string };
+
+  assert.equal(response.status, 409);
+  assert.equal(body.ok, false);
+  assert.equal(body.scope, "remesas");
+  assert.equal(body.requestedScope, "manifiesto");
+  assert.equal(body.nextAction, "revisar_rechazo");
+  assert.deepEqual(executedActions, ["emit_loading_order:sesion", "emit_remesa:rechazada"]);
+});
+
+test("a queued retry keeps the name of the person who asked for the emission", async () => {
+  const executedActions: string[] = [];
+  const response = await handleEmitWithRuntime(
+    emitRequest("exp-1", { scope: "orden", chain: true }),
+    emitContext("exp-1"),
+    statefulRuntime(orderOnlyInputs(), [], executedActions),
+    { preparedBy: "WILSON PEREZ" }
+  );
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(executedActions, ["emit_loading_order:WILSON PEREZ"]);
+});

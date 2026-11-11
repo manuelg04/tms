@@ -105,3 +105,21 @@ export function durableEvidenceWasStored(result: unknown): boolean {
     && (durableEvidence as Record<string, unknown>).stored === true
   );
 }
+
+export async function rndcAvailability(): Promise<{ available: boolean; detail?: string }> {
+  try {
+    const response = await forwardRndcRequest("/rndc/availability");
+
+    if (!response.ok) {
+      return { available: false, detail: "El servicio de transmisión del TMS no responde" };
+    }
+
+    const body = await response.json().catch(() => null) as { available?: unknown; detail?: unknown } | null;
+    return {
+      available: body?.available === true,
+      detail: typeof body?.detail === "string" ? body.detail : undefined
+    };
+  } catch {
+    return { available: false, detail: "El servicio de transmisión del TMS no responde" };
+  }
+}

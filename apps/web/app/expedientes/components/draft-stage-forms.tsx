@@ -6,7 +6,7 @@ import { FieldHelpProvider } from "../../components/fields/field-help";
 import { loadingOrderDraftFieldHelp, manifestFieldHelp } from "../../lib/rndc-field-help";
 
 import { useEffect, useState } from "react";
-import { useQuery } from "convex/react";
+import { useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import { DateField } from "../../components/fields/date-field";
 import { CargoNatureField, IdTypeField, InsurerField, MunicipalityField, PackagingField, PartyField, SiteField, formatDocument, type PartyPick } from "../../components/fields/lookup-fields";

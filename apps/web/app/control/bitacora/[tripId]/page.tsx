@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useState } from "react";
-import { useConvexAuth, useMutation, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "../../../lib/convex-hooks";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { routeProgress } from "../../../../convex/model/monitoring";
@@ -14,8 +14,9 @@ import { DeliveryForm } from "../components/delivery-form";
 import { ScheduleForm } from "../components/schedule-form";
 import { channelLabels, dayKey, formatDate, formatDateTime, formatDuration, formatInterval, formatLongDate, formatTime, formatWeight, kindLabels, relativeDue, relativePast, useNow } from "../components/format";
 import "../bitacora.css";
+import { Skeleton } from "../../../components/skeleton";
 
-const TripMap = dynamic(() => import("../components/trip-map").then((m) => m.TripMap), { ssr: false, loading: () => <div className="skeleton" style={{ height: 320 }}>Cargando mapa…</div> });
+const TripMap = dynamic(() => import("../components/trip-map").then((m) => m.TripMap), { ssr: false, loading: () => <Skeleton height={320} label="Cargando mapa" variant="block" /> });
 
 type Report = NonNullable<ReturnType<typeof useQuery<typeof api.monitoring.detail>>>["reports"][number];
 type ScheduleChange = NonNullable<NonNullable<ReturnType<typeof useQuery<typeof api.monitoring.detail>>>["trip"]["scheduleChanges"]>[number];
@@ -36,9 +37,7 @@ export default function MonitoringTripDetail({ params }: { params: Promise<{ tri
 
   if (data === undefined)
     return (
-      <div className="skeleton" role="status">
-        Cargando bitácora…
-      </div>
+      <Skeleton label="Cargando bitácora" />
     );
   if (data === null)
     return (

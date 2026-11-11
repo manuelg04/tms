@@ -1,6 +1,7 @@
 "use client";
 
 import { ConvexProviderWithAuth, ConvexReactClient } from "convex/react";
+import { ConvexQueryCacheProvider } from "convex-helpers/react/cache/provider";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { fetchConvexAccessToken, fetchDemoSession } from "./lib/auth-client";
 import type { DemoUser } from "./lib/auth";
@@ -36,7 +37,7 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider value={auth}>
       <ConvexProviderWithAuth client={client} useAuth={useProvidedAuth}>
-        {children}
+        <ConvexQueryCacheProvider expiration={600_000}>{children}</ConvexQueryCacheProvider>
       </ConvexProviderWithAuth>
     </AuthContext.Provider>
   );

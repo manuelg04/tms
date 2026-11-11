@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "convex/react";
+import { useQuery } from "../../../lib/convex-hooks";
 import { api } from "../../../../convex/_generated/api";
 import { formatDate } from "./format";
 

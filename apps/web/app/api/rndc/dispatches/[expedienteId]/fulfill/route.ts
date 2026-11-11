@@ -7,6 +7,7 @@ import { effectiveConsignment, remissionWeightTons, type ConsignmentDraft, type 
 import { getAuthSettings, createConvexToken, jsonResponse } from "../../../../../lib/auth-server";
 import { authorizeGatewayRequest } from "../../../../../lib/rndc-gateway";
 import { POST as runRndcAction } from "../../../actions/[action]/route";
+import { currentManifestDocument } from "../../../../../../convex/model/currentManifest";
 
 type Detail = NonNullable<FunctionReturnType<typeof api.expedientes.detail>>;
 
@@ -54,7 +55,7 @@ export async function POST(
     return jsonResponse({ error: "Despacho no encontrado" }, 404);
   }
 
-  const manifest = detail.documents.find((document) => document.kind === "manifiesto");
+  const manifest = currentManifestDocument(detail.expediente, detail.documents);
 
   if (!manifest || (manifest.officialState !== "authorized" && manifest.officialState !== "fulfilled")) {
     return jsonResponse({ error: "El manifiesto debe estar autorizado antes del cumplido" }, 409);

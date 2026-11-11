@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useRef, type FormEvent } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Doc, Id } from "../../../convex/_generated/dataModel";
 import {

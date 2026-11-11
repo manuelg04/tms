@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useConvexAuth, useMutation, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Doc } from "../../../convex/_generated/dataModel";
 import { normalizeAlarm, readableColor } from "../../../convex/model/tracking";
 import { convexErrorMessage } from "../../lib/convex-error";
 import "../../control/tracking.css";
+import { Skeleton } from "../../components/skeleton";
 
 const hex = ["00", "33", "66", "99", "CC", "FF"];
 const palette = hex.flatMap((r) =>
@@ -34,9 +35,7 @@ export default function VisualAlarmsPage() {
   }, [deleting]);
   if (!data)
     return (
-      <div className="skeleton" role="status">
-        Cargando alertas visuales…
-      </div>
+      <Skeleton label="Cargando alertas visuales" />
     );
   async function deleteSelected() {
     if (!deleting || inFlight.current) return;

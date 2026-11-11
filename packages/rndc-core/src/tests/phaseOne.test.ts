@@ -177,6 +177,41 @@ test("builds one targeted annulment without adding a reverse chain", () => {
   });
 });
 
+test("builds the replacement and the initial fulfilment annulments with their own fields", () => {
+  const buildTargetedAnnulmentMessage = requireApi<(input: Record<string, unknown>) => { name: string; request: RndcMessageRequest }>("buildTargetedAnnulmentMessage");
+  const replaced = buildTargetedAnnulmentMessage({
+    target: "manifest",
+    companyRndcNit: "9007736849",
+    manifestNumber: "9702001",
+    reasonCode: "V",
+    replacementManifestNumber: "9702002",
+    observations: "CAMBIO DE VEHICULO POR VARADA ANTES DEL CARGUE"
+  });
+  const initial = buildTargetedAnnulmentMessage({
+    target: "remesa-initial-compliance",
+    companyRndcNit: "9007736849",
+    remesaNumber: "97102",
+    manifestNumber: "9702001",
+    observations: "REVERSO DEL CUMPLIDO POR CANCELACION DEL VIAJE"
+  });
+
+  assert.deepEqual(replaced.request.variables, {
+    NUMNITEMPRESATRANSPORTE: "9007736849",
+    NUMMANIFIESTOCARGA: "9702001",
+    MOTIVOANULACIONMANIFIESTO: "V",
+    NUMMANIFIESTOCARGANUEVO: "9702002",
+    OBSERVACIONES: "CAMBIO DE VEHICULO POR VARADA ANTES DEL CARGUE"
+  });
+  assert.equal(initial.request.procesoId, 54);
+  assert.deepEqual(initial.request.variables, {
+    NUMNITEMPRESATRANSPORTE: "9007736849",
+    CONSECUTIVOREMESA: "97102",
+    NUMMANIFIESTOCARGA: "9702001",
+    CODMOTIVOANULACIONCUMPLIDO: "O",
+    OBSERVACIONES: "REVERSO DEL CUMPLIDO POR CANCELACION DEL VIAJE"
+  });
+});
+
 test("builds type 3 document and acceptance reconciliation queries", () => {
   const buildRndcDocumentQuery = requireApi<(input: Record<string, unknown>) => RndcMessageRequest>("buildRndcDocumentQuery");
   const buildAcceptanceQuery = requireApi<(input: Record<string, unknown>) => RndcMessageRequest>("buildAcceptanceQuery");

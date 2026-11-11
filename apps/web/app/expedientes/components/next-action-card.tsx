@@ -1,7 +1,7 @@
 import type { DispatchPrimaryAction } from "../../../convex/model/dispatchPresentation";
 import { BlockerList } from "./blocker-list";
 
-export function NextActionCard({ action, blockers, busy, formId, onAction }: { action: DispatchPrimaryAction; blockers: string[]; busy: boolean; formId?: string; onAction?: () => void }) {
+export function NextActionCard({ action, blockers, busy, formId, onAction, onFormSubmit }: { action: DispatchPrimaryAction; blockers: string[]; busy: boolean; formId?: string; onAction?: () => void; onFormSubmit?: () => void }) {
   return (
     <section className="next-action-card compact" aria-labelledby="next-action-title">
       <div className="next-action-body">
@@ -14,7 +14,7 @@ export function NextActionCard({ action, blockers, busy, formId, onAction }: { a
           className="primary-action"
           disabled={action.disabled || busy}
           form={formId}
-          onClick={formId ? undefined : onAction}
+          onClick={formId ? onFormSubmit : onAction}
           type={formId ? "submit" : "button"}
         >
           {busy ? "Procesando…" : action.label}

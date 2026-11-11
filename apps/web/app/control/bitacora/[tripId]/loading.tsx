@@ -1,3 +1,4 @@
+import { Skeleton } from "../../../components/skeleton";
 export default function Loading() {
-  return <div className="full-page-state" role="status">Cargando…</div>;
+  return <Skeleton label="Cargando" variant="detail" />;
 }

@@ -6,7 +6,7 @@ import { FormField, FormValidationError, ValidatedForm } from "../../components/
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { DateField } from "../../components/fields/date-field";
@@ -14,6 +14,7 @@ import { MoneyField } from "../../components/fields/money-field";
 import { IdTypeField, MunicipalityField, PackagingField, PartyField, VehicleField, type PartyPick, type VehiclePick } from "../../components/fields/lookup-fields";
 import { requiredDriverFreight } from "../components/vehicle-assignment-state";
 import { loadingWindowEnd, optionalNumber, required, value } from "../../lib/form-data";
+import { Skeleton } from "../../components/skeleton";
 
 type BaseState = {
   client: PartyPick | null;
@@ -117,14 +118,14 @@ function templateState(template: Template | null): BaseState {
 }
 
 export default function NuevoDespachoPage() {
-  return <Suspense fallback={<div className="skeleton">Preparando el formulario…</div>}><NuevoDespachoLoader /></Suspense>;
+  return <Suspense fallback={<Skeleton label="Preparando el formulario" variant="detail" />}><NuevoDespachoLoader /></Suspense>;
 }
 
 function NuevoDespachoLoader() {
   const params = useSearchParams();
   const sourceId = params.get("desde");
   const source = useQuery(api.expedientes.detail, sourceId ? { expedienteId: sourceId as Id<"expedientes"> } : "skip");
-  if (sourceId && source === undefined) return <div className="skeleton">Copiando datos del despacho anterior…</div>;
+  if (sourceId && source === undefined) return <Skeleton label="Copiando datos del despacho anterior" variant="detail" />;
   const template: Template | null = sourceId && source?.expediente.loadingOrderDraft
     ? { code: source.expediente.code, customerName: source.customer.name, order: source.expediente.loadingOrderDraft }
     : null;

@@ -262,6 +262,78 @@ test("targeted annulment sends only the selected RNDC process", async () => {
   });
 });
 
+test("a manifest annulled for a change carries the consecutive of the manifest that replaces it", async () => {
+  await withEnvironment({ AUTH_MODE: "service", RNDC_SERVICE_TOKEN: serviceToken }, async () => {
+    const app = createRndcApp(await dryRunConfig("tms-rndc-phase-one-replacement-"));
+    const send = (body: Record<string, unknown>) => request(app, "/rndc/annulments/targeted", { headers: authorizedHeaders(), body });
+    const accepted = await send({
+      target: "manifest",
+      manifestNumber: "9702001",
+      reasonCode: "C",
+      replacementManifestNumber: "9702002",
+      observations: "CAMBIO DE CONDUCTOR POR INCAPACIDAD MEDICA"
+    });
+    const xml = await readFile(record(record(accepted.body).request).path as string, "utf8");
+
+    assert.equal(accepted.status, 200);
+    assert.match(xml, /<MOTIVOANULACIONMANIFIESTO>C<\/MOTIVOANULACIONMANIFIESTO>/);
+    assert.match(xml, /<NUMMANIFIESTOCARGANUEVO>9702002<\/NUMMANIFIESTOCARGANUEVO>/);
+
+    const missingReplacement = await send({ target: "manifest", manifestNumber: "9702001", reasonCode: "C", observations: "CAMBIO DE CONDUCTOR" });
+    const unexpectedReplacement = await send({ target: "manifest", manifestNumber: "9702001", reasonCode: "S", replacementManifestNumber: "9702002", observations: "VIAJE CANCELADO POR EL GENERADOR" });
+    const sameNumber = await send({ target: "manifest", manifestNumber: "9702001", reasonCode: "V", replacementManifestNumber: "9702001", observations: "CAMBIO DE VEHICULO" });
+    const unknownReason = await send({ target: "manifest", manifestNumber: "9702001", reasonCode: "X", observations: "MOTIVO DESCONOCIDO" });
+    const withoutObservation = await send({ target: "manifest", manifestNumber: "9702001", reasonCode: "S" });
+    const remesaWithManifestReason = await send({ target: "remesa", remesaNumber: "97102", reasonCode: "C", observations: "CAMBIO DE CONDUCTOR" });
+
+    for (const rejected of [missingReplacement, unexpectedReplacement, sameNumber, unknownReason, withoutObservation, remesaWithManifestReason]) {
+      assert.equal(rejected.status, 400);
+    }
+  });
+});
+
+test("a cancelled service annuls the manifest without a replacement", async () => {
+  await withEnvironment({ AUTH_MODE: "service", RNDC_SERVICE_TOKEN: serviceToken }, async () => {
+    const app = createRndcApp(await dryRunConfig("tms-rndc-phase-one-cancelled-"));
+    const response = await request(app, "/rndc/annulments/targeted", {
+      headers: authorizedHeaders(),
+      body: { target: "manifest", manifestNumber: "9702001", reasonCode: "S", observations: "EL GENERADOR CANCELO EL VIAJE" }
+    });
+    const xml = await readFile(record(record(response.body).request).path as string, "utf8");
+
+    assert.equal(response.status, 200);
+    assert.match(xml, /<MOTIVOANULACIONMANIFIESTO>S<\/MOTIVOANULACIONMANIFIESTO>/);
+    assert.doesNotMatch(xml, /NUMMANIFIESTOCARGANUEVO/);
+  });
+});
+
+test("the initial fulfilment of a remesa is annulled with its own process", async () => {
+  await withEnvironment({ AUTH_MODE: "service", RNDC_SERVICE_TOKEN: serviceToken }, async () => {
+    const app = createRndcApp(await dryRunConfig("tms-rndc-phase-one-initial-"));
+    const send = (body: Record<string, unknown>) => request(app, "/rndc/annulments/targeted", { headers: authorizedHeaders(), body });
+    const accepted = await send({
+      target: "remesa-initial-compliance",
+      remesaNumber: "97102",
+      manifestNumber: "9702001",
+      reasonCode: "O",
+      observations: "REVERSO DEL CUMPLIDO POR CANCELACION DEL VIAJE"
+    });
+    const body = record(accepted.body);
+    const xml = await readFile(record(body.request).path as string, "utf8");
+
+    assert.equal(accepted.status, 200);
+    assert.equal(record(body.request).procesoId, 54);
+    assert.match(xml, /<CONSECUTIVOREMESA>97102<\/CONSECUTIVOREMESA>/);
+    assert.match(xml, /<NUMMANIFIESTOCARGA>9702001<\/NUMMANIFIESTOCARGA>/);
+    assert.match(xml, /<CODMOTIVOANULACIONCUMPLIDO>O<\/CODMOTIVOANULACIONCUMPLIDO>/);
+
+    const shortObservation = await send({ target: "remesa-initial-compliance", remesaNumber: "97102", manifestNumber: "9702001", observations: "MUY CORTA" });
+    const withoutManifest = await send({ target: "remesa-initial-compliance", remesaNumber: "97102", observations: "REVERSO DEL CUMPLIDO POR CANCELACION DEL VIAJE" });
+    assert.equal(shortObservation.status, 400);
+    assert.equal(withoutManifest.status, 400);
+  });
+});
+
 test("reconciliation and acceptance routes issue typed type-3 queries", async () => {
   await withEnvironment({ AUTH_MODE: "service", RNDC_SERVICE_TOKEN: serviceToken }, async () => {
     const app = createRndcApp(await dryRunConfig("tms-rndc-phase-one-queries-"));

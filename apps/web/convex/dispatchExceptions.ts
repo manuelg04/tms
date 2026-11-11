@@ -6,12 +6,22 @@ import { appendAudit, requireActor, requireSameOrganization } from "./model/acce
 import {
   buildCorrectionComparison,
   buildTransshipmentPlan,
+  manifestAnnulmentQuota,
+  needsReplacementManifest,
   validateEmptyManifest,
   validateExceptionRequest,
   validateRemesaWithoutOrder
 } from "./model/advancedWorkflow";
 import { buildDispatchSnapshot } from "./model/dispatchSnapshot";
 import { initialDocumentLifecycle } from "./model/documentLifecycle";
+import { claimConsecutive } from "./model/dispatchRecords";
+
+const QUOTA_SCAN_LIMIT = 3000;
+const BOGOTA_OFFSET_MS = 5 * 60 * 60 * 1000;
+
+function monthKey(timestamp: number): string {
+  return new Date(timestamp - BOGOTA_OFFSET_MS).toISOString().slice(0, 7);
+}
 
 const typeValidator = v.union(
   v.literal("remesa_without_order"),
@@ -72,6 +82,144 @@ export const listForExpediente = query({
       .withIndex("by_expediente_and_created_at", (q) => q.eq("expedienteId", expediente._id))
       .order("desc")
       .take(100);
+  }
+});
+
+export const annulmentQuota = query({
+  args: { expedienteId: v.id("expedientes") },
+  returns: v.union(
+    v.null(),
+    v.object({
+      month: v.string(),
+      issued: v.number(),
+      annulled: v.number(),
+      replaced: v.number(),
+      limitPercent: v.number(),
+      allowed: v.number(),
+      remaining: v.number(),
+      exceeded: v.boolean(),
+      partial: v.boolean()
+    })
+  ),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin", "operator", "auditor"]);
+    const expediente = await ctx.db.get("expedientes", args.expedienteId);
+    if (!expediente || expediente.organizationId !== actor.organizationId) return null;
+    const own = await ctx.db
+      .query("documents")
+      .withIndex("by_expediente", (q) => q.eq("expedienteId", expediente._id))
+      .collect();
+    const target = own
+      .filter((document) => document.kind === "manifiesto" && (document.officialState === "authorized" || document.officialState === "fulfilled"))
+      .sort((a, b) => b.updatedAt - a.updatedAt)[0];
+    if (!target) return null;
+    const month = monthKey(target.createdAt);
+    const mode = target.mode ?? "dry-run";
+    const manifests = await ctx.db
+      .query("documents")
+      .withIndex("by_organization_and_kind", (q) => q.eq("organizationId", expediente.organizationId).eq("kind", "manifiesto"))
+      .order("desc")
+      .take(QUOTA_SCAN_LIMIT);
+    const sameMonth = manifests.filter((document) =>
+      (document.mode ?? "dry-run") === mode
+      && monthKey(document.createdAt) === month
+      && (document.officialState === "authorized" || document.officialState === "fulfilled" || document.officialState === "annulled")
+    );
+    let annulled = 0;
+    let replaced = 0;
+
+    for (const document of sameMonth) {
+      if (document.officialState !== "annulled") continue;
+      const exceptions = await ctx.db
+        .query("dispatchExceptions")
+        .withIndex("by_document_and_created_at", (q) => q.eq("documentId", document._id))
+        .order("desc")
+        .take(10);
+      const annulment = exceptions.find((exception) => exception.type === "annulment" && exception.status === "completed");
+      if (needsReplacementManifest(annulment?.reasonCode)) replaced += 1;
+      else annulled += 1;
+    }
+
+    return {
+      month,
+      replaced,
+      partial: manifests.length === QUOTA_SCAN_LIMIT,
+      ...manifestAnnulmentQuota({ issued: sameMonth.length, annulled })
+    };
+  }
+});
+
+export const reserveReplacementManifest = mutation({
+  args: { expedienteId: v.id("expedientes"), documentId: v.id("documents") },
+  returns: v.string(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin"]);
+    const expediente = await requireExpediente(ctx, args.expedienteId);
+    requireSameOrganization(actor, expediente.organizationId);
+    const document = await requireDocument(ctx, expediente, args.documentId);
+
+    if (document.kind !== "manifiesto" || document.officialState !== "authorized") {
+      throw invalid(["Solo un manifiesto autorizado y sin cumplir puede reemplazarse"]);
+    }
+
+    const number = await claimConsecutive(ctx, expediente.organizationId, expediente.agencyCode ?? "", "manifiesto", Date.now());
+    await appendAudit(ctx, {
+      organizationId: expediente.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "manifest.replacement_reserved",
+      entityType: "documents",
+      entityId: document._id,
+      detailsJson: JSON.stringify({ replaces: document.number, replacementManifestNumber: number })
+    });
+    return number;
+  }
+});
+
+export const openReplacementManifest = mutation({
+  args: {
+    expedienteId: v.id("expedientes"),
+    documentId: v.id("documents"),
+    replacementManifestNumber: v.string()
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin"]);
+    const expediente = await requireExpediente(ctx, args.expedienteId);
+    requireSameOrganization(actor, expediente.organizationId);
+    const replaced = await requireDocument(ctx, expediente, args.documentId);
+    const number = args.replacementManifestNumber.trim();
+
+    if (replaced.kind !== "manifiesto" || replaced.officialState !== "annulled" || !number || number === replaced.number) {
+      throw invalid(["El manifiesto anterior debe estar anulado para abrir su reemplazo"]);
+    }
+
+    const now = Date.now();
+    await ctx.db.patch("expedientes", expediente._id, {
+      sourceManifestDocumentId: replaced._id,
+      manifestDocumentId: undefined,
+      manifestNumber: undefined,
+      tripNumber: undefined,
+      status: "in_progress",
+      manifestDraft: {
+        ...expediente.manifestDraft,
+        manifestNumber: number,
+        sourceManifestNumber: replaced.number,
+        printedAt: undefined
+      },
+      updatedBy: actor._id,
+      updatedAt: now
+    });
+    await appendAudit(ctx, {
+      organizationId: expediente.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "manifest.replacement_opened",
+      entityType: "expediente",
+      entityId: expediente._id,
+      detailsJson: JSON.stringify({ replaces: replaced.number, replacementManifestNumber: number })
+    });
+    return null;
   }
 });
 

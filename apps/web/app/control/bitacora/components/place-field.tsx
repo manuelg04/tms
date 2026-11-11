@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useQuery } from "convex/react";
+import { useQuery } from "../../../lib/convex-hooks";
 import { useDebounced } from "../../../lib/hooks";
 import { api } from "../../../../convex/_generated/api";
 import { SearchSelect } from "../../../components/fields/search-select";

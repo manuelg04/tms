@@ -69,6 +69,9 @@ test("migrate catalogue, copy route, assign schedule, query mirror and retain re
         exact: true,
       }),
     ).toBeVisible();
+    await page
+      .getByRole("button", { name: "Importar catálogo", exact: true })
+      .click();
     await page.getByLabel("Archivo JSON del catálogo").setInputFiles({
       name: "catalogue.json",
       mimeType: "application/json",
@@ -78,6 +81,9 @@ test("migrate catalogue, copy route, assign schedule, query mirror and retain re
       .getByRole("button", { name: "Importar catálogo revisado" })
       .click();
     await expect(page.getByRole("status")).toContainText("3 guardados");
+    await page
+      .getByRole("button", { name: "Importar catálogo", exact: true })
+      .click();
     await page.getByLabel("Archivo JSON del catálogo").setInputFiles({
       name: "catalogue.json",
       mimeType: "application/json",
@@ -95,7 +101,7 @@ test("migrate catalogue, copy route, assign schedule, query mirror and retain re
     await page
       .getByRole("button", { name: "Copiar ruta", exact: true })
       .click();
-    const editor = page.getByRole("region", { name: "Datos de la ruta" });
+    const editor = page.getByRole("dialog", { name: "Datos de la ruta" });
     await editor.getByLabel("Código de ruta", { exact: true }).fill("804");
     await editor.getByLabel("Vía", { exact: true }).fill("COPIA DE PRUEBA");
     await editor

@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePaginatedQuery } from "convex/react";
+import { usePaginatedQuery } from "../lib/convex-hooks";
 import { api } from "../../convex/_generated/api";
 import { DocumentTable } from "../components/document-table";
 import type { DocumentSection } from "../lib/document-workspace";
 import { documentSections } from "../lib/document-workspace";
 import { statusLabels } from "../lib/labels";
 import { isEmptyText, useDebounced } from "../lib/hooks";
+import { Skeleton } from "../components/skeleton";
 
 type StatusFilter = "draft" | "pending" | "sent" | "authorized" | "rejected" | "fulfilled" | "annulled" | "";
 
@@ -80,7 +81,7 @@ export function DocumentWorkspace({ section }: { section: DocumentSection }) {
       </div>
 
       <section className="panel document-workspace-list" aria-label={`Listado de ${section.label.toLocaleLowerCase("es")}`}>
-        {pageStatus === "LoadingFirstPage" ? <div className="skeleton">Cargando {section.label.toLocaleLowerCase("es")}…</div> : <DocumentTable emptyMessage={!filtered} rows={results} section={section} />}
+        {pageStatus === "LoadingFirstPage" ? <Skeleton label={`Cargando ${section.label.toLocaleLowerCase("es")}`} /> : <DocumentTable emptyMessage={!filtered} rows={results} section={section} />}
       </section>
 
       {pageStatus === "CanLoadMore" || pageStatus === "LoadingMore" ? (

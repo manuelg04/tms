@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { useConvexAuth, useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Doc } from "../../../convex/_generated/dataModel";
 import { STUDY_STATUSES, STUDY_STATUS_LABELS, studyProgress, type StudyStatus } from "../../../convex/model/securityStudies";
 import { formatDate, formatDateTime, relativePast, useNow } from "../../control/bitacora/components/format";
 import "../../control/bitacora/bitacora.css";
 import "./estudios.css";
+import { Skeleton } from "../../components/skeleton";
 
 type Tab = "abiertos" | StudyStatus | "todos";
 
@@ -32,7 +33,7 @@ export default function SecurityStudiesBoard() {
     return base.filter((s) => [s.code, s.driverName, s.driverDocument, s.customer, s.plate].filter(Boolean).some((v) => String(v).toLocaleLowerCase("es").includes(needle)));
   }, [tab, search, studies, open]);
 
-  if (!data) return <div className="skeleton" role="status">Cargando estudios…</div>;
+  if (!data) return <Skeleton label="Cargando estudios" />;
   const client = data.viewer === "client";
 
   return (

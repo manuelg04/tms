@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { useConvexAuth, useMutation, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "../../../lib/convex-hooks";
 import { api } from "../../../../convex/_generated/api";
 import { DateField } from "../../../components/fields/date-field";
 import { RouteSuggestions } from "../components/route-suggestions";

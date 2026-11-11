@@ -7,6 +7,7 @@ import "./globals.css";
 import "./styles/workspace.css";
 import "./styles/detail.css";
 import "./styles/fields.css";
+import "./styles/motion.css";
 
 const archivo = Archivo({
   subsets: ["latin"],

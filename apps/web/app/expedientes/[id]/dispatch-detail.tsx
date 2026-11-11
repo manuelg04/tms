@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { dispatchPrimaryAction } from "../../../convex/model/dispatchPresentation";
@@ -36,6 +36,10 @@ import {
   manifestFulfillmentDraftFromForm,
   remesaFulfillmentDraftFromForm,
 } from "./stage-payloads";
+import { Skeleton } from "../../components/skeleton";
+import { emissionNotice } from "../../lib/emission-notice";
+import { currentManifestDocument } from "../../../convex/model/currentManifest";
+import type { ChainScope } from "../../../convex/model/pendingEmission";
 
 type AdvancedModal = AdvancedAction | null;
 
@@ -83,6 +87,9 @@ export function DispatchDetail({
   const exceptions = useQuery(api.dispatchExceptions.listForExpediente, {
     expedienteId,
   });
+  const pending = useQuery(api.pendingEmissions.forDispatch, { expedienteId });
+  const cancelPending = useMutation(api.pendingEmissions.cancel);
+  const emitIntent = useRef(true);
   const { user } = useDemoUser();
   const [selectedStage, setSelectedStage] = useState<DispatchStage | null>(
     entry.stage ?? null,
@@ -200,7 +207,7 @@ export function DispatchDetail({
   ]);
 
   if (detailResult === undefined || stageResult === undefined) {
-    return <div className="full-page-state">Preparando el despacho…</div>;
+    return <Skeleton label="Preparando el despacho" variant="detail" />;
   }
 
   if (detailResult === null || stageResult === null) {
@@ -222,8 +229,9 @@ export function DispatchDetail({
         ),
       }
     : detailResult;
-  const manifestDocument = detail.documents.find(
-    (document) => document.kind === "manifiesto",
+  const manifestDocument = currentManifestDocument(
+    detail.expediente,
+    detail.documents,
   );
   const orderDocument = detail.documents.find(
     (document) => document.kind === "orden_cargue",
@@ -300,6 +308,7 @@ export function DispatchDetail({
         "remesas",
         "La orden de cargue quedó guardada. Los datos conocidos ya están disponibles para las remesas.",
       );
+      await emitIfRequested("orden");
     }, true);
   }
 
@@ -314,6 +323,7 @@ export function DispatchDetail({
         "vehiculo_conductor",
         "Las remesas quedaron guardadas y siguen heredando la información de la orden.",
       );
+      await emitIfRequested("remesas");
     }, true);
   }
 
@@ -333,6 +343,7 @@ export function DispatchDetail({
         "manifiesto",
         "El vehículo y el conductor quedaron asignados al despacho.",
       );
+      await emitIfRequested("remesas");
     }, true);
   }
 
@@ -347,7 +358,32 @@ export function DispatchDetail({
         "envio_rndc",
         "El manifiesto quedó guardado. Revisa el resumen y los bloqueos antes de enviar.",
       );
+      await emitIfRequested("manifiesto");
     }, true);
+  }
+
+  async function emitIfRequested(scope: ChainScope) {
+    const requested = emitIntent.current;
+    emitIntent.current = true;
+    if (!requested) return;
+    try {
+      const response = await fetch(
+        `/api/rndc/dispatches/${expedienteId}/emit`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ scope, chain: true, queueIfUnavailable: true }),
+        },
+      );
+      setNotice(
+        emissionNotice(response.status, await response.json().catch(() => null)),
+      );
+    } catch {
+      setNotice({
+        tone: "bad",
+        text: "Guardado, pero no fue posible iniciar la transmisión. Vuelve a intentarlo desde el documento.",
+      });
+    }
   }
 
   async function fulfillRemesas(data: FormData) {
@@ -416,16 +452,8 @@ export function DispatchDetail({
 
   async function emitScope(scope: Exclude<EmissionScope, "todo">) {
     await run(async () => {
-      await callDispatchRoute("emit", { scope });
-      const labels = {
-        orden: "La orden de cargue",
-        remesas: "Las remesas",
-        manifiesto: "El manifiesto",
-      };
-      setNotice({
-        tone: "ok",
-        text: `${labels[scope]} terminó su emisión en modo de prueba y conservó su evidencia.`,
-      });
+      emitIntent.current = true;
+      await emitIfRequested(scope);
     });
   }
 
@@ -595,14 +623,13 @@ export function DispatchDetail({
                 Volver al listado
               </button>
               {canSave ? (
-                <button
-                  className="primary-action"
-                  disabled={busy}
-                  form="stage-primary-form"
-                  type="submit"
-                >
-                  {busy ? "Guardando…" : "Guardar cambios"}
-                </button>
+                <SaveButtons
+                  busy={busy}
+                  emits={emitStages.includes(selectedStage ?? "")}
+                  onIntent={(emit) => {
+                    emitIntent.current = emit;
+                  }}
+                />
               ) : null}
             </div>
             {!canSave && focus.action !== "ver" ? (
@@ -716,10 +743,35 @@ export function DispatchDetail({
                 ? "Requiere atención"
                 : hasOperationInFlight
                   ? "En proceso"
-                  : "Modo prueba"
+                  : pending
+                    ? pending.status === "attention"
+                      ? "Requiere revisión"
+                      : "En cola"
+                    : "Modo prueba"
           }
         />
       </section>
+
+      {pending ? (
+        <div
+          className={`operation-notice ${pending.status === "attention" ? "bad" : "wait"}`}
+        >
+          <span />
+          {pending.status === "attention"
+            ? `Este despacho no se pudo transmitir de forma automática: ${pending.lastError ?? "requiere revisión"}. Corrige y vuelve a guardar.`
+            : "En cola para transmitir al RNDC. Se enviará solo cuando el servicio esté disponible."}
+          {canEdit ? (
+            <button
+              aria-label="Quitar de la cola"
+              onClick={() => void cancelPending({ expedienteId })}
+              title="Quitar de la cola"
+              type="button"
+            >
+              ×
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
       {notice ? (
         <div className={`operation-notice ${notice.tone}`} role="status">
@@ -736,11 +788,18 @@ export function DispatchDetail({
       ) : null}
 
       <NextActionCard
-        action={primaryAction}
+        action={
+          formId && emitStages.includes(stageResult.stage)
+            ? { ...primaryAction, label: "Guardar y emitir" }
+            : primaryAction
+        }
         blockers={stageResult.blockers}
         busy={busy}
         formId={formId}
         onAction={() => void runPrimaryAction()}
+        onFormSubmit={() => {
+          emitIntent.current = true;
+        }}
       />
 
       <div className="document-hub-anchor" id="centro-documental">
@@ -785,6 +844,12 @@ export function DispatchDetail({
       {selectedStage && currentForm ? (
         <div className="guided-detail-layout single">
           <section className="active-stage-panel" aria-live="polite">
+            {notice ? (
+              <div className={`operation-notice ${notice.tone}`}>
+                <span />
+                {notice.text}
+              </div>
+            ) : null}
             {currentForm}
             <div className="active-stage-actions">
               <button
@@ -795,14 +860,13 @@ export function DispatchDetail({
                 Cerrar
               </button>
               {canEdit && selectedDocument?.canEdit ? (
-                <button
-                  className="primary-action"
-                  disabled={busy}
-                  form="stage-primary-form"
-                  type="submit"
-                >
-                  {busy ? "Guardando…" : "Guardar cambios"}
-                </button>
+                <SaveButtons
+                  busy={busy}
+                  emits={emitStages.includes(selectedStage ?? "")}
+                  onIntent={(emit) => {
+                    emitIntent.current = emit;
+                  }}
+                />
               ) : null}
             </div>
             {selectedStage !== stageResult.stage &&
@@ -825,6 +889,57 @@ export function DispatchDetail({
           }}
         />
       ) : null}
+    </>
+  );
+}
+
+const emitStages: string[] = [
+  "orden_cargue",
+  "remesas",
+  "vehiculo_conductor",
+  "manifiesto",
+];
+
+function SaveButtons({
+  busy,
+  emits,
+  onIntent,
+}: {
+  busy: boolean;
+  emits: boolean;
+  onIntent: (emit: boolean) => void;
+}) {
+  if (!emits)
+    return (
+      <button
+        className="primary-action"
+        disabled={busy}
+        form="stage-primary-form"
+        type="submit"
+      >
+        {busy ? "Guardando…" : "Guardar cambios"}
+      </button>
+    );
+  return (
+    <>
+      <button
+        className="ghost-button"
+        disabled={busy}
+        form="stage-primary-form"
+        onClick={() => onIntent(false)}
+        type="submit"
+      >
+        Guardar borrador
+      </button>
+      <button
+        className="primary-action"
+        disabled={busy}
+        form="stage-primary-form"
+        onClick={() => onIntent(true)}
+        type="submit"
+      >
+        {busy ? "Guardando y transmitiendo…" : "Guardar y emitir"}
+      </button>
     </>
   );
 }

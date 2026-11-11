@@ -262,3 +262,25 @@ test("Avansat point import preserves legacy coordinates without accepting them f
     }),
   );
 });
+
+test("the light catalogue lists routes without stops and opens one route on demand", async () => {
+  const f = await trackingFixture();
+  await f.admin.mutation(f.api.routes.savePoint, pointFixture);
+  const routeId = await f.admin.mutation(f.api.routes.saveRoute, routeFixture);
+  const list = await f.auditor.query(f.api.routes.routeSummaries, {});
+  assert.equal(list.canEdit, false);
+  assert.deepEqual(
+    list.routes.map((r) => [r.code, r.stopCount, "stops" in r]),
+    [["803", 3, false]],
+  );
+  assert.equal(
+    (await f.admin.query(f.api.routes.points, {})).points[0].code,
+    "74",
+  );
+  assert.equal(
+    (await f.admin.query(f.api.routes.route, { routeId }))?.stops.length,
+    3,
+  );
+  await assert.rejects(() => f.t.query(f.api.routes.routeSummaries, {}));
+  await assert.rejects(() => f.t.query(f.api.routes.route, { routeId }));
+});

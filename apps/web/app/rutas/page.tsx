@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef, type FormEvent } from "react";
-import { useConvexAuth, useMutation, useQuery } from "convex/react";
+import { useDeferredValue, useMemo, useRef, useState, type FormEvent } from "react";
+import { useConvex, useConvexAuth, useMutation, useQuery } from "../lib/convex-hooks";
 import { api } from "../../convex/_generated/api";
-import type { Doc } from "../../convex/_generated/dataModel";
+import type { Doc, Id } from "../../convex/_generated/dataModel";
+import { SideSheet } from "../components/side-sheet";
 import { routeName } from "../../convex/model/routes";
 import { convexErrorMessage } from "../lib/convex-error";
 import {
@@ -15,6 +16,7 @@ import {
 } from "./catalogue-import";
 import "../control/tracking.css";
 import "./routes.css";
+import { Skeleton } from "../components/skeleton";
 
 const blankPoint: PointInput = {
   code: "",
@@ -38,132 +40,170 @@ const blankRoute: RouteInput = {
   stops: [{ key: "delivery", pointCode: "9999", minutes: 0 }],
 };
 
+const PAGE_SIZE = 25;
+
+type Selection =
+  | { kind: "point"; point: Doc<"operationalPoints"> | "new" }
+  | { kind: "route"; routeId: Id<"operationalRoutes"> | "new"; copy: boolean }
+  | { kind: "import" }
+  | null;
+
 export default function RoutesPage() {
   const { isAuthenticated } = useConvexAuth(),
-    data = useQuery(api.routes.catalogue, isAuthenticated ? {} : "skip");
+    convex = useConvex(),
+    summaries = useQuery(api.routes.routeSummaries, isAuthenticated ? {} : "skip"),
+    pointData = useQuery(api.routes.points, isAuthenticated ? {} : "skip");
   const savePoint = useMutation(api.routes.savePoint),
     saveRoute = useMutation(api.routes.saveRoute);
   const [tab, setTab] = useState<"routes" | "points">("routes"),
     [search, setSearch] = useState(""),
-    [page, setPage] = useState(0);
-  const [point, setPoint] = useState<Doc<"operationalPoints"> | "new" | null>(
-      null,
-    ),
-    [route, setRoute] = useState<Doc<"operationalRoutes"> | "new" | null>(null),
-    [copy, setCopy] = useState(false);
+    [page, setPage] = useState(0),
+    [selection, setSelection] = useState<Selection>(null);
   const [file, setFile] = useState<CatalogueImport | null>(null),
     [busy, setBusy] = useState(false),
+    [progress, setProgress] = useState(""),
     [message, setMessage] = useState(""),
     [error, setError] = useState("");
   const importing = useRef(false);
-  if (!data)
-    return (
-      <div className="skeleton" role="status">
-        Cargando rutas y puestos…
-      </div>
-    );
-  const needle = search.trim().toUpperCase();
-  const points = data.points.filter((p) =>
-      [p.code, p.name, p.city, p.controller, p.address].some((f) =>
-        f.toUpperCase().includes(needle),
-      ),
+  const needle = useDeferredValue(search).trim().toUpperCase();
+  const routes = useMemo(
+      () =>
+        (summaries?.routes ?? []).filter((r) =>
+          [r.code, r.origin, r.destination, r.via].some((f) =>
+            f.toUpperCase().includes(needle),
+          ),
+        ),
+      [summaries, needle],
     ),
-    routes = data.routes.filter((r) =>
-      [r.code, r.origin, r.destination, r.via].some((f) =>
-        f.toUpperCase().includes(needle),
-      ),
+    points = useMemo(
+      () =>
+        (pointData?.points ?? []).filter((p) =>
+          [p.code, p.name, p.city, p.controller, p.address].some((f) =>
+            f.toUpperCase().includes(needle),
+          ),
+        ),
+      [pointData, needle],
     );
+  const canEdit = summaries?.canEdit ?? false;
+  const loading = tab === "routes" ? !summaries : !pointData;
+  const total = tab === "routes" ? routes.length : points.length;
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const current = Math.min(page, pages - 1);
+
   async function importFile() {
-    if (!file || !data || importing.current) return;
+    if (!file || importing.current) return;
     importing.current = true;
     setBusy(true);
     setError("");
+    setMessage("");
     let saved = 0,
       unchanged = 0;
     try {
+      const data = await convex.query(api.routes.catalogue, {});
       for (const p of file.points) {
-        const current = data.points.find((r) => r.code === p.code);
-        if (current && current.source !== "avansat")
+        const existing = data.points.find((r) => r.code === p.code);
+        if (existing && existing.source !== "avansat")
           throw new Error(`El puesto ${p.code} ya pertenece al catálogo TMS.`);
-        if (current && sameCatalogueRecord(current, p)) {
+        if (existing && sameCatalogueRecord(existing, p)) {
           unchanged++;
           continue;
         }
         await savePoint({
           ...p,
-          expectedRevision: current?.revision ?? 0,
+          expectedRevision: existing?.revision ?? 0,
           source: "avansat",
         });
         saved++;
-        setMessage(`${saved} registros importados…`);
+        setProgress(`${saved} registros importados…`);
       }
       for (const r of file.routes) {
-        const current = data.routes.find((p) => p.code === r.code);
-        if (current && current.source !== "avansat")
+        const existing = data.routes.find((p) => p.code === r.code);
+        if (existing && existing.source !== "avansat")
           throw new Error(`La ruta ${r.code} ya pertenece al catálogo TMS.`);
-        if (current && sameCatalogueRecord(current, r)) {
+        if (existing && sameCatalogueRecord(existing, r)) {
           unchanged++;
           continue;
         }
         await saveRoute({
           ...r,
-          expectedRevision: current?.revision ?? 0,
+          expectedRevision: existing?.revision ?? 0,
           source: "avansat",
         });
         saved++;
-        setMessage(`${saved} registros importados…`);
+        setProgress(`${saved} registros importados…`);
       }
       setMessage(
         `Importación terminada: ${saved} guardados, ${unchanged} sin cambios.`,
       );
       setFile(null);
+      setSelection(null);
     } catch (e) {
       setError(
         `${convexErrorMessage(e, "No se pudo importar.")} Se guardaron ${saved} registros; puedes revisar y repetir el archivo.`,
       );
     } finally {
+      setProgress("");
       setBusy(false);
       importing.current = false;
     }
   }
-  function exportCatalogue() {
-    if (!data) return;
-    const strip = (record: Record<string, unknown>) =>
-      Object.fromEntries(
-        Object.entries(record).filter(
-          ([key]) =>
-            ![
-              "_id",
-              "_creationTime",
-              "organizationId",
-              "source",
-              "revision",
-              "updatedAt",
-              "photoId",
-            ].includes(key),
+  async function exportCatalogue() {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      const data = await convex.query(api.routes.catalogue, {});
+      const strip = (record: Record<string, unknown>) =>
+        Object.fromEntries(
+          Object.entries(record).filter(
+            ([key]) =>
+              ![
+                "_id",
+                "_creationTime",
+                "organizationId",
+                "source",
+                "revision",
+                "updatedAt",
+                "photoId",
+              ].includes(key),
+          ),
+        );
+      const url = URL.createObjectURL(
+        new Blob(
+          [
+            JSON.stringify(
+              {
+                version: 1,
+                points: data.points.map(strip),
+                routes: data.routes.map(strip),
+              },
+              null,
+              2,
+            ),
+          ],
+          { type: "application/json" },
         ),
       );
-    const url = URL.createObjectURL(
-      new Blob(
-        [
-          JSON.stringify(
-            {
-              version: 1,
-              points: data.points.map(strip),
-              routes: data.routes.map(strip),
-            },
-            null,
-            2,
-          ),
-        ],
-        { type: "application/json" },
-      ),
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "rutas-puestos.json";
-    link.click();
-    URL.revokeObjectURL(url);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "rutas-puestos.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      setError(convexErrorMessage(e, "No se pudo exportar el catálogo."));
+    } finally {
+      setBusy(false);
+    }
+  }
+  function open(next: Selection) {
+    setError("");
+    setMessage("");
+    setSelection(next);
+  }
+  function changeTab(next: "routes" | "points") {
+    setTab(next);
+    setSearch("");
+    setPage(0);
   }
   return (
     <div className="tracking-workspace route-workspace">
@@ -173,16 +213,33 @@ export default function RoutesPage() {
           <h2>Rutas y puestos de control</h2>
           <p>Catálogo operativo y tiempos desde el origen</p>
         </div>
-        <button className="ghost-button" onClick={exportCatalogue}>
-          Exportar catálogo
-        </button>
+        <div className="route-heading-actions">
+          {canEdit && (
+            <button
+              className="ghost-button"
+              disabled={busy}
+              onClick={() => open({ kind: "import" })}
+              type="button"
+            >
+              Importar catálogo
+            </button>
+          )}
+          <button
+            className="ghost-button"
+            disabled={busy || !summaries}
+            onClick={() => void exportCatalogue()}
+            type="button"
+          >
+            Exportar catálogo
+          </button>
+        </div>
       </div>
       {message && (
         <p role="status" className="tracking-message success">
           {message}
         </p>
       )}
-      {error && (
+      {error && !selection && (
         <p role="alert" className="tracking-message error">
           {error}
         </p>
@@ -197,30 +254,27 @@ export default function RoutesPage() {
             <button
               role="tab"
               aria-selected={tab === "routes"}
-              onClick={() => {
-                setTab("routes");
-                setSearch("");
-                setPage(0);
-              }}
+              onClick={() => changeTab("routes")}
             >
               Rutas
             </button>
             <button
               role="tab"
               aria-selected={tab === "points"}
-              onClick={() => {
-                setTab("points");
-                setSearch("");
-                setPage(0);
-              }}
+              onClick={() => changeTab("points")}
             >
               Puestos de control
             </button>
           </div>
-          <label>
+          <label className="route-search">
             Buscar
             <input
               type="search"
+              placeholder={
+                tab === "routes"
+                  ? "Código, origen, destino o vía"
+                  : "Código, nombre, ciudad o encargado"
+              }
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -228,240 +282,330 @@ export default function RoutesPage() {
               }}
             />
           </label>
-          {data.canEdit && (
+          {canEdit && (
             <button
               className="primary-action"
               disabled={busy}
-              onClick={() => {
-                setError("");
-                setCopy(false);
-                if (tab === "points") setPoint("new");
-                else setRoute("new");
-              }}
+              onClick={() =>
+                open(
+                  tab === "points"
+                    ? { kind: "point", point: "new" }
+                    : { kind: "route", routeId: "new", copy: false },
+                )
+              }
             >
               Insertar {tab === "points" ? "puesto" : "ruta"}
             </button>
           )}
         </div>
-        <div className="tracking-table-scroll">
-          <table className="tracking-table">
-            <thead>
-              <tr>
-                {(tab === "routes"
-                  ? [
-                      "Código",
-                      "Ruta",
-                      "Cant. P/C",
-                      "Estado",
-                      "Origen de datos",
-                      "Acciones",
-                    ]
-                  : [
-                      "Código",
-                      "Descripción",
-                      "Ciudad",
-                      "Encargado",
-                      "Dirección",
-                      "Teléfono",
-                      "Puesto",
-                      "Estado",
-                      "Acciones",
-                    ]
-                ).map((h) => (
-                  <th key={h}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {tab === "routes"
-                ? routes.slice(page * 100, (page + 1) * 100).map((r) => (
-                    <tr key={r._id}>
-                      <td>{r.code}</td>
-                      <td>{routeName(r)}</td>
-                      <td>{r.stops.length}</td>
-                      <td>{r.active ? "Activa" : "Inactiva"}</td>
-                      <td>{r.source === "avansat" ? "Avansat" : "TMS"}</td>
-                      <td>
-                        <button
-                          className="text-button"
-                          onClick={() => {
-                            setCopy(false);
-                            setRoute(r);
-                          }}
-                        >
-                          Ver {data.canEdit ? "/ actualizar" : ""}
-                        </button>
-                        {data.canEdit && (
-                          <button
-                            className="text-button"
-                            onClick={() => {
-                              setCopy(true);
-                              setRoute(r);
-                            }}
-                          >
-                            Copiar ruta
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                : points.slice(page * 100, (page + 1) * 100).map((p) => (
-                    <tr key={p._id}>
-                      <td>{p.code}</td>
-                      <td>{p.name}</td>
-                      <td>{p.city}</td>
-                      <td>{p.controller || "—"}</td>
-                      <td>{p.address || "—"}</td>
-                      <td>{p.phone || "—"}</td>
-                      <td>{p.virtual ? "Virtual" : "Físico"}</td>
-                      <td>{p.active ? "Activo" : "Inactivo"}</td>
-                      <td>
-                        <button
-                          className="text-button"
-                          onClick={() => setPoint(p)}
-                        >
-                          Ver {data.canEdit ? "/ actualizar" : ""}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              {!(tab === "routes" ? routes : points).length && (
+        {loading ? (
+          <Skeleton label="Cargando rutas y puestos" rows={10} />
+        ) : (
+          <div className="tracking-table-scroll">
+            <table className="tracking-table route-table">
+              <thead>
                 <tr>
-                  <td colSpan={9} className="tracking-empty">
-                    No hay registros que coincidan.
-                  </td>
+                  {(tab === "routes"
+                    ? [
+                        "Código",
+                        "Ruta",
+                        "Cant. P/C",
+                        "Estado",
+                        "Origen de datos",
+                        "Acciones",
+                      ]
+                    : [
+                        "Código",
+                        "Descripción",
+                        "Ciudad",
+                        "Encargado",
+                        "Dirección",
+                        "Teléfono",
+                        "Puesto",
+                        "Estado",
+                        "Acciones",
+                      ]
+                  ).map((h) => (
+                    <th key={h}>{h}</th>
+                  ))}
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div className="route-actions" aria-label="Paginación del catálogo">
+              </thead>
+              <tbody>
+                {tab === "routes"
+                  ? routes
+                      .slice(current * PAGE_SIZE, (current + 1) * PAGE_SIZE)
+                      .map((r) => (
+                        <tr
+                          key={r._id}
+                          onClick={() =>
+                            open({ kind: "route", routeId: r._id, copy: false })
+                          }
+                        >
+                          <td>{r.code}</td>
+                          <td>{routeName(r)}</td>
+                          <td>{r.stopCount}</td>
+                          <td>{r.active ? "Activa" : "Inactiva"}</td>
+                          <td>{r.source === "avansat" ? "Avansat" : "TMS"}</td>
+                          <td>
+                            <button
+                              className="text-button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                open({
+                                  kind: "route",
+                                  routeId: r._id,
+                                  copy: false,
+                                });
+                              }}
+                            >
+                              Ver {canEdit ? "/ actualizar" : ""}
+                            </button>
+                            {canEdit && (
+                              <button
+                                className="text-button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  open({
+                                    kind: "route",
+                                    routeId: r._id,
+                                    copy: true,
+                                  });
+                                }}
+                              >
+                                Copiar ruta
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))
+                  : points
+                      .slice(current * PAGE_SIZE, (current + 1) * PAGE_SIZE)
+                      .map((p) => (
+                        <tr
+                          key={p._id}
+                          onClick={() => open({ kind: "point", point: p })}
+                        >
+                          <td>{p.code}</td>
+                          <td>{p.name}</td>
+                          <td>{p.city}</td>
+                          <td>{p.controller || "—"}</td>
+                          <td>{p.address || "—"}</td>
+                          <td>{p.phone || "—"}</td>
+                          <td>{p.virtual ? "Virtual" : "Físico"}</td>
+                          <td>{p.active ? "Activo" : "Inactivo"}</td>
+                          <td>
+                            <button
+                              className="text-button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                open({ kind: "point", point: p });
+                              }}
+                            >
+                              Ver {canEdit ? "/ actualizar" : ""}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                {!total && (
+                  <tr className="route-empty-row">
+                    <td colSpan={9} className="tracking-empty">
+                      No hay registros que coincidan.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <div className="route-actions route-pagination" aria-label="Paginación del catálogo">
           <span>
-            {tab === "routes" ? routes.length : points.length} registros ·
-            página {page + 1} de{" "}
-            {Math.max(
-              1,
-              Math.ceil(
-                (tab === "routes" ? routes.length : points.length) / 100,
-              ),
-            )}
+            {loading
+              ? "Catálogo"
+              : `${total.toLocaleString("es-CO")} registros · página ${current + 1} de ${pages}`}
           </span>
           <button
             className="ghost-button"
-            disabled={page === 0}
-            onClick={() => setPage((p) => p - 1)}
+            disabled={loading || current === 0}
+            onClick={() => setPage(current - 1)}
           >
             Anterior
           </button>
           <button
             className="ghost-button"
-            disabled={
-              (page + 1) * 100 >=
-              (tab === "routes" ? routes.length : points.length)
-            }
-            onClick={() => setPage((p) => p + 1)}
+            disabled={loading || current + 1 >= pages}
+            onClick={() => setPage(current + 1)}
           >
             Siguiente
           </button>
         </div>
       </section>
-      {point && (
+      {selection?.kind === "point" && (
         <PointEditor
-          key={typeof point === "string" ? "new" : point._id}
-          initial={point === "new" ? blankPoint : point}
-          revision={point === "new" ? 0 : point.revision}
-          source={point === "new" ? "tms" : point.source}
-          canEdit={data.canEdit}
-          onClose={() => setPoint(null)}
+          key={selection.point === "new" ? "new" : selection.point._id}
+          initial={selection.point === "new" ? blankPoint : selection.point}
+          revision={selection.point === "new" ? 0 : selection.point.revision}
+          source={selection.point === "new" ? "tms" : selection.point.source}
+          canEdit={canEdit}
+          onClose={() => setSelection(null)}
           onSave={async (values) => {
             await savePoint(values);
-            setPoint(null);
+            setSelection(null);
             setMessage("Puesto guardado.");
           }}
         />
       )}
-      {route && (
-        <RouteEditor
-          key={`${typeof route === "string" ? "new" : route._id}:${copy}`}
-          initial={route === "new" ? blankRoute : route}
-          revision={route === "new" || copy ? 0 : route.revision}
-          copying={copy}
-          source={route === "new" || copy ? "tms" : route.source}
-          points={data.points}
-          canEdit={data.canEdit}
-          onClose={() => setRoute(null)}
+      {selection?.kind === "route" && (
+        <RouteSheet
+          key={`${selection.routeId}:${selection.copy}`}
+          routeId={selection.routeId}
+          copying={selection.copy}
+          points={pointData?.points ?? []}
+          canEdit={canEdit}
+          onClose={() => setSelection(null)}
           onSave={async (values) => {
             await saveRoute(values);
-            setRoute(null);
+            setSelection(null);
             setMessage("Ruta guardada.");
           }}
         />
       )}
-      {data.canEdit && (
-        <section className="panel route-import">
-          <h3>Importar catálogo Avansat</h3>
-          <p>
-            Conserva códigos, nombres, tiempos y el orden de los puestos.
-            Repetir el mismo archivo conserva los registros que no cambiaron.
-          </p>
-          <label>
-            Archivo JSON del catálogo
-            <input
-              type="file"
-              accept=".json,application/json"
-              disabled={busy}
-              onChange={async (e) => {
-                setError("");
-                setFile(null);
-                const selected = e.target.files?.[0];
-                if (!selected) return;
-                try {
-                  if (selected.size > 25 * 1024 * 1024)
-                    throw new Error("El archivo supera 25 MB.");
-                  setFile(parseCatalogueImport(await selected.text()));
-                } catch (error) {
-                  setError(convexErrorMessage(error, "Archivo inválido."));
-                }
-                e.target.value = "";
-              }}
-            />
-          </label>
-          {file && (
-            <div>
+      {selection?.kind === "import" && (
+        <SideSheet
+          label="Importar catálogo"
+          eyebrow="Rutas y P. Control"
+          title="Importar catálogo Avansat"
+          description="Conserva códigos, nombres, tiempos y el orden de los puestos. Repetir el mismo archivo conserva los registros que no cambiaron."
+          narrow
+          busy={busy}
+          onClose={() => {
+            setFile(null);
+            setSelection(null);
+          }}
+          footer={
+            <>
+              <button
+                className="ghost-button"
+                disabled={busy}
+                onClick={() => {
+                  setFile(null);
+                  setSelection(null);
+                }}
+                type="button"
+              >
+                Cancelar
+              </button>
+              <button
+                className="primary-action"
+                disabled={busy || !file}
+                onClick={() => void importFile()}
+                type="button"
+              >
+                {busy ? "Importando…" : "Importar catálogo revisado"}
+              </button>
+            </>
+          }
+        >
+          <div className="route-import">
+            {error && (
+              <p role="alert" className="tracking-message error">
+                {error}
+              </p>
+            )}
+            <label>
+              Archivo JSON del catálogo
+              <input
+                type="file"
+                accept=".json,application/json"
+                disabled={busy}
+                onChange={async (e) => {
+                  setError("");
+                  setFile(null);
+                  const selected = e.target.files?.[0];
+                  if (!selected) return;
+                  try {
+                    if (selected.size > 25 * 1024 * 1024)
+                      throw new Error("El archivo supera 25 MB.");
+                    setFile(parseCatalogueImport(await selected.text()));
+                  } catch (error) {
+                    setError(convexErrorMessage(error, "Archivo inválido."));
+                  }
+                  e.target.value = "";
+                }}
+              />
+            </label>
+            {file && (
               <p>
                 {file.points.length} puestos · {file.routes.length} rutas. Los
                 cambios se aplican al catálogo; los planes ya asignados
                 conservan su versión.
               </p>
-              <button
-                className="primary-action"
-                disabled={busy}
-                onClick={() => void importFile()}
-              >
-                {busy ? "Importando…" : "Importar catálogo revisado"}
-              </button>
-              <button
-                className="ghost-button"
-                disabled={busy}
-                onClick={() => setFile(null)}
-              >
-                Cancelar
-              </button>
-            </div>
-          )}
-          <details>
-            <summary>Formato de importación</summary>
-            <pre>
-              {JSON.stringify(
-                { version: 1, points: [blankPoint], routes: [blankRoute] },
-                null,
-                2,
-              )}
-            </pre>
-          </details>
-        </section>
+            )}
+            {progress && <p>{progress}</p>}
+            <details>
+              <summary>Formato de importación</summary>
+              <pre>
+                {JSON.stringify(
+                  { version: 1, points: [blankPoint], routes: [blankRoute] },
+                  null,
+                  2,
+                )}
+              </pre>
+            </details>
+          </div>
+        </SideSheet>
       )}
     </div>
+  );
+}
+
+function RouteSheet({
+  routeId,
+  copying,
+  points,
+  canEdit,
+  onClose,
+  onSave,
+}: {
+  routeId: Id<"operationalRoutes"> | "new";
+  copying: boolean;
+  points: Doc<"operationalPoints">[];
+  canEdit: boolean;
+  onClose: () => void;
+  onSave: (
+    value: RouteInput & { expectedRevision: number; source: "avansat" | "tms" },
+  ) => Promise<void>;
+}) {
+  const stored = useQuery(
+    api.routes.route,
+    routeId === "new" ? "skip" : { routeId },
+  );
+  if (routeId !== "new" && !stored)
+    return (
+      <SideSheet
+        label="Datos de la ruta"
+        eyebrow="Ruta"
+        title={stored === null ? "Ruta no disponible" : "Abriendo ruta"}
+        onClose={onClose}
+      >
+        {stored === null ? (
+          <p className="tracking-empty">Esta ruta ya no existe en el catálogo.</p>
+        ) : (
+          <Skeleton label="Cargando ruta" variant="detail" rows={8} />
+        )}
+      </SideSheet>
+    );
+  const route = routeId === "new" ? null : stored!;
+  return (
+    <RouteEditor
+      initial={route ?? blankRoute}
+      revision={!route || copying ? 0 : route.revision}
+      copying={copying}
+      source={!route || copying ? "tms" : route.source}
+      points={points}
+      canEdit={canEdit}
+      onClose={onClose}
+      onSave={onSave}
+    />
   );
 }
 
@@ -516,14 +660,33 @@ function PointEditor({
     }
   }
   return (
-    <section className="panel route-editor" aria-label="Datos del puesto">
-      <h3>{revision ? "Actualizar puesto" : "Insertar puesto"}</h3>
+    <SideSheet
+      label="Datos del puesto"
+      eyebrow={revision ? `Puesto ${initial.code}` : "Puesto de control"}
+      title={revision ? (canEdit ? "Actualizar puesto" : "Datos del puesto") : "Insertar puesto"}
+      description={revision ? initial.name : undefined}
+      narrow
+      busy={busy}
+      onClose={onClose}
+      footer={
+        <>
+          <button type="button" className="ghost-button" disabled={busy} onClick={onClose}>
+            Cerrar
+          </button>
+          {canEdit && (
+            <button className="primary-action" disabled={busy} form="point-form" type="submit">
+              {busy ? "Guardando…" : "Guardar puesto"}
+            </button>
+          )}
+        </>
+      }
+    >
       {error && (
         <p role="alert" className="tracking-message error">
           {error}
         </p>
       )}
-      <form onSubmit={submit}>
+      <form className="route-editor" id="point-form" onSubmit={submit}>
         <fieldset disabled={!canEdit || busy}>
           <div className="route-fields">
             {(
@@ -601,22 +764,9 @@ function PointEditor({
             />
             Activo
           </label>
-          {canEdit && (
-            <button className="primary-action" type="submit">
-              {busy ? "Guardando…" : "Guardar puesto"}
-            </button>
-          )}
         </fieldset>
-        <button
-          type="button"
-          className="ghost-button"
-          disabled={busy}
-          onClick={onClose}
-        >
-          Cerrar
-        </button>
       </form>
-    </section>
+    </SideSheet>
   );
 }
 
@@ -694,21 +844,60 @@ function RouteEditor({
       ),
     }));
   }
+  const pointNames = useMemo(
+    () => new Map(points.map((p) => [p.code, p])),
+    [points],
+  );
   return (
-    <section className="panel route-editor" aria-label="Datos de la ruta">
-      <h3>
-        {copying
+    <SideSheet
+      label="Datos de la ruta"
+      eyebrow={
+        copying
+          ? `Copia de la ruta ${initial.code}`
+          : revision
+            ? `Ruta ${initial.code}`
+            : "Ruta"
+      }
+      title={
+        copying
           ? "Copiar ruta"
           : revision
-            ? "Actualizar ruta"
-            : "Insertar ruta"}
-      </h3>
+            ? canEdit
+              ? "Actualizar ruta"
+              : "Datos de la ruta"
+            : "Insertar ruta"
+      }
+      description={revision || copying ? routeName(initial) : undefined}
+      busy={busy}
+      onClose={onClose}
+      footer={
+        <>
+          <button type="button" className="ghost-button" disabled={busy} onClick={onClose}>
+            Cerrar
+          </button>
+          {canEdit && (
+            <button className="primary-action" disabled={busy} form="route-form" type="submit">
+              {busy ? "Guardando…" : "Guardar ruta"}
+            </button>
+          )}
+        </>
+      }
+    >
+      <datalist id="route-point-options">
+        {points.map((p) => (
+          <option key={p._id} value={p.code}>
+            {p.name}
+            {p.active ? "" : " (Inactivo)"}
+          </option>
+        ))}
+        <option value="9999">Lugar Entrega</option>
+      </datalist>
       {error && (
         <p role="alert" className="tracking-message error">
           {error}
         </p>
       )}
-      <form onSubmit={submit}>
+      <form className="route-editor" id="route-form" onSubmit={submit}>
         <fieldset disabled={!canEdit || busy}>
           <div className="route-fields">
             {(
@@ -768,23 +957,26 @@ function RouteEditor({
                   <tr key={s.key}>
                     <td>{index + 1}</td>
                     <td>
-                      <select
-                        aria-label={`Puesto ${index + 1}`}
-                        value={s.pointCode}
-                        disabled={s.pointCode === "9999"}
-                        onChange={(e) =>
-                          stopValue(index, "pointCode", e.target.value)
-                        }
-                      >
-                        <option value="">Seleccionar puesto</option>
-                        {points.map((p) => (
-                          <option key={p._id} value={p.code}>
-                            {p.code} · {p.name}
-                            {p.active ? "" : " (Inactivo)"}
-                          </option>
-                        ))}
-                        <option value="9999">Lugar Entrega</option>
-                      </select>
+                      {s.pointCode === "9999" ? (
+                        <span className="route-stop-name">Lugar Entrega</span>
+                      ) : (
+                        <>
+                          <input
+                            aria-label={`Puesto ${index + 1}`}
+                            list="route-point-options"
+                            placeholder="Código del puesto"
+                            required
+                            value={s.pointCode}
+                            onChange={(e) =>
+                              stopValue(index, "pointCode", e.target.value.trim())
+                            }
+                          />
+                          <span className="route-stop-name">
+                            {pointNames.get(s.pointCode)?.name ??
+                              (s.pointCode ? "Puesto sin registrar" : "Escribe el código o el nombre")}
+                          </span>
+                        </>
+                      )}
                     </td>
                     <td>
                       <input
@@ -914,21 +1106,10 @@ function RouteEditor({
               >
                 Adicionar puesto de control
               </button>
-              <button className="primary-action" type="submit">
-                {busy ? "Guardando…" : "Guardar ruta"}
-              </button>
             </div>
           )}
         </fieldset>
-        <button
-          type="button"
-          className="ghost-button"
-          disabled={busy}
-          onClick={onClose}
-        >
-          Cerrar
-        </button>
       </form>
-    </section>
+    </SideSheet>
   );
 }

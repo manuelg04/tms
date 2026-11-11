@@ -11,6 +11,7 @@
 import type * as access from "../access.js";
 import type * as avansatCustomers from "../avansatCustomers.js";
 import type * as clientCompanies from "../clientCompanies.js";
+import type * as crons from "../crons.js";
 import type * as dashboard from "../dashboard.js";
 import type * as dispatchExceptions from "../dispatchExceptions.js";
 import type * as dispatchRoutePlans from "../dispatchRoutePlans.js";
@@ -32,6 +33,7 @@ import type * as model_actionableNotification from "../model/actionableNotificat
 import type * as model_advancedWorkflow from "../model/advancedWorkflow.js";
 import type * as model_avansatCustomers from "../model/avansatCustomers.js";
 import type * as model_consecutiveRange from "../model/consecutiveRange.js";
+import type * as model_currentManifest from "../model/currentManifest.js";
 import type * as model_dashboardStatus from "../model/dashboardStatus.js";
 import type * as model_dispatchPresentation from "../model/dispatchPresentation.js";
 import type * as model_dispatchRecords from "../model/dispatchRecords.js";
@@ -57,6 +59,8 @@ import type * as model_monitoringValidators from "../model/monitoringValidators.
 import type * as model_officialDocumentIdentity from "../model/officialDocumentIdentity.js";
 import type * as model_operationIntent from "../model/operationIntent.js";
 import type * as model_operationState from "../model/operationState.js";
+import type * as model_pendingEmission from "../model/pendingEmission.js";
+import type * as model_pendingEmissionValidators from "../model/pendingEmissionValidators.js";
 import type * as model_reconciliationOutcome from "../model/reconciliationOutcome.js";
 import type * as model_rndcCatalogs from "../model/rndcCatalogs.js";
 import type * as model_rndcOperationRecords from "../model/rndcOperationRecords.js";
@@ -76,6 +80,7 @@ import type * as monitoring from "../monitoring.js";
 import type * as monitoringSeed from "../monitoringSeed.js";
 import type * as notifications from "../notifications.js";
 import type * as officialDocuments from "../officialDocuments.js";
+import type * as pendingEmissions from "../pendingEmissions.js";
 import type * as rndc from "../rndc.js";
 import type * as rndcOperations from "../rndcOperations.js";
 import type * as rndcReferenceCatalogs from "../rndcReferenceCatalogs.js";
@@ -95,6 +100,7 @@ declare const fullApi: ApiFromModules<{
   access: typeof access;
   avansatCustomers: typeof avansatCustomers;
   clientCompanies: typeof clientCompanies;
+  crons: typeof crons;
   dashboard: typeof dashboard;
   dispatchExceptions: typeof dispatchExceptions;
   dispatchRoutePlans: typeof dispatchRoutePlans;
@@ -116,6 +122,7 @@ declare const fullApi: ApiFromModules<{
   "model/advancedWorkflow": typeof model_advancedWorkflow;
   "model/avansatCustomers": typeof model_avansatCustomers;
   "model/consecutiveRange": typeof model_consecutiveRange;
+  "model/currentManifest": typeof model_currentManifest;
   "model/dashboardStatus": typeof model_dashboardStatus;
   "model/dispatchPresentation": typeof model_dispatchPresentation;
   "model/dispatchRecords": typeof model_dispatchRecords;
@@ -141,6 +148,8 @@ declare const fullApi: ApiFromModules<{
   "model/officialDocumentIdentity": typeof model_officialDocumentIdentity;
   "model/operationIntent": typeof model_operationIntent;
   "model/operationState": typeof model_operationState;
+  "model/pendingEmission": typeof model_pendingEmission;
+  "model/pendingEmissionValidators": typeof model_pendingEmissionValidators;
   "model/reconciliationOutcome": typeof model_reconciliationOutcome;
   "model/rndcCatalogs": typeof model_rndcCatalogs;
   "model/rndcOperationRecords": typeof model_rndcOperationRecords;
@@ -160,6 +169,7 @@ declare const fullApi: ApiFromModules<{
   monitoringSeed: typeof monitoringSeed;
   notifications: typeof notifications;
   officialDocuments: typeof officialDocuments;
+  pendingEmissions: typeof pendingEmissions;
   rndc: typeof rndc;
   rndcOperations: typeof rndcOperations;
   rndcReferenceCatalogs: typeof rndcReferenceCatalogs;

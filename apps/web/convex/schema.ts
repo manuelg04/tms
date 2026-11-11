@@ -34,6 +34,7 @@ import {
   rndcOperationType
 } from "./model/schemaValidators";
 import { masterTables } from "./model/schemaMasterTables";
+import { pendingEmissionFields } from "./model/pendingEmissionValidators";
 
 export default defineSchema({
   ...masterTables,
@@ -44,6 +45,11 @@ export default defineSchema({
   operationalRoutes: defineTable(routeFields).index("by_org_code", ["organizationId", "code"]),
   routePlans: defineTable(planFields).index("by_dispatch", ["dispatchId"]),
   dispatchRoutePlans: defineTable(dispatchPlanFields).index("by_expediente", ["expedienteId"]),
+  pendingEmissions: defineTable(pendingEmissionFields)
+    .index("by_expediente", ["expedienteId"])
+    .index("by_organization_and_requested_at", ["organizationId", "requestedAt"])
+    .index("by_status_and_requested_at", ["status", "requestedAt"]),
+  pendingEmissionTicker: defineTable({ scheduledFor: v.number() }),
   monitoringTrips: defineTable(monitoringTripFields)
     .index("by_org_status", ["organizationId", "status"])
     .index("by_org_code", ["organizationId", "code"])

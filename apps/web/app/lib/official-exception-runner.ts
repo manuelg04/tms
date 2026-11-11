@@ -62,7 +62,9 @@ export async function runOfficialExceptionSequence(input: {
     expedienteRemesaId?: string;
     originalOperationId?: string;
     payload: Record<string, unknown>;
+    optional?: boolean;
   }>;
+  responseExtra?: Record<string, unknown>;
 }): Promise<Response> {
   const authorization = authorizeGatewayRequest(input.request, "manage_official_documents");
   if (authorization instanceof Response) return authorization;
@@ -90,6 +92,7 @@ export async function runOfficialExceptionSequence(input: {
   const operations: Id<"rndcOperations">[] = [];
   const results: Array<{ action: string; documentId: string; response: Record<string, unknown> }> = [];
   let evidenceCount = 0;
+  let skipped = 0;
   let status: "completed" | "rejected" | "uncertain" = "completed";
   let responseStatus = 200;
 
@@ -114,20 +117,25 @@ export async function runOfficialExceptionSequence(input: {
     const result = await actionResponse.json().catch(() => ({})) as Record<string, unknown>;
     results.push({ action: step.action, documentId: step.documentId, response: result });
     if (typeof result.operationId === "string") operations.push(result.operationId as Id<"rndcOperations">);
-    if (result.evidenceStored === true) evidenceCount += 1;
     if (result.status === "uncertain" || result.status === "reconciling") {
       status = "uncertain";
       responseStatus = 202;
       break;
     }
-    if (!actionResponse.ok || result.ok !== true) {
+    const accepted = actionResponse.ok && result.ok === true;
+    if (!accepted && step.optional && actionResponse.status === 422) {
+      skipped += 1;
+      continue;
+    }
+    if (result.evidenceStored === true) evidenceCount += 1;
+    if (!accepted) {
       status = "rejected";
       responseStatus = actionResponse.status;
       break;
     }
   }
 
-  if (status === "completed" && evidenceCount !== input.steps.length) {
+  if (status === "completed" && evidenceCount !== input.steps.length - skipped) {
     status = "uncertain";
     responseStatus = 202;
   }
@@ -138,7 +146,7 @@ export async function runOfficialExceptionSequence(input: {
     evidenceCount,
     resultJson: JSON.stringify(results)
   });
-  return jsonResponse({ ok: status === "completed", exceptionId, exceptionStatus: status, evidenceStored: evidenceCount === input.steps.length, steps: results }, responseStatus);
+  return jsonResponse({ ...input.responseExtra, ok: status === "completed", exceptionId, exceptionStatus: status, evidenceStored: evidenceCount === input.steps.length - skipped, steps: results }, responseStatus);
 }
 
 export function isRecord(value: unknown): value is Record<string, unknown> {

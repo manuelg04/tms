@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
-import { useMutation, usePaginatedQuery, useQuery } from "convex/react";
+import { useMutation, usePaginatedQuery, useQuery } from "../lib/convex-hooks";
 import { api } from "../../convex/_generated/api";
 import { formatTimestamp } from "../lib/labels";
 import { isEmptyText, useDebounced } from "../lib/hooks";
 import { MasterSyncAction, MasterSyncBadge, type MasterSyncOutcome, type MasterSyncSummaryView } from "./components/master-sync";
+import { Skeleton } from "../components/skeleton";
+import { SideSheet } from "../components/side-sheet";
 
 type Tab = "conductores" | "vehiculos" | "remolques" | "terceros";
 
@@ -338,7 +340,7 @@ export default function MaestrosPage() {
 
       <section className="panel" aria-label={tab === "conductores" ? "Listado de conductores" : tab === "vehiculos" ? "Listado de vehículos" : tab === "remolques" ? "Listado de remolques" : "Listado de terceros"}>
         {pageStatus === "LoadingFirstPage" ? (
-          <div className="skeleton">Cargando…</div>
+          <Skeleton label="Cargando" />
         ) : tab === "conductores" ? (
           <DriversTable
             onSelect={(document) => setSelectedDocument((current) => (current === document ? null : document))}
@@ -403,18 +405,10 @@ function DriverDetailPanel({
   const title = detail && detail.name && detail.name.trim() !== "" ? detail.name : document;
 
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <h2>{title}</h2>
-        <div className="panel-head-actions">
-          {detail ? <MasterSyncAction keyValue={detail.document} kind="driver" onDone={onSync} summary={detail.rndcSyncSummary} /> : null}
-          <button className="text-button" onClick={onClose} type="button">
-            Cerrar
-          </button>
-        </div>
-      </div>
+    <SideSheet eyebrow="Conductor" label="Detalle del conductor" onClose={onClose} title={title}>
+      {detail ? <div className="sheet-actions"><MasterSyncAction keyValue={detail.document} kind="driver" onDone={onSync} summary={detail.rndcSyncSummary} /></div> : null}
       {detail === undefined ? (
-        <div className="skeleton">Cargando detalle…</div>
+        <Skeleton label="Cargando detalle" />
       ) : detail === null ? (
         <div className="empty-state">No encontrado</div>
       ) : (
@@ -451,7 +445,7 @@ function DriverDetailPanel({
           </div>
         </div>
       )}
-    </section>
+    </SideSheet>
   );
 }
 
@@ -473,18 +467,10 @@ function VehicleDetailPanel({
   const title = detail ? detail.plate : plate;
 
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <h2>{title}</h2>
-        <div className="panel-head-actions">
-          {detail ? <MasterSyncAction keyValue={detail.plate} kind="vehicle" onDone={onSync} summary={detail.rndcSyncSummary} /> : null}
-          <button className="text-button" onClick={onClose} type="button">
-            Cerrar
-          </button>
-        </div>
-      </div>
+    <SideSheet eyebrow="Vehículo" label="Detalle del vehículo" onClose={onClose} title={title}>
+      {detail ? <div className="sheet-actions"><MasterSyncAction keyValue={detail.plate} kind="vehicle" onDone={onSync} summary={detail.rndcSyncSummary} /></div> : null}
       {detail === undefined ? (
-        <div className="skeleton">Cargando detalle…</div>
+        <Skeleton label="Cargando detalle" />
       ) : detail === null ? (
         <div className="empty-state">No encontrado</div>
       ) : (
@@ -522,18 +508,14 @@ function VehicleDetailPanel({
           </div>
         </div>
       )}
-    </section>
+    </SideSheet>
   );
 }
 
 function TrailerDetailPanel({ detail, onClose, plate }: { detail: TrailerDetail | null | undefined; onClose: () => void; plate: string }) {
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <h2>Remolque {plate}</h2>
-        <button className="text-button" onClick={onClose} type="button">Cerrar</button>
-      </div>
-      {detail === undefined ? <div className="skeleton">Cargando detalle…</div> : detail === null ? <div className="empty-state">No encontrado</div> : (
+    <SideSheet eyebrow="Remolque" label="Detalle del remolque" onClose={onClose} title={`Remolque ${plate}`}>
+      {detail === undefined ? <Skeleton label="Cargando detalle" /> : detail === null ? <div className="empty-state">No encontrado</div> : (
         <div className="detail-body">
           <div className="field-grid">
             <ReadOnlyField label="Placa"><span className="plate-chip">{detail.plate}</span></ReadOnlyField>
@@ -557,7 +539,7 @@ function TrailerDetailPanel({ detail, onClose, plate }: { detail: TrailerDetail 
           </div>
         </div>
       )}
-    </section>
+    </SideSheet>
   );
 }
 

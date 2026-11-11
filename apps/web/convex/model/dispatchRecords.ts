@@ -21,6 +21,7 @@ import {
 import { type OfficialDocumentState } from "./documentLifecycle";
 import { refreshDispatchSearchText } from "./dispatchSearchProjection";
 import { masterSyncSummary } from "./masterSync";
+import { currentManifestDocument } from "./currentManifest";
 
 export const stageValidator = v.union(
   v.literal("orden_cargue"),
@@ -467,9 +468,11 @@ export async function officialStateFor(
     .query("documents")
     .withIndex("by_expediente", (q) => q.eq("expedienteId", expediente._id))
     .collect();
-  const match = documents
-    .filter((document) => document.kind === kind)
-    .sort((a, b) => b.updatedAt - a.updatedAt)[0];
+  const match = kind === "manifiesto"
+    ? currentManifestDocument(expediente, documents)
+    : documents
+        .filter((document) => document.kind === kind)
+        .sort((a, b) => b.updatedAt - a.updatedAt)[0];
   const state = match?.officialState ?? match?.status;
   return state === "authorized" || state === "fulfilled" || state === "annulled" || state === "pending" ? state : "draft";
 }
@@ -488,9 +491,7 @@ export async function buildProjection(
     .query("documents")
     .withIndex("by_expediente", (q) => q.eq("expedienteId", expediente._id))
     .collect();
-  const manifestDocument = manifestDocuments
-    .filter((document) => document.kind === "manifiesto")
-    .sort((a, b) => b.updatedAt - a.updatedAt)[0];
+  const manifestDocument = currentManifestDocument(expediente, manifestDocuments);
 
   return {
     annulled: expediente.status === "cancelled",

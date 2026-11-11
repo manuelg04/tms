@@ -3,7 +3,7 @@
 import { FormField } from "./form-validation";
 
 import { useEffect, useState } from "react";
-import { useQuery } from "convex/react";
+import { useQuery } from "../../lib/convex-hooks";
 import { useDebounced } from "../../lib/hooks";
 import { api } from "../../../convex/_generated/api";
 import { DEFAULT_PARTY_SITE } from "../../../convex/model/masterSync";

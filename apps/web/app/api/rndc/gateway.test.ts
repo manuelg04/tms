@@ -29,12 +29,21 @@ afterEach(() => {
 
 test("protects the health route and exposes only the safe mode", async () => {
   const unauthorized = await getHealth(new Request("http://localhost/api/rndc/health"));
-  globalThis.fetch = async () => Response.json({ ok: true, status: "alive", secret: "hidden" });
+  globalThis.fetch = async () => Response.json({ ok: true, status: "alive", secret: "hidden", available: true });
   const authorized = await getHealth(authenticatedRequest("http://localhost/api/rndc/health", "operator"));
   const body = await authorized.json() as Record<string, unknown>;
 
   assert.equal(unauthorized.status, 401);
-  assert.deepEqual(body, { ok: true, mode: "dry-run" });
+  assert.deepEqual(body, { ok: true, mode: "dry-run", rndcAvailable: true });
+});
+
+test("reports when the RNDC service itself is not answering", async () => {
+  globalThis.fetch = async (input) => String(input).endsWith("/rndc/availability")
+    ? Response.json({ ok: true, available: false, detail: "connect ECONNREFUSED 10.0.0.1" })
+    : Response.json({ ok: true, status: "alive" });
+  const response = await getHealth(authenticatedRequest("http://localhost/api/rndc/health", "operator"));
+
+  assert.deepEqual(await response.json(), { ok: true, mode: "dry-run", rndcAvailable: false });
 });
 
 test("reports the configured mode once real users are enabled and keeps demo sessions in dry-run", async () => {
@@ -47,7 +56,7 @@ test("reports the configured mode once real users are enabled and keeps demo ses
 
   process.env.AUTH_MODE = "local";
   const localResponse = await getHealth(authenticatedRequest("http://localhost/api/rndc/health", "operator"));
-  assert.deepEqual(await localResponse.json(), { ok: true, mode: "live" });
+  assert.deepEqual(await localResponse.json(), { ok: true, mode: "live", rndcAvailable: false });
 });
 
 test("allows operators through the gateway and keeps the service secret server-side", async () => {

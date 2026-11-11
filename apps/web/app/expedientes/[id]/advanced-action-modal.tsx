@@ -17,6 +17,8 @@ import {
 import { kindLabels, statusLabels } from "../../lib/labels";
 import type { Detail } from "./detail-types";
 import { required } from "../../lib/form-data";
+import { useQuery } from "../../lib/convex-hooks";
+import { api } from "../../../convex/_generated/api";
 import {
   appointmentBefore,
   emptyManifestPayload,
@@ -168,6 +170,7 @@ export function AdvancedActionModal({
       const result = (await response.json()) as {
         error?: string;
         blockers?: string[];
+        replacementManifestNumber?: string;
       };
       if (!response.ok)
         throw new Error(
@@ -175,7 +178,11 @@ export function AdvancedActionModal({
             result.blockers?.[0] ??
             "La acción avanzada no terminó correctamente.",
         );
-      onDone(successMessage(modal));
+      onDone(
+        result.replacementManifestNumber
+          ? `El manifiesto quedó anulado y se reabrió con el número ${result.replacementManifestNumber} como reemplazo. Cambia lo necesario (conductor, vehículo o liquidación) y usa "Guardar y emitir" en el manifiesto antes de cinco días.`
+          : successMessage(modal),
+      );
     } catch (cause) {
       setError(
         cause instanceof Error
@@ -228,6 +235,8 @@ export function AdvancedActionModal({
             <label>
               <span>Observación detallada</span>
               <textarea
+                maxLength={modal === "annul" ? 200 : undefined}
+                minLength={modal === "annul" ? 20 : undefined}
                 name="observation"
                 placeholder="Contexto, alcance y soporte revisado"
                 required
@@ -318,40 +327,7 @@ function modalFields(
       </>
     );
   if (modal === "annul")
-    return (
-      <>
-        <label className="wide">
-          <span>Documento</span>
-          <select
-            defaultValue={eligible.length === 1 ? eligible[0]._id : ""}
-            name="documentId"
-            required
-          >
-            <option value="">Selecciona</option>
-            {eligible.map(documentOption)}
-          </select>
-        </label>
-        <label>
-          <span>Motivo RNDC</span>
-          <select defaultValue="" name="reasonCode" required>
-            <option value="">Selecciona</option>
-            <option value="D">Error de digitación</option>
-            <option value="S">Cancelación del servicio</option>
-          </select>
-        </label>
-        <label className="confirmation-check wide">
-          <input name="wholeSet" type="checkbox" />
-          <span>
-            Anular el conjunto documental completo cuando el plan de
-            dependencias lo permita.
-          </span>
-        </label>
-        <div className="modal-info wide">
-          La anulación se detiene si existe un documento dependiente que debe
-          reversarse o liberarse primero.
-        </div>
-      </>
-    );
+    return <AnnulFields detail={detail} eligible={eligible} />;
   if (modal === "reconcile")
     return (
       <>
@@ -531,6 +507,120 @@ function ModalMunicipalityField({
           }
         />
       ) : null}
+    </>
+  );
+}
+
+const replacementReasons = ["R", "T", "G", "C", "V"];
+
+function AnnulFields({
+  detail,
+  eligible,
+}: {
+  detail: Detail;
+  eligible: Detail["documents"];
+}) {
+  const [documentId, setDocumentId] = useState(
+    eligible.length === 1 ? eligible[0]._id : "",
+  );
+  const [reason, setReason] = useState("");
+  const [wholeSet, setWholeSet] = useState(false);
+  const quota = useQuery(api.dispatchExceptions.annulmentQuota, {
+    expedienteId: detail.expediente._id,
+  });
+  const kind = eligible.find((document) => document._id === documentId)?.kind;
+  const manifest = kind === "manifiesto" && !wholeSet;
+  const replacement = manifest && replacementReasons.includes(reason);
+  const countsForQuota =
+    quota && !replacement && (kind === "manifiesto" || wholeSet);
+  return (
+    <>
+      <label className="wide">
+        <span>Documento</span>
+        <select
+          name="documentId"
+          onChange={(event) => {
+            setDocumentId(event.target.value);
+            setReason("");
+          }}
+          required
+          value={documentId}
+        >
+          <option value="">Selecciona</option>
+          {eligible.map(documentOption)}
+        </select>
+      </label>
+      <label>
+        <span>Motivo RNDC</span>
+        <select
+          name="reasonCode"
+          onChange={(event) => setReason(event.target.value)}
+          required
+          value={reason}
+        >
+          <option value="">Selecciona</option>
+          <option value="S">Cancelación del servicio</option>
+          <option value="D">Error de digitación</option>
+          {manifest ? (
+            <optgroup label="Con manifiesto de reemplazo">
+              <option value="C">Cambio de conductor</option>
+              <option value="V">Cambio de vehículo</option>
+              <option value="T">Cambio de tarifa</option>
+              <option value="G">Cambio de destino por el generador</option>
+              <option value="R">Cambio en las remesas</option>
+            </optgroup>
+          ) : null}
+        </select>
+      </label>
+      <label className="confirmation-check wide">
+        <input
+          checked={wholeSet}
+          name="wholeSet"
+          onChange={(event) => {
+            setWholeSet(event.target.checked);
+            if (event.target.checked && replacementReasons.includes(reason))
+              setReason("");
+          }}
+          type="checkbox"
+        />
+        <span>
+          Anular el conjunto documental completo (cumplidos, manifiesto,
+          remesas e información del viaje) cuando el plan de dependencias lo
+          permita.
+        </span>
+      </label>
+      {replacement ? (
+        <div className="modal-info wide">
+          El TMS reserva el siguiente consecutivo de manifiesto y lo reporta al
+          RNDC como el que reemplaza a este. El manifiesto nuevo se debe expedir
+          con ese número y con este como manifiesto anterior, máximo cinco días
+          después. Este reemplazo no cuenta para el tope mensual. Al terminar,
+          el manifiesto de este despacho queda reabierto con ese número para
+          que cambies lo necesario y lo emitas.
+        </div>
+      ) : null}
+      {countsForQuota ? (
+        <div
+          className={quota.exceeded ? "form-error wide" : "modal-info wide"}
+          role={quota.exceeded ? "alert" : undefined}
+        >
+          Tope mensual del RNDC ({quota.month}): {quota.annulled} de{" "}
+          {quota.issued} manifiestos expedidos desde el TMS están anulados; se
+          permiten {quota.allowed} ({quota.limitPercent}%).{" "}
+          {quota.exceeded
+            ? "Esta anulación supera el tope: el RNDC solo la acepta si la empresa manifiesta en su portal que continúa, y la reporta a la Superintendencia de Transporte."
+            : `Después de esta quedan ${Math.max(0, quota.remaining - 1)}.`}
+          {quota.replaced > 0
+            ? ` Hay ${quota.replaced} anulados con reemplazo, que no cuentan.`
+            : ""}
+          {quota.partial ? " El conteo puede estar incompleto." : ""}
+        </div>
+      ) : null}
+      <div className="modal-info wide">
+        La anulación se detiene si existe un documento dependiente que debe
+        reversarse o liberarse primero. La observación se envía al RNDC: debe
+        ser clara y tener entre 20 y 200 caracteres.
+      </div>
     </>
   );
 }

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import { useConvex, useMutation, useQuery } from "convex/react";
+import { useConvex, useMutation, useQuery } from "../lib/convex-hooks";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import type {
@@ -21,6 +21,7 @@ import {
   type RegistryModule,
 } from "./registry-config";
 import "./document-registry.css";
+import { Skeleton } from "../components/skeleton";
 
 export function DocumentRegistry({
   module,
@@ -240,7 +241,7 @@ export function DocumentRegistry({
               <strong>
                 {result
                   ? `${result.total.toLocaleString("es-CO")} registros`
-                  : "Cargando registros…"}
+                  : "Registros"}
               </strong>
               <span>
                 Más recientes primero
@@ -331,7 +332,7 @@ export function DocumentRegistry({
                     <td className="registry-empty" colSpan={columns.length}>
                       {invalidDates
                         ? "Corrige el rango de fechas para buscar."
-                        : "Cargando documentos…"}
+                        : <Skeleton label="Cargando documentos" />}
                     </td>
                   </tr>
                 ) : result.rows.length === 0 ? (

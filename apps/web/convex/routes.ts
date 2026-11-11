@@ -90,6 +90,79 @@ export const catalogue = query({
   },
 });
 
+function canWrite(actor: Doc<"users">) {
+  return actor.roles.some((r) =>
+    writers.includes(r as (typeof writers)[number]),
+  );
+}
+
+export const routeSummaries = query({
+  args: {},
+  returns: v.object({
+    routes: v.array(
+      v.object({
+        _id: v.id("operationalRoutes"),
+        code: v.string(),
+        origin: v.string(),
+        destination: v.string(),
+        via: v.string(),
+        active: v.boolean(),
+        source,
+        stopCount: v.number(),
+      }),
+    ),
+    canEdit: v.boolean(),
+  }),
+  handler: async (ctx) => {
+    const actor = await requireActor(ctx, undefined, [...readers]);
+    const routes = await ctx.db
+      .query("operationalRoutes")
+      .withIndex("by_org_code", (q) =>
+        q.eq("organizationId", actor.organizationId),
+      )
+      .collect();
+    return {
+      routes: routes.map((r) => ({
+        _id: r._id,
+        code: r.code,
+        origin: r.origin,
+        destination: r.destination,
+        via: r.via,
+        active: r.active,
+        source: r.source,
+        stopCount: r.stops.length,
+      })),
+      canEdit: canWrite(actor),
+    };
+  },
+});
+
+export const points = query({
+  args: {},
+  returns: v.object({ points: v.array(pointDoc), canEdit: v.boolean() }),
+  handler: async (ctx) => {
+    const actor = await requireActor(ctx, undefined, [...readers]);
+    const points = await ctx.db
+      .query("operationalPoints")
+      .withIndex("by_org_code", (q) =>
+        q.eq("organizationId", actor.organizationId),
+      )
+      .collect();
+    return { points, canEdit: canWrite(actor) };
+  },
+});
+
+export const route = query({
+  args: { routeId: v.id("operationalRoutes") },
+  returns: v.union(routeDoc, v.null()),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, [...readers]);
+    const route = await ctx.db.get("operationalRoutes", args.routeId);
+    if (!route || route.organizationId !== actor.organizationId) return null;
+    return route;
+  },
+});
+
 export const savePoint = mutation({
   args: { ...pointInput, expectedRevision: v.number(), source },
   returns: v.id("operationalPoints"),

@@ -2,13 +2,14 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useConvexAuth, useQuery, useMutation } from "convex/react";
+import { useConvexAuth, useQuery, useMutation } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { convexErrorMessage } from "../../lib/convex-error";
 import { optionalModules } from "../../lib/modules";
 import "../../control/tracking.css";
 import "../../rutas/routes.css";
+import { Skeleton } from "../../components/skeleton";
 
 const processes = [
   { id: 4, label: "Manifiestos" },
@@ -99,9 +100,7 @@ export default function MirrorPage() {
   }
   if (!data)
     return (
-      <div className="skeleton" role="status">
-        Cargando espejo RNDC…
-      </div>
+      <Skeleton label="Cargando espejo RNDC" />
     );
   const last = data.runs.find(
     (r) =>

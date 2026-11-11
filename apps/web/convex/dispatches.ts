@@ -31,6 +31,7 @@ import {
   buildProjection,
   claimConsecutive
 } from "./model/dispatchRecords";
+import { currentManifestDocument } from "./model/currentManifest";
 
 export const reserveLoadingOrderNumber = mutation({
   args: { actorToken: v.optional(v.string()), token: v.string() },
@@ -802,9 +803,7 @@ export const emissionInputs = query({
         .filter((document) => document.kind === kind)
         .sort((a, b) => b.updatedAt - a.updatedAt)[0];
     const orderDocument = documentFor("orden_cargue");
-    const manifestDocument = expediente.manifestDocumentId
-      ? documents.find((document) => document._id === expediente.manifestDocumentId)
-      : documentFor("manifiesto");
+    const manifestDocument = currentManifestDocument(expediente, documents);
     const tripEmitted = operations.some(
       (operation) =>
         operation.operationType === "emit_trip" &&

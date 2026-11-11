@@ -100,11 +100,90 @@ test("whole-set annulment follows reverse documentary dependency order", () => {
   assert.deepEqual(result.steps, [
     "annul_manifest_fulfillment:man-1",
     "annul_remesa_fulfillment:rem-1",
+    "annul_remesa_initial_fulfillment:rem-1",
     "annul_manifest:man-1",
     "annul_remesa:rem-1",
-    "annul_trip",
-    "annul_cargo:order-1"
+    "annul_trip"
   ]);
+});
+
+test("a loading order that never became a remesa is annulled with the whole set", () => {
+  const result = buildAnnulmentPlan({
+    wholeSet: true,
+    documents: [{ id: "order-1", kind: "orden_cargue", officialState: "authorized" }]
+  });
+
+  assert.deepEqual(result.steps, ["annul_cargo:order-1"]);
+});
+
+test("a loading order already converted into a remesa stays as a historical record", () => {
+  const result = buildAnnulmentPlan({
+    target: { id: "order-1", kind: "orden_cargue", officialState: "authorized" },
+    documents: [
+      { id: "order-1", kind: "orden_cargue", officialState: "authorized" },
+      { id: "rem-1", kind: "remesa", officialState: "annulled" }
+    ]
+  });
+
+  assert.equal(result.ok, false);
+  assert.match(result.blockers[0], /registro histórico/);
+});
+
+test("a manifest with fulfilled remesas is not annulled on its own", () => {
+  const result = buildAnnulmentPlan({
+    target: { id: "man-1", kind: "manifiesto", officialState: "authorized", remesaIds: ["rem-1"] },
+    documents: [{ id: "rem-1", kind: "remesa", officialState: "fulfilled", fulfillmentState: "fulfilled" }]
+  });
+
+  assert.equal(result.ok, false);
+  assert.match(result.blockers[0], /remesas cumplidas/);
+});
+
+test("a fulfilled remesa reverses both fulfilments before its annulment", () => {
+  const result = buildAnnulmentPlan({
+    target: { id: "rem-1", kind: "remesa", officialState: "fulfilled", fulfillmentState: "fulfilled" },
+    documents: []
+  });
+
+  assert.deepEqual(result.steps, ["annul_remesa_fulfillment", "annul_remesa_initial_fulfillment", "annul_remesa"]);
+});
+
+test("a replacement reason annuls only the manifest and never the whole set", () => {
+  const documents = [
+    { id: "rem-1", kind: "remesa", officialState: "authorized" },
+    { id: "man-1", kind: "manifiesto", officialState: "authorized", remesaIds: ["rem-1"] }
+  ];
+  const single = buildAnnulmentPlan({ target: documents[1], documents, reasonCode: "C" });
+  const whole = buildAnnulmentPlan({ wholeSet: true, documents, reasonCode: "C" });
+  const remesa = buildAnnulmentPlan({ target: { id: "rem-9", kind: "remesa", officialState: "authorized" }, documents: [], reasonCode: "T" });
+
+  assert.deepEqual(single.steps, ["annul_manifest", "annul_trip"]);
+  assert.equal(whole.ok, false);
+  assert.equal(remesa.ok, false);
+});
+
+test("annulment reasons follow the RNDC catalogue of each document", async () => {
+  const { annulmentReasonAllowed, needsReplacementManifest } = await import("./advancedWorkflow");
+
+  assert.equal(annulmentReasonAllowed("manifiesto", "V"), true);
+  assert.equal(annulmentReasonAllowed("manifiesto", "X"), false);
+  assert.equal(annulmentReasonAllowed("remesa", "S"), true);
+  assert.equal(annulmentReasonAllowed("remesa", "C"), false);
+  assert.equal(annulmentReasonAllowed("orden_cargue", undefined), false);
+  assert.equal(needsReplacementManifest("S"), false);
+  assert.equal(needsReplacementManifest("G"), true);
+});
+
+test("the monthly annulment allowance follows the ranges of the RNDC manual", async () => {
+  const { manifestAnnulmentQuota } = await import("./advancedWorkflow");
+
+  assert.deepEqual(manifestAnnulmentQuota({ issued: 40, annulled: 11 }), { issued: 40, annulled: 11, limitPercent: 30, allowed: 12, remaining: 1, exceeded: false });
+  assert.equal(manifestAnnulmentQuota({ issued: 40, annulled: 12 }).exceeded, true);
+  assert.equal(manifestAnnulmentQuota({ issued: 499, annulled: 0 }).limitPercent, 30);
+  assert.equal(manifestAnnulmentQuota({ issued: 500, annulled: 0 }).limitPercent, 20);
+  assert.equal(manifestAnnulmentQuota({ issued: 2000, annulled: 0 }).limitPercent, 20);
+  assert.equal(manifestAnnulmentQuota({ issued: 2001, annulled: 0 }).limitPercent, 10);
+  assert.equal(manifestAnnulmentQuota({ issued: 0, annulled: 0 }).exceeded, true);
 });
 
 test("transshipment links an eligible previous manifest and preserves both assignments", () => {

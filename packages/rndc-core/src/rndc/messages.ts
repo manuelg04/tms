@@ -36,7 +36,8 @@ export type RemesaCorrectionInput = {
 export type TargetedAnnulmentInput =
   | { target: "manifest-compliance"; companyRndcNit: string; manifestNumber: string; reasonCode?: string; observations?: string }
   | { target: "remesa-compliance"; companyRndcNit: string; remesaNumber: string; reasonCode?: string; observations?: string }
-  | { target: "manifest"; companyRndcNit: string; manifestNumber: string; reasonCode?: string; observations?: string }
+  | { target: "remesa-initial-compliance"; companyRndcNit: string; remesaNumber: string; manifestNumber: string; reasonCode?: string; observations?: string }
+  | { target: "manifest"; companyRndcNit: string; manifestNumber: string; reasonCode?: string; replacementManifestNumber?: string; observations?: string }
   | { target: "remesa"; companyRndcNit: string; remesaNumber: string; reverseReasonCode?: string; reasonCode?: string; observations?: string }
   | { target: "trip-information"; companyRndcNit: string; tripNumber: string; reasonCode?: string }
   | { target: "cargo-information"; companyRndcNit: string; cargoNumber: string; reasonCode?: string };
@@ -410,6 +411,13 @@ export function buildComplianceMessages(scenario: DemoScenario): RndcFlowMessage
   ];
 }
 
+export const MANIFEST_ANNULMENT_REASONS = ["D", "S", "R", "T", "G", "C", "V"] as const;
+export const MANIFEST_REPLACEMENT_REASONS = ["R", "T", "G", "C", "V"] as const;
+
+export function manifestAnnulmentNeedsReplacement(reasonCode: string | undefined): boolean {
+  return (MANIFEST_REPLACEMENT_REASONS as readonly string[]).includes(reasonCode ?? "");
+}
+
 export function buildTargetedAnnulmentMessage(input: TargetedAnnulmentInput): RndcFlowMessage {
   if (input.target === "manifest-compliance") {
     return {
@@ -437,6 +445,20 @@ export function buildTargetedAnnulmentMessage(input: TargetedAnnulmentInput): Rn
     };
   }
 
+  if (input.target === "remesa-initial-compliance") {
+    return {
+      name: "annul-remesa-initial-compliance",
+      title: "Anular cumplido inicial de remesa",
+      request: createMessage(54, {
+        NUMNITEMPRESATRANSPORTE: input.companyRndcNit,
+        CONSECUTIVOREMESA: input.remesaNumber,
+        NUMMANIFIESTOCARGA: input.manifestNumber,
+        CODMOTIVOANULACIONCUMPLIDO: input.reasonCode ?? "O",
+        OBSERVACIONES: input.observations
+      })
+    };
+  }
+
   if (input.target === "manifest") {
     return {
       name: "annul-manifest",
@@ -445,6 +467,7 @@ export function buildTargetedAnnulmentMessage(input: TargetedAnnulmentInput): Rn
         NUMNITEMPRESATRANSPORTE: input.companyRndcNit,
         NUMMANIFIESTOCARGA: input.manifestNumber,
         MOTIVOANULACIONMANIFIESTO: input.reasonCode ?? "S",
+        ...(input.replacementManifestNumber ? { NUMMANIFIESTOCARGANUEVO: input.replacementManifestNumber } : {}),
         OBSERVACIONES: input.observations
       })
     };

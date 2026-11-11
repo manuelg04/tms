@@ -1,13 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery } from "./lib/convex-hooks";
 import { api } from "../convex/_generated/api";
 import { DocumentTable } from "./components/document-table";
 import { resolveDocumentSection } from "./lib/document-workspace";
 import { formatTimestamp } from "./lib/labels";
+import { Skeleton } from "./components/skeleton";
+import { PendingEmissionsPanel } from "./components/pending-emissions-panel";
+import { useDemoUser } from "./providers";
 
 export default function Home() {
+  const { user } = useDemoUser();
   const overview = useQuery(api.dashboard.overview, {});
   const recent = useQuery(api.dashboard.recentDocuments, { limit: 12 });
   const notifications = useQuery(api.notifications.list, {});
@@ -41,6 +45,8 @@ export default function Home() {
         </article>
       </section>
 
+      <PendingEmissionsPanel canSubmit={user?.role === "admin" || user?.role === "operator"} />
+
       <div className="dash-grid">
         <section className="panel" aria-label="Documentos recientes">
           <div className="panel-head">
@@ -50,7 +56,7 @@ export default function Home() {
             </Link>
           </div>
           {recent === undefined ? (
-            <div className="skeleton">Cargando documentos…</div>
+            <Skeleton label="Cargando documentos" />
           ) : (
             <DocumentTable rows={recent} section={resolveDocumentSection("todos")!} />
           )}
@@ -66,7 +72,7 @@ export default function Home() {
             ) : null}
           </div>
           {notifications === undefined ? (
-            <div className="skeleton">Cargando…</div>
+            <Skeleton label="Cargando" />
           ) : notifications.length === 0 ? (
             <div className="empty-state">
               Aquí verás cada respuesta del RNDC. Inicia o continúa el recorrido desde{" "}

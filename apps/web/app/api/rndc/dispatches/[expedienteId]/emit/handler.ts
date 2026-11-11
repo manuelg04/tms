@@ -10,14 +10,24 @@ import {
 } from "../../../../../../convex/model/emissionPlan";
 import type { OfficialDocumentState } from "../../../../../../convex/model/documentLifecycle";
 import { getAuthSettings, createConvexToken, jsonResponse } from "../../../../../lib/auth-server";
-import { authorizeGatewayRequest, safeRndcMode } from "../../../../../lib/rndc-gateway";
+import { authorizeGatewayRequest, rndcAvailability, safeRndcMode } from "../../../../../lib/rndc-gateway";
+import { chainScopes, isChainScope, type ChainScope } from "../../../../../../convex/model/pendingEmission";
 import { syncMaster, type MasterSyncResult } from "../../../../../lib/rndc-master-sync";
 import { POST as runRndcAction } from "../../../actions/[action]/route";
 
 export type EmitBody = {
   scope?: unknown;
   simulateTimeoutAt?: unknown;
+  chain?: unknown;
+  queueIfUnavailable?: unknown;
+  preparedBy?: string;
 };
+
+export type EmitOptions = {
+  preparedBy?: string;
+};
+
+type ScopeResult = { status: number; payload: Record<string, unknown> };
 
 export type ExecutedStep = {
   key: string;
@@ -46,15 +56,19 @@ export type EmitRuntime = {
     documentId: string,
     body: EmitBody
   ) => Promise<ExecutedStep>;
+  rndcAvailable?: () => Promise<{ available: boolean; detail?: string }>;
+  queue?: (expedienteId: Id<"expedientes">, scope: ChainScope, reason?: string) => Promise<void>;
+  settleQueue?: (expedienteId: Id<"expedientes">, completedScope: ChainScope) => Promise<void>;
 };
 
 export async function handleEmitWithRuntime(
   request: Request,
   context: { params: Promise<{ expedienteId: string }> },
-  runtime?: EmitRuntime
+  runtime?: EmitRuntime,
+  options: EmitOptions = {}
 ): Promise<Response> {
   try {
-    return await handleEmit(request, context, runtime);
+    return await handleEmit(request, context, runtime, options);
   } catch (error) {
     return jsonResponse(
       {
@@ -69,7 +83,8 @@ export async function handleEmitWithRuntime(
 async function handleEmit(
   request: Request,
   context: { params: Promise<{ expedienteId: string }> },
-  injectedRuntime?: EmitRuntime
+  injectedRuntime: EmitRuntime | undefined,
+  options: EmitOptions
 ): Promise<Response> {
   const authorization = authorizeGatewayRequest(request, "submit_rndc");
 
@@ -88,7 +103,7 @@ async function handleEmit(
       return jsonResponse({ error: "Cuerpo de solicitud inválido" }, 400);
     }
 
-    const allowedKeys = new Set(["scope", "simulateTimeoutAt"]);
+    const allowedKeys = new Set(["scope", "simulateTimeoutAt", "chain", "queueIfUnavailable"]);
     const unexpected = Object.keys(parsed).filter((key) => !allowedKeys.has(key));
 
     if (unexpected.length > 0) {
@@ -134,15 +149,95 @@ async function handleEmit(
         await client.mutation(api.dispatches.prepareForEmission, { expedienteId: id, scope: requestedScope });
       },
       ensureOfficialDocuments: (id, currentInputs, steps) => ensureOfficialDocuments(client, id, currentInputs, steps),
-      executeStep
+      executeStep,
+      rndcAvailable: rndcAvailability,
+      queue: async (id, queuedScope, reason) => {
+        await client.mutation(api.pendingEmissions.enqueue, { expedienteId: id, scope: queuedScope, reason });
+      },
+      settleQueue: async (id, completedScope) => {
+        await client.mutation(api.pendingEmissions.settle, { expedienteId: id, outcome: "done", completedScope });
+      }
     };
   }
 
   const typedExpedienteId = expedienteId as Id<"expedientes">;
+  const chain = body.chain === true;
+
+  if (chain && !isChainScope(scope)) {
+    return jsonResponse({ error: "La emisión encadenada requiere un documento de destino" }, 400);
+  }
+
+  const current = await runtime.loadInputs(typedExpedienteId);
+
+  if (!current) {
+    return jsonResponse({ error: "Despacho no encontrado" }, 404);
+  }
+
+  if (body.queueIfUnavailable === true && runtime.rndcAvailable && runtime.queue) {
+    const availability = await runtime.rndcAvailable();
+
+    if (!availability.available) {
+      await runtime.queue(typedExpedienteId, isChainScope(scope) ? scope : "manifiesto", availability.detail);
+      return jsonResponse(
+        {
+          ok: false,
+          queued: true,
+          reason: "rndc_unavailable",
+          code: current.code,
+          scope,
+          nextAction: "esperar_rndc",
+          error: "El RNDC no está disponible. El documento quedó guardado y en cola; se transmitirá cuando el servicio vuelva."
+        },
+        202
+      );
+    }
+  }
+
+  const scopes: EmissionScope[] = chain && isChainScope(scope) ? chainScopes(scope, chainState(current)) : [scope];
+  const steps: unknown[] = [];
+  let last: ScopeResult = {
+    status: 200,
+    payload: { ok: true, code: current.code, mode: safeRndcMode(), completed: true, alreadyAuthorized: true }
+  };
+
+  for (const currentScope of scopes) {
+    last = await emitOneScope(request, expedienteId, currentScope, runtime, { ...body, preparedBy: options.preparedBy });
+    if (Array.isArray(last.payload.steps)) steps.push(...last.payload.steps);
+
+    if (last.status !== 200) {
+      return jsonResponse({ ...last.payload, scope: currentScope, requestedScope: scope, steps }, last.status);
+    }
+  }
+
+  if (runtime.settleQueue) {
+    await runtime.settleQueue(typedExpedienteId, isChainScope(scope) ? scope : "manifiesto").catch(() => undefined);
+  }
+
+  return jsonResponse({ ...last.payload, scope, steps }, 200);
+}
+
+function chainState(inputs: EmissionInputs) {
+  const authorized = (state: string) => state === "authorized" || state === "fulfilled";
+  return {
+    workflowVariant: inputs.workflowVariant,
+    orderAuthorized: authorized(inputs.order.officialState),
+    consignmentsAuthorized: inputs.consignments.length > 0 && inputs.consignments.every((item) => authorized(item.officialState)),
+    manifestAuthorized: authorized(inputs.manifest.officialState)
+  };
+}
+
+async function emitOneScope(
+  request: Request,
+  expedienteId: string,
+  scope: EmissionScope,
+  runtime: EmitRuntime,
+  body: EmitBody
+): Promise<ScopeResult> {
+  const typedExpedienteId = expedienteId as Id<"expedientes">;
   let inputs = await runtime.loadInputs(typedExpedienteId);
 
   if (!inputs) {
-    return jsonResponse({ error: "Despacho no encontrado" }, 404);
+    return scopeResult({ error: "Despacho no encontrado" }, 404);
   }
 
   if (runtime.syncMasters) {
@@ -152,7 +247,7 @@ async function handleEmit(
       .map((result) => `${result.label}: ${result.error ?? "no quedó registrado en el RNDC"}`);
 
     if (masterBlockers.length > 0) {
-      return jsonResponse(
+      return scopeResult(
         {
           ok: false,
           reason: "masters_not_registered",
@@ -169,7 +264,7 @@ async function handleEmit(
   try {
     await runtime.prepareForEmission(typedExpedienteId, scope);
   } catch (error) {
-    return jsonResponse(
+    return scopeResult(
       {
         error: "El documento tiene datos pendientes y no puede emitirse",
         detail: extractConvexError(error)
@@ -181,13 +276,13 @@ async function handleEmit(
   inputs = await runtime.loadInputs(typedExpedienteId);
 
   if (!inputs) {
-    return jsonResponse({ error: "Despacho no encontrado" }, 404);
+    return scopeResult({ error: "Despacho no encontrado" }, 404);
   }
 
   const plan = buildEmissionPlan(toPlanInput(inputs), scope);
 
   if (!plan.ok) {
-    return jsonResponse(
+    return scopeResult(
       {
         ok: false,
         reason: plan.reason,
@@ -201,7 +296,7 @@ async function handleEmit(
   const blockedSteps = plan.steps.filter((step) => step.state === "blocked");
 
   if (blockedSteps.length > 0) {
-    return jsonResponse(
+    return scopeResult(
       {
         ok: false,
         reason: "missing_fields",
@@ -237,7 +332,7 @@ async function handleEmit(
     const documentId = documentIdForStep(step, documentIds);
 
     if (!documentId) {
-      return jsonResponse({ error: `No existe documento persistido para el paso ${step.key}` }, 409);
+      return scopeResult({ error: `No existe documento persistido para el paso ${step.key}` }, 409);
     }
 
     const stepResult = await runtime.executeStep(request, expedienteId, inputs.organizationId, step, documentId, body);
@@ -258,7 +353,7 @@ async function handleEmit(
   }
 
   const completed = !stoppedAt && executed.length === plan.steps.length;
-  return jsonResponse(
+  return scopeResult(
     {
       ok: completed,
       code: inputs.code,
@@ -271,6 +366,10 @@ async function handleEmit(
     },
     completed ? 200 : 409
   );
+}
+
+function scopeResult(payload: Record<string, unknown>, status: number): ScopeResult {
+  return { status, payload };
 }
 
 async function executeStep(
@@ -288,7 +387,7 @@ async function executeStep(
     expedienteRemesaId: step.remesaId,
     requestKey: `emit-${expedienteId}-${step.key}`,
     businessKey: `emit:${expedienteId}:${step.key}`,
-    payload: { ...step.payload, preparedBy: preparerName(request) },
+    payload: { ...step.payload, preparedBy: body.preparedBy ?? preparerName(request) },
     simulateTimeout: body.simulateTimeoutAt === step.key
   };
   const headers = new Headers(request.headers);

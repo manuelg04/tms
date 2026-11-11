@@ -18,6 +18,7 @@ const operationIdentityPlans: Record<string, OperationIdentityPlan> = {
   annul_remesa: { documentKind: "remesa", field: "remesaNumber" },
   annul_manifest: { documentKind: "manifiesto", field: "manifestNumber" },
   annul_remesa_fulfillment: { documentKind: "remesa", field: "remesaNumber" },
+  annul_remesa_initial_fulfillment: { documentKind: "remesa", field: "remesaNumber" },
   annul_manifest_fulfillment: { documentKind: "manifiesto", field: "manifestNumber" }
 };
 
@@ -77,6 +78,7 @@ const dryRunOnlyOperations = new Set([
   "annul_remesa",
   "annul_manifest",
   "annul_remesa_fulfillment",
+  "annul_remesa_initial_fulfillment",
   "annul_manifest_fulfillment"
 ]);
 

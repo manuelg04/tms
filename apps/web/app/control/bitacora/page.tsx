@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { useConvexAuth, useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Doc } from "../../../convex/_generated/dataModel";
 import { dayKey, formatDateTime, formatInterval, formatTime, relativeDue, relativePast, useNow } from "./components/format";
 import "./bitacora.css";
+import { Skeleton } from "../../components/skeleton";
 
 type Tab = "en_ruta" | "entregado" | "todos";
 
@@ -39,9 +40,7 @@ export default function MonitoringBoard() {
 
   if (!data)
     return (
-      <div className="skeleton" role="status">
-        Cargando bitácora…
-      </div>
+      <Skeleton label="Cargando bitácora" />
     );
 
   return (

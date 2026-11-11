@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useRef, useState, type FormEvent } from "react";
-import { useConvexAuth, useMutation, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "../../../lib/convex-hooks";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import {
@@ -19,6 +19,7 @@ import { convexErrorMessage } from "../../../lib/convex-error";
 import { formatDate, formatDateTime, relativePast, useNow } from "../../../control/bitacora/components/format";
 import "../../../control/bitacora/bitacora.css";
 import "../estudios.css";
+import { Skeleton } from "../../../components/skeleton";
 
 type Detail = NonNullable<ReturnType<typeof useQuery<typeof api.securityStudies.detail>>>;
 
@@ -33,7 +34,7 @@ export default function SecurityStudyDetail({ params }: { params: Promise<{ stud
   const deleteStudy = useMutation(api.securityStudies.deleteStudy);
   const reopen = useMutation(api.securityStudies.reopen);
 
-  if (data === undefined) return <div className="skeleton" role="status">Cargando estudio…</div>;
+  if (data === undefined) return <Skeleton label="Cargando estudio" />;
   if (data === null)
     return (
       <div className="bm-workspace">

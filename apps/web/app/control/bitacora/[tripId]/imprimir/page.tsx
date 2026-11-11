@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { use, useMemo } from "react";
-import { useConvexAuth, useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "../../../../lib/convex-hooks";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
 import { reportCompliance, routeProgress } from "../../../../../convex/model/monitoring";

@@ -21,6 +21,7 @@ export const operationTypeValidator = v.union(
   v.literal("annul_remesa"),
   v.literal("annul_manifest"),
   v.literal("annul_remesa_fulfillment"),
+  v.literal("annul_remesa_initial_fulfillment"),
   v.literal("annul_manifest_fulfillment"),
   v.literal("upsert_third_party"),
   v.literal("upsert_vehicle"),

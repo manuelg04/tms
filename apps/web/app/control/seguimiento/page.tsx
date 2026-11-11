@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { useConvexAuth, useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Doc } from "../../../convex/_generated/dataModel";
 import {
@@ -18,6 +18,7 @@ import {
   type TrackingSort,
 } from "../../../convex/model/tracking";
 import { downloadTrackingExcel } from "../components/tracking-excel";
+import { Skeleton } from "../../components/skeleton";
 
 export default function TrackingPage() {
   const { isAuthenticated } = useConvexAuth();
@@ -30,9 +31,7 @@ export default function TrackingPage() {
   );
   if (!data)
     return (
-      <div className="skeleton" role="status">
-        Cargando seguimiento…
-      </div>
+      <Skeleton label="Cargando seguimiento" />
     );
   const enRoute = filtered.filter((r) => r.queue === "en_route"),
     pending = filtered.filter((r) => r.queue === "pending_arrival");

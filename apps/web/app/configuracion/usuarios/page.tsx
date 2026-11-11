@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useConvexAuth, useMutation, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { jobTitleDescriptions, jobTitleLabels, jobTitles as allJobTitles, requiresCustomer, type JobTitle } from "../../../convex/model/userAccounts";
@@ -11,6 +11,7 @@ const jobTitles = allJobTitles.filter((title) => optionalModules.trafficControl 
 import { convexErrorMessage } from "../../lib/convex-error";
 import { CustomerField, type CustomerPick } from "../../components/fields/customer-field";
 import "../../control/tracking.css";
+import { Skeleton } from "../../components/skeleton";
 
 type Account = {
   _id: Id<"users">;
@@ -37,7 +38,7 @@ export default function UsersPage() {
   const [busyId, setBusyId] = useState<Account["_id"] | null>(null);
 
   if (!data) {
-    return <div className="skeleton" role="status">Cargando usuarios…</div>;
+    return <Skeleton label="Cargando usuarios" />;
   }
 
   if (!data.canView) {

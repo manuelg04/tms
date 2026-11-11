@@ -34,10 +34,13 @@ import type { DurableContextValidator, DurableEvidenceStore } from "./durableEvi
 import { scenarioToForm } from "./formScenario.js";
 import { securityHeaders, createRequestLoggingMiddleware, createDurableEvidenceMiddleware, createLegacyCorsMiddleware, createServiceAuthenticationMiddleware, createExpectedModeMiddleware, createOperationalReadinessMiddleware, createLegacyMessageMiddleware, createDryRunOnlyMiddleware } from "./middleware.js";
 import { submitForm, summarizeFlow } from "./formOperations.js";
+import { createAvailabilityChecker } from "./availability.js";
+import type { RndcAvailability } from "./availability.js";
 
 type RndcAppRuntimeHooks = RndcAppHooks & {
   evidenceStore?: DurableEvidenceStore;
   durableContextValidator?: DurableContextValidator;
+  availability?: () => Promise<RndcAvailability>;
 };
 
 export function createRndcApp(overrides: Partial<RndcConfig> = {}, hooks: RndcAppRuntimeHooks = {}): express.Express {
@@ -88,6 +91,11 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}, hooks: RndcAp
       res.setHeader("Content-Disposition", "attachment");
     }
   }));
+
+  const checkAvailability = hooks.availability ?? createAvailabilityChecker(readConfig);
+  app.get("/rndc/availability", (_req, res, next) => {
+    checkAvailability().then((availability) => res.json({ ok: true, ...availability })).catch(next);
+  });
 
   app.get("/rndc/forms/reference", requireOperationalReadiness, (_req, res) => {
     const config = readConfig();

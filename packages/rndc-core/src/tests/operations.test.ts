@@ -61,12 +61,24 @@ test("builds a Viaje Vacío manifest without remesas trip or tracking fields", (
   scenario.cargoNumber = "";
   scenario.remesaNumber = "";
   scenario.manifestRemesas = [];
+  scenario.monitoringCompanyNit = "8300596993";
   const variables = buildManifestIssueMessages(scenario)[0].request.variables as RndcXmlRecord;
 
   assert.equal(variables.CODOPERACIONTRANSPORTE, "W");
   assert.equal(variables.CONSECUTIVOINFORMACIONVIAJE, undefined);
   assert.equal(variables.REMESASMAN, undefined);
   assert.equal(variables.NITMONITOREOFLOTA, undefined);
+});
+
+test("authorizes the fleet monitoring company on a manifest with consignments", () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  scenario.monitoringCompanyNit = "8300596993";
+  const variables = buildManifestIssueMessages(scenario)[0].request.variables as RndcXmlRecord;
+
+  assert.equal(variables.NITMONITOREOFLOTA, "8300596993");
+
+  scenario.monitoringCompanyNit = undefined;
+  assert.equal((buildManifestIssueMessages(scenario)[0].request.variables as RndcXmlRecord).NITMONITOREOFLOTA, undefined);
 });
 
 test("links a transshipment manifest to the prior RNDC manifest", () => {

@@ -6,6 +6,7 @@ import { FieldHelpProvider } from "../../components/fields/field-help";
 import { loadingOrderDraftFieldHelp, manifestFieldHelp } from "../../lib/rndc-field-help";
 
 import { useEffect, useState } from "react";
+import { companyProfile } from "../../lib/company-profile";
 import { useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import { DateField } from "../../components/fields/date-field";
@@ -108,6 +109,7 @@ type Manifest = {
   paymentDate?: string;
   paymentAgencyCode?: string;
   contractNumber?: string;
+  monitoringCompanyNit?: string;
   requiresTracking?: boolean;
   observations?: string;
 };
@@ -458,6 +460,7 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <FormField><span>Tipo de manifiesto<em aria-hidden="true"> *</em></span><select defaultValue={normalizeManifestType(draft.manifestType) ?? "G"} name="manifestType" required>{MANIFEST_TYPE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></FormField>
         {context.consignmentCount < 2 ? <div className="field-hint span-2">Multiparada solo aplica cuando el manifiesto agrupa dos o más remesas (una por cada entrega del recorrido).</div> : null}
         <Field label="Nro. de contrato" name="contractNumber" placeholder="Opcional" value={draft.contractNumber} />
+        <Field hint="Empresa de GPS que reporta al RNDC llegadas y salidas" inputMode="numeric" label="NIT empresa de monitoreo" name="monitoringCompanyNit" pattern="[0-9]{6,12}" required={context.consignmentCount > 0} value={draft.monitoringCompanyNit ?? companyProfile.monitoringCompanyNit} />
         <Field label="Origen" name="originPreview" placeholder="—" readOnly value={context.originCity} />
         <Field label="Destino" name="destinationPreview" placeholder="—" readOnly value={context.destinationCity} />
         <FormField><span>Alcance</span><select defaultValue={draft.operationScope ?? "intermunicipal"} name="operationScope"><option value="intermunicipal">Intermunicipal</option><option value="municipal">Municipal</option></select></FormField>

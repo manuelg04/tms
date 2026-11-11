@@ -126,6 +126,7 @@ export const manifestDraftValidator = v.object({
   requiresTracking: v.optional(v.boolean()),
   observations: v.optional(v.string()),
   sourceManifestNumber: v.optional(v.string()),
+  monitoringCompanyNit: v.optional(v.string()),
   emptyManifestReason: v.optional(v.string()),
   printedAt: v.optional(v.number())
 });

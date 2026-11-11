@@ -245,6 +245,7 @@ export type DemoScenario = {
   workflowVariant?: "standard" | "remesa_without_order" | "empty_manifest" | "transshipment";
   manifestType?: string;
   sourceManifestNumber?: string;
+  monitoringCompanyNit?: string;
   company: {
     nit: string;
     dv: string;

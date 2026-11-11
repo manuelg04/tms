@@ -847,6 +847,27 @@ test("blocks suspended live fulfill forms before validation or RNDC contact", as
   process.env.RNDC_INGEST_KEY = "";
 });
 
+test("manifest form sends the fleet monitoring company NIT and drops malformed values", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-manifest-monitoring-"));
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  });
+  const send = async (monitoringCompanyNit: string) => {
+    const response = await requestJson(app, "/rndc/forms/manifest", {
+      method: "POST",
+      body: { manifestNumber: "0045202", remesaNumber: "45945", monitoringCompanyNit }
+    });
+    const step = (response.body.steps as { procesoId: number; requestPath: string }[]).find((item) => item.procesoId === 4);
+    assert.ok(step);
+    return readFile(step.requestPath, "utf8");
+  };
+
+  assert.match(await send("830059699-3"), /<NITMONITOREOFLOTA>8300596993<\/NITMONITOREOFLOTA>/);
+  assert.doesNotMatch(await send("SATRACK"), /NITMONITOREOFLOTA/);
+});
+
 test("fulfill remesa sends only the two entry times reported by the transport company", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-fulfill-entries-"));
   const app = createRndcApp({

@@ -3,6 +3,7 @@ export const companyProfile = {
   nit: "900773684-9",
   address: "CALLE 16 Nº 24 - 35 EDIFICIO MAQROLL OFI 401 BR SAN FRANCISCO / BUCARAMANGA",
   phones: "6076040133 /",
+  monitoringCompanyNit: "8300596993",
   routePlanFine: "$ 50,000",
   routePlanObservations: "REPORTARSE A SEGURIDAD EN TODOS LOS PUESTOS DE CONTROL (EL NO CONTESTAR LAS LLAMADAS ES CAUSAL DE MULTA) 3163419107 - 3182754930."
 } as const;

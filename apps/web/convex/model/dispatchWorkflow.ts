@@ -299,6 +299,7 @@ export type ManifestDraft = {
   requiresTracking?: boolean;
   observations?: string;
   sourceManifestNumber?: string;
+  monitoringCompanyNit?: string;
   emptyManifestReason?: string;
   printedAt?: number;
 };

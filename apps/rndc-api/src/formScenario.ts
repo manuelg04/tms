@@ -21,6 +21,7 @@ export function buildScenarioFromForm(config: RndcConfig, payload: unknown, allo
   }
   scenario.manifestType = readOptionalString(record, "manifestType", scenario.manifestType);
   scenario.sourceManifestNumber = readOptionalString(record, "sourceManifestNumber", scenario.sourceManifestNumber);
+  scenario.monitoringCompanyNit = monitoringNit(readOptionalString(record, "monitoringCompanyNit", scenario.monitoringCompanyNit));
   scenario.cargoNumber = readString(record, "cargoNumber", scenario.cargoNumber);
   scenario.tripNumber = readString(record, "tripNumber", scenario.tripNumber);
   scenario.remesaNumber = readString(record, "remesaNumber", scenario.remesaNumber);
@@ -294,6 +295,11 @@ export function applyMoney(target: MoneyData, record: Record<string, unknown>): 
   target.icaRetention = readNumber(record, "icaRetention", target.icaRetention);
   target.icaRetentionPerMille = readNumber(record, "icaRetentionPerMille", target.icaRetentionPerMille);
   target.fopatRetention = readNumber(record, "fopatRetention", target.fopatRetention);
+}
+
+function monitoringNit(value: string | undefined): string | undefined {
+  const digits = (value ?? "").replace(/\D/g, "");
+  return digits.length >= 6 && digits.length <= 12 ? digits : undefined;
 }
 
 export function applyCompliance(target: ComplianceData, record: Record<string, unknown>): void {

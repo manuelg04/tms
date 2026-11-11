@@ -128,6 +128,18 @@ test("independently emitted order and remesa payloads use their own expedition d
   assert.equal(manifest.vehicleHolder.fullName, "AVILA CHAVEZ MARIA FERNANDA");
 });
 
+test("the manifest payload carries the fleet monitoring company only as clean digits", () => {
+  const withNit = buildEmissionPlan(baseInput({
+    manifest: { number: "0000001", snapshot: { ...manifestSnapshot, monitoringCompanyNit: "830.059.699-3" }, officialState: "draft" }
+  }));
+  const withoutNit = buildEmissionPlan(baseInput());
+  const payloadOf = (plan: ReturnType<typeof buildEmissionPlan>) =>
+    (plan.ok ? plan.steps.find((step) => step.action === "issue_manifest")?.payload : undefined) as Record<string, unknown> | undefined;
+
+  assert.equal(payloadOf(withNit)?.monitoringCompanyNit, "8300596993");
+  assert.equal(payloadOf(withoutNit)?.monitoringCompanyNit, undefined);
+});
+
 test("authorized documents are skipped and never resent", () => {
   const plan = buildEmissionPlan(
     baseInput({

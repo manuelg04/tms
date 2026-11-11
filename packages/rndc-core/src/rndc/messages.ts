@@ -155,6 +155,7 @@ export function buildFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
         CONSECUTIVOINFORMACIONVIAJE: scenario.tripNumber || undefined,
         CODOPERACIONTRANSPORTE: scenario.manifestType || "G",
         MANNROMANIFIESTOTRANSBORDO: scenario.sourceManifestNumber,
+        NITMONITOREOFLOTA: scenario.workflowVariant === "empty_manifest" ? undefined : scenario.monitoringCompanyNit,
         FECHAEXPEDICIONMANIFIESTO: scenario.expeditionDate,
         CODMUNICIPIOORIGENMANIFIESTO: scenario.sender.cityCode,
         CODMUNICIPIODESTINOMANIFIESTO: scenario.recipient.cityCode,

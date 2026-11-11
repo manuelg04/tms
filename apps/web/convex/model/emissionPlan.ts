@@ -395,6 +395,7 @@ function buildManifestPayload(
     manifestRemesas: remesaNumbers.length > 0 ? consignments.map((item) => consignmentSummary(item)) : undefined,
     manifestType: normalizeManifestType(manifest.manifestType) ?? manifest.manifestType,
     sourceManifestNumber: manifest.sourceManifestNumber,
+    monitoringCompanyNit: remesaNumbers.length > 0 ? monitoringNit(manifest.monitoringCompanyNit) : undefined,
     expeditionDate: requireField(manifest.issueDate, "expeditionDate", missing),
     balancePaymentDate: requireField(manifest.paymentDate ?? manifest.estimatedDeliveryDate, "balancePaymentDate", missing),
     driver: driverPayload(assignment, missing),
@@ -410,6 +411,11 @@ function buildManifestPayload(
     observations: manifest.observations
   };
   return { payload: prune(payload), missingFields: missing };
+}
+
+function monitoringNit(value: string | undefined): string | undefined {
+  const digits = (value ?? "").replace(/\D/g, "");
+  return digits.length >= 6 && digits.length <= 12 ? digits : undefined;
 }
 
 function partyPayload(

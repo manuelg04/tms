@@ -173,6 +173,7 @@ export function manifestDraftFromForm(data: FormData, detail: Detail) {
     paymentDate: value(data, "paymentDate"),
     paymentAgencyCode: value(data, "paymentAgencyCode"),
     contractNumber: value(data, "contractNumber"),
+    monitoringCompanyNit: value(data, "monitoringCompanyNit")?.replace(/\D/g, ""),
     requiresTracking: data.get("requiresTracking") === "on",
     observations: value(data, "observations"),
   };

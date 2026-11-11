@@ -59,6 +59,15 @@ test("reports the configured mode once real users are enabled and keeps demo ses
   assert.deepEqual(await localResponse.json(), { ok: true, mode: "live", rndcAvailable: false });
 });
 
+test("a transmission service without the availability check keeps working as before", async () => {
+  globalThis.fetch = async (input) => String(input).endsWith("/rndc/availability")
+    ? Response.json({ error: { code: "NOT_FOUND" } }, { status: 404 })
+    : Response.json({ ok: true, status: "alive" });
+  const response = await getHealth(authenticatedRequest("http://localhost/api/rndc/health", "operator"));
+
+  assert.deepEqual(await response.json(), { ok: true, mode: "dry-run", rndcAvailable: true });
+});
+
 test("allows operators through the gateway and keeps the service secret server-side", async () => {
   let authorization = "";
   let backendUrl = "";

@@ -110,6 +110,10 @@ export async function rndcAvailability(): Promise<{ available: boolean; detail?:
   try {
     const response = await forwardRndcRequest("/rndc/availability");
 
+    if (response.status === 404) {
+      return { available: true };
+    }
+
     if (!response.ok) {
       return { available: false, detail: "El servicio de transmisión del TMS no responde" };
     }

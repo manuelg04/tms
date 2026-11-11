@@ -273,6 +273,45 @@ test("builds the official pending electronic acceptance query", () => {
   });
 });
 
+test("builds and normalizes the initial remesa compliance query", () => {
+  const buildInitialComplianceQuery = requireApi<(input: Record<string, unknown>) => RndcMessageRequest>("buildInitialComplianceQuery");
+  const normalizeInitialCompliance = requireApi<(parsed: unknown) => unknown[]>("normalizeInitialCompliance");
+  const request = buildInitialComplianceQuery({ companyRndcNit: "9007736849", remesaNumber: "45945" });
+
+  assert.equal(request.tipo, 3);
+  assert.equal(request.procesoId, 45);
+  assert.deepEqual(request.documento, { NUMNITEMPRESATRANSPORTE: "9007736849", CONSECUTIVOREMESA: "'45945'" });
+
+  const parsed = parseXml([
+    "<root>",
+    "<documento>",
+    "<ingresoid>9434997</ingresoid>",
+    "<fechaing>09/11/2026 5:56:00 p. m.</fechaing>",
+    "<consecutivoremesa>45945</consecutivoremesa>",
+    "<nummanifiestocarga>0045202</nummanifiestocarga>",
+    "<fechallegadacargue>09/11/2026</fechallegadacargue>",
+    "<horallegadacargue>13:53</horallegadacargue>",
+    "<fechasalidacargue>09/11/2026</fechasalidacargue>",
+    "<horasalidacargue>13:58</horasalidacargue>",
+    "<fechallegadadescargue></fechallegadadescargue>",
+    "<horallegadadescargue></horallegadadescargue>",
+    "</documento>",
+    "</root>"
+  ].join(""));
+
+  assert.deepEqual(normalizeInitialCompliance(parsed), [{
+    id: "9434997",
+    remesaNumber: "45945",
+    manifestNumber: "0045202",
+    registeredAt: "09/11/2026 5:56:00 p. m.",
+    loadingArrival: { date: "09/11/2026", time: "13:53" },
+    loadingExit: { date: "09/11/2026", time: "13:58" },
+    unloadingArrival: undefined,
+    unloadingExit: undefined
+  }]);
+  assert.deepEqual(normalizeInitialCompliance(parseXml("<root><ErrorMSG>Error RNDC11: Documento no encontrado.</ErrorMSG></root>")), []);
+});
+
 test("normalizes RNDC type 3 records and electronic acceptances", () => {
   const normalizeRndcQueryRecords = requireApi<(parsed: unknown) => Record<string, string>[]>("normalizeRndcQueryRecords");
   const normalizeManifestAcceptances = requireApi<(parsed: unknown) => unknown[]>("normalizeManifestAcceptances");

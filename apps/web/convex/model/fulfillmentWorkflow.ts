@@ -64,58 +64,38 @@ export function validateFulfillmentQuantities(input: FulfillmentQuantities): str
 }
 
 
-export type OperationTimes = {
-  loadingArrivalAt: number;
-  loadingEntryAt: number;
-  loadingExitAt: number;
-  unloadingArrivalAt: number;
-  unloadingEntryAt: number;
-  unloadingExitAt: number;
+export type EntryTimesDraft = {
+  suspended?: boolean;
+  loadingEntryAt?: number;
+  unloadingEntryAt?: number;
 };
 
-export type OperationTimesDraft = Partial<OperationTimes>;
+const CLOCK_TOLERANCE_MS = 60_000;
 
-export type OperationTimesSource = {
-  loadingAppointmentAt?: number;
-  loadingAgreedHours?: string;
-  unloadingAppointmentAt?: number;
-  unloadingAgreedHours?: string;
-};
-
-const HOUR_MS = 3_600_000;
-
-function agreedHoursMs(value: string | undefined, fallbackHours: number): number {
-  const text = (value ?? "").trim().replace(",", ".");
-  const parsed = text === "" ? Number.NaN : Number(text);
-  return (Number.isFinite(parsed) && parsed >= 0 ? parsed : fallbackHours) * HOUR_MS;
-}
-
-export function deriveOperationTimes(source: OperationTimesSource, draft: OperationTimesDraft | undefined, fallback: { loadingAt: number; unloadingAt: number }): OperationTimes {
-  const loadingBase = source.loadingAppointmentAt ?? fallback.loadingAt;
-  const loadingArrivalAt = draft?.loadingArrivalAt ?? loadingBase;
-  const loadingEntryAt = draft?.loadingEntryAt ?? Math.max(loadingArrivalAt, loadingBase);
-  const loadingExitAt = draft?.loadingExitAt ?? loadingEntryAt + agreedHoursMs(source.loadingAgreedHours, 1);
-  const unloadingBase = Math.max(source.unloadingAppointmentAt ?? fallback.unloadingAt, loadingExitAt);
-  const unloadingArrivalAt = draft?.unloadingArrivalAt ?? unloadingBase;
-  const unloadingEntryAt = draft?.unloadingEntryAt ?? Math.max(unloadingArrivalAt, unloadingBase);
-  const unloadingExitAt = draft?.unloadingExitAt ?? unloadingEntryAt + agreedHoursMs(source.unloadingAgreedHours, 2);
-  return { loadingArrivalAt, loadingEntryAt, loadingExitAt, unloadingArrivalAt, unloadingEntryAt, unloadingExitAt };
-}
-
-export function validateOperationTimes(times: OperationTimesDraft): string[] {
+export function validateEntryTimes(draft: EntryTimesDraft, now: number): string[] {
   const errors: string[] = [];
-  const ordered: Array<[keyof OperationTimes, keyof OperationTimes, string]> = [
-    ["loadingArrivalAt", "loadingEntryAt", "La entrada al cargue no puede ser antes de la llegada."],
-    ["loadingEntryAt", "loadingExitAt", "La salida del cargue no puede ser antes de la entrada."],
-    ["loadingExitAt", "unloadingArrivalAt", "La llegada al descargue no puede ser antes de la salida del cargue."],
-    ["unloadingArrivalAt", "unloadingEntryAt", "La entrada al descargue no puede ser antes de la llegada."],
-    ["unloadingEntryAt", "unloadingExitAt", "La salida del descargue no puede ser antes de la entrada."]
-  ];
-  for (const [before, after, message] of ordered) {
-    const left = times[before];
-    const right = times[after];
-    if (left !== undefined && right !== undefined && right < left) errors.push(message);
+  const { loadingEntryAt, unloadingEntryAt } = draft;
+
+  if (loadingEntryAt === undefined) {
+    errors.push("Registra la fecha y hora de entrada al cargue.");
+  } else if (loadingEntryAt > now + CLOCK_TOLERANCE_MS) {
+    errors.push("La entrada al cargue no puede ser una fecha futura.");
   }
+
+  if (draft.suspended) {
+    return errors;
+  }
+
+  if (unloadingEntryAt === undefined) {
+    errors.push("Registra la fecha y hora de entrada al descargue.");
+  } else if (unloadingEntryAt > now + CLOCK_TOLERANCE_MS) {
+    errors.push("La entrada al descargue no puede ser una fecha futura.");
+  }
+
+  if (loadingEntryAt !== undefined && unloadingEntryAt !== undefined && unloadingEntryAt <= loadingEntryAt) {
+    errors.push("La entrada al descargue debe ser posterior a la entrada al cargue.");
+  }
+
   return errors;
 }
 

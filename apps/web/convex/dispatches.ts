@@ -13,7 +13,7 @@ import {
   manifestDraftValidator,
   manifestFulfillmentDraftValidator
 } from "./model/draftValidators";
-import { validateFulfillmentQuantities, validateOperationTimes } from "./model/fulfillmentWorkflow";
+import { validateEntryTimes, validateFulfillmentQuantities } from "./model/fulfillmentWorkflow";
 import { normalizeSearchText } from "./model/dispatchSearch";
 import { refreshDispatchSearchText } from "./model/dispatchSearchProjection";
 import {
@@ -631,7 +631,7 @@ export const recordFulfillmentDraft = mutation({
       throw new ConvexError({ code: "INVALID_STATE", message: "Sólo una remesa autorizada y pendiente puede preparar su cumplido" });
     }
 
-    const errors = [...validateFulfillmentQuantities(args.draft), ...validateOperationTimes(args.draft)];
+    const errors = [...validateFulfillmentQuantities(args.draft), ...validateEntryTimes(args.draft, Date.now())];
 
     if (errors.length > 0) {
       throw new ConvexError({ code: "VALIDATION", message: errors[0], data: { errors } });

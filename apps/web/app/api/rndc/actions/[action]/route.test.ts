@@ -84,18 +84,16 @@ test("requires delivery evidence fields for a normal remesa fulfillment", () => 
       remesaType: "C",
       loadedQuantityKg: 1_000,
       unitCode: 1,
-      loadingArrivalDate: "10/07/2026",
-      loadingArrivalTime: "08:00",
       loadingEntryDate: "10/07/2026",
-      loadingEntryTime: "08:10",
-      loadingExitDate: "10/07/2026",
-      loadingExitTime: "08:30"
+      loadingEntryTime: "08:10"
     }
   });
 
   assert.equal(result.ok, false);
   assert.ok(result.missingFields.includes("compliance.deliveredQuantityKg"));
-  assert.ok(result.missingFields.includes("compliance.unloadingExitTime"));
+  assert.ok(result.missingFields.includes("compliance.unloadingEntryTime"));
+  assert.ok(!result.missingFields.includes("compliance.loadingArrivalDate"));
+  assert.ok(!result.missingFields.includes("compliance.unloadingExitTime"));
 });
 
 test("requires suspension and adjustment reasons for manifest fulfillment", () => {

@@ -91,12 +91,8 @@ const contracts: Record<string, PayloadContract> = {
       "remesaNumber",
       "manifestNumber",
       "compliance.remesaType",
-      "compliance.loadingArrivalDate",
-      "compliance.loadingArrivalTime",
       "compliance.loadingEntryDate",
-      "compliance.loadingEntryTime",
-      "compliance.loadingExitDate",
-      "compliance.loadingExitTime"
+      "compliance.loadingEntryTime"
     ],
     numbers: ["compliance.loadedQuantityKg", "compliance.unitCode"]
   },
@@ -148,12 +144,8 @@ export function validateDurableActionPayload(
     if (remesaType === "C") {
       requireFiniteNumber(payload, "compliance.deliveredQuantityKg", missingFields, invalidFields);
       for (const field of [
-        "compliance.unloadingArrivalDate",
-        "compliance.unloadingArrivalTime",
         "compliance.unloadingEntryDate",
-        "compliance.unloadingEntryTime",
-        "compliance.unloadingExitDate",
-        "compliance.unloadingExitTime"
+        "compliance.unloadingEntryTime"
       ]) {
         requireString(payload, field, missingFields);
       }

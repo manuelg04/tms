@@ -2,7 +2,7 @@ import { ConvexHttpClient } from "convex/browser";
 import type { FunctionReturnType } from "convex/server";
 import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
-import { bogotaDateTimeParts, buildFulfillmentPlan, deriveOperationTimes } from "../../../../../../convex/model/fulfillmentWorkflow";
+import { bogotaDateTimeParts, buildFulfillmentPlan, validateEntryTimes } from "../../../../../../convex/model/fulfillmentWorkflow";
 import { effectiveConsignment, remissionWeightTons, type ConsignmentDraft, type LoadingOrderDraft } from "../../../../../../convex/model/dispatchWorkflow";
 import { getAuthSettings, createConvexToken, jsonResponse } from "../../../../../lib/auth-server";
 import { authorizeGatewayRequest } from "../../../../../lib/rndc-gateway";
@@ -116,6 +116,17 @@ export async function POST(
       }, 409);
     }
 
+    if (!isManifest) {
+      const timeErrors = validateEntryTimes(remesaRow?.fulfillmentDraft ?? {}, Date.now());
+
+      if (timeErrors.length > 0) {
+        return jsonResponse({
+          error: `Remesa ${remesaRow?.number ?? "pendiente"}: ${timeErrors[0]}`,
+          nextAction: "completar_cumplido"
+        }, 409);
+      }
+    }
+
     const action = isManifest ? "fulfill_manifest" : "fulfill_remesa";
     const result = await executeStep(request, {
       action,
@@ -199,46 +210,30 @@ async function executeStep(
   return { outcome: "rejected", status: response.status >= 400 ? response.status : 422, error };
 }
 
-function operationTimesPayload(detail: Detail, remesa: Detail["remesas"][number]): Record<string, string> {
-  const effective = effectiveConsignment((remesa.draft ?? {}) as ConsignmentDraft, (detail.expediente.loadingOrderDraft ?? null) as LoadingOrderDraft | null);
-  const loadingAt = detail.serviceOrder.scheduledLoadingAt ?? detail.expediente.createdAt;
-  const times = deriveOperationTimes(
-    {
-      loadingAppointmentAt: effective.loading?.appointmentAt,
-      loadingAgreedHours: effective.loading?.agreedHours,
-      unloadingAppointmentAt: effective.unloading?.appointmentAt,
-      unloadingAgreedHours: effective.unloading?.agreedHours
-    },
-    remesa.fulfillmentDraft,
-    { loadingAt, unloadingAt: detail.serviceOrder.scheduledUnloadingAt ?? loadingAt }
-  );
-  const loadingArrival = bogotaDateTimeParts(times.loadingArrivalAt);
-  const loadingEntry = bogotaDateTimeParts(times.loadingEntryAt);
-  const loadingExit = bogotaDateTimeParts(times.loadingExitAt);
-  const unloadingArrival = bogotaDateTimeParts(times.unloadingArrivalAt);
-  const unloadingEntry = bogotaDateTimeParts(times.unloadingEntryAt);
-  const unloadingExit = bogotaDateTimeParts(times.unloadingExitAt);
-  return {
-    loadingArrivalDate: loadingArrival.date,
-    loadingArrivalTime: loadingArrival.time,
-    loadingEntryDate: loadingEntry.date,
-    loadingEntryTime: loadingEntry.time,
-    loadingExitDate: loadingExit.date,
-    loadingExitTime: loadingExit.time,
-    unloadingArrivalDate: unloadingArrival.date,
-    unloadingArrivalTime: unloadingArrival.time,
-    unloadingEntryDate: unloadingEntry.date,
-    unloadingEntryTime: unloadingEntry.time,
-    unloadingExitDate: unloadingExit.date,
-    unloadingExitTime: unloadingExit.time
-  };
+function entryTimesPayload(remesa: Detail["remesas"][number]): Record<string, string> {
+  const draft = remesa.fulfillmentDraft;
+  const payload: Record<string, string> = {};
+
+  if (draft?.loadingEntryAt !== undefined) {
+    const loadingEntry = bogotaDateTimeParts(draft.loadingEntryAt);
+    payload.loadingEntryDate = loadingEntry.date;
+    payload.loadingEntryTime = loadingEntry.time;
+  }
+
+  if (draft?.unloadingEntryAt !== undefined && !draft.suspended) {
+    const unloadingEntry = bogotaDateTimeParts(draft.unloadingEntryAt);
+    payload.unloadingEntryDate = unloadingEntry.date;
+    payload.unloadingEntryTime = unloadingEntry.time;
+  }
+
+  return payload;
 }
 
 function consignmentPayload(detail: Detail, remesa: Detail["remesas"][number], preparedBy: string): Record<string, unknown> {
   return {
     ...basePayload(detail, remesa, preparedBy),
     compliance: {
-      ...operationTimesPayload(detail, remesa),
+      ...entryTimesPayload(remesa),
       remesaType: remesa.fulfillmentDraft?.suspended ? "S" : "C",
       unitCode: 1,
       loadedQuantityKg: loadedQuantityKg(detail, remesa),

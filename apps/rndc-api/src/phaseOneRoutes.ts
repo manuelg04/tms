@@ -5,6 +5,7 @@ import express from "express";
 import {
   buildAcceptanceQuery,
   buildFailureResponse,
+  buildInitialComplianceQuery,
   buildRemesaCorrectionMessage,
   buildRndcDocumentQuery,
   buildRndcXml,
@@ -14,6 +15,7 @@ import {
   calculateFopat,
   classifyRndcError,
   maskSecrets,
+  normalizeInitialCompliance,
   normalizeManifestAcceptances,
   normalizeRndcQueryRecords,
   RndcClient
@@ -31,7 +33,7 @@ import { getRequestContext } from "./runtimeSecurity.js";
 import { readDurableEvidenceContext } from "./durableEvidence.js";
 import type { DurableEvidenceReport, DurableEvidenceStore } from "./durableEvidence.js";
 
-export type PhaseOneOperation = "remesa-correction" | "targeted-annulment" | "reconciliation" | "acceptance-query";
+export type PhaseOneOperation = "remesa-correction" | "targeted-annulment" | "reconciliation" | "acceptance-query" | "initial-compliance-query";
 
 export type PhaseOneOperationResult = {
   ok: boolean;
@@ -55,7 +57,7 @@ export type PhaseOneOperationResult = {
     radicado?: string;
     errorText?: string;
   };
-  records?: Record<string, string>[] | ReturnType<typeof normalizeManifestAcceptances>;
+  records?: Record<string, string>[] | ReturnType<typeof normalizeManifestAcceptances> | ReturnType<typeof normalizeInitialCompliance>;
   classification?: ReturnType<typeof classifyRndcError>;
   convexSync: {
     synced: false;
@@ -200,6 +202,31 @@ export function registerPhaseOneRoutes(
         normalizeRndcQueryRecords
       );
       res.status(resultStatus(result)).json(result);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/rndc/initial-compliance/:remesaNumber", requireOperationalReadiness, async (req, res, next) => {
+    try {
+      const config = readConfig();
+      const remesaNumber = String(req.params.remesaNumber ?? "").trim();
+
+      if (!/^[A-Za-z0-9-]{1,20}$/.test(remesaNumber)) {
+        sendValidationError(req, res, ["remesaNumber"]);
+        return;
+      }
+
+      const result = await executePhaseOneOperation(
+        config,
+        "initial-compliance-query",
+        remesaNumber,
+        buildInitialComplianceQuery({ companyRndcNit: config.companyRndcNit, remesaNumber }),
+        req,
+        evidenceStore,
+        normalizeInitialCompliance
+      );
+      res.status(result.ok || result.response.status === 200 ? 200 : 502).json(result);
     } catch (error) {
       next(error);
     }

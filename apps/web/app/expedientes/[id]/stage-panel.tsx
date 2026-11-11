@@ -1,5 +1,3 @@
-import type { OperationTimes } from "../../../convex/model/fulfillmentWorkflow";
-import { deriveOperationTimes } from "../../../convex/model/fulfillmentWorkflow";
 import {
   effectiveConsignment,
   remissionWeightTons,
@@ -126,11 +124,11 @@ export function renderStage(input: {
   if (input.selectedStage === "cumplido_inicial")
     return (
       <ConsignmentFulfillmentForm
+        expedienteId={detail.expediente._id}
         onSubmit={input.fulfillRemesas}
         remesas={detail.remesas.map((remesa) => ({
           ...remesa,
           cargoWeightKg: remesa.cargoWeightKg ?? loadedWeightKg(detail, remesa),
-          operationTimes: defaultOperationTimes(detail, remesa),
         }))}
       />
     );
@@ -144,31 +142,6 @@ export function renderStage(input: {
       }
       onSubmit={input.fulfillManifest}
     />
-  );
-}
-
-function defaultOperationTimes(
-  detail: Detail,
-  remesa: Detail["remesas"][number],
-): OperationTimes {
-  const effective = effectiveConsignment(
-    remesa.draft ?? {},
-    detail.expediente.loadingOrderDraft ?? null,
-  );
-  const loadingAt =
-    detail.serviceOrder.scheduledLoadingAt ?? detail.expediente.createdAt;
-  return deriveOperationTimes(
-    {
-      loadingAppointmentAt: effective.loading?.appointmentAt,
-      loadingAgreedHours: effective.loading?.agreedHours,
-      unloadingAppointmentAt: effective.unloading?.appointmentAt,
-      unloadingAgreedHours: effective.unloading?.agreedHours,
-    },
-    remesa.fulfillmentDraft,
-    {
-      loadingAt,
-      unloadingAt: detail.serviceOrder.scheduledUnloadingAt ?? loadingAt,
-    },
   );
 }
 

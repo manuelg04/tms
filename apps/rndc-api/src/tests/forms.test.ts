@@ -847,6 +847,101 @@ test("blocks suspended live fulfill forms before validation or RNDC contact", as
   process.env.RNDC_INGEST_KEY = "";
 });
 
+test("fulfill remesa sends only the two entry times reported by the transport company", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-fulfill-entries-"));
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  });
+  const response = await requestJson(app, "/rndc/forms/fulfill-remesa", {
+    method: "POST",
+    body: {
+      remesaNumber: "45945",
+      manifestNumber: "0045202",
+      compliance: {
+        remesaType: "C",
+        loadedQuantityKg: 34000,
+        deliveredQuantityKg: 34000,
+        unitCode: 1,
+        loadingEntryDate: "09/11/2026",
+        loadingEntryTime: "13:55",
+        unloadingEntryDate: "13/11/2026",
+        unloadingEntryTime: "18:10"
+      }
+    }
+  });
+  const steps = response.body.steps as { requestPath: string }[];
+  const xml = await readFile(steps[0].requestPath, "utf8");
+
+  assert.equal(response.status, 200);
+  assert.match(xml, /<FECHAENTRADACARGUE>09\/11\/2026<\/FECHAENTRADACARGUE>/);
+  assert.match(xml, /<HORAENTRADACARGUEREMESA>13:55<\/HORAENTRADACARGUEREMESA>/);
+  assert.match(xml, /<FECHAENTRADADESCARGUE>13\/11\/2026<\/FECHAENTRADADESCARGUE>/);
+  assert.match(xml, /<HORAENTRADADESCARGUECUMPLIDO>18:10<\/HORAENTRADADESCARGUECUMPLIDO>/);
+  assert.doesNotMatch(xml, /LLEGADACARGUE|SALIDACARGUE|LLEGADADESCARGUE|SALIDADESCARGUE/);
+});
+
+test("fulfill remesa without the unloading entry is rejected before reaching the RNDC", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-fulfill-missing-entry-"));
+  process.env.CONVEX_URL = "https://convex.example";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  }, { durableContextValidator: async () => true });
+
+  try {
+    const response = await requestJson(app, "/rndc/forms/fulfill-remesa", {
+      method: "POST",
+      headers: durableHeaders("dry-run", "op-missing-unloading-entry", "fulfill_remesa"),
+      body: {
+        remesaNumber: "45945",
+        manifestNumber: "0045202",
+        compliance: {
+          remesaType: "C",
+          loadedQuantityKg: 34000,
+          deliveredQuantityKg: 34000,
+          unitCode: 1,
+          loadingEntryDate: "09/11/2026",
+          loadingEntryTime: "13:55"
+        }
+      }
+    });
+    const missing = response.body.missingFields as string[];
+
+    assert.equal(response.status, 400);
+    assert.ok(missing.includes("compliance.unloadingEntryDate"));
+    assert.ok(!missing.includes("compliance.unloadingArrivalDate"));
+    assert.ok(!missing.includes("compliance.loadingExitTime"));
+  } finally {
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
+});
+
+test("initial compliance query reads process 45 for one remesa without writing", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-initial-compliance-"));
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  });
+  const response = await requestJson(app, "/rndc/initial-compliance/45945", { method: "GET" });
+  const xml = await readFile((response.body.request as { path: string }).path, "utf8");
+
+  assert.equal(response.status, 200);
+  assert.equal(response.body.operation, "initial-compliance-query");
+  assert.deepEqual(response.body.records, []);
+  assert.match(xml, /<tipo>3<\/tipo>/);
+  assert.match(xml, /<procesoid>45<\/procesoid>/);
+  assert.match(xml, /<CONSECUTIVOREMESA>&apos;45945&apos;<\/CONSECUTIVOREMESA>/);
+
+  const invalid = await requestJson(app, "/rndc/initial-compliance/45945%27%20OR", { method: "GET" });
+  assert.equal(invalid.status, 400);
+});
+
 test("rejects unsupported fulfillment types before building durable RNDC XML", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-invalid-fulfillment-type-"));
   process.env.CONVEX_URL = "https://convex.example";

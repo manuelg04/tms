@@ -1,4 +1,6 @@
 import { compactConsignmentOverrides } from "../../../convex/model/dispatchWorkflow";
+import { parseBogotaLocalInput } from "../../../convex/model/monitoring";
+import { FormValidationError } from "../../components/fields/form-validation";
 import { loadingWindowEnd, required, timestamp, value } from "../../lib/form-data";
 import type { Detail } from "./detail-types";
 
@@ -187,12 +189,8 @@ export function remesaFulfillmentDraftFromForm(
     returnedQuantity: value(data, `${remesa._id}_returned`),
     unit: remesa.cargoUnit ?? "kg",
     observation: value(data, `${remesa._id}_observation`),
-    loadingArrivalAt: timestamp(data, `${remesa._id}_loadingArrivalAt`),
-    loadingEntryAt: timestamp(data, `${remesa._id}_loadingEntryAt`),
-    loadingExitAt: timestamp(data, `${remesa._id}_loadingExitAt`),
-    unloadingArrivalAt: timestamp(data, `${remesa._id}_unloadingArrivalAt`),
-    unloadingEntryAt: timestamp(data, `${remesa._id}_unloadingEntryAt`),
-    unloadingExitAt: timestamp(data, `${remesa._id}_unloadingExitAt`),
+    loadingEntryAt: bogotaTimestamp(data, `${remesa._id}_loadingEntryAt`),
+    unloadingEntryAt: bogotaTimestamp(data, `${remesa._id}_unloadingEntryAt`),
   };
 }
 
@@ -276,6 +274,15 @@ export function appointmentBefore(
   };
 }
 
+
+function bogotaTimestamp(data: FormData, key: string): number {
+  try {
+    return parseBogotaLocalInput(required(data, key).slice(0, 16));
+  } catch (cause) {
+    if (cause instanceof FormValidationError) throw cause;
+    throw new FormValidationError(key, "Selecciona una fecha y hora válidas.");
+  }
+}
 
 function definedEntries<T extends Record<string, unknown>>(
   source: T,

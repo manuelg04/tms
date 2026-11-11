@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
 import { FormField, ValidatedForm } from "../../components/fields/form-validation";
-import type { OperationTimes } from "../../../convex/model/fulfillmentWorkflow";
+import { bogotaLocalInput } from "../../../convex/model/monitoring";
+import { monitoringSummary, type LogisticsMoment, type RemesaMonitoring } from "../../lib/remesa-monitoring";
 
 type Remesa = {
   _id: string;
-  operationTimes: OperationTimes;
   sequence: number;
   number?: string;
   cargoDescription: string;
@@ -16,13 +17,19 @@ type Remesa = {
     returnedQuantity?: string;
     unit?: string;
     observation?: string;
+    loadingEntryAt?: number;
+    unloadingEntryAt?: number;
   };
 };
 
-export function ConsignmentFulfillmentForm({ onSubmit, remesas }: { onSubmit: (data: FormData) => void | Promise<void>; remesas: Remesa[] }) {
+type MonitoringState = { mode?: string; byRemesa: Record<string, RemesaMonitoring>; loaded: boolean };
+
+export function ConsignmentFulfillmentForm({ expedienteId, onSubmit, remesas }: { expedienteId: string; onSubmit: (data: FormData) => void | Promise<void>; remesas: Remesa[] }) {
+  const monitoring = useRemesaMonitoring(expedienteId);
+  const latest = bogotaLocalInput(Date.now());
   return (
     <ValidatedForm id="stage-primary-form" onSubmit={(event) => { return onSubmit(new FormData(event.currentTarget)); }}>
-      <div className="stage-form-heading"><span>06</span><div><h3 id="active-stage-title" tabIndex={-1}>Cumplido inicial</h3><p>Confirma las cantidades reales de cada remesa y ajusta los tiempos solo si fueron distintos a los pactados. El manifiesto permanecerá abierto.</p></div></div>
+      <div className="stage-form-heading"><span>06</span><div><h3 id="active-stage-title" tabIndex={-1}>Cumplido inicial</h3><p>Registra la cantidad entregada y la hora real de entrada al cargue y al descargue. Las llegadas y salidas las reporta la empresa de monitoreo. El manifiesto permanecerá abierto.</p></div></div>
       <div className="fulfillment-remesas">
         {remesas.map((remesa) => (
           <fieldset className={remesa.fulfillmentState === "fulfilled" ? "fulfillment-card complete" : "fulfillment-card"} disabled={remesa.fulfillmentState === "fulfilled"} key={remesa._id}>
@@ -35,16 +42,10 @@ export function ConsignmentFulfillmentForm({ onSubmit, remesas }: { onSubmit: (d
               <Quantity label="Sobrante" name={`${remesa._id}_surplus`} value={remesa.fulfillmentDraft?.surplusQuantity ?? "0"} />
               <Quantity label="Devuelta" name={`${remesa._id}_returned`} value={remesa.fulfillmentDraft?.returnedQuantity ?? "0"} />
             </div>
-            <div className="fulfillment-times">
-              <div className="field-group-note"><strong>Tiempos de cargue</strong><small>Prellenados con la cita y las horas pactadas</small></div>
-              <Moment label="Llegada" name={`${remesa._id}_loadingArrivalAt`} value={remesa.operationTimes.loadingArrivalAt} />
-              <Moment label="Entrada" name={`${remesa._id}_loadingEntryAt`} value={remesa.operationTimes.loadingEntryAt} />
-              <Moment label="Salida" name={`${remesa._id}_loadingExitAt`} value={remesa.operationTimes.loadingExitAt} />
-              <div className="field-group-note"><strong>Tiempos de descargue</strong><small>Los exige el RNDC para cumplir la remesa</small></div>
-              <Moment label="Llegada" name={`${remesa._id}_unloadingArrivalAt`} value={remesa.operationTimes.unloadingArrivalAt} />
-              <Moment label="Entrada" name={`${remesa._id}_unloadingEntryAt`} value={remesa.operationTimes.unloadingEntryAt} />
-              <Moment label="Salida" name={`${remesa._id}_unloadingExitAt`} value={remesa.operationTimes.unloadingExitAt} />
-            </div>
+            <div className="field-group-note"><strong>Entradas</strong><small>Hora real, la reporta la empresa de transporte</small></div>
+            <Moment label="Entrada al cargue" max={latest} name={`${remesa._id}_loadingEntryAt`} value={remesa.fulfillmentDraft?.loadingEntryAt} />
+            <Moment label="Entrada al descargue" max={latest} name={`${remesa._id}_unloadingEntryAt`} value={remesa.fulfillmentDraft?.unloadingEntryAt} />
+            <MonitoringPanel loaded={monitoring.loaded} mode={monitoring.mode} monitoring={monitoring.byRemesa[remesa._id]} />
             <FormField><span>Observaciones de entrega</span><textarea defaultValue={remesa.fulfillmentDraft?.observation} name={`${remesa._id}_observation`} rows={2} /></FormField>
             {remesa.fulfillmentState === "fulfilled" ? <span className="fulfilled-lock">✓ Cumplida · Sólo lectura</span> : null}
           </fieldset>
@@ -66,14 +67,54 @@ export function ManifestFulfillmentForm({ defaultDate, defaultObservation, onSub
   );
 }
 
-function Moment({ label, name, value }: { label: string; name: string; value: number }) {
-  return <FormField><span>{label}</span><input defaultValue={localDateTime(value)} name={name} required type="datetime-local" /></FormField>;
+function Moment({ label, max, name, value }: { label: string; max: string; name: string; value?: number }) {
+  return <FormField><span>{label}</span><input defaultValue={value === undefined ? "" : bogotaLocalInput(value)} max={max} name={name} required type="datetime-local" /></FormField>;
 }
 
-function localDateTime(value: number): string {
-  const date = new Date(value);
-  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
-  return local.toISOString().slice(0, 16);
+function MonitoringPanel({ loaded, mode, monitoring }: { loaded: boolean; mode?: string; monitoring?: RemesaMonitoring }) {
+  const record = monitoring?.record;
+  const summary = loaded && !monitoring ? "No fue posible consultar el RNDC. Puedes continuar; el RNDC validará el monitoreo al recibir el cumplido." : monitoringSummary(monitoring, mode);
+  return (
+    <div className="monitoring-panel" role="status">
+      <div className="field-group-note"><strong>Monitoreo en el RNDC</strong><small>Solo lectura</small></div>
+      {record ? (
+        <dl className="monitoring-times">
+          <MonitoringTime label="Llegada al cargue" value={record.loadingArrival} />
+          <MonitoringTime label="Salida del cargue" value={record.loadingExit} />
+          <MonitoringTime label="Llegada al descargue" value={record.unloadingArrival} />
+          <MonitoringTime label="Salida del descargue" value={record.unloadingExit} />
+        </dl>
+      ) : null}
+      <p>{summary}{record ? ` Cumplido inicial ${record.id}.` : ""}</p>
+    </div>
+  );
+}
+
+function MonitoringTime({ label, value }: { label: string; value?: LogisticsMoment }) {
+  return <div><dt>{label}</dt><dd className={value ? undefined : "pending"}>{value ? `${value.date} ${value.time}` : "Sin reportar"}</dd></div>;
+}
+
+function useRemesaMonitoring(expedienteId: string): MonitoringState {
+  const [state, setState] = useState<MonitoringState>({ byRemesa: {}, loaded: false });
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`/api/rndc/dispatches/${expedienteId}/monitoring`, { signal: controller.signal })
+      .then(async (response) => (response.ok ? ((await response.json()) as { mode?: string; remesas?: RemesaMonitoring[] }) : null))
+      .then((body) => {
+        setState({
+          mode: body?.mode,
+          byRemesa: Object.fromEntries((body?.remesas ?? []).map((item) => [item.remesaId, item])),
+          loaded: true
+        });
+      })
+      .catch((cause: unknown) => {
+        if (!(cause instanceof DOMException && cause.name === "AbortError")) setState({ byRemesa: {}, loaded: true });
+      });
+    return () => controller.abort();
+  }, [expedienteId]);
+
+  return state;
 }
 
 function Quantity({ label, name, required = false, value }: { label: string; name: string; required?: boolean; value: string }) {

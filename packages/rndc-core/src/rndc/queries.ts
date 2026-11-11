@@ -1,5 +1,5 @@
 import { extractRndcDocuments } from "./masterData.js";
-import type { RndcManifestAcceptance, RndcMessageRequest, RndcScalar, RndcXmlRecord } from "./types.js";
+import type { RndcInitialRemesaCompliance, RndcLogisticsMoment, RndcManifestAcceptance, RndcMessageRequest, RndcScalar, RndcXmlRecord } from "./types.js";
 
 export type RndcDocumentQueryInput = {
   companyRndcNit: string;
@@ -44,6 +44,56 @@ const pendingAcceptanceVariables = [
   "NUMPLACA",
   "NUMIDCONDUCTOR"
 ];
+
+const initialComplianceVariables = [
+  "INGRESOID",
+  "FECHAING",
+  "CONSECUTIVOREMESA",
+  "NUMMANIFIESTOCARGA",
+  "FECHALLEGADACARGUE",
+  "HORALLEGADACARGUE",
+  "FECHASALIDACARGUE",
+  "HORASALIDACARGUE",
+  "FECHALLEGADADESCARGUE",
+  "HORALLEGADADESCARGUE",
+  "FECHASALIDADESCARGUE",
+  "HORASALIDADESCARGUE"
+];
+
+export function buildInitialComplianceQuery(input: { companyRndcNit: string; remesaNumber: string }): RndcMessageRequest {
+  return buildRndcDocumentQuery({
+    companyRndcNit: input.companyRndcNit,
+    processId: 45,
+    variables: initialComplianceVariables,
+    filters: { CONSECUTIVOREMESA: input.remesaNumber }
+  });
+}
+
+export function normalizeInitialCompliance(parsed: unknown): RndcInitialRemesaCompliance[] {
+  return normalizeRndcQueryRecords(parsed).flatMap((record) => {
+    const id = record.INGRESOID;
+    const remesaNumber = record.CONSECUTIVOREMESA;
+
+    if (!id || !remesaNumber) {
+      return [];
+    }
+
+    return [{
+      id,
+      remesaNumber,
+      manifestNumber: record.NUMMANIFIESTOCARGA || undefined,
+      registeredAt: record.FECHAING || undefined,
+      loadingArrival: logisticsMoment(record.FECHALLEGADACARGUE, record.HORALLEGADACARGUE),
+      loadingExit: logisticsMoment(record.FECHASALIDACARGUE, record.HORASALIDACARGUE),
+      unloadingArrival: logisticsMoment(record.FECHALLEGADADESCARGUE, record.HORALLEGADADESCARGUE),
+      unloadingExit: logisticsMoment(record.FECHASALIDADESCARGUE, record.HORASALIDADESCARGUE)
+    }];
+  });
+}
+
+function logisticsMoment(date: string | undefined, time: string | undefined): RndcLogisticsMoment | undefined {
+  return date && time ? { date, time } : undefined;
+}
 
 export function buildRndcDocumentQuery(input: RndcDocumentQueryInput): RndcMessageRequest {
   const documento: RndcXmlRecord = {

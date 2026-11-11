@@ -3,52 +3,31 @@ import test from "node:test";
 import {
   bogotaDateTimeParts,
   buildFulfillmentPlan,
-  deriveOperationTimes,
-  validateFulfillmentQuantities,
-  validateOperationTimes
+  validateEntryTimes,
+  validateFulfillmentQuantities
 } from "./fulfillmentWorkflow.js";
 
 const HOUR = 3_600_000;
 
-test("operation times default to the agreed appointments and hours", () => {
-  const times = deriveOperationTimes(
-    { loadingAppointmentAt: 100 * HOUR, loadingAgreedHours: "1.5", unloadingAppointmentAt: 110 * HOUR, unloadingAgreedHours: "2" },
-    undefined,
-    { loadingAt: 0, unloadingAt: 0 }
-  );
-
-  assert.deepEqual(times, {
-    loadingArrivalAt: 100 * HOUR,
-    loadingEntryAt: 100 * HOUR,
-    loadingExitAt: 101.5 * HOUR,
-    unloadingArrivalAt: 110 * HOUR,
-    unloadingEntryAt: 110 * HOUR,
-    unloadingExitAt: 112 * HOUR
-  });
+test("entry times are never derived and must both be recorded", () => {
+  assert.deepEqual(validateEntryTimes({}, 100 * HOUR), [
+    "Registra la fecha y hora de entrada al cargue.",
+    "Registra la fecha y hora de entrada al descargue."
+  ]);
+  assert.deepEqual(validateEntryTimes({ loadingEntryAt: 10 * HOUR, unloadingEntryAt: 20 * HOUR }, 100 * HOUR), []);
 });
 
-test("operation times keep operator overrides and never place unloading before loading", () => {
-  const times = deriveOperationTimes(
-    { loadingAppointmentAt: 100 * HOUR, unloadingAppointmentAt: 90 * HOUR },
-    { loadingExitAt: 103 * HOUR },
-    { loadingAt: 0, unloadingAt: 0 }
-  );
-
-  assert.equal(times.loadingExitAt, 103 * HOUR);
-  assert.equal(times.unloadingArrivalAt, 103 * HOUR);
-  assert.equal(times.unloadingExitAt, 105 * HOUR);
+test("entry times reject future moments and an unloading entry that is not after loading", () => {
+  assert.deepEqual(validateEntryTimes({ loadingEntryAt: 10 * HOUR, unloadingEntryAt: 101 * HOUR }, 100 * HOUR), [
+    "La entrada al descargue no puede ser una fecha futura."
+  ]);
+  assert.deepEqual(validateEntryTimes({ loadingEntryAt: 20 * HOUR, unloadingEntryAt: 20 * HOUR }, 100 * HOUR), [
+    "La entrada al descargue debe ser posterior a la entrada al cargue."
+  ]);
 });
 
-test("operation times fall back to the service order schedule when no appointment exists", () => {
-  const times = deriveOperationTimes({}, undefined, { loadingAt: 50 * HOUR, unloadingAt: 60 * HOUR });
-
-  assert.equal(times.loadingArrivalAt, 50 * HOUR);
-  assert.equal(times.unloadingArrivalAt, 60 * HOUR);
-});
-
-test("operation times must follow the trip order", () => {
-  assert.deepEqual(validateOperationTimes({ loadingArrivalAt: 10, loadingEntryAt: 20, loadingExitAt: 30, unloadingArrivalAt: 40, unloadingEntryAt: 50, unloadingExitAt: 60 }), []);
-  assert.deepEqual(validateOperationTimes({ loadingExitAt: 30, unloadingArrivalAt: 20 }), ["La llegada al descargue no puede ser antes de la salida del cargue."]);
+test("a suspended consignment only needs the loading entry", () => {
+  assert.deepEqual(validateEntryTimes({ suspended: true, loadingEntryAt: 10 * HOUR }, 100 * HOUR), []);
 });
 
 test("operation times format in Bogota local time", () => {

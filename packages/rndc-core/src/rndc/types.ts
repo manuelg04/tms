@@ -195,6 +195,19 @@ export type RndcManifestAcceptance = {
   observation?: string;
 };
 
+export type RndcLogisticsMoment = { date: string; time: string };
+
+export type RndcInitialRemesaCompliance = {
+  id: string;
+  remesaNumber: string;
+  manifestNumber?: string;
+  registeredAt?: string;
+  loadingArrival?: RndcLogisticsMoment;
+  loadingExit?: RndcLogisticsMoment;
+  unloadingArrival?: RndcLogisticsMoment;
+  unloadingExit?: RndcLogisticsMoment;
+};
+
 export type ComplianceData = {
   remesaType: string;
   manifestType: string;

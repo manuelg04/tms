@@ -301,12 +301,8 @@ export const requiredFormFields: Record<FormOperation, string[]> = {
     "compliance.remesaType",
     "compliance.loadedQuantityKg",
     "compliance.unitCode",
-    "compliance.loadingArrivalDate",
-    "compliance.loadingArrivalTime",
     "compliance.loadingEntryDate",
-    "compliance.loadingEntryTime",
-    "compliance.loadingExitDate",
-    "compliance.loadingExitTime"
+    "compliance.loadingEntryTime"
   ],
   "fulfill-manifest": [
     "manifestNumber",
@@ -456,12 +452,8 @@ export function collectMissingFormFields(operation: FormOperation, payload: unkn
     if (remesaType === "C") {
       pushMissing(record, missing, [
         "compliance.deliveredQuantityKg",
-        "compliance.unloadingArrivalDate",
-        "compliance.unloadingArrivalTime",
         "compliance.unloadingEntryDate",
-        "compliance.unloadingEntryTime",
-        "compliance.unloadingExitDate",
-        "compliance.unloadingExitTime"
+        "compliance.unloadingEntryTime"
       ]);
 
       if (!hasFiniteNumericFormValue(record, "compliance.deliveredQuantityKg") && !missing.includes("compliance.deliveredQuantityKg")) {

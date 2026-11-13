@@ -2,16 +2,33 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { emissionNotice } from "./emission-notice";
 
-test("an accepted emission names each authorized document", () => {
+test("an accepted emission announces the saved order apart from the documents authorized by the RNDC", () => {
   const notice = emissionNotice(200, {
     mode: "dry-run",
     steps: [
-      { action: "emit_loading_order", documentNumber: "0000081", outcome: "authorized", radicado: "904100350" },
-      { action: "emit_remesa", documentNumber: "00056", outcome: "authorized" }
+      { action: "emit_loading_order", documentNumber: "0000081", outcome: "authorized" },
+      { action: "emit_remesa", documentNumber: "00056", outcome: "authorized", radicado: "904100350" }
     ]
   });
   assert.equal(notice.tone, "ok");
-  assert.equal(notice.text, "Guardado y transmitido (modo prueba): Orden de cargue 0000081 (radicado 904100350), Remesa 00056.");
+  assert.equal(notice.text, "Orden de cargue 0000081 guardada y lista para imprimir. Guardado y transmitido (modo prueba): Remesa 00056 (radicado 904100350).");
+});
+
+test("saving only the loading order says it is ready to print without mentioning the RNDC", () => {
+  const notice = emissionNotice(200, {
+    mode: "dry-run",
+    steps: [{ action: "emit_loading_order", documentNumber: "0000081", outcome: "authorized" }]
+  });
+  assert.equal(notice.tone, "ok");
+  assert.equal(notice.text, "Orden de cargue 0000081 guardada y lista para imprimir.");
+});
+
+test("a failure while saving the loading order is not described as an RNDC transmission", () => {
+  const notice = emissionNotice(502, {
+    steps: [{ action: "emit_loading_order", documentNumber: "0000081", outcome: "failed", error: "sin conexión" }]
+  });
+  assert.equal(notice.tone, "bad");
+  assert.equal(notice.text, "No se pudo dejar lista la orden de cargue: sin conexión. Queda guardada como borrador; vuelve a intentarlo.");
 });
 
 test("an outage tells the operator the document is queued", () => {
@@ -35,7 +52,7 @@ test("a rejection after a partial chain reports both results", () => {
     ]
   });
   assert.equal(notice.tone, "bad");
-  assert.equal(notice.text, "Orden de cargue 0000081 con autorización del RNDC. El RNDC rechazó remesa 00056: REM100 peso inválido. Corrige el dato y vuelve a guardar.");
+  assert.equal(notice.text, "Orden de cargue 0000081 guardada y lista para imprimir. El RNDC rechazó remesa 00056: REM100 peso inválido. Corrige el dato y vuelve a guardar.");
 });
 
 test("an uncertain result asks for reconciliation instead of a resend", () => {

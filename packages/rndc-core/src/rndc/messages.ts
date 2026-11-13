@@ -56,66 +56,11 @@ export function buildFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
       request: createMessage(11, partyVariables(scenario, scenario.recipient))
     },
     {
-      name: "cargo",
-      title: "Registrar informacion de carga",
-      request: createMessage(1, {
-        NUMNITEMPRESATRANSPORTE: scenario.company.rndcNit,
-        CONSECUTIVOINFORMACIONCARGA: scenario.cargoNumber || undefined,
-        CODOPERACIONTRANSPORTE: "G",
-        CODTIPOEMPAQUE: scenario.cargo.packageCode,
-        CODNATURALEZACARGA: scenario.cargo.natureCode,
-        DESCRIPCIONCORTAPRODUCTO: scenario.cargo.shortDescription,
-        MERCANCIAINFORMACIONCARGA: scenario.cargo.merchandiseCode,
-        CANTIDADINFORMACIONCARGA: scenario.cargo.quantityKg,
-        UNIDADMEDIDACAPACIDAD: 1,
-        CODTIPOIDREMITENTE: scenario.sender.idType,
-        NUMIDREMITENTE: scenario.sender.id,
-        CODSEDEREMITENTE: scenario.sender.siteCode,
-        CODTIPOIDDESTINATARIO: scenario.recipient.idType,
-        NUMIDDESTINATARIO: scenario.recipient.id,
-        CODSEDEDESTINATARIO: scenario.recipient.siteCode,
-        PACTOTIEMPOCARGUE: "SI",
-        HORASPACTOCARGA: scenario.loadingAgreedHours,
-        MINUTOSPACTOCARGA: scenario.loadingAgreedMinutes,
-        PACTOTIEMPODESCARGUE: "SI",
-        HORASPACTODESCARGUE: scenario.unloadingAgreedHours,
-        MINUTOSPACTODESCARGUE: scenario.unloadingAgreedMinutes,
-        OBSERVACIONES: scenario.observations,
-        FECHACITAPACTADACARGUE: scenario.loadingAppointmentDate,
-        HORACITAPACTADACARGUE: scenario.loadingAppointmentTime,
-        FECHACITAPACTADADESCARGUE: scenario.unloadingAppointmentDate,
-        HORACITAPACTADADESCARGUEREMESA: scenario.unloadingAppointmentTime
-      })
-    },
-    {
-      name: "trip",
-      title: "Registrar informacion de viaje",
-      request: createMessage(2, {
-        NUMNITEMPRESATRANSPORTE: scenario.company.rndcNit,
-        CONSECUTIVOINFORMACIONVIAJE: scenario.tripNumber,
-        CODIDCONDUCTOR: scenario.driver.idType,
-        NUMIDCONDUCTOR: scenario.driver.id,
-        NUMPLACA: scenario.vehicle.plate,
-        NUMPLACAREMOLQUE: scenario.vehicle.trailerPlate,
-        CODMUNICIPIOORIGENINFOVIAJE: scenario.sender.cityCode,
-        CODMUNICIPIODESTINOINFOVIAJE: scenario.recipient.cityCode,
-        VALORFLETEPACTADOVIAJE: scenario.money.freightValue,
-        PREREMESAS: rawXml([
-          '<PREREMESAS procesoid="44">',
-          "<MANPREREMESA>",
-          `<CONSECUTIVOINFORMACIONCARGA>${escapeXml(scenario.cargoNumber)}</CONSECUTIVOINFORMACIONCARGA>`,
-          "</MANPREREMESA>",
-          "</PREREMESAS>"
-        ].join(""))
-      })
-    },
-    {
       name: "remesa",
       title: "Expedir remesa terrestre de carga",
       request: createMessage(3, {
         NUMNITEMPRESATRANSPORTE: scenario.company.rndcNit,
         CONSECUTIVOREMESA: scenario.remesaNumber,
-        CONSECUTIVOINFORMACIONCARGA: scenario.cargoNumber || undefined,
         CODOPERACIONTRANSPORTE: "G",
         CODNATURALEZACARGA: scenario.cargo.natureCode,
         CANTIDADCARGADA: scenario.cargo.quantityKg,
@@ -152,7 +97,6 @@ export function buildFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
       request: createMessage(4, {
         NUMNITEMPRESATRANSPORTE: scenario.company.rndcNit,
         NUMMANIFIESTOCARGA: scenario.manifestNumber,
-        CONSECUTIVOINFORMACIONVIAJE: scenario.tripNumber || undefined,
         CODOPERACIONTRANSPORTE: scenario.manifestType || "G",
         MANNROMANIFIESTOTRANSBORDO: scenario.sourceManifestNumber,
         NITMONITOREOFLOTA: scenario.workflowVariant === "empty_manifest" ? undefined : scenario.monitoringCompanyNit,
@@ -248,7 +192,7 @@ export function buildPartyMessages(scenario: DemoScenario): RndcFlowMessage[] {
 
 export function buildMtmProductionFlowMessages(scenario: DemoScenario): RndcFlowMessage[] {
   const messages = buildFlowMessages(scenario);
-  const wanted = ["cargo", "trip", "remesa", "manifest"];
+  const wanted = ["remesa", "manifest"];
   return wanted.map((name) => {
     const message = messages.find((item) => item.name === name);
     if (!message) {
@@ -258,11 +202,8 @@ export function buildMtmProductionFlowMessages(scenario: DemoScenario): RndcFlow
   });
 }
 
-export function buildLoadingOrderMessages(scenario: DemoScenario): RndcFlowMessage[] {
-  const messages = buildFlowMessages(scenario);
-  return [
-    renameMessage(findMessage(messages, "cargo"), "issue-loading-order", "Registrar informacion de carga (orden de cargue)")
-  ];
+export function buildLoadingOrderMessages(_scenario: DemoScenario): RndcFlowMessage[] {
+  return [];
 }
 
 export function buildRemesaMessages(scenario: DemoScenario): RndcFlowMessage[] {
@@ -273,16 +214,11 @@ export function buildRemesaMessages(scenario: DemoScenario): RndcFlowMessage[] {
 }
 
 export function buildManifestMessages(scenario: DemoScenario): RndcFlowMessage[] {
-  const messages = buildFlowMessages(scenario);
-  return [
-    renameMessage(findMessage(messages, "trip"), "register-trip"),
-    renameMessage(findMessage(messages, "manifest"), "issue-manifest")
-  ];
+  return buildManifestIssueMessages(scenario);
 }
 
-export function buildTripMessages(scenario: DemoScenario): RndcFlowMessage[] {
-  const messages = buildFlowMessages(scenario);
-  return [renameMessage(findMessage(messages, "trip"), "register-trip")];
+export function buildTripMessages(_scenario: DemoScenario): RndcFlowMessage[] {
+  return [];
 }
 
 export function buildManifestIssueMessages(scenario: DemoScenario): RndcFlowMessage[] {

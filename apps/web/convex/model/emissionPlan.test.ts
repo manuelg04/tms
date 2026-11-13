@@ -94,15 +94,15 @@ function baseInput(overrides: Partial<EmissionPlanInput> = {}): EmissionPlanInpu
   };
 }
 
-test("a fresh dispatch plans cargo, consignments, trip and manifest in order", () => {
+test("a fresh dispatch plans the internal order, consignments and manifest in order without trip registration", () => {
   const plan = buildEmissionPlan(baseInput());
 
   assert.equal(plan.ok, true);
   assert.deepEqual(
     plan.ok ? plan.steps.map((step) => step.action) : [],
-    ["emit_loading_order", "emit_remesa", "register_trip", "issue_manifest"]
+    ["emit_loading_order", "emit_remesa", "issue_manifest"]
   );
-  assert.deepEqual(plan.ok ? plan.steps.map((step) => step.state) : [], ["pending", "pending", "pending", "pending"]);
+  assert.deepEqual(plan.ok ? plan.steps.map((step) => step.state) : [], ["pending", "pending", "pending"]);
 });
 
 test("independently emitted order and remesa payloads use their own expedition date instead of the manifest date", () => {
@@ -154,11 +154,11 @@ test("authorized documents are skipped and never resent", () => {
   const states = plan.ok ? Object.fromEntries(plan.steps.map((step) => [step.action, step.state])) : {};
   assert.equal(states.emit_loading_order, "authorized");
   assert.equal(states.emit_remesa, "authorized");
-  assert.equal(states.register_trip, "pending");
+  assert.equal("register_trip" in states, false);
   assert.equal(states.issue_manifest, "pending");
 });
 
-test("an emitted trip is not resent when the manifest failed", () => {
+test("trip registration is never planned, whether or not a trip was emitted before", () => {
   const plan = buildEmissionPlan(
     baseInput({
       order: { number: "0000001", snapshot: orderSnapshot, officialState: "authorized" },
@@ -170,9 +170,24 @@ test("an emitted trip is not resent when the manifest failed", () => {
   );
 
   assert.equal(plan.ok, true);
-  const states = plan.ok ? Object.fromEntries(plan.steps.map((step) => [step.action, step.state])) : {};
-  assert.equal(states.register_trip, "authorized");
-  assert.equal(states.issue_manifest, "pending");
+  assert.deepEqual(
+    plan.ok ? plan.steps.map((step) => [step.action, step.state]) : [],
+    [["emit_loading_order", "authorized"], ["emit_remesa", "authorized"], ["issue_manifest", "pending"]]
+  );
+
+  for (const scope of ["todo", "manifiesto"] as const) {
+    const scoped = buildEmissionPlan(
+      baseInput({
+        order: { number: "0000001", snapshot: orderSnapshot, officialState: "authorized" },
+        consignments: [
+          { remesaId: "rem1", number: "00001", snapshot: consignmentSnapshot, officialState: "authorized" }
+        ]
+      }),
+      scope
+    );
+    assert.equal(scoped.ok, true);
+    assert.equal(scoped.ok ? scoped.steps.some((step) => step.action === "register_trip") : true, false);
+  }
 });
 
 test("an uncertain operation blocks the plan and demands reconciliation", () => {
@@ -236,15 +251,14 @@ test("payloads are built only from snapshot data", () => {
   assert.equal(remesa.cargoNumber, "0000001");
   assert.deepEqual(remesa.cargoPolicy, { number: "AB002905", expirationDate: "2027-04-09", insurerNit: "860002400" });
 
-  const trip = plan.steps[2].payload;
-  assert.equal(trip.tripNumber, "0000001");
-  assert.equal((trip.driver as Record<string, unknown>).id, "71851149");
-  assert.equal((trip.driver as Record<string, unknown>).fullName, "ZOILO ANDRES MAZO");
-  assert.equal((trip.vehicle as Record<string, unknown>).plate, "STO172");
-  assert.equal((trip.vehicle as Record<string, unknown>).trailerPlate, "R80508");
-  assert.equal((trip.money as Record<string, unknown>).freightValue, 3500000);
-
-  const manifest = plan.steps[3].payload;
+  assert.equal(plan.steps.length, 3);
+  const manifest = plan.steps[2].payload;
+  assert.equal(plan.steps[2].action, "issue_manifest");
+  assert.equal((manifest.driver as Record<string, unknown>).id, "71851149");
+  assert.equal((manifest.driver as Record<string, unknown>).fullName, "ZOILO ANDRES MAZO");
+  assert.equal((manifest.vehicle as Record<string, unknown>).plate, "STO172");
+  assert.equal((manifest.vehicle as Record<string, unknown>).trailerPlate, "R80508");
+  assert.equal((manifest.money as Record<string, unknown>).freightValue, 3500000);
   assert.equal(manifest.manifestNumber, "0000001");
   assert.equal(manifest.tripNumber, "0000001");
   assert.equal(manifest.remesaNumber, "00001");
@@ -269,13 +283,34 @@ test("appointments come from the snapshot epoch in Bogota time", () => {
   assert.match(String(cargo.loadingAppointmentTime), /^\d{2}:\d{2}$/);
 });
 
-test("missing RNDC fields are reported per step without inventing data", () => {
-  const withoutSiteCode = {
+test("the internal loading order is not blocked by RNDC party or cargo classification data", () => {
+  const withoutRndcData = {
     ...orderSnapshot,
     sender: { ...orderSnapshot.sender, siteCode: undefined },
     merchandiseCode: undefined
   };
-  const plan = buildEmissionPlan(baseInput({ order: { number: "0000001", snapshot: withoutSiteCode, officialState: "draft" } }));
+  const plan = buildEmissionPlan(baseInput({ order: { number: "0000001", snapshot: withoutRndcData, officialState: "draft" } }));
+
+  assert.equal(plan.ok, true);
+  if (!plan.ok) {
+    return;
+  }
+
+  const cargoStep = plan.steps[0];
+  assert.equal(cargoStep.action, "emit_loading_order");
+  assert.equal(cargoStep.state, "pending");
+  assert.deepEqual(cargoStep.missingFields, []);
+  assert.equal((cargoStep.payload.sender as Record<string, unknown>).siteCode, undefined);
+  assert.equal((cargoStep.payload.cargo as Record<string, unknown>).merchandiseCode, undefined);
+});
+
+test("the loading order still reports its missing expedition date and appointments", () => {
+  const withoutDates = {
+    ...orderSnapshot,
+    expeditionDate: undefined,
+    loading: { ...orderSnapshot.loading, appointmentAt: undefined }
+  };
+  const plan = buildEmissionPlan(baseInput({ order: { number: "0000001", snapshot: withoutDates, officialState: "draft" } }));
 
   assert.equal(plan.ok, true);
   if (!plan.ok) {
@@ -284,24 +319,50 @@ test("missing RNDC fields are reported per step without inventing data", () => {
 
   const cargoStep = plan.steps[0];
   assert.equal(cargoStep.state, "blocked");
-  assert.ok(cargoStep.missingFields.includes("sender.siteCode"));
-  assert.ok(cargoStep.missingFields.includes("cargo.merchandiseCode"));
-  assert.equal((cargoStep.payload.sender as Record<string, unknown>).siteCode, undefined);
+  assert.deepEqual([...cargoStep.missingFields].sort(), ["expeditionDate", "loadingAppointmentDate"]);
 });
 
-test("an unknown identification type is reported instead of guessed", () => {
-  const strangeIdType = {
-    ...orderSnapshot,
-    sender: { ...orderSnapshot.sender, identificationType: "REGISTRO RARO" }
+test("missing RNDC fields are reported on the remesa step without inventing data", () => {
+  const withoutSiteCode = {
+    ...consignmentSnapshot,
+    sender: { ...consignmentSnapshot.sender, siteCode: undefined },
+    merchandiseCode: undefined
   };
-  const plan = buildEmissionPlan(baseInput({ order: { number: "0000001", snapshot: strangeIdType, officialState: "draft" } }));
+  const plan = buildEmissionPlan(
+    baseInput({ consignments: [{ remesaId: "rem1", number: "00001", snapshot: withoutSiteCode, officialState: "draft" }] })
+  );
 
   assert.equal(plan.ok, true);
   if (!plan.ok) {
     return;
   }
 
-  assert.ok(plan.steps[0].missingFields.includes("sender.idType"));
+  const remesaStep = plan.steps[1];
+  assert.equal(remesaStep.action, "emit_remesa");
+  assert.equal(remesaStep.state, "blocked");
+  assert.ok(remesaStep.missingFields.includes("sender.siteCode"));
+  assert.ok(remesaStep.missingFields.includes("cargo.merchandiseCode"));
+  assert.equal((remesaStep.payload.sender as Record<string, unknown>).siteCode, undefined);
+});
+
+test("an unknown identification type is reported on the remesa instead of guessed, and ignored on the internal order", () => {
+  const strangeSender = { ...orderSnapshot.sender, identificationType: "REGISTRO RARO" };
+  const plan = buildEmissionPlan(
+    baseInput({
+      order: { number: "0000001", snapshot: { ...orderSnapshot, sender: strangeSender }, officialState: "draft" },
+      consignments: [
+        { remesaId: "rem1", number: "00001", snapshot: { ...consignmentSnapshot, sender: strangeSender }, officialState: "draft" }
+      ]
+    })
+  );
+
+  assert.equal(plan.ok, true);
+  if (!plan.ok) {
+    return;
+  }
+
+  assert.deepEqual(plan.steps[0].missingFields, []);
+  assert.ok(plan.steps[1].missingFields.includes("sender.idType"));
 });
 
 test("a fully authorized and emitted dispatch has no pending steps", () => {
@@ -368,11 +429,11 @@ test("order scope plans only the loading order without remesa or manifest prepar
   assert.deepEqual(plan.ok ? plan.steps.map((step) => step.action) : [], ["emit_loading_order"]);
 });
 
-test("remesa scope requires an authorized loading order for the standard workflow", () => {
+test("remesa scope requires a saved loading order for the standard workflow", () => {
   const blocked = buildEmissionPlan(baseInput(), "remesas");
 
   assert.equal(blocked.ok, false);
-  assert.match(!blocked.ok ? blocked.blockers.join(" ") : "", /orden de cargue autorizada/i);
+  assert.match(!blocked.ok ? blocked.blockers.join(" ") : "", /Requiere la orden de cargue guardada/);
 
   const plan = buildEmissionPlan(
     baseInput({ order: { number: "0000001", snapshot: orderSnapshot, officialState: "authorized" } }),
@@ -383,7 +444,7 @@ test("remesa scope requires an authorized loading order for the standard workflo
   assert.deepEqual(plan.ok ? plan.steps.map((step) => step.action) : [], ["emit_remesa"]);
 });
 
-test("manifest scope requires every remesa to be authorized and keeps trip registration inside the scope", () => {
+test("manifest scope requires every remesa to be authorized and plans only the manifest", () => {
   const blocked = buildEmissionPlan(
     baseInput({ order: { number: "0000001", snapshot: orderSnapshot, officialState: "authorized" } }),
     "manifiesto"
@@ -401,7 +462,7 @@ test("manifest scope requires every remesa to be authorized and keeps trip regis
   );
 
   assert.equal(plan.ok, true);
-  assert.deepEqual(plan.ok ? plan.steps.map((step) => step.action) : [], ["register_trip", "issue_manifest"]);
+  assert.deepEqual(plan.ok ? plan.steps.map((step) => step.action) : [], ["issue_manifest"]);
 });
 
 test("remesa without order keeps its independent remesa and manifest scopes", () => {

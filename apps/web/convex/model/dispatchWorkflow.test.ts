@@ -203,14 +203,14 @@ test("order scope has no documentary dependency in the standard workflow", () =>
   );
 });
 
-test("remesa scope waits for the order unless the workflow has no loading order", () => {
+test("remesa scope waits for the saved order unless the workflow has no loading order", () => {
   assert.match(
     emissionDependencyBlockers("remesas", {
       workflowVariant: "standard",
       orderOfficialState: "draft",
       consignmentOfficialStates: ["draft"]
     }).join(" "),
-    /orden de cargue autorizada/i
+    /Requiere la orden de cargue guardada/
   );
   assert.deepEqual(
     emissionDependencyBlockers("remesas", {
@@ -271,9 +271,17 @@ test("each preparation scope targets only its own numbers and photographs", () =
     order: false,
     consignments: false,
     manifest: true,
-    trip: true,
+    trip: false,
     assignment: true
   });
+});
+
+test("no scope or variant targets trip registration", () => {
+  for (const scope of ["orden", "remesas", "manifiesto", "todo"] as const) {
+    for (const variant of ["standard", "transshipment", "remesa_without_order", "empty_manifest"] as const) {
+      assert.equal(emissionScopeTargets(scope, variant).trip, false);
+    }
+  }
 });
 
 test("exception variants preserve their documentary targets", () => {
@@ -309,6 +317,36 @@ test("a partial loading order lists its missing fields in operational language",
   assert.ok(missing.includes("Sitio y cita de cargue"));
   assert.ok(missing.includes("Peso (TN)"));
   assert.ok(!missing.includes("Cliente"));
+});
+
+test("an internal loading order asks for the site but not for the RNDC classification the consignment requires", () => {
+  const internalOrder: LoadingOrderDraft = {
+    ...completeOrder,
+    sender: { name: "ITALCOL S.A", identificationNumber: "890100756" },
+    recipient: { name: "GRANJA GIRON", identificationNumber: "900222333" },
+    merchandiseCode: undefined,
+    natureOfCargo: undefined
+  };
+
+  assert.deepEqual(loadingOrderMissingFields(internalOrder), ["Sede del remitente", "Sede del destinatario"]);
+
+  const missing = consignmentMissingFields(
+    {
+      consignmentClass: "terrestre_carga",
+      declaredValue: "5000000",
+      consignmentValue: "400000",
+      policyNumber: "POL-1",
+      policyExpiresOn: "2027-07-13",
+      insurerNit: "900123456",
+      remissions: [{ quantity: "10", packagingClass: "GRANEL", description: "MAIZ", weightTons: "34" }],
+      unitOfMeasure: "TN",
+      loading: { agreedHours: "1" },
+      unloading: { agreedHours: "2" }
+    },
+    internalOrder
+  );
+
+  assert.deepEqual(missing, ["Datos RNDC del remitente", "Datos RNDC del destinatario", "Clasificación RNDC de la carga"]);
 });
 
 test("an empty loading order reports it has not started", () => {
@@ -418,14 +456,14 @@ test("legacy manifest type labels normalize to RNDC codes", () => {
   assert.equal(normalizeManifestType("Otro"), undefined);
 });
 
-test("editing the loading order is rejected once its cargo information left draft", () => {
+test("editing the loading order is rejected once it left draft and was registered", () => {
   assert.throws(
     () => assertStageEditable("orden_cargue", { officialState: "draft", cargoInfoState: "pending" }),
-    /ya tiene una transmisión RNDC/i
+    /La orden de cargue ya quedó registrada y no puede editarse/
   );
   assert.throws(
     () => assertStageEditable("orden_cargue", { officialState: "draft", cargoInfoState: "authorized" }),
-    /ya tiene una transmisión RNDC/i
+    /La orden de cargue ya quedó registrada y no puede editarse/
   );
   assert.doesNotThrow(() => assertStageEditable("orden_cargue", { officialState: "draft", cargoInfoState: "draft" }));
 });

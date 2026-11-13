@@ -14,28 +14,16 @@ const contracts: Record<string, PayloadContract> = {
     strings: [
       "cargoNumber",
       "loadingAppointmentDate",
-      "loadingAppointmentTime",
       "unloadingAppointmentDate",
-      "unloadingAppointmentTime",
-      "sender.idType",
       "sender.id",
-      "sender.siteCode",
-      "sender.cityCode",
-      "recipient.idType",
       "recipient.id",
-      "recipient.siteCode",
-      "recipient.cityCode",
-      "cargo.shortDescription",
-      "cargo.merchandiseCode",
-      "cargo.packageCode",
-      "cargo.natureCode"
+      "cargo.shortDescription"
     ],
     numbers: ["cargo.quantityKg"]
   },
   emit_remesa: {
     strings: [
       "remesaNumber",
-      "cargoNumber",
       "loadingAppointmentDate",
       "loadingAppointmentTime",
       "unloadingAppointmentDate",
@@ -71,9 +59,7 @@ const contracts: Record<string, PayloadContract> = {
   emit_manifest: {
     strings: [
       "manifestNumber",
-      "tripNumber",
       "remesaNumber",
-      "cargoNumber",
       "expeditionDate",
       "balancePaymentDate",
       "driver.idType",

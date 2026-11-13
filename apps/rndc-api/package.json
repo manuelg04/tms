@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "build": "npm run build -w @tms/rndc-core && tsc -p tsconfig.json",
     "typecheck": "npm run typecheck -w @tms/rndc-core && tsc --noEmit -p tsconfig.json",
-    "test": "npm run build && node --test \"dist/tests/**/*.test.js\"",
+    "test": "npm run build && CONVEX_URL= RNDC_INGEST_KEY= node --test \"dist/tests/**/*.test.js\"",
     "rndc:flow": "npm run build -w @tms/rndc-core && tsx src/cli.ts flow",
     "rndc:prod-flow": "npm run build -w @tms/rndc-core && tsx src/cli.ts mtm-prod-flow",
     "rndc:prepare-ops": "npm run build -w @tms/rndc-core && tsx src/cli.ts prepare-ops",

@@ -13,8 +13,9 @@ import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { DateField } from "../../components/fields/date-field";
 import { MoneyField } from "../../components/fields/money-field";
-import { CargoNatureField, IdTypeField, MerchandiseField, MunicipalityField, PackagingField, PartyField, VehicleField, type PartyPick, type VehiclePick } from "../../components/fields/lookup-fields";
+import { CargoNatureField, IdTypeField, MerchandiseField, MunicipalityField, PackagingField, PartyField, SiteField, VehicleField, type PartyPick, type VehiclePick } from "../../components/fields/lookup-fields";
 import { requiredDriverFreight } from "../components/vehicle-assignment-state";
+import { DEFAULT_PARTY_SITE } from "../../../convex/model/masterSync";
 import { loadingWindowEnd, optionalNumber, required, value } from "../../lib/form-data";
 import { Skeleton } from "../../components/skeleton";
 import { SolicitudPrefillLoader, SolicitudSummary, type SolicitudPrefill } from "./solicitud-prefill";
@@ -266,7 +267,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
       if (action === "open") {
         let notice: { tone: "ok" | "bad" | "wait"; text: string } = {
           tone: "bad",
-          text: "La orden quedó guardada, pero no fue posible iniciar la transmisión. Usa Guardar y emitir para intentarlo de nuevo."
+          text: "La orden quedó guardada como borrador, pero no se pudo dejar lista. Ábrela y usa Guardar orden para intentarlo de nuevo."
         };
         try {
           const response = await fetch(`/api/rndc/dispatches/${created.expedienteId}/emit`, {
@@ -302,7 +303,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
           <h2>{template ? `Copia de ${template.code}` : prefill ? `Solicitud de planilla · ${prefill.request.vehicle.plate ?? "sin placa"}` : "Datos de la orden de cargue"}</h2>
           <p>{prefill ? "Datos traídos de MTM Operaciones. Revisa cada campo antes de guardar; nada se crea hasta que guardes." : "La misma información operativa de Avansat, con búsquedas en los maestros del TMS."}</p>
         </div>
-        <div className="base-dispatch-outcome"><strong>Al guardar y emitir</strong><span>La orden se transmite al RNDC y queda lista para hacer la remesa</span></div>
+        <div className="base-dispatch-outcome"><strong>Al guardar la orden</strong><span>Queda numerada y lista para imprimir y para hacer la remesa. Es un documento interno: no se envía al RNDC</span></div>
       </section> : null}
 
       {template ? <div className="operation-notice ok" role="status"><span />Datos copiados de <Link href={`/expedientes/${sourceId}`}>{template.code}</Link>: revisa fechas, peso y observaciones antes de guardar. Nada se crea hasta que guardes.</div> : null}
@@ -352,7 +353,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
             <Field label="Celular remitente" name="senderCellphone" onChange={(event) => update({ senderCellphone: event.target.value })} type="tel" value={state.senderCellphone} />
             <input name="senderName" type="hidden" value={state.senderName} />
             <input name="senderCity" type="hidden" value={state.senderCity} />
-            <input name="senderSiteCode" type="hidden" value={state.senderSiteCode} />
+            <OrderPartySite document={state.senderId} label="Sede del remitente" name="senderSiteCode" onParty={(party) => update({ sender: party })} onSite={(siteCode) => update({ senderSiteCode: siteCode })} party={state.sender} role="sender" siteCode={state.senderSiteCode} />
 
             <div className="field-group-note"><strong>Datos del destinatario</strong></div>
             <PartyField
@@ -374,7 +375,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
             <Field label="Celular destinatario" name="recipientCellphone" onChange={(event) => update({ recipientCellphone: event.target.value })} type="tel" value={state.recipientCellphone} />
             <input name="recipientName" type="hidden" value={state.recipientName} />
             <input name="recipientCity" type="hidden" value={state.recipientCity} />
-            <input name="recipientSiteCode" type="hidden" value={state.recipientSiteCode} />
+            <OrderPartySite document={state.recipientId} label="Sede del destinatario" name="recipientSiteCode" onParty={(party) => update({ recipient: party })} onSite={(siteCode) => update({ recipientSiteCode: siteCode })} party={state.recipient} role="recipient" siteCode={state.recipientSiteCode} />
 
             <div className="field-group-note"><strong>Datos del vehículo</strong></div>
             <VehicleField label="Placa" onClear={() => update({ vehicle: null })} onSelect={(vehicle) => update({ vehicle })} required selected={state.vehicle} />
@@ -409,7 +410,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
         <span>Los demás documentos quedarán disponibles como borradores independientes.</span>
         <div>
           <button className="ghost-button" disabled={saving || !me || !reservation} value="draft" type="submit">{savingAction === "draft" ? "Guardando…" : "Guardar borrador"}</button>
-          <button className="primary-action" disabled={saving || !me || !reservation} value="open" type="submit">{savingAction === "open" ? "Guardando y transmitiendo…" : "Guardar y emitir orden"}</button>
+          <button className="primary-action" disabled={saving || !me || !reservation} value="open" type="submit">{savingAction === "open" ? "Guardando la orden…" : "Guardar orden"}</button>
         </div>
       </div>
     </ValidatedForm>
@@ -507,4 +508,38 @@ function loadingDateTime(data: FormData, key: string, endOfDay: boolean): number
 
 function readError(cause: unknown): string {
   return cause instanceof Error ? cause.message.replace(/^.*?: /, "") : "No fue posible guardar el despacho.";
+}
+
+function OrderPartySite({ document, label, name, onParty, onSite, party, role, siteCode }: { document: string; label: string; name: string; onParty: (party: PartyPick) => void; onSite: (siteCode: string) => void; party: PartyPick | null; role: "sender" | "recipient"; siteCode: string }) {
+  const matches = useQuery(api.lookups.partiesSearch, !party && document.trim().length >= 5 ? { term: document.trim(), role } : "skip");
+  const exact = matches?.find((row) => row.document === document.trim());
+  const onPartyRef = useRef(onParty);
+  onPartyRef.current = onParty;
+  const onSiteRef = useRef(onSite);
+  onSiteRef.current = onSite;
+  useEffect(() => {
+    if (!party && exact) onPartyRef.current(exact);
+  }, [party, exact]);
+  const unknown = !party && (document.trim().length < 5 || (matches !== undefined && !exact));
+  useEffect(() => {
+    if (unknown && document.trim() && !siteCode) onSiteRef.current(DEFAULT_PARTY_SITE.siteCode);
+  }, [unknown, document, siteCode]);
+  return (
+    <>
+      {party ? (
+        <SiteField
+          className="span-2"
+          label={label}
+          name={name}
+          onClear={() => onSite("")}
+          onDefault={(site) => onSite(site.siteCode)}
+          onSelect={(site) => onSite(site.siteCode)}
+          required
+          selectedCode={siteCode || undefined}
+          thirdPartyId={party._id}
+        />
+      ) : null}
+      <input name={name} type="hidden" value={siteCode} />
+    </>
+  );
 }

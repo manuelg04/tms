@@ -70,9 +70,12 @@ export function PartyField({ className, name, label, role, required, disabled, s
 export function SiteField({ className = "", name, label, thirdPartyId, required, disabled, selectedCode, selectedName, onSelect, onClear, onManual, onDefault }: { className?: string; name?: string; label: string; thirdPartyId?: Id<"thirdParties"> | null; required?: boolean; disabled?: boolean; selectedCode?: string; selectedName?: string; onSelect: (site: SitePick) => void; onClear?: () => void; onManual?: (code: string) => void; onDefault?: (site: { siteCode: string; siteName: string }) => void }) {
   const [term, setTerm] = useState("");
   const sites = useQuery(api.lookups.partySites, thirdPartyId ? { thirdPartyId } : "skip");
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
   useEffect(() => {
     if (thirdPartyId && sites?.length === 0 && !selectedCode) onDefault?.(DEFAULT_PARTY_SITE);
-  }, [thirdPartyId, sites, selectedCode, onDefault]);
+    if (thirdPartyId && sites?.length === 1 && !selectedCode && !disabled) onSelectRef.current(sites[0]);
+  }, [thirdPartyId, sites, selectedCode, onDefault, disabled]);
   if (!thirdPartyId) {
     return (
       <FormField name={name ?? label} required={required} value={selectedCode ?? ""} className={className}>

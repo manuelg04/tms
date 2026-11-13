@@ -18,6 +18,11 @@ export const statusLabels: Record<string, string> = {
   annulled: "Anulado"
 };
 
+export function documentStatusLabel(kind: string | undefined, status: string): string {
+  if (kind === "orden_cargue" && (status === "authorized" || status === "fulfilled")) return "Lista";
+  return statusLabels[status] ?? status;
+}
+
 const dateFormatter = new Intl.DateTimeFormat("es-CO", {
   day: "2-digit",
   month: "short",

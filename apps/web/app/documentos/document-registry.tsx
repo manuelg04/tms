@@ -408,7 +408,7 @@ export function DocumentRegistry({
 const moduleGuides: Record<RegistryModule["slug"], { what: string; done: string; create: string }> = {
   ordenes: {
     what: "Aquí creas la orden de cargue, el primer documento del viaje.",
-    done: "Terminas cuando el estado pasa a Autorizado; después sigue la remesa.",
+    done: "Es un documento interno: no se envía al RNDC. Terminas cuando el estado pasa a Lista; después sigue la remesa.",
     create: "Nueva orden de cargue",
   },
   remesas: {

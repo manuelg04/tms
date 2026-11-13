@@ -109,8 +109,8 @@ export function DocumentPrintPreview({ kind, expedienteId, remesaId, documentId,
             <strong>Pendiente de autorización</strong>
           </div> : <div className="document-print-notice document-pdf-caption">
             <span>Vista del PDF guardado{!expedienteId ? ". Este documento no tiene un despacho asociado." : "."}</span>
-            {selection?.document ? <StatusBadge status={selection.document.officialState ?? selection.document.status} /> : null}
-            {selection?.document?.mode === "dry-run" ? <strong>Documento de prueba</strong> : null}
+            {selection?.document ? <StatusBadge internal={selection.document.kind === "orden_cargue"} status={selection.document.officialState ?? selection.document.status} /> : null}
+            {selection?.document?.mode === "dry-run" && selection.document.kind !== "orden_cargue" ? <strong>Documento de prueba</strong> : null}
           </div>}
           {currentPdf?.error ? <p className="document-print-notice" role="alert">{currentPdf.error} Puedes volver a intentar desde el listado.</p> : !currentPdf?.url ? <p className="document-print-notice" role="status">Preparando PDF…</p> : <>
             <iframe className="document-pdf-frame" onLoad={() => setLoadedPdf(currentPdf.url)} ref={frame} src={`${currentPdf.url}#toolbar=1&view=FitH`} title={`PDF de ${titles[kind].toLowerCase()}`} />
@@ -136,7 +136,7 @@ export function DocumentPrintSheet({ detail, kind, remesaId, documentId }: { det
   const date = kind === "manifiesto" ? manifest?.issueDate : cargo?.expeditionDate;
   const official = document?.mode === "live" && ["authorized", "fulfilled", "annulled"].includes(state);
   const radicado = official ? document?.issuanceRadicado : undefined;
-  const note = document?.mode === "dry-run" ? "Documento de prueba · Sin validez oficial" : official ? "Copia de consulta · El PDF emitido aún no está disponible" : "Borrador · Sin autorización RNDC";
+  const note = kind === "orden_cargue" ? (official ? "Documento interno de la empresa" : "Borrador · Documento interno de la empresa") : document?.mode === "dry-run" ? "Documento de prueba · Sin validez oficial" : official ? "Copia de consulta · El PDF emitido aún no está disponible" : "Borrador · Sin autorización RNDC";
   const observations = kind === "manifiesto" ? manifest?.observations : kind === "remesa" ? consignment.generalObservations ?? consignment.transporterObservations : order?.observations;
   const lines = kind === "orden_cargue" ? [{ remissionNumber: order?.customerReference ?? serviceOrder.customerReference, quantity: order?.cargoQuantity ?? serviceOrder.cargoQuantity, packagingClass: order?.packagingCode, weightTons: order?.weightTons ?? tons(serviceOrder.cargoWeightKg), volumeM3: order?.volumeM3, description: order?.cargoDescription ?? serviceOrder.cargoDescription }]
     : kind === "remesa" && consignment.remissions?.length ? consignment.remissions
@@ -147,9 +147,9 @@ export function DocumentPrintSheet({ detail, kind, remesaId, documentId }: { det
     <article className="document-print-sheet">
       <header className="document-paper-heading">
         <div className="document-paper-brand"><strong>MTM</strong><span>Transportes MTM</span></div>
-        <div><h1>{titles[kind]}</h1><p>No. <strong>{number || "Pendiente de asignación"}</strong></p>{radicado ? <p>Autorización RNDC: <strong>{radicado}</strong></p> : null}</div>
+        <div><h1>{titles[kind]}</h1><p>No. <strong>{number || "Pendiente de asignación"}</strong></p>{radicado && kind !== "orden_cargue" ? <p>Autorización RNDC: <strong>{radicado}</strong></p> : null}</div>
       </header>
-      <div className="document-paper-condition"><strong>{note}</strong><StatusBadge status={state} /></div>
+      <div className="document-paper-condition"><strong>{note}</strong><StatusBadge internal={kind === "orden_cargue"} status={state} /></div>
       <div className="document-paper-fields">
         <PaperField label="Fecha" value={date || dateOnly(expediente.createdAt)} />
         <PaperField label="Agencia" value={(kind === "manifiesto" ? manifest?.agencyCode : cargo?.agencyCode) ?? expediente.agencyCode} />

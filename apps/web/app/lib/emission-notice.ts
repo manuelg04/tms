@@ -14,16 +14,20 @@ type Step = { action?: unknown; documentNumber?: unknown; outcome?: unknown; rad
 export function emissionNotice(status: number, body: unknown): EmissionNotice {
   const record = isRecord(body) ? body : {};
   const steps = (Array.isArray(record.steps) ? record.steps : []).filter(isRecord) as Step[];
-  const authorized = steps.filter((step) => step.outcome === "authorized" && step.action !== "register_trip").map(describeStep);
-  const done = authorized.length > 0 ? `${authorized.join(", ")} con autorización del RNDC. ` : "";
+  const internal = steps.filter((step) => step.outcome === "authorized" && step.action === "emit_loading_order").map(describeStep);
+  const authorized = steps.filter((step) => step.outcome === "authorized" && step.action !== "register_trip" && step.action !== "emit_loading_order").map(describeStep);
+  const saved = internal.length > 0 ? `${internal.join(", ")} guardada y lista para imprimir. ` : "";
+  const done = `${saved}${authorized.length > 0 ? `${authorized.join(", ")} con autorización del RNDC. ` : ""}`;
   const trial = record.mode === "dry-run" ? " (modo prueba)" : "";
 
   if (status === 200) {
     return {
       tone: "ok",
       text: authorized.length > 0
-        ? `Guardado y transmitido${trial}: ${authorized.join(", ")}.`
-        : `Guardado. Los documentos de esta etapa ya estaban autorizados por el RNDC${trial}.`
+        ? `${saved}Guardado y transmitido${trial}: ${authorized.join(", ")}.`
+        : saved
+          ? saved.trim()
+          : `Guardado. Los documentos de esta etapa ya estaban listos${trial}.`
     };
   }
 
@@ -52,6 +56,13 @@ export function emissionNotice(status: number, body: unknown): EmissionNotice {
 
   if (failing?.outcome === "in_progress" || record.reason === "in_flight" || record.nextAction === "esperar") {
     return { tone: "wait", text: `${done}Guardado. Ya hay una transmisión en curso para este despacho; espera su resultado.` };
+  }
+
+  if (failing?.action === "emit_loading_order") {
+    return {
+      tone: "bad",
+      text: `No se pudo dejar lista la orden de cargue: ${text(failing.error) ?? "el servicio no respondió"}. Queda guardada como borrador; vuelve a intentarlo.`
+    };
   }
 
   if (failing) {

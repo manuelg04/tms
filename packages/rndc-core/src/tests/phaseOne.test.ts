@@ -392,7 +392,7 @@ test("associates multiple remesas in manifest XML while keeping one-remesa scena
       { number: "97103" }
     ]
   });
-  const variables = buildManifestMessages(scenario)[1].request.variables as RndcXmlRecord;
+  const variables = buildManifestMessages(scenario)[0].request.variables as RndcXmlRecord;
   const association = variables.REMESASMAN as { kind: "rawXml"; xml: string };
 
   assert.match(association.xml, /<CONSECUTIVOREMESA>97102<\/CONSECUTIVOREMESA>/);
@@ -400,7 +400,7 @@ test("associates multiple remesas in manifest XML while keeping one-remesa scena
   assert.equal((association.xml.match(/<REMESA>/g) ?? []).length, 2);
 
   delete (scenario as unknown as { manifestRemesas?: unknown }).manifestRemesas;
-  const legacy = (buildManifestMessages(scenario)[1].request.variables as RndcXmlRecord).REMESASMAN as { xml: string };
+  const legacy = (buildManifestMessages(scenario)[0].request.variables as RndcXmlRecord).REMESASMAN as { xml: string };
   assert.equal((legacy.xml.match(/<REMESA>/g) ?? []).length, 1);
   assert.match(legacy.xml, /<CONSECUTIVOREMESA>42196<\/CONSECUTIVOREMESA>/);
 });
@@ -410,7 +410,7 @@ test("escapes remesa identifiers inside the raw manifest association XML", () =>
   Object.assign(scenario, {
     manifestRemesas: [{ number: "REM&A<1>" }]
   });
-  const variables = buildManifestMessages(scenario)[1].request.variables as RndcXmlRecord;
+  const variables = buildManifestMessages(scenario)[0].request.variables as RndcXmlRecord;
   const association = variables.REMESASMAN as { xml: string };
 
   assert.match(association.xml, /<CONSECUTIVOREMESA>REM&amp;A&lt;1&gt;<\/CONSECUTIVOREMESA>/);

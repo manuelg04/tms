@@ -383,7 +383,7 @@ async function makeRow(
     kind: input.kind as RegistryKind,
     date: input.date || bogotaDate(createdAt),
     status,
-    statusLabel: registryStatusLabel(status),
+    statusLabel: registryStatusLabel(status, input.kind),
     createdBy: author?.organizationId === organizationId ? author.name : "",
     createdAt,
     createdAtLabel: registryCreatedAtLabel(createdAt),

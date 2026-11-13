@@ -6,27 +6,19 @@ import { join } from "node:path";
 import test from "node:test";
 import { buildMtmReferenceScenario } from "../data/demoScenario.js";
 import { loadConfig } from "../rndc/config.js";
-import { buildAnnulmentMessages, buildComplianceMessages, buildDriverVehicleMessages, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildLoadingOrderMessages, buildManifestIssueMessages, buildManifestMessages, buildRemesaMessages, prepareOperationRequests } from "../rndc/messages.js";
+import { buildAnnulmentMessages, buildComplianceMessages, buildDriverVehicleMessages, buildFulfillManifestMessages, buildFulfillRemesaMessages, buildFlowMessages, buildLoadingOrderMessages, buildManifestIssueMessages, buildManifestMessages, buildMtmProductionFlowMessages, buildRemesaMessages, buildTripMessages, prepareOperationRequests } from "../rndc/messages.js";
 import type { RndcXmlRecord } from "../rndc/types.js";
 
-test("builds loading order as RNDC cargo information", () => {
+test("loading order and trip information produce no RNDC messages", () => {
   const scenario = buildMtmReferenceScenario(loadConfig());
-  const messages = buildLoadingOrderMessages(scenario);
-  const variables = messages[0].request.variables as RndcXmlRecord;
 
-  assert.deepEqual(messages.map((message) => [message.name, message.request.procesoId]), [
-    ["issue-loading-order", 1]
+  assert.deepEqual(buildLoadingOrderMessages(scenario), []);
+  assert.deepEqual(buildTripMessages(scenario), []);
+  assert.deepEqual(buildFlowMessages(scenario).map((message) => message.request.procesoId).filter((procesoId) => procesoId === 1 || procesoId === 2), []);
+  assert.deepEqual(buildMtmProductionFlowMessages(scenario).map((message) => [message.name, message.request.procesoId]), [
+    ["remesa", 3],
+    ["manifest", 4]
   ]);
-  assert.equal(variables.NUMNITEMPRESATRANSPORTE, "9007736849");
-  assert.equal(variables.CONSECUTIVOINFORMACIONCARGA, "000044579");
-  assert.equal(variables.CODOPERACIONTRANSPORTE, "G");
-  assert.equal(variables.MERCANCIAINFORMACIONCARGA, "002803");
-  assert.equal(variables.CANTIDADINFORMACIONCARGA, 34000);
-  assert.equal(variables.CODTIPOIDREMITENTE, "N");
-  assert.equal(variables.NUMIDREMITENTE, "9002266843");
-  assert.equal(variables.CODSEDEDESTINATARIO, "1");
-  assert.equal(variables.FECHACITAPACTADACARGUE, "22/06/2026");
-  assert.equal(variables.HORACITAPACTADADESCARGUEREMESA, "12:06");
 });
 
 test("builds a remesa without inventing loading-order ancestry", () => {
@@ -142,20 +134,17 @@ test("builds remesa and manifest form operations from RNDC process messages", ()
   const remesa = buildRemesaMessages(scenario);
   const manifest = buildManifestMessages(scenario);
   const remesaVariables = remesa[0].request.variables as RndcXmlRecord;
-  const tripVariables = manifest[0].request.variables as RndcXmlRecord;
-  const manifestVariables = manifest[1].request.variables as RndcXmlRecord;
+  const manifestVariables = manifest[0].request.variables as RndcXmlRecord;
 
   assert.deepEqual(remesa.map((message) => [message.name, message.request.procesoId]), [
     ["issue-remesa", 3]
   ]);
   assert.deepEqual(manifest.map((message) => [message.name, message.request.procesoId]), [
-    ["register-trip", 2],
     ["issue-manifest", 4]
   ]);
   assert.equal(remesaVariables.CONSECUTIVOREMESA, "42196");
-  assert.equal(remesaVariables.CONSECUTIVOINFORMACIONCARGA, "000044579");
-  assert.equal(tripVariables.CONSECUTIVOINFORMACIONVIAJE, "IV42196");
-  assert.equal(tripVariables.NUMIDCONDUCTOR, "80756632");
+  assert.equal(remesaVariables.CONSECUTIVOINFORMACIONCARGA, undefined);
+  assert.equal(manifestVariables.CONSECUTIVOINFORMACIONVIAJE, undefined);
   assert.equal(manifestVariables.NUMMANIFIESTOCARGA, "0041464");
   assert.equal(manifestVariables.NUMIDTITULARMANIFIESTO, "74322799");
   assert.equal(manifestVariables.RETENCIONICAMANIFIESTOCARGA, 3);
@@ -166,21 +155,9 @@ test("uses the scenario ICA per-mille rate in the manifest message", () => {
   scenario.money.icaRetentionPerMille = 5;
 
   const manifest = buildManifestMessages(scenario);
-  const manifestVariables = manifest[1].request.variables as RndcXmlRecord;
+  const manifestVariables = manifest[0].request.variables as RndcXmlRecord;
 
   assert.equal(manifestVariables.RETENCIONICAMANIFIESTOCARGA, 5);
-});
-
-test("escapes the cargo number embedded in the trip remesa XML", () => {
-  const scenario = buildMtmReferenceScenario(loadConfig());
-  scenario.cargoNumber = "CARGO<&9001";
-
-  const manifest = buildManifestMessages(scenario);
-  const tripVariables = manifest[0].request.variables as RndcXmlRecord;
-  const preremesa = tripVariables.PREREMESAS as { kind: string; xml: string };
-
-  assert.match(preremesa.xml, /CARGO&lt;&amp;9001/);
-  assert.doesNotMatch(preremesa.xml, /CARGO<&9001/);
 });
 
 test("builds compliance messages for remesa before manifest", () => {
@@ -299,7 +276,6 @@ test("prepares masked XML files for the requested RNDC operations", async () => 
 
   assert.equal(result.ok, true);
   assert.deepEqual(result.requests.map((request) => request.name), [
-    "issue-loading-order",
     "issue-remesa",
     "issue-manifest",
     "fulfill-remesa",
@@ -313,13 +289,24 @@ test("prepares masked XML files for the requested RNDC operations", async () => 
   ]);
   assert.ok(existsSync(result.resultPath));
 
-  const loadingOrder = result.requests.find((request) => request.name === "issue-loading-order");
-  assert.ok(loadingOrder?.path);
-  const xml = await readFile(loadingOrder.path, "utf8");
-  assert.match(xml, /<procesoid>1<\/procesoid>/);
-  assert.match(xml, /<CONSECUTIVOINFORMACIONCARGA>000044579<\/CONSECUTIVOINFORMACIONCARGA>/);
-  assert.match(xml, /<password>\*\*\*<\/password>/);
-  assert.doesNotMatch(xml, /TEST_PASSWORD/);
+  assert.deepEqual(result.requests.filter((request) => request.procesoId === 1 || request.procesoId === 2), []);
+
+  const remesa = result.requests.find((request) => request.name === "issue-remesa");
+  const manifest = result.requests.find((request) => request.name === "issue-manifest");
+  assert.ok(remesa?.path);
+  assert.ok(manifest?.path);
+  const remesaXml = await readFile(remesa.path, "utf8");
+  const manifestXml = await readFile(manifest.path, "utf8");
+  assert.match(remesaXml, /<procesoid>3<\/procesoid>/);
+  assert.doesNotMatch(remesaXml, /CONSECUTIVOINFORMACIONCARGA/);
+  assert.match(manifestXml, /<procesoid>4<\/procesoid>/);
+  assert.doesNotMatch(manifestXml, /CONSECUTIVOINFORMACIONVIAJE/);
+
+  for (const request of result.requests) {
+    const xml = await readFile(request.path, "utf8");
+    assert.match(xml, /<password>\*\*\*<\/password>/);
+    assert.doesNotMatch(xml, /TEST_PASSWORD/);
+  }
 
   const tripAnnulment = result.requests.find((request) => request.name === "annul-trip-information");
   const cargoAnnulment = result.requests.find((request) => request.name === "annul-cargo-information");
@@ -329,19 +316,15 @@ test("prepares masked XML files for the requested RNDC operations", async () => 
   assert.match(await readFile(cargoAnnulment.path, "utf8"), /<MOTIVOANULACIONINFOCARGA>S<\/MOTIVOANULACIONINFOCARGA>/);
 });
 
-test("splits trip registration and manifest issuance into separate durable messages", async () => {
-  const { buildManifestIssueMessages, buildTripMessages } = await import("../rndc/messages.js");
+test("issues the manifest as a single durable message without trip registration", () => {
   const scenario = buildMtmReferenceScenario(loadConfig());
-  const trip = buildTripMessages(scenario);
   const manifest = buildManifestIssueMessages(scenario);
 
-  assert.deepEqual(trip.map((message) => [message.name, message.request.procesoId]), [["register-trip", 2]]);
   assert.deepEqual(manifest.map((message) => [message.name, message.request.procesoId]), [["issue-manifest", 4]]);
-
-  const tripVariables = trip[0].request.variables as RndcXmlRecord;
-  assert.equal(tripVariables.CONSECUTIVOINFORMACIONVIAJE, scenario.tripNumber);
-  assert.equal(tripVariables.NUMPLACA, scenario.vehicle.plate);
+  assert.deepEqual(buildManifestMessages(scenario), manifest);
 
   const manifestVariables = manifest[0].request.variables as RndcXmlRecord;
   assert.equal(manifestVariables.NUMMANIFIESTOCARGA, scenario.manifestNumber);
+  assert.equal(manifestVariables.NUMPLACA, scenario.vehicle.plate);
+  assert.equal(manifestVariables.CONSECUTIVOINFORMACIONVIAJE, undefined);
 });

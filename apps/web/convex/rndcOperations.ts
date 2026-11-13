@@ -415,7 +415,7 @@ export const finishDocumentOperationFromService = mutation({
       throw new ConvexError({ code: "CONFLICT", message: boundPayload.error });
     }
 
-    if (args.outcome === "succeeded") {
+    if (args.outcome === "succeeded" && operation.operationType !== "emit_cargo") {
       if (!args.radicado?.trim()) {
         throw new ConvexError({ code: "CONFLICT", message: "Successful document operation requires an RNDC radicado" });
       }

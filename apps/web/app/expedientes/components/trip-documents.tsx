@@ -58,7 +58,7 @@ export function TripDocumentStrip({ items, expedienteId, remesaCount, current, c
             <Link aria-current={link.key === current ? "true" : undefined} className={link.key === current ? "current" : ""} href={link.href}>
               <span className="trip-strip-title">{link.title}</span>
               <strong>{link.exists ? link.number ?? "Sin número" : "Sin crear"}</strong>
-              {!link.exists ? <em>Crear</em> : link.key === "fulfillment" && link.state === "draft" ? null : <StatusBadge status={link.state} />}
+              {!link.exists ? <em>Crear</em> : link.key === "fulfillment" && link.state === "draft" ? null : <StatusBadge internal={link.key === "order"} status={link.state} />}
             </Link>
           </li>
         ))}

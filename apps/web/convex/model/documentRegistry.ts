@@ -66,7 +66,8 @@ const statusLabels: Record<string, string> = {
   cancelled: "Anulado",
 };
 
-export function registryStatusLabel(status: string): string {
+export function registryStatusLabel(status: string, kind?: string): string {
+  if (kind === "orden_cargue" && (status === "authorized" || status === "fulfilled")) return "Lista";
   return statusLabels[status] ?? status;
 }
 

@@ -1,5 +1,7 @@
-export function StatusBadge({ status }: { status: string }) {
-  const label = status === "ready"
+export function StatusBadge({ status, internal }: { status: string; internal?: boolean }) {
+  const label = internal && (status === "authorized" || status === "fulfilled")
+    ? "Lista"
+    : status === "ready"
     ? "Listo"
     : status === "succeeded"
       ? "Completado"

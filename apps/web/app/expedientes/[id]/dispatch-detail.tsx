@@ -723,7 +723,7 @@ export function DispatchDetail({
             </span>
           </div>
           <div className="registry-selection-actions">
-            <StatusBadge status={focusState} />
+            <StatusBadge internal={focus.stage === "orden_cargue"} status={focusState} />
             {focus.action === "ver" && tripEditable && focusState === "draft" ? (
               <Link
                 className="ghost-button action-link"
@@ -763,11 +763,19 @@ export function DispatchDetail({
             <div>
               <strong>
                 Listo: {focusName.toLowerCase()} {focusNumber ?? ""}{" "}
-                {focus.stage === "manifiesto" ? "autorizado" : "autorizada"}
+                {focus.stage === "orden_cargue"
+                  ? "guardada"
+                  : focus.stage === "manifiesto"
+                    ? "autorizado"
+                    : "autorizada"}
                 {focus.stage === "remesas" && detail.remesas.length > 1
                   ? "s"
                   : ""}
-                {trial ? " (modo prueba)" : " por el RNDC"}.
+                {focus.stage === "orden_cargue"
+                  ? ", lista para imprimir"
+                  : trial
+                    ? " (modo prueba)"
+                    : " por el RNDC"}.
               </strong>
               <span>
                 Este documento ya está terminado.
@@ -829,6 +837,7 @@ export function DispatchDetail({
                 <SaveButtons
                   busy={busy}
                   emits={emitStages.includes(selectedStage ?? "")}
+                  internal={selectedStage === "orden_cargue"}
                   onIntent={(emit) => {
                     emitIntent.current = emit;
                   }}
@@ -1122,10 +1131,12 @@ const emitStages: string[] = [
 function SaveButtons({
   busy,
   emits,
+  internal,
   onIntent,
 }: {
   busy: boolean;
   emits: boolean;
+  internal?: boolean;
   onIntent: (emit: boolean) => void;
 }) {
   if (!emits)
@@ -1157,7 +1168,7 @@ function SaveButtons({
         onClick={() => onIntent(true)}
         type="submit"
       >
-        {busy ? "Guardando y transmitiendo…" : "Guardar y emitir"}
+        {internal ? (busy ? "Guardando la orden…" : "Guardar orden") : busy ? "Guardando y transmitiendo…" : "Guardar y emitir"}
       </button>
     </>
   );

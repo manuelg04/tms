@@ -108,12 +108,11 @@ export function documentFileSegment(value: string): string {
 }
 
 function readAuthorization(steps: RndcFlowStep[]): AuthorizationData {
-  const loadingOrder = steps.find((step) => step.name === "cargo");
   const remesa = steps.find((step) => step.name === "remesa");
   const manifest = steps.find((step) => step.name === "manifest");
 
   return {
-    loadingOrderAuthorization: loadingOrder?.response.radicado ?? "PENDIENTE",
+    loadingOrderAuthorization: "PENDIENTE",
     remesaAuthorization: remesa?.response.radicado ?? "PENDIENTE",
     manifestAuthorization: manifest?.response.radicado ?? "PENDIENTE",
     seguridadQr: manifest?.response.seguridadQr ?? "PENDIENTE",
@@ -271,7 +270,7 @@ async function writeLoadingOrderPdf(path: string, scenario: DemoScenario, mode: 
 
   drawLoadingOrderCopy(doc, scenario, 28, "Original");
   drawLoadingOrderCopy(doc, scenario, 402, "Copia");
-  modeFooter(doc, mode);
+  text(doc, "Documento interno de la empresa.", PAGE_X, doc.page.height - 22, PAGE_W, { size: 6.5, align: "center", color: "#666666" });
 
   doc.end();
   await waitForStream(stream);

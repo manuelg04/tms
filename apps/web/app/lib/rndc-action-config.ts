@@ -41,7 +41,7 @@ export type RndcActionConfig = {
 };
 
 const actionConfigs: Record<RndcActionName, RndcActionConfig> = {
-  emit_loading_order: { operationType: "emit_cargo", backendPath: "/rndc/forms/loading-order", processId: 1, lifecycle: "submission" },
+  emit_loading_order: { operationType: "emit_cargo", backendPath: "/rndc/forms/loading-order", processId: 0, lifecycle: "submission" },
   emit_remesa: { operationType: "emit_remesa", backendPath: "/rndc/forms/remesa", processId: 3, lifecycle: "submission" },
   register_trip: { operationType: "emit_trip", backendPath: "/rndc/forms/trip", processId: 2, lifecycle: "none" },
   issue_manifest: { operationType: "emit_manifest", backendPath: "/rndc/forms/manifest-issue", processId: 4, lifecycle: "submission" },

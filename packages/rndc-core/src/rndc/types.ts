@@ -70,8 +70,6 @@ export type FlowStepName =
   | "sender"
   | "recipient"
   | "vehicle"
-  | "cargo"
-  | "trip"
   | "remesa"
   | "manifest";
 

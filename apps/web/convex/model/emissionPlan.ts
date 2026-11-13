@@ -286,8 +286,8 @@ function isAuthorized(state: OfficialDocumentState): boolean {
 
 function buildCargoPayload(orderNumber: string, order: LoadingOrderDraft, assignment: AssignmentSnapshotData): PayloadDraft {
   const missing: string[] = [];
-  const sender = partyPayload(order.sender, "sender", missing);
-  const recipient = partyPayload(order.recipient, "recipient", missing);
+  const sender = partyPayload(order.sender, "sender", []);
+  const recipient = partyPayload(order.recipient, "recipient", []);
   const loadingDate = appointmentDate(order.loading?.appointmentAt, "loadingAppointment", missing);
   const unloadingDate = appointmentDate(order.unloading?.appointmentAt, "unloadingAppointment", missing);
   const payload: Record<string, unknown> = {
@@ -310,7 +310,7 @@ function buildCargoPayload(orderNumber: string, order: LoadingOrderDraft, assign
         weightTons: order.weightTons,
         declaredValue: undefined
       },
-      missing
+      []
     ),
     observations: order.observations
   };

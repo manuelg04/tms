@@ -240,7 +240,7 @@ async function emitOneScope(
     return scopeResult({ error: "Despacho no encontrado" }, 404);
   }
 
-  if (runtime.syncMasters) {
+  if (runtime.syncMasters && scope !== "orden") {
     const masterResults = await runtime.syncMasters(typedExpedienteId, scope);
     const masterBlockers = masterResults
       .filter((result) => result.state !== "registered")

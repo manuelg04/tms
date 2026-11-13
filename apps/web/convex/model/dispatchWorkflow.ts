@@ -30,7 +30,7 @@ export function emissionScopeTargets(
   const order = (scope === "orden" || scope === "todo") && (workflowVariant === "standard" || workflowVariant === "transshipment");
   const consignments = (scope === "remesas" || scope === "todo") && workflowVariant !== "empty_manifest";
   const manifest = scope === "manifiesto" || scope === "todo";
-  const trip = manifest && (workflowVariant === "standard" || workflowVariant === "transshipment");
+  const trip = false;
   return { order, consignments, manifest, trip, assignment: order || manifest };
 }
 
@@ -57,7 +57,7 @@ export function emissionDependencyBlockers(
       return ["El manifiesto vacío no usa remesas"];
     }
     if ((variant === "standard" || variant === "transshipment") && !officiallyAuthorized(input.orderOfficialState)) {
-      return ["Requiere orden de cargue autorizada"];
+      return ["Requiere la orden de cargue guardada"];
     }
   }
 
@@ -335,13 +335,13 @@ export function loadingOrderMissingFields(draft: LoadingOrderDraft | null | unde
   }
   if (!partyComplete(draft.sender)) {
     missing.push("Remitente con identificación");
-  } else if (!present(draft.sender?.identificationType) || !present(draft.sender?.siteCode) || !present(draft.sender?.municipalityCode)) {
-    missing.push("Datos RNDC del remitente");
+  } else if (!present(draft.sender?.siteCode)) {
+    missing.push("Sede del remitente");
   }
   if (!partyComplete(draft.recipient)) {
     missing.push("Destinatario con identificación");
-  } else if (!present(draft.recipient?.identificationType) || !present(draft.recipient?.siteCode) || !present(draft.recipient?.municipalityCode)) {
-    missing.push("Datos RNDC del destinatario");
+  } else if (!present(draft.recipient?.siteCode)) {
+    missing.push("Sede del destinatario");
   }
   if (!siteComplete(draft.loading)) {
     missing.push("Sitio y cita de cargue");
@@ -358,13 +358,6 @@ export function loadingOrderMissingFields(draft: LoadingOrderDraft | null | unde
   if (!present(draft.packagingCode)) {
     missing.push("Tipo de empaque");
   }
-  if (!present(draft.merchandiseCode)) {
-    missing.push("Código de mercancía");
-  }
-  if (!present(draft.natureOfCargo)) {
-    missing.push("Naturaleza de la carga");
-  }
-
   return missing;
 }
 
@@ -587,7 +580,7 @@ export function assertStageEditable(
   state: { officialState: OfficialDocumentState; cargoInfoState?: OfficialDocumentState }
 ): void {
   if (stage === "orden_cargue" && state.cargoInfoState !== undefined && state.cargoInfoState !== "draft") {
-    throw new Error("La orden de cargue ya tiene una transmisión RNDC asociada y no puede editarse");
+    throw new Error("La orden de cargue ya quedó registrada y no puede editarse");
   }
 
   if (state.officialState !== "draft") {

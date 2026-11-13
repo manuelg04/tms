@@ -320,7 +320,7 @@ export async function POST(
     serviceKey,
     operationId: queued.operationId,
     workerId,
-    outcome: actionOutcome.operationOutcome,
+    outcome: action === "emit_loading_order" && actionOutcome.operationOutcome === "uncertain" ? "failed" as const : actionOutcome.operationOutcome,
     radicado,
     resultJson: JSON.stringify(result),
     errorText

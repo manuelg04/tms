@@ -21,9 +21,10 @@ test("dry-run flow creates evidence and PDFs without live credentials", async ()
   }));
 
   assert.equal(result.ok, true);
-  assert.equal(result.steps.length, 9);
+  assert.deepEqual(result.steps.map((step) => step.procesoId), [11, 11, 12, 11, 11, 3, 4]);
+  assert.deepEqual(result.steps.slice(-4).map((step) => step.name), ["sender", "recipient", "remesa", "manifest"]);
   assert.equal(result.documents.length, 3);
-  assert.equal(result.documents[0].kind, "loading-order");
+  assert.deepEqual(result.documents.map((document) => document.kind), ["loading-order", "remesa", "manifest"]);
   assert.equal(result.steps.at(-2)?.name, "remesa");
   assert.equal(result.steps.at(-1)?.name, "manifest");
   assert.match(result.remesaAuthorization ?? "", /^9\d{8}$/);
@@ -47,6 +48,7 @@ test("dry-run flow creates evidence and PDFs without live credentials", async ()
     assert.ok(step.responsePath && existsSync(step.responsePath));
     assert.equal(step.accepted, true);
     assert.equal(step.response.endpointUrl, "http://rndcpruebas.mintransporte.gov.co:8080/soap/IBPMServices");
+    assert.doesNotMatch(await readFile(step.requestPath, "utf8"), /CONSECUTIVOINFORMACIONCARGA|CONSECUTIVOINFORMACIONVIAJE/);
   }
 });
 

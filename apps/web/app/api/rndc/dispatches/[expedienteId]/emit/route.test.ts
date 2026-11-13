@@ -92,7 +92,7 @@ test("emits only the loading order when scope is orden", async () => {
   assert.deepEqual(body.steps?.map((step) => step.action), ["emit_loading_order"]);
 });
 
-test("returns a clear blocker when remesa scope has no authorized loading order", async () => {
+test("returns a clear blocker when remesa scope has no saved loading order", async () => {
   const inputs = fullInputs();
   inputs.order.officialState = "draft";
   const response = await handleEmitWithRuntime(
@@ -103,7 +103,7 @@ test("returns a clear blocker when remesa scope has no authorized loading order"
   const body = await response.json() as { blockers?: string[] };
 
   assert.equal(response.status, 409);
-  assert.match(body.blockers?.join(" ") ?? "", /orden de cargue autorizada/i);
+  assert.match(body.blockers?.join(" ") ?? "", /Requiere la orden de cargue guardada/);
 });
 
 test("keeps the complete dry-run sequence compatible when scope is omitted", async () => {
@@ -121,7 +121,7 @@ test("keeps the complete dry-run sequence compatible when scope is omitted", asy
   assert.equal(body.scope, "todo");
   assert.equal(body.completed, true);
   assert.deepEqual(preparedScopes, ["todo"]);
-  assert.deepEqual(executedActions, ["emit_loading_order", "emit_remesa", "register_trip", "issue_manifest"]);
+  assert.deepEqual(executedActions, ["emit_loading_order", "emit_remesa", "issue_manifest"]);
 });
 
 test("rejects an unknown emission scope before loading dispatch data", async () => {
@@ -163,6 +163,27 @@ test("blocks emission when a required master could not be registered in RNDC", a
   assert.equal(body.reason, "masters_not_registered");
   assert.deepEqual(body.blockers, ["Vehículo SWM776: teléfono del propietario es obligatorio"]);
   assert.deepEqual(preparedScopes, []);
+});
+
+test("saves the internal loading order without registering masters in RNDC", async () => {
+  const masterScopes: string[] = [];
+  const executedActions: string[] = [];
+  const runtime = emissionRuntime(orderOnlyInputs(), [], executedActions);
+  const response = await handleEmitWithRuntime(
+    emitRequest("exp-1", { scope: "orden" }),
+    emitContext("exp-1"),
+    {
+      ...runtime,
+      syncMasters: async (_expedienteId, scope) => {
+        masterScopes.push(scope);
+        return [{ kind: "vehicle", key: "SWM776", label: "Vehículo SWM776", state: "rejected", skipped: false, error: "no debe consultarse", operationIds: [] }];
+      }
+    }
+  );
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(masterScopes, []);
+  assert.deepEqual(executedActions, ["emit_loading_order"]);
 });
 
 test("continues the emission when every required master is registered", async () => {
@@ -401,10 +422,9 @@ test("a chained emission sends the missing earlier documents first and closes th
   assert.deepEqual(executedActions, [
     "emit_loading_order:sesion",
     "emit_remesa:sesion",
-    "register_trip:sesion",
     "issue_manifest:sesion"
   ]);
-  assert.deepEqual(body.steps?.map((step) => step.action), ["emit_loading_order", "emit_remesa", "register_trip", "issue_manifest"]);
+  assert.deepEqual(body.steps?.map((step) => step.action), ["emit_loading_order", "emit_remesa", "issue_manifest"]);
   assert.deepEqual(settled, ["manifiesto"]);
 });
 

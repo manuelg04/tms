@@ -49,7 +49,7 @@ export function DocumentHub({ busy, items, expedienteId, remesaCount, canEdit, o
             <article className="document-hub-card" key={item.key}>
               <div className="document-hub-card-heading">
                 <div><span>{item.description}</span><h4>{item.title}</h4></div>
-                <StatusBadge status={item.state} />
+                <StatusBadge internal={item.key === "order"} status={item.state} />
               </div>
               <strong className="document-hub-number">{item.number ?? (module ? "Sin crear" : "Pendiente")}</strong>
               {official ? <p className="document-hub-ready">{item.key === "fulfillment" ? "Cumplidos registrados" : "Documento terminado"}</p> : item.blockers.length > 0 ? <ul className="document-hub-blockers">{item.blockers.slice(0, 3).map((blocker) => <li key={blocker}>{blocker}</li>)}{item.blockers.length > 3 ? <li>y {item.blockers.length - 3} más</li> : null}</ul> : <p className="document-hub-ready">Listo para continuar</p>}

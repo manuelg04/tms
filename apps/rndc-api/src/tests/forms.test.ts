@@ -258,7 +258,7 @@ test("rejects incomplete persisted expediente forms in dry run instead of using 
     assert.equal(response.status, 400);
     assert.equal(response.body.ok, false);
     assert.ok(Array.isArray(response.body.missingFields));
-    assert.ok(response.body.missingFields.includes("cargoNumber"));
+    assert.equal(response.body.missingFields.includes("cargoNumber"), false);
     assert.ok(response.body.missingFields.includes("sender.id"));
     assert.equal(evidenceCalls, 0);
   } finally {

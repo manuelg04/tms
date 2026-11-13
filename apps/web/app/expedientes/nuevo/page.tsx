@@ -15,6 +15,7 @@ import { IdTypeField, MunicipalityField, PackagingField, PartyField, VehicleFiel
 import { requiredDriverFreight } from "../components/vehicle-assignment-state";
 import { loadingWindowEnd, optionalNumber, required, value } from "../../lib/form-data";
 import { Skeleton } from "../../components/skeleton";
+import { SolicitudPrefillLoader, SolicitudSummary, type SolicitudPrefill } from "./solicitud-prefill";
 
 type BaseState = {
   client: PartyPick | null;
@@ -124,6 +125,10 @@ export default function NuevoDespachoPage() {
 function NuevoDespachoLoader() {
   const params = useSearchParams();
   const sourceId = params.get("desde");
+  const solicitudId = params.get("solicitud");
+  if (solicitudId) {
+    return <SolicitudPrefillLoader solicitudId={solicitudId}>{(prefill) => <NuevoDespachoForm key={`solicitud-${solicitudId}`} prefill={prefill} sourceId={null} template={null} />}</SolicitudPrefillLoader>;
+  }
   const source = useQuery(api.expedientes.detail, sourceId ? { expedienteId: sourceId as Id<"expedientes"> } : "skip");
   if (sourceId && source === undefined) return <Skeleton label="Copiando datos del despacho anterior" variant="detail" />;
   const template: Template | null = sourceId && source?.expediente.loadingOrderDraft
@@ -132,7 +137,7 @@ function NuevoDespachoLoader() {
   return <NuevoDespachoForm key={sourceId ?? "nuevo"} sourceId={sourceId} template={template} />;
 }
 
-function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; template: Template | null }) {
+function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string | null; template: Template | null; prefill?: SolicitudPrefill }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const me = useQuery(api.access.me, {});
@@ -142,8 +147,8 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
   const [reservation, setReservation] = useState<Reservation | null>(null);
   const [reservationToken] = useState(() => `loading-order-${crypto.randomUUID()}`);
   const [savingAction, setSavingAction] = useState<"draft" | "open" | null>(null);
-  const [state, setState] = useState<BaseState>(() => templateState(template));
-  const copied = template?.order;
+  const [state, setState] = useState<BaseState>(() => ({ ...templateState(template), ...prefill?.state }));
+  const copied: Partial<Template["order"]> | undefined = template?.order ?? prefill?.defaults;
   const update = (patch: Partial<BaseState>) => setState((current) => ({ ...current, ...patch }));
   const today = new Date().toISOString().slice(0, 10);
   const reserveLoadingOrderNumber = useMutation(api.dispatches.reserveLoadingOrderNumber);
@@ -153,6 +158,7 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
   const createDraft = useMutation(api.dispatches.createDraft);
   const saveLoadingOrder = useMutation(api.dispatches.saveLoadingOrderDraft);
   const saveAssignment = useMutation(api.dispatches.saveAssignmentDraft);
+  const linkSolicitud = useMutation(api.operaciones.link);
 
   useEffect(() => {
     if (!organizationId) return;
@@ -246,7 +252,13 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
           expedienteId: created.expedienteId,
           draft: { ...preparedOrder, customerId }
         }),
-        saveAssignment({ expedienteId: created.expedienteId, vehicleId: state.vehicle._id, driverId: state.vehicle.drivers?.length === 1 ? state.vehicle.drivers[0]._id : undefined })
+        saveAssignment({ expedienteId: created.expedienteId, vehicleId: state.vehicle._id, driverId: assignedDriverId(state.vehicle, prefill) }),
+        ...(prefill ? [linkSolicitud({
+          expedienteId: created.expedienteId,
+          operacionesExpedienteId: prefill.request.expedienteId,
+          plate: prefill.request.vehicle.plate,
+          driverName: prefill.request.driver.name
+        })] : [])
       ]);
 
       router.push(action === "open" ? `/expedientes/${created.expedienteId}?stage=orden_cargue#centro-documental` : `/expedientes/${created.expedienteId}`);
@@ -263,13 +275,14 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
       <section className="base-dispatch-intro">
         <div>
           <span className="eyebrow">Nueva orden de cargue</span>
-          <h2>{template ? `Copia de ${template.code}` : "Datos de la orden de cargue"}</h2>
-          <p>La misma información operativa de Avansat, con búsquedas en los maestros del TMS.</p>
+          <h2>{template ? `Copia de ${template.code}` : prefill ? `Solicitud de planilla · ${prefill.request.vehicle.plate ?? "sin placa"}` : "Datos de la orden de cargue"}</h2>
+          <p>{prefill ? "Datos traídos de MTM Operaciones. Revisa cada campo antes de guardar; nada se crea hasta que guardes." : "La misma información operativa de Avansat, con búsquedas en los maestros del TMS."}</p>
         </div>
         <div className="base-dispatch-outcome"><strong>Al guardar</strong><span>Se abre el centro documental del despacho</span></div>
       </section>
 
       {template ? <div className="operation-notice ok" role="status"><span />Datos copiados de <Link href={`/expedientes/${sourceId}`}>{template.code}</Link>: revisa fechas, peso y observaciones antes de guardar. Nada se crea hasta que guardes.</div> : null}
+      {prefill ? <SolicitudSummary prefill={prefill} /> : null}
       <div className="base-document-path" aria-label="Documentos que se completan después"><span className="active">1. Orden de cargue</span><span>Remesas</span><span>Vehículo y conductor</span><span>Manifiesto</span><span>Cumplidos</span></div>
 
       <div className="guided-form-stage">
@@ -378,6 +391,13 @@ function NuevoDespachoForm({ sourceId, template }: { sourceId: string | null; te
       </div>
     </ValidatedForm>
   );
+}
+
+function assignedDriverId(vehicle: VehiclePick, prefill: SolicitudPrefill | undefined) {
+  const drivers = vehicle.drivers ?? [];
+  const wanted = (prefill?.request.driver.document ?? "").replace(/\D/g, "");
+  const requested = wanted ? drivers.find((driver) => driver.document.replace(/\D/g, "") === wanted) : undefined;
+  return requested?._id ?? (drivers.length === 1 ? drivers[0]._id : undefined);
 }
 
 function StageHeading({ id, text, title }: { id: string; text: string; title: string }) {

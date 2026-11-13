@@ -14,6 +14,12 @@ import {
   ManifestForm,
   ReviewStage,
 } from "../components/draft-stage-forms";
+import {
+  suggestionSummary,
+  withConsignmentSuggestions,
+  withManifestSuggestions,
+  type OperacionesSuggestions,
+} from "../../lib/operaciones-suggestions";
 import type { Detail } from "./detail-types";
 
 export function renderStage(input: {
@@ -28,8 +34,10 @@ export function renderStage(input: {
   saveManifestStage: (data: FormData) => void;
   fulfillRemesas: (data: FormData) => void;
   fulfillManifest: (data: FormData) => void;
+  operaciones?: OperacionesSuggestions | null;
 }) {
   const detail = input.detail;
+  const operaciones = input.operaciones;
   if (input.selectedStage === "orden_cargue")
     return (
       <LoadingOrderForm
@@ -40,6 +48,8 @@ export function renderStage(input: {
     );
   if (input.selectedStage === "remesas")
     return (
+      <>
+      <OperacionesHint show={input.isEditable} stage="remesas" suggestions={operaciones} />
       <ConsignmentsForm
         context={{
           customerName: detail.customer.name,
@@ -54,8 +64,13 @@ export function renderStage(input: {
         onSubmit={input.saveRemesas}
         order={detail.expediente.loadingOrderDraft ?? {}}
         readOnly={!input.isEditable}
-        remesas={detail.remesas}
+        remesas={detail.remesas.map((remesa) =>
+          remesa.officialState === "draft"
+            ? { ...remesa, draft: withConsignmentSuggestions(remesa.draft, operaciones) }
+            : remesa,
+        )}
       />
+      </>
     );
   if (input.selectedStage === "vehiculo_conductor")
     return (
@@ -68,6 +83,8 @@ export function renderStage(input: {
     );
   if (input.selectedStage === "manifiesto")
     return (
+      <>
+      <OperacionesHint show={!input.manifestReadOnly} stage="manifiesto" suggestions={operaciones} />
       <ManifestForm
         context={{
           agencyCode: detail.expediente.agencyCode,
@@ -83,10 +100,15 @@ export function renderStage(input: {
           driver: detail.driver,
           secondDriver: detail.secondDriver,
         }}
-        draft={detail.expediente.manifestDraft ?? {}}
+        draft={
+          input.manifestReadOnly
+            ? detail.expediente.manifestDraft ?? {}
+            : withManifestSuggestions(detail.expediente.manifestDraft ?? {}, operaciones)
+        }
         onSubmit={input.saveManifestStage}
         readOnly={input.manifestReadOnly}
       />
+      </>
     );
   if (input.selectedStage === "envio_rndc")
     return (
@@ -142,6 +164,26 @@ export function renderStage(input: {
       }
       onSubmit={input.fulfillManifest}
     />
+  );
+}
+
+function OperacionesHint({
+  show,
+  stage,
+  suggestions,
+}: {
+  show: boolean;
+  stage: "remesas" | "manifiesto";
+  suggestions?: OperacionesSuggestions | null;
+}) {
+  if (!show || !suggestions) return null;
+  const items = suggestionSummary(stage, suggestions);
+  if (items.length === 0) return null;
+  return (
+    <div className="operation-notice ok" role="status">
+      <span />
+      Sugerido desde la solicitud de planilla de Operaciones: {items.join(", ")}. Solo se llenan los campos vacíos; revísalos antes de guardar.
+    </div>
   );
 }
 

@@ -44,6 +44,10 @@ const pageMeta: Record<string, PageMeta> = {
     title: "Despachos",
     subtitle: "Listado, búsqueda y exportación de despachos"
   },
+  "/solicitudes": {
+    title: "Solicitudes de planilla",
+    subtitle: "Viajes pedidos desde MTM Operaciones, listos para crear el despacho"
+  },
   "/expedientes/nuevo": {
     title: "Nuevo despacho",
     subtitle: "Datos base y apertura del centro documental"
@@ -94,6 +98,16 @@ const allNavItems: NavItem[] = [
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <path d="M1.5 4.5h5l1.4 1.7h6.6v7.3h-13v-9Z" strokeLinejoin="round" />
         <path d="M3 4.5V2.3h4.8l1.2 1.5h4v2.4" strokeLinejoin="round" />
+      </svg>
+    )
+  },
+  {
+    href: "/solicitudes",
+    label: "Solicitudes",
+    icon: (
+      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+        <path d="M1.5 9.5 3.6 3h8.8l2.1 6.5v4h-13v-4Z" strokeLinejoin="round" />
+        <path d="M1.5 9.5h4l.8 1.6h3.4l.8-1.6h4" strokeLinejoin="round" />
       </svg>
     )
   },

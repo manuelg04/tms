@@ -20,6 +20,8 @@ import {
 import { BlockerList } from "../components/blocker-list";
 import { DocumentHub } from "../components/document-hub";
 import { DispatchRoutePlan } from "../components/dispatch-route-plan";
+import { OperacionesPanel } from "../components/operaciones-panel";
+import { useOperacionesSuggestions } from "../components/use-operaciones-suggestions";
 import { NextActionCard } from "../components/next-action-card";
 import { resolveDispatchEntry } from "../../lib/document-workspace";
 import { AdvancedActionModal } from "./advanced-action-modal";
@@ -88,6 +90,7 @@ export function DispatchDetail({
     expedienteId,
   });
   const pending = useQuery(api.pendingEmissions.forDispatch, { expedienteId });
+  const operaciones = useOperacionesSuggestions(expedienteId);
   const cancelPending = useMutation(api.pendingEmissions.cancel);
   const emitIntent = useRef(true);
   const { user } = useDemoUser();
@@ -504,8 +507,11 @@ export function DispatchDetail({
     return result;
   }
 
-  const currentForm = selectedStage
+  const currentForm = selectedStage && operaciones.loading
+    ? <Skeleton label="Trayendo datos de la solicitud de planilla" />
+    : selectedStage
     ? renderStage({
+        operaciones: operaciones.suggestions,
         detail,
         selectedStage,
         isEditable,
@@ -817,6 +823,8 @@ export function DispatchDetail({
           onEmit={(scope) => void emitScope(scope)}
         />
       </div>
+
+      <OperacionesPanel canSend={isEditable} expedienteId={detail.expediente._id} />
 
       <DispatchRoutePlan
         destination={detail.unloadingLocation.city}

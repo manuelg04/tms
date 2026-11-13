@@ -383,6 +383,35 @@ export default defineSchema({
     .index("by_document", ["documentId"])
     .index("by_rndc_operation", ["rndcOperationId"])
     .index("by_storage_id", ["storageId"]),
+  operacionesLinks: defineTable({
+    organizationId: v.id("organizations"),
+    expedienteId: v.id("expedientes"),
+    operacionesExpedienteId: v.string(),
+    plate: v.optional(v.string()),
+    driverName: v.optional(v.string()),
+    linkedBy: v.id("users"),
+    linkedAt: v.number()
+  })
+    .index("by_expediente", ["expedienteId"])
+    .index("by_organization_and_operaciones_expediente", ["organizationId", "operacionesExpedienteId"]),
+  operacionesDeliveries: defineTable({
+    organizationId: v.id("organizations"),
+    expedienteId: v.id("expedientes"),
+    kind: v.union(
+      v.literal("loading_order"),
+      v.literal("manifest_numbers"),
+      v.literal("official_manifest"),
+      v.literal("official_remesa")
+    ),
+    deliveryKey: v.string(),
+    number: v.optional(v.string()),
+    status: v.union(v.literal("applied"), v.literal("pending"), v.literal("failed")),
+    message: v.string(),
+    deliveredBy: v.id("users"),
+    updatedAt: v.number()
+  })
+    .index("by_expediente", ["expedienteId"])
+    .index("by_expediente_and_key", ["expedienteId", "deliveryKey"]),
   auditEvents: defineTable({
     organizationId: v.id("organizations"),
     actorType: v.union(v.literal("user"), v.literal("service"), v.literal("system")),

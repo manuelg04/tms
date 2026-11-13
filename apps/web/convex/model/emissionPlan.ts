@@ -422,7 +422,6 @@ function buildManifestPayload(
       advanceValue: requireMoney(manifest.advance ?? "0", "money.advanceValue", missing),
       icaRetentionPerMille: requireMoney(manifest.withholdingIca, "money.icaRetentionPerMille", missing)
     },
-    fopat: fopatDeclaration(manifest.fopatContribution),
     observations: manifest.observations
   };
   return { payload: prune(payload), missingFields: missing };
@@ -647,15 +646,6 @@ function requireMoney(value: string | undefined, field: string, missing: string[
   }
 
   return parsed;
-}
-
-function fopatDeclaration(value: string | undefined): { declaredAmount: number } | undefined {
-  if (value === undefined || value.trim() === "") {
-    return undefined;
-  }
-
-  const parsed = parseMoney(value);
-  return parsed === undefined || parsed < 0 ? undefined : { declaredAmount: Math.round(parsed) };
 }
 
 function parseMoney(value: string): number | undefined {

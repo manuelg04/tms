@@ -442,9 +442,9 @@ const MONEY_KEYS = ["freightTotal", "advance", "withholdingSource", "withholding
 
 export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: ManifestContext; draft: Manifest; onSubmit: (data: FormData) => void | Promise<void>; readOnly: boolean }) {
   const [money, setMoney] = useState<Record<(typeof MONEY_KEYS)[number], string>>({ freightTotal: draft.freightTotal ?? "", advance: draft.advance ?? "0", withholdingSource: draft.withholdingSource ?? "0", withholdingIca: draft.withholdingIca ?? "0", fopatContribution: draft.fopatContribution ?? "", adjustments: draft.adjustments ?? "0" });
-  const [fopatManual, setFopatManual] = useState(draft.fopatContribution !== undefined && draft.fopatContribution !== "");
-  const fopatSuggested = String(Math.round(Number(money.freightTotal || 0) * 0.001));
-  const fopatValue = fopatManual ? money.fopatContribution : fopatSuggested;
+  const [manifestType, setManifestType] = useState<string>(normalizeManifestType(draft.manifestType) ?? "G");
+  const urbanManifest = manifestType === "U" || manifestType === "V";
+  const fopatValue = urbanManifest ? "0" : String(Math.round(Number(money.freightTotal || 0) * 0.001));
   const icaAmount = icaPesos(money.freightTotal, money.withholdingIca);
   const suggested = String(Math.max(0, Number(money.freightTotal || 0) - Number(money.advance || 0) - Number(money.withholdingSource || 0) - icaAmount - Number(fopatValue || 0) + Number(money.adjustments || 0)));
   const [net, setNet] = useState<{ value: string; manual: boolean }>({ value: draft.netPayable ?? "", manual: Boolean(draft.netPayable) });
@@ -459,7 +459,7 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <DateField label="Fecha estimada de entrega" name="estimatedDeliveryDate" required value={draft.estimatedDeliveryDate} />
         <Field label="Nro. de manifiesto" name="manifestNumberPreview" placeholder="Automático" readOnly value={draft.manifestNumber} />
         <Field label="Agencia" name="agencyPreview" placeholder="—" readOnly value={context.agencyCode} />
-        <FormField><span>Tipo de manifiesto<em aria-hidden="true"> *</em></span><select defaultValue={normalizeManifestType(draft.manifestType) ?? "G"} name="manifestType" required>{MANIFEST_TYPE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></FormField>
+        <FormField><span>Tipo de manifiesto<em aria-hidden="true"> *</em></span><select name="manifestType" onChange={(event) => setManifestType(event.target.value)} required value={manifestType}>{MANIFEST_TYPE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></FormField>
         {context.consignmentCount < 2 ? <div className="field-hint span-2">Multiparada solo aplica cuando el manifiesto agrupa dos o más remesas (una por cada entrega del recorrido).</div> : null}
         <Field label="Nro. de contrato" name="contractNumber" placeholder="Opcional" value={draft.contractNumber} />
         <Field hint="Empresa de GPS que reporta al RNDC llegadas y salidas" inputMode="numeric" label="NIT empresa de monitoreo" name="monitoringCompanyNit" pattern="[0-9]{6,12}" required={context.consignmentCount > 0} value={draft.monitoringCompanyNit ?? companyProfile.monitoringCompanyNit} />
@@ -492,7 +492,7 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <MoneyField label="Retención en la fuente" name="withholdingSource" onChange={(value) => setMoney({ ...money, withholdingSource: value })} value={money.withholdingSource} />
         <Field hint={icaAmount ? `Equivale a $${formatThousands(String(icaAmount))} sobre el flete` : "Tarifa por cada $1.000 del flete"} inputMode="decimal" label="ReteICA (por mil)" max="20" min="0" name="withholdingIca" onChange={(event) => setMoney({ ...money, withholdingIca: event.target.value })} step="0.01" type="number" value={money.withholdingIca} />
         <MoneyField label="Anticipo" name="advance" onChange={(value) => setMoney({ ...money, advance: value })} value={money.advance} />
-        <MoneyField hint={fopatValue !== fopatSuggested ? `0,1 % del flete: $${formatThousands(fopatSuggested)}` : "0,1 % del flete. Poner 0 si no aplica"} label="FOPAT" name="fopatContribution" onChange={(value) => { setFopatManual(true); setMoney({ ...money, fopatContribution: value }); }} value={fopatValue} />
+        <MoneyField hint={urbanManifest ? "No aplica a viajes municipales" : "Lo calcula el sistema: 0,1 % del flete"} key={fopatValue} label="FOPAT" name="fopatContribution" readOnly value={fopatValue} />
         <MoneyField label="Ajustes" name="adjustments" onChange={(value) => setMoney({ ...money, adjustments: value })} value={money.adjustments} />
         <MoneyField hint={net.manual && net.value !== suggested ? `Calculado: $${formatThousands(suggested)}` : "Flete − anticipo − retenciones + ajustes"} label="Neto a pagar" name="netPayable" onChange={(value) => setNet({ value, manual: true })} required value={netValue} />
         <Field label="Agencia de pago" name="paymentAgencyCode" placeholder={context.agencyCode ?? "—"} value={draft.paymentAgencyCode} />

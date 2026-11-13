@@ -42,7 +42,7 @@ export const rndcFieldHelp: Readonly<Record<string, string>> = {
   withholdingSource: "Retención en la fuente en pesos: 1 % del valor del viaje por servicio de transporte de carga, cuando ese valor supera 4 UVT. No incluye el ICA.",
   withholdingIca: "Tarifa de ReteICA por cada $1.000 del flete, no el valor en pesos (3 por mil → escribe 3). Máximo 20, con hasta dos decimales, según el municipio de cargue.",
   advance: "Anticipo entregado al conductor, en pesos. No puede superar el valor del viaje menos las retenciones. Si el viaje es de flota propia no se permite anticipo.",
-  fopatContribution: "Retención FOPAT: 0,1 % del valor a pagar, redondeada al peso. No aplica a viajes municipales ni a vehículos de 10.500 kg o menos de peso bruto. Se calcula al enviar.",
+  fopatContribution: "Retención FOPAT: 0,1 % del valor a pagar, redondeada al peso. La calcula el sistema; no se escribe. Sale en 0 en viajes municipales, flota propia y vehículos de 10.500 kg o menos de peso bruto.",
   adjustments: "Valores que suman al saldo del titular (por ejemplo, reconocimientos pactados). Escríbelos en pesos.",
   netPayable: "Saldo por pagar al titular del manifiesto: flete menos anticipo, retenciones y FOPAT, más ajustes.",
   paymentDate: "Fecha de pago del saldo al titular. El RNDC la acepta desde un mes antes hasta dos meses después de hoy. Si la dejas vacía se usa la fecha estimada de entrega.",

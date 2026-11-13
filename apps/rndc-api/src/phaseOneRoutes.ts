@@ -13,6 +13,7 @@ import {
   MANIFEST_ANNULMENT_REASONS,
   manifestAnnulmentNeedsReplacement,
   calculateFopat,
+  FOPAT_GROSS_WEIGHT_THRESHOLD_KG,
   classifyRndcError,
   maskSecrets,
   normalizeInitialCompliance,
@@ -70,7 +71,6 @@ export type FormFopatAssessment = {
   stage: "manifest" | "fulfill-manifest";
   basis: number;
   submittedAmount: number;
-  declaredAmount?: number;
   result: FopatResult;
   warning?: string;
 };
@@ -285,14 +285,14 @@ export function assessFormFopat(
       - scenario.compliance.freightDiscountValue;
   const result = calculateFopat({
     valueToPay: basis,
-    operationType: optionalString(fopat, "operationType"),
-    isOwnFleet: optionalBoolean(fopat, "isOwnFleet"),
-    grossVehicleWeightKg: optionalNumber(fopat, "grossVehicleWeightKg"),
-    vehicleConfigurationEligible: optionalBoolean(fopat, "vehicleConfigurationEligible")
+    operationType: fopatOperationType(optionalString(fopat, "operationType"), scenario),
+    isOwnFleet: optionalBoolean(fopat, "isOwnFleet") ?? holderIsCompany(scenario),
+    grossVehicleWeightKg: optionalNumber(fopat, "grossVehicleWeightKg")
+      ?? scenarioGrossWeightKg(scenario)
+      ?? FOPAT_GROSS_WEIGHT_THRESHOLD_KG + 1,
+    vehicleConfigurationEligible: optionalBoolean(fopat, "vehicleConfigurationEligible") ?? true
   });
-  const declaredAmount = optionalNumber(fopat, "declaredAmount");
-  const declared = declaredAmount !== undefined && declaredAmount >= 0 ? Math.round(declaredAmount) : undefined;
-  const reviewRequired = result.status === "review-required" && declared === undefined;
+  const reviewRequired = result.status === "review-required";
   const warning = reviewRequired && mode === "dry-run"
     ? "FOPAT applicability is incomplete; dry-run used 0 and live submission would be blocked"
     : undefined;
@@ -302,13 +302,46 @@ export function assessFormFopat(
       stage: operation === "manifest-issue" ? "manifest" : operation,
       basis,
       submittedAmount: scenario.money.fopatRetention,
-      declaredAmount: declared,
       result,
       warning
     },
-    amountToUse: result.status === "review-required" ? declared ?? 0 : result.amount,
+    amountToUse: result.status === "review-required" ? 0 : result.amount,
     blocked: reviewRequired && mode === "live"
   };
+}
+
+function fopatOperationType(declared: string | undefined, scenario: DemoScenario): string {
+  const normalized = declared?.trim().toLowerCase();
+
+  if (normalized === "municipal") {
+    return "U";
+  }
+
+  if (declared?.trim() && normalized !== "intermunicipal") {
+    return declared;
+  }
+
+  return scenario.manifestType || "G";
+}
+
+function holderIsCompany(scenario: DemoScenario): boolean | undefined {
+  const holder = digitsOnly(scenario.vehicleHolder.id);
+
+  if (!holder) {
+    return undefined;
+  }
+
+  return holder === digitsOnly(scenario.company.nit) || holder === digitsOnly(scenario.company.rndcNit);
+}
+
+function scenarioGrossWeightKg(scenario: DemoScenario): number | undefined {
+  const empty = scenario.vehicle.emptyWeightKg;
+  const capacity = scenario.vehicle.capacityKg;
+  return Number.isFinite(empty) && Number.isFinite(capacity) && empty > 0 && capacity > 0 ? empty + capacity : undefined;
+}
+
+function digitsOnly(value: string | undefined): string {
+  return (value ?? "").replace(/\D/g, "");
 }
 
 async function executePhaseOneOperation(

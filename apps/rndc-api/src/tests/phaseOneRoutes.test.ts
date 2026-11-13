@@ -435,43 +435,35 @@ test("fulfill-manifest forms calculate FOPAT from the adjusted value", async () 
   });
 });
 
-test("an operator-declared FOPAT amount resolves an incomplete applicability review", async () => {
-  const scenario = buildMtmReferenceScenario(loadConfig(await dryRunConfig("tms-rndc-phase-one-fopat-declared-")));
-  const undeclared = assessFormFopat("manifest-issue", {}, scenario, "live");
-  const declared = assessFormFopat("manifest-issue", { fopat: { declaredAmount: 4760 } }, scenario, "live");
-  const negative = assessFormFopat("manifest-issue", { fopat: { declaredAmount: -1 } }, scenario, "live");
-  const computed = assessFormFopat("manifest-issue", { fopat: { operationType: "U", declaredAmount: 4760 } }, scenario, "live");
+test("FOPAT is derived from the manifest itself without operator input", async () => {
+  const base = buildMtmReferenceScenario(loadConfig(await dryRunConfig("tms-rndc-phase-one-fopat-derived-")));
+  const heavy = { ...base, manifestType: "G", vehicle: { ...base.vehicle, emptyWeightKg: 8000, capacityKg: 34000 } };
+  const thirdParty = assessFormFopat("manifest-issue", {}, heavy, "live");
+  const urban = assessFormFopat("manifest-issue", {}, { ...heavy, manifestType: "U" }, "live");
+  const ownFleet = assessFormFopat("manifest-issue", {}, {
+    ...heavy,
+    vehicleHolder: { ...heavy.vehicleHolder, id: heavy.company.nit }
+  }, "live");
+  const light = assessFormFopat("manifest-issue", {}, {
+    ...heavy,
+    vehicle: { ...heavy.vehicle, emptyWeightKg: 3500, capacityKg: 4500 }
+  }, "live");
+  const unknownWeight = assessFormFopat("manifest-issue", {}, {
+    ...heavy,
+    vehicle: { ...heavy.vehicle, emptyWeightKg: 0, capacityKg: 0 }
+  }, "live");
+  const expected = Math.round(heavy.money.freightValue * 0.001);
 
-  assert.equal(undeclared?.blocked, true);
-  assert.equal(declared?.blocked, false);
-  assert.equal(declared?.amountToUse, 4760);
-  assert.equal(declared?.assessment.declaredAmount, 4760);
-  assert.equal(negative?.blocked, true);
-  assert.equal(computed?.blocked, false);
-  assert.equal(computed?.amountToUse, 0);
+  assert.equal(thirdParty?.blocked, false);
+  assert.equal(thirdParty?.amountToUse, expected);
+  assert.equal(urban?.amountToUse, 0);
+  assert.equal(urban?.blocked, false);
+  assert.equal(ownFleet?.amountToUse, 0);
+  assert.equal(light?.amountToUse, 0);
+  assert.equal(unknownWeight?.amountToUse, expected);
 });
 
-test("a declared FOPAT amount reaches the manifest XML without a review warning", async () => {
-  await withEnvironment({ AUTH_MODE: "service", RNDC_SERVICE_TOKEN: serviceToken }, async () => {
-    const config = await dryRunConfig("tms-rndc-phase-one-fopat-declared-xml-");
-    const response = await request(createRndcApp(config), "/rndc/forms/manifest", {
-      headers: authorizedHeaders(),
-      body: { fopat: { declaredAmount: 3210 } }
-    });
-    const body = record(response.body);
-    const assessment = record(body.fopat);
-    const manifestStep = (body.steps as Record<string, unknown>[]).find((step) => step.name === "issue-manifest");
-    assert.ok(manifestStep);
-    const xml = await readFile(manifestStep.requestPath as string, "utf8");
-
-    assert.equal(response.status, 200);
-    assert.equal(assessment.declaredAmount, 3210);
-    assert.equal(assessment.warning, undefined);
-    assert.match(xml, /<RETENCIONFOPAT>3210<\/RETENCIONFOPAT>/);
-  });
-});
-
-test("dry-run continues with a FOPAT warning while live mode fails closed before evidence or sending", async () => {
+test("dry-run derives FOPAT without a warning while live mode stays closed before evidence or sending", async () => {
   await withEnvironment({
     AUTH_MODE: "service",
     RNDC_SERVICE_TOKEN: serviceToken,
@@ -491,9 +483,10 @@ test("dry-run continues with a FOPAT warning while live mode fails closed before
     const dryXml = await readFile(dryManifestStep.requestPath as string, "utf8");
 
     assert.equal(dry.status, 200);
-    assert.equal(dryResult.status, "review-required");
-    assert.equal(typeof dryAssessment.warning, "string");
-    assert.match(dryXml, /<RETENCIONFOPAT>0<\/RETENCIONFOPAT>/);
+    assert.equal(dryResult.status, "applicable");
+    assert.equal(dryAssessment.warning, undefined);
+    assert.match(dryXml, new RegExp(`<RETENCIONFOPAT>${String(dryResult.amount)}</RETENCIONFOPAT>`));
+    assert.equal(dryResult.amount, Math.round(Number(dryAssessment.basis) * 0.001));
 
     const liveOverrides = await liveConfig("tms-rndc-phase-one-fopat-live-review-");
     const liveOutput = liveOverrides.outputDir as string;

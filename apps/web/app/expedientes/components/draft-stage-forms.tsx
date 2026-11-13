@@ -396,7 +396,7 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
 
       <div className="field-group-note"><strong>Resumen que pasa al manifiesto</strong></div>
       <Field label="Unidad de medida" name={`${key}_unitOfMeasure`} required value={effective.unitOfMeasure} />
-      <Field label="Código de mercancía" name={`${key}_merchandiseCode`} required value={effective.merchandiseCode} />
+      <MerchandiseField code={effective.merchandiseCode} codeName={`${key}_merchandiseCode`} label="Producto para el RNDC" readOnly={readOnly} required value={order.cargoDescription ?? effective.remissions?.[0]?.description} />
       <PackagingField code={packaging.code || undefined} description={packaging.description || undefined} label="Código de empaque" name={`${key}_packagingCode`} onClear={() => setPackaging({ code: "", description: "" })} onSelect={(option) => setPackaging({ code: option.code, description: option.description })} />
       <CargoNatureField name={`${key}_natureOfCargo`} required value={effective.natureOfCargo} />
       <Field label="Grupo embalaje envase" name={`${key}_packagingGroup`} placeholder="Sin relación en catálogo" readOnly value={packagingGroup} />

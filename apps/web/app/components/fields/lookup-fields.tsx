@@ -2,12 +2,12 @@
 
 import { FormField } from "./form-validation";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "../../lib/convex-hooks";
 import { useDebounced } from "../../lib/hooks";
 import { api } from "../../../convex/_generated/api";
 import { DEFAULT_PARTY_SITE } from "../../../convex/model/masterSync";
-import { matchMerchandiseProduct } from "../../../convex/model/merchandiseProducts";
+import { merchandiseShortName } from "../../../convex/model/merchandiseSearch";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { SearchSelect } from "./search-select";
 
@@ -348,50 +348,92 @@ export const CARGO_NATURES = [
   { code: "7", label: "Refrigerada" }
 ];
 
-export type MerchandisePick = { name: string; code: string; natureCode?: string; packagingCode?: string };
+export type MerchandisePick = { name: string; code: string; source: "own" | "rndc"; officialName?: string; natureCode?: string; packagingCode?: string };
 
-export function MerchandiseField({ className = "", name, codeName, value, code, required, codeRequired, readOnly, onProduct }: { className?: string; name: string; codeName: string; value?: string; code?: string; required?: boolean; codeRequired?: boolean; readOnly?: boolean; onProduct?: (product: MerchandisePick) => void }) {
-  const listId = useId();
-  const products = useQuery(api.lookups.merchandiseProducts, readOnly ? "skip" : {});
-  const [product, setProduct] = useState(value ?? "");
+export function MerchandiseField({ className = "", label = "Mercancía", name, codeName, value, code, required, readOnly, onProduct }: { className?: string; label?: string; name?: string; codeName: string; value?: string; code?: string; required?: boolean; readOnly?: boolean; onProduct?: (product: MerchandisePick) => void }) {
+  const [description, setDescription] = useState(value ?? "");
   const [productCode, setProductCode] = useState(code ?? "");
-  const [filledFrom, setFilledFrom] = useState<string>();
-  const match = matchMerchandiseProduct(products ?? [], product);
-  const matched = Boolean(match && match.code === productCode.trim());
-  const hint = readOnly
-    ? undefined
-    : matched
-      ? "Código tomado de las remesas que MTM ya registró en el RNDC con este producto."
-      : product.trim() && products !== undefined && !match
-        ? "Producto nuevo para el TMS: escribe el código de 6 dígitos del RNDC una vez y queda guardado para la próxima."
-        : "Se llena solo al elegir un producto de la lista.";
+  const [term, setTerm] = useState("");
+  const [touched, setTouched] = useState(false);
+  const query = useDebounced(term.trim(), 200);
+  const results = useQuery(api.lookups.merchandiseSearch, !readOnly && query.length >= 2 ? { term: query } : "skip");
+  const pendingName = touched ? query : description.trim();
+  const resolved = useQuery(
+    api.lookups.merchandiseResolve,
+    productCode ? { code: productCode } : !readOnly && pendingName.length >= 2 ? { name: pendingName } : "skip"
+  );
+  const suggestion = !productCode && resolved ? resolved : undefined;
+  const onProductRef = useRef(onProduct);
+  onProductRef.current = onProduct;
 
-  function changeProduct(next: string) {
-    setProduct(next);
-    const found = matchMerchandiseProduct(products ?? [], next);
-    if (found) {
-      setProductCode(found.code);
-      setFilledFrom(found.name);
-      onProduct?.(found);
-    } else if (filledFrom) {
-      setProductCode("");
-      setFilledFrom(undefined);
-    }
+  function apply(product: MerchandisePick, typed: string) {
+    const text = typed.trim();
+    const next = product.source === "own" ? product.name : text.length >= 4 && !/^\d+$/.test(text) ? text.toUpperCase().slice(0, 60) : merchandiseShortName(product.name);
+    setDescription(next);
+    setProductCode(product.code);
+    setTerm("");
+    setTouched(false);
+    onProductRef.current?.(product);
   }
 
+  useEffect(() => {
+    if (!touched && suggestion && description.trim()) {
+      setProductCode(suggestion.code);
+      onProductRef.current?.(suggestion);
+    }
+  }, [touched, suggestion, description]);
+
+  const hint = productCode
+    ? `Código RNDC ${productCode}${resolved?.officialName ? ` · ${resolved.officialName.slice(0, 90)}` : ""}. Lo pone el sistema.`
+    : readOnly
+      ? undefined
+      : suggestion
+        ? `Sugerido: ${suggestion.source === "own" ? suggestion.name : merchandiseShortName(suggestion.name)} (${suggestion.code}). Elígelo de la lista o busca otro.`
+        : !touched && description.trim() && resolved === null
+          ? `No reconocimos "${description.trim()}". Búscalo con otra palabra y elígelo de la lista.`
+          : "Escribe el producto con tus palabras y elígelo de la lista. El código RNDC lo pone el sistema.";
+
   return (
-    <>
-      <FormField className={className}>
-        <span>Mercancía{required ? <em aria-hidden="true"> *</em> : null}</span>
-        <input autoComplete="off" list={readOnly ? undefined : listId} name={name} onChange={(event) => changeProduct(event.target.value)} placeholder="Escribe o elige el producto" readOnly={readOnly} required={required} value={product} />
-        {readOnly ? null : <datalist id={listId}>{(products ?? []).map((item) => <option key={item.name} label={item.code} value={item.name} />)}</datalist>}
-      </FormField>
-      <FormField>
-        <span>Código de mercancía{codeRequired ? <em aria-hidden="true"> *</em> : null}</span>
-        <input aria-describedby={hint ? `${codeName}-hint` : undefined} inputMode="numeric" maxLength={6} name={codeName} onChange={(event) => { setProductCode(event.target.value); setFilledFrom(undefined); }} pattern="[0-9]{6}" placeholder="6 dígitos" readOnly={readOnly} required={codeRequired} title="Código de 6 dígitos de la tabla de productos del RNDC" value={productCode} />
-        {hint ? <small className="cargo-field-hint" id={`${codeName}-hint`}>{hint}</small> : null}
-      </FormField>
-    </>
+    <div
+      className="merchandise-field"
+      onBlur={(event) => {
+        if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
+        if (touched && !productCode && suggestion && term.trim()) apply(suggestion, term);
+      }}
+    >
+      <SearchSelect
+        className={className}
+        disabled={readOnly}
+        emptyText="No hay productos con esas palabras. Prueba con el material o el nombre general (cemento, hierro, abono…)."
+        hint={hint}
+        label={label}
+        name={codeName}
+        onClear={() => { setDescription(""); setProductCode(""); setTerm(""); setTouched(true); }}
+        onSearch={(next) => {
+          setTerm(next);
+          if (next.trim() !== description.trim()) {
+            setTouched(true);
+            if (productCode) setProductCode("");
+          }
+        }}
+        onSelect={(key) => {
+          const product = results?.[Number(key)];
+          if (product) apply(product, term);
+        }}
+        options={results?.map((product, index) => ({
+          key: String(index),
+          title: product.source === "own" ? product.name : product.name.slice(0, 110),
+          badge: product.code,
+          subtitle: product.source === "own" ? `Ya usado por la empresa${product.officialName ? ` · ${product.officialName.slice(0, 70)}` : ""}` : "Tabla de productos del RNDC"
+        }))}
+        placeholder="Cemento, carbón, gaseosa…"
+        required={required}
+        selectedLabel={productCode ? description || resolved?.name || productCode : undefined}
+        validationValue={productCode}
+      />
+      {name ? <input name={name} type="hidden" value={productCode ? description || resolved?.name || "" : term.trim().toUpperCase().slice(0, 60) || description} /> : null}
+      <input name={codeName} type="hidden" value={productCode} />
+    </div>
   );
 }
 

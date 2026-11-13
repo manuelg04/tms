@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import type { Id } from "../../../convex/_generated/dataModel";
 import type { AdvancedAction } from "../components/advanced-actions";
 import { MoneyField } from "../../components/fields/money-field";
+import { MerchandiseField } from "../../components/fields/lookup-fields";
 import {
   CargoNatureField,
   DriverField,
@@ -436,14 +437,7 @@ function modalFields(
         <span>Cita de descargue</span>
         <input name="unloadingAppointment" required type="datetime-local" />
       </label>
-      <label>
-        <span>Mercancía</span>
-        <input name="cargoDescription" required />
-      </label>
-      <label>
-        <span>Código mercancía</span>
-        <input name="merchandiseCode" required />
-      </label>
+      <MerchandiseField codeName="merchandiseCode" name="cargoDescription" required />
       <label>
         <span>Cantidad</span>
         <input name="quantity" required />

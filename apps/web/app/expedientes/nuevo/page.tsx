@@ -382,7 +382,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
 
             <div className="field-group-note"><strong>Datos de la mercancía</strong></div>
             <CargoGuidance />
-            <MerchandiseField code={copied?.merchandiseCode} codeName="merchandiseCode" name="cargoDescription" onProduct={(product) => { if (!state.packagingCode && product.packagingCode) update({ packagingCode: product.packagingCode, packagingDescription: "" }); }} required value={copied?.cargoDescription} />
+            <MerchandiseField className="span-2" code={copied?.merchandiseCode} codeName="merchandiseCode" name="cargoDescription" onProduct={(product) => { if (!state.packagingCode && product.packagingCode) update({ packagingCode: product.packagingCode, packagingDescription: "" }); }} required value={copied?.cargoDescription} />
             <Field defaultValue={copied?.weightTons} hint={cargoHints.weight} label="Peso (TN)" min="0" name="weightTons" required step="0.001" type="number" />
             <Field defaultValue={copied?.volumeM3} hint={cargoHints.volume} label="Volumen (m³)" min="0" name="volumeM3" step="0.01" type="number" />
             <Field defaultValue={copied?.cargoQuantity} hint={cargoHints.quantity} label="Cantidad" min="0" name="cargoQuantity" type="number" />

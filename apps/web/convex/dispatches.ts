@@ -33,6 +33,7 @@ import {
 } from "./model/dispatchRecords";
 import { currentManifestDocument } from "./model/currentManifest";
 import { isMerchandiseCode, rememberMerchandiseProduct } from "./model/merchandiseProducts";
+import { completeCargoClassification } from "./model/merchandiseCatalog";
 
 export const reserveLoadingOrderNumber = mutation({
   args: { actorToken: v.optional(v.string()), token: v.string() },
@@ -262,9 +263,10 @@ export const saveLoadingOrderDraft = mutation({
     }
 
     const now = Date.now();
+    const draft = await completeCargoClassification(ctx, expediente.organizationId, args.draft);
     await ctx.db.patch("expedientes", expediente._id, {
-      loadingOrderDraft: args.draft,
-      agencyCode: args.draft.agencyCode ?? expediente.agencyCode,
+      loadingOrderDraft: draft,
+      agencyCode: draft.agencyCode ?? expediente.agencyCode,
       updatedBy: actor._id,
       updatedAt: now
     });
@@ -278,15 +280,15 @@ export const saveLoadingOrderDraft = mutation({
       createdAt: now
     });
     await refreshDispatchSearchText(ctx, expediente._id);
-    if (args.draft.cargoDescription && isMerchandiseCode(args.draft.merchandiseCode)) {
+    if (draft.cargoDescription && isMerchandiseCode(draft.merchandiseCode)) {
       await rememberMerchandiseProduct(
         ctx,
         expediente.organizationId,
         {
-          name: args.draft.cargoDescription,
-          code: args.draft.merchandiseCode,
-          natureCode: args.draft.natureOfCargo,
-          packagingCode: args.draft.packagingCode
+          name: draft.cargoDescription,
+          code: draft.merchandiseCode,
+          natureCode: draft.natureOfCargo,
+          packagingCode: draft.packagingCode
         },
         "tms"
       );

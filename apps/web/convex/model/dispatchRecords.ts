@@ -21,6 +21,7 @@ import {
 import { type OfficialDocumentState } from "./documentLifecycle";
 import { refreshDispatchSearchText } from "./dispatchSearchProjection";
 import { masterSyncSummary } from "./masterSync";
+import { completeCargoClassification } from "./merchandiseCatalog";
 import { currentManifestDocument } from "./currentManifest";
 
 export const stageValidator = v.union(
@@ -85,7 +86,28 @@ export async function prepareForEmissionHandler(
   ]);
   const variant = expediente.workflowVariant ?? "standard";
   const targets = emissionScopeTargets(args.scope, variant);
-  const orderDraft = expediente.loadingOrderDraft as (LoadingOrderDraft & { customerId?: Id<"customers"> }) | undefined;
+  const storedOrderDraft = expediente.loadingOrderDraft;
+  const completedOrderDraft = storedOrderDraft ? await completeCargoClassification(ctx, expediente.organizationId, storedOrderDraft) : undefined;
+  if (storedOrderDraft && completedOrderDraft !== storedOrderDraft) {
+    await ctx.db.patch("expedientes", expediente._id, { loadingOrderDraft: completedOrderDraft });
+  }
+  for (const remesa of remesas) {
+    const remesaDraft = remesa.draft as ConsignmentDraft | undefined;
+    if (!remesaDraft || isAuthorizedState(remesa.officialState)) continue;
+    const effective = effectiveConsignment(remesaDraft, completedOrderDraft);
+    const completed = await completeCargoClassification(
+      ctx,
+      expediente.organizationId,
+      { merchandiseCode: effective.merchandiseCode, natureOfCargo: effective.natureOfCargo, packagingCode: effective.packagingCode },
+      completedOrderDraft?.cargoDescription ?? effective.remissions?.[0]?.description
+    );
+    if (completed.merchandiseCode && (completed.merchandiseCode !== effective.merchandiseCode || completed.natureOfCargo !== effective.natureOfCargo)) {
+      const nextDraft = { ...remesa.draft, merchandiseCode: completed.merchandiseCode, natureOfCargo: completed.natureOfCargo };
+      await ctx.db.patch("expedienteRemesas", remesa._id, { draft: nextDraft });
+      remesa.draft = nextDraft;
+    }
+  }
+  const orderDraft = completedOrderDraft as (LoadingOrderDraft & { customerId?: Id<"customers"> }) | undefined;
   const orderNumber = orderDraft?.orderNumber ?? expediente.cargoNumber;
   const manifestNumber = expediente.manifestDraft?.manifestNumber ?? expediente.manifestNumber;
   const consignmentNumbers = remesas.flatMap((remesa) => remesa.number ? [remesa.number] : []);

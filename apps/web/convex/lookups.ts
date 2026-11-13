@@ -3,6 +3,7 @@ import { mutation, query } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { requireActor } from "./model/access";
 import { normalizeSearchText } from "./model/searchText";
+import { resolveMerchandiseCode, rndcProductName, searchMerchandiseCatalog } from "./model/merchandiseCatalog";
 
 const LIMIT = 12;
 
@@ -179,18 +180,45 @@ export const packagingSearch = query({
   }
 });
 
-export const merchandiseProducts = query({
-  args: {},
-  returns: v.array(v.object({ name: v.string(), code: v.string(), natureCode: v.optional(v.string()), packagingCode: v.optional(v.string()) })),
-  handler: async (ctx) => {
+const merchandiseOptionValidator = v.object({
+  name: v.string(),
+  code: v.string(),
+  source: v.union(v.literal("own"), v.literal("rndc")),
+  officialName: v.optional(v.string()),
+  natureCode: v.optional(v.string()),
+  packagingCode: v.optional(v.string())
+});
+
+export const merchandiseSearch = query({
+  args: { term: v.string() },
+  returns: v.array(merchandiseOptionValidator),
+  handler: async (ctx, args) => {
     const actor = await requireActor(ctx);
-    const rows = await ctx.db
-      .query("merchandiseProducts")
-      .withIndex("by_organization_and_search", (q) => q.eq("organizationId", actor.organizationId))
-      .take(600);
-    return rows
-      .sort((left, right) => right.uses - left.uses || left.name.localeCompare(right.name))
-      .map((row) => ({ name: row.name, code: row.code, natureCode: row.natureCode, packagingCode: row.packagingCode }));
+    const matches = await searchMerchandiseCatalog(ctx, actor.organizationId, args.term, LIMIT);
+    return matches.map((match) => ({
+      name: match.name,
+      code: match.code,
+      source: match.source,
+      officialName: rndcProductName(match.code),
+      natureCode: match.natureCode,
+      packagingCode: match.packagingCode
+    }));
+  }
+});
+
+export const merchandiseResolve = query({
+  args: { name: v.optional(v.string()), code: v.optional(v.string()) },
+  returns: v.union(merchandiseOptionValidator, v.null()),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx);
+    const code = args.code?.trim();
+    if (code) {
+      return { name: args.name?.trim() || rndcProductName(code) || code, code, source: "rndc" as const, officialName: rndcProductName(code) };
+    }
+    const match = await resolveMerchandiseCode(ctx, actor.organizationId, args.name);
+    return match
+      ? { name: match.name, code: match.code, source: match.source, officialName: rndcProductName(match.code), natureCode: match.natureCode, packagingCode: match.packagingCode }
+      : null;
   }
 });
 

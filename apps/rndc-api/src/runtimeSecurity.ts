@@ -32,6 +32,7 @@ export type RndcRuntimeSettings = {
   legacyApiKey?: string;
   legacyApiKeyEnabled: boolean;
   legacyMessageEnabled: boolean;
+  liveWritesEnabled: boolean;
   nodeEnvironment: string;
   convexUrl?: string;
   convexIngestKey?: string;
@@ -86,6 +87,7 @@ export function readRndcRuntimeSettings(environment: NodeJS.ProcessEnv = process
     legacyApiKey: nonEmpty(environment.RNDC_API_KEY),
     legacyApiKeyEnabled: parseEnabled(environment.RNDC_ENABLE_LEGACY_API_KEY),
     legacyMessageEnabled: parseEnabled(environment.RNDC_ENABLE_LEGACY_MESSAGE),
+    liveWritesEnabled: parseEnabled(environment.RNDC_LIVE_WRITES_ENABLED),
     nodeEnvironment: environment.NODE_ENV ?? "development",
     convexUrl: nonEmpty(environment.CONVEX_URL),
     convexIngestKey: nonEmpty(environment.RNDC_INGEST_KEY),

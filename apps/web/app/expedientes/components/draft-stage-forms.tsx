@@ -441,9 +441,12 @@ function paidByOptions(current: string | undefined) {
 const MONEY_KEYS = ["freightTotal", "advance", "withholdingSource", "withholdingIca", "fopatContribution", "adjustments"] as const;
 
 export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: ManifestContext; draft: Manifest; onSubmit: (data: FormData) => void | Promise<void>; readOnly: boolean }) {
-  const [money, setMoney] = useState<Record<(typeof MONEY_KEYS)[number], string>>({ freightTotal: draft.freightTotal ?? "", advance: draft.advance ?? "0", withholdingSource: draft.withholdingSource ?? "0", withholdingIca: draft.withholdingIca ?? "0", fopatContribution: draft.fopatContribution ?? "0", adjustments: draft.adjustments ?? "0" });
+  const [money, setMoney] = useState<Record<(typeof MONEY_KEYS)[number], string>>({ freightTotal: draft.freightTotal ?? "", advance: draft.advance ?? "0", withholdingSource: draft.withholdingSource ?? "0", withholdingIca: draft.withholdingIca ?? "0", fopatContribution: draft.fopatContribution ?? "", adjustments: draft.adjustments ?? "0" });
+  const [fopatManual, setFopatManual] = useState(draft.fopatContribution !== undefined && draft.fopatContribution !== "");
+  const fopatSuggested = String(Math.round(Number(money.freightTotal || 0) * 0.001));
+  const fopatValue = fopatManual ? money.fopatContribution : fopatSuggested;
   const icaAmount = icaPesos(money.freightTotal, money.withholdingIca);
-  const suggested = String(Math.max(0, Number(money.freightTotal || 0) - Number(money.advance || 0) - Number(money.withholdingSource || 0) - icaAmount - Number(money.fopatContribution || 0) + Number(money.adjustments || 0)));
+  const suggested = String(Math.max(0, Number(money.freightTotal || 0) - Number(money.advance || 0) - Number(money.withholdingSource || 0) - icaAmount - Number(fopatValue || 0) + Number(money.adjustments || 0)));
   const [net, setNet] = useState<{ value: string; manual: boolean }>({ value: draft.netPayable ?? "", manual: Boolean(draft.netPayable) });
   const netValue = net.manual ? net.value : suggested;
   return (
@@ -489,7 +492,7 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <MoneyField label="Retención en la fuente" name="withholdingSource" onChange={(value) => setMoney({ ...money, withholdingSource: value })} value={money.withholdingSource} />
         <Field hint={icaAmount ? `Equivale a $${formatThousands(String(icaAmount))} sobre el flete` : "Tarifa por cada $1.000 del flete"} inputMode="decimal" label="ReteICA (por mil)" max="20" min="0" name="withholdingIca" onChange={(event) => setMoney({ ...money, withholdingIca: event.target.value })} step="0.01" type="number" value={money.withholdingIca} />
         <MoneyField label="Anticipo" name="advance" onChange={(value) => setMoney({ ...money, advance: value })} value={money.advance} />
-        <MoneyField label="FOPAT" name="fopatContribution" onChange={(value) => setMoney({ ...money, fopatContribution: value })} value={money.fopatContribution} />
+        <MoneyField hint={fopatValue !== fopatSuggested ? `0,1 % del flete: $${formatThousands(fopatSuggested)}` : "0,1 % del flete. Poner 0 si no aplica"} label="FOPAT" name="fopatContribution" onChange={(value) => { setFopatManual(true); setMoney({ ...money, fopatContribution: value }); }} value={fopatValue} />
         <MoneyField label="Ajustes" name="adjustments" onChange={(value) => setMoney({ ...money, adjustments: value })} value={money.adjustments} />
         <MoneyField hint={net.manual && net.value !== suggested ? `Calculado: $${formatThousands(suggested)}` : "Flete − anticipo − retenciones + ajustes"} label="Neto a pagar" name="netPayable" onChange={(value) => setNet({ value, manual: true })} required value={netValue} />
         <Field label="Agencia de pago" name="paymentAgencyCode" placeholder={context.agencyCode ?? "—"} value={draft.paymentAgencyCode} />

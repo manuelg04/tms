@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { mkdtemp, readFile } from "node:fs/promises";
 import { ServerResponse } from "node:http";
 import type { IncomingHttpHeaders, IncomingMessage } from "node:http";
@@ -797,6 +798,43 @@ test("blocks incomplete live-mode forms before validation or RNDC contact", asyn
   assert.equal((body.error as Record<string, unknown>).code, "LIVE_WRITES_DISABLED");
   process.env.CONVEX_URL = "";
   process.env.RNDC_INGEST_KEY = "";
+});
+
+test("lets live forms reach validation only when official writes are enabled", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-live-enabled-"));
+  process.env.CONVEX_URL = "https://example.invalid";
+  process.env.RNDC_INGEST_KEY = "test-ingest-key";
+  process.env.RNDC_LIVE_WRITES_ENABLED = "true";
+
+  try {
+    const app = createRndcApp({
+      outputDir: join(base, "runs"),
+      pdfDir: join(base, "pdfs"),
+      mode: "live",
+      username: "LIVE_USER",
+      password: "LIVE_PASSWORD",
+      companyNit: "900773684",
+      companyDv: "9",
+      companyRndcNit: "9007736849"
+    }, { durableContextValidator: async () => true });
+    const response = await requestJson(app, "/rndc/forms/remesa", {
+      method: "POST",
+      headers: durableHeaders("live", "op-live-enabled-incomplete", "emit_remesa"),
+      body: {
+        remesaNumber: "42196",
+        driver: { idType: "C", id: "80756632" },
+        vehicle: { plate: "JVK276" }
+      }
+    });
+
+    assert.equal(response.status, 400);
+    assert.equal(Array.isArray(response.body.missingFields), true);
+    assert.equal(existsSync(join(base, "runs")), false);
+  } finally {
+    delete process.env.RNDC_LIVE_WRITES_ENABLED;
+    process.env.CONVEX_URL = "";
+    process.env.RNDC_INGEST_KEY = "";
+  }
 });
 
 test("blocks suspended live fulfill forms before validation or RNDC contact", async () => {

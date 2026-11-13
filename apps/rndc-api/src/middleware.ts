@@ -225,7 +225,8 @@ export function createExpectedModeMiddleware(readConfig: () => RndcConfig): expr
     }
 
     const config = readConfig();
-    const runtimeReady = assessRuntimeSafety(config, readRndcRuntimeSettings()).ready;
+    const runtimeSettings = readRndcRuntimeSettings();
+    const runtimeReady = assessRuntimeSafety(config, runtimeSettings).ready;
     const durableOperationType = durableOperationTypeForRequest(req);
 
     if (config.mode === "live" && runtimeReady && req.method !== "GET" && req.header("X-TMS-Durable-Operation") !== "true") {
@@ -241,8 +242,9 @@ export function createExpectedModeMiddleware(readConfig: () => RndcConfig): expr
       && durableOperationType
       && durableOperationType !== "reconcile"
       && durableOperationType !== "query_acceptance"
+      && !runtimeSettings.liveWritesEnabled
     ) {
-      sendApiError(req, res, 403, "LIVE_WRITES_DISABLED", "Official RNDC writes remain disabled until canonical recovery is complete");
+      sendApiError(req, res, 403, "LIVE_WRITES_DISABLED", "Official RNDC writes are disabled; enable RNDC_LIVE_WRITES_ENABLED for an approved live window");
       return;
     }
 

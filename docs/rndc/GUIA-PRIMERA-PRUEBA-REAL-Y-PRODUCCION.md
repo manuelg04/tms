@@ -163,6 +163,8 @@ npx convex env set RNDC_LIVE_WRITES_ENABLED false --prod
 
 No definir este valor en desarrollo. Su ausencia equivale a `false`.
 
+El backend tiene el mismo interruptor: con `RNDC_MODE=live` rechaza toda escritura oficial con `LIVE_WRITES_DISABLED` mientras su variable `RNDC_LIVE_WRITES_ENABLED` no sea `true`. Durante la ventana se define en el proveedor del backend y se retira al cerrarla.
+
 ## Manejo de secretos
 
 Generar valores independientes:

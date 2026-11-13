@@ -11,6 +11,7 @@ import test from "node:test";
 import { buildMtmReferenceScenario, loadConfig } from "@tms/rndc-core";
 import type { RndcConfig } from "@tms/rndc-core";
 import { createRndcApp } from "../index.js";
+import { assessFormFopat } from "../phaseOneRoutes.js";
 
 const serviceToken = "phase-one-service-token-with-more-than-32-characters";
 
@@ -431,6 +432,42 @@ test("fulfill-manifest forms calculate FOPAT from the adjusted value", async () 
     assert.equal(assessment.basis, 4_790_000);
     assert.equal(result.amount, 4790);
     assert.match(requestEvidence, /<RETENCIONFOPAT>4790<\/RETENCIONFOPAT>/);
+  });
+});
+
+test("an operator-declared FOPAT amount resolves an incomplete applicability review", async () => {
+  const scenario = buildMtmReferenceScenario(loadConfig(await dryRunConfig("tms-rndc-phase-one-fopat-declared-")));
+  const undeclared = assessFormFopat("manifest-issue", {}, scenario, "live");
+  const declared = assessFormFopat("manifest-issue", { fopat: { declaredAmount: 4760 } }, scenario, "live");
+  const negative = assessFormFopat("manifest-issue", { fopat: { declaredAmount: -1 } }, scenario, "live");
+  const computed = assessFormFopat("manifest-issue", { fopat: { operationType: "U", declaredAmount: 4760 } }, scenario, "live");
+
+  assert.equal(undeclared?.blocked, true);
+  assert.equal(declared?.blocked, false);
+  assert.equal(declared?.amountToUse, 4760);
+  assert.equal(declared?.assessment.declaredAmount, 4760);
+  assert.equal(negative?.blocked, true);
+  assert.equal(computed?.blocked, false);
+  assert.equal(computed?.amountToUse, 0);
+});
+
+test("a declared FOPAT amount reaches the manifest XML without a review warning", async () => {
+  await withEnvironment({ AUTH_MODE: "service", RNDC_SERVICE_TOKEN: serviceToken }, async () => {
+    const config = await dryRunConfig("tms-rndc-phase-one-fopat-declared-xml-");
+    const response = await request(createRndcApp(config), "/rndc/forms/manifest", {
+      headers: authorizedHeaders(),
+      body: { fopat: { declaredAmount: 3210 } }
+    });
+    const body = record(response.body);
+    const assessment = record(body.fopat);
+    const manifestStep = (body.steps as Record<string, unknown>[]).find((step) => step.name === "issue-manifest");
+    assert.ok(manifestStep);
+    const xml = await readFile(manifestStep.requestPath as string, "utf8");
+
+    assert.equal(response.status, 200);
+    assert.equal(assessment.declaredAmount, 3210);
+    assert.equal(assessment.warning, undefined);
+    assert.match(xml, /<RETENCIONFOPAT>3210<\/RETENCIONFOPAT>/);
   });
 });
 

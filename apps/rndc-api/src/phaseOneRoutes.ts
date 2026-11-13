@@ -70,6 +70,7 @@ export type FormFopatAssessment = {
   stage: "manifest" | "fulfill-manifest";
   basis: number;
   submittedAmount: number;
+  declaredAmount?: number;
   result: FopatResult;
   warning?: string;
 };
@@ -289,7 +290,9 @@ export function assessFormFopat(
     grossVehicleWeightKg: optionalNumber(fopat, "grossVehicleWeightKg"),
     vehicleConfigurationEligible: optionalBoolean(fopat, "vehicleConfigurationEligible")
   });
-  const reviewRequired = result.status === "review-required";
+  const declaredAmount = optionalNumber(fopat, "declaredAmount");
+  const declared = declaredAmount !== undefined && declaredAmount >= 0 ? Math.round(declaredAmount) : undefined;
+  const reviewRequired = result.status === "review-required" && declared === undefined;
   const warning = reviewRequired && mode === "dry-run"
     ? "FOPAT applicability is incomplete; dry-run used 0 and live submission would be blocked"
     : undefined;
@@ -299,10 +302,11 @@ export function assessFormFopat(
       stage: operation === "manifest-issue" ? "manifest" : operation,
       basis,
       submittedAmount: scenario.money.fopatRetention,
+      declaredAmount: declared,
       result,
       warning
     },
-    amountToUse: result.status === "review-required" ? 0 : result.amount,
+    amountToUse: result.status === "review-required" ? declared ?? 0 : result.amount,
     blocked: reviewRequired && mode === "live"
   };
 }

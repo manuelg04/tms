@@ -140,6 +140,22 @@ test("the manifest payload carries the fleet monitoring company only as clean di
   assert.equal(payloadOf(withoutNit)?.monitoringCompanyNit, undefined);
 });
 
+test("the manifest payload declares the FOPAT amount typed in the form and omits it when blank", () => {
+  const declared = buildEmissionPlan(baseInput({
+    manifest: { number: "0000001", snapshot: { ...manifestSnapshot, fopatContribution: "3500" }, officialState: "draft" }
+  }));
+  const zero = buildEmissionPlan(baseInput({
+    manifest: { number: "0000001", snapshot: { ...manifestSnapshot, fopatContribution: "0" }, officialState: "draft" }
+  }));
+  const blank = buildEmissionPlan(baseInput());
+  const payloadOf = (plan: ReturnType<typeof buildEmissionPlan>) =>
+    (plan.ok ? plan.steps.find((step) => step.action === "issue_manifest")?.payload : undefined) as Record<string, unknown> | undefined;
+
+  assert.deepEqual(payloadOf(declared)?.fopat, { declaredAmount: 3500 });
+  assert.deepEqual(payloadOf(zero)?.fopat, { declaredAmount: 0 });
+  assert.equal(payloadOf(blank)?.fopat, undefined);
+});
+
 test("authorized documents are skipped and never resent", () => {
   const plan = buildEmissionPlan(
     baseInput({

@@ -1,5 +1,6 @@
 import express from "express";
 import { registerMirrorRoutes } from "./mirrorRoutes.js";
+import { registerMasterLookupRoutes } from "./masterLookupRoutes.js";
 import { fileURLToPath } from "node:url";
 import {
   buildDriverMessages,
@@ -84,6 +85,7 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}, hooks: RndcAp
   app.use("/rndc", createExpectedModeMiddleware(readConfig));
   app.use("/rndc", createDurableEvidenceMiddleware(runtimeSettings, durableContextValidator));
   registerMirrorRoutes(app, readConfig);
+  registerMasterLookupRoutes(app, readConfig);
   app.use("/pdf", requireServiceAuthentication, express.static(initialConfig.pdfDir, {
     dotfiles: "deny",
     fallthrough: true,

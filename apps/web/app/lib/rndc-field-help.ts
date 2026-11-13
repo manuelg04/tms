@@ -21,7 +21,7 @@ export const rndcFieldHelp: Readonly<Record<string, string>> = {
   maxLoadingDate: "Se reporta al RNDC como cita de descargue a las 23:59. Debe ser igual o posterior a la fecha mínima y máximo 5 días después.",
   vehicleId: "Placa registrada en el RNDC. El SOAT y la revisión técnico-mecánica deben estar vigentes hasta la cita de descargue, o el manifiesto será rechazado.",
   cargoDescription: "Nombre corto y claro del producto, máximo 60 caracteres (ej. CARBÓN MINERAL). El RNDC rechaza textos vacíos o poco explicativos.",
-  merchandiseCode: "Código de 6 dígitos de la tabla de productos del RNDC (ej. 002803). Debe cuadrar con la naturaleza de la carga; productos varios (009980) solo se acepta por debajo de 15 toneladas.",
+  merchandiseCode: "El sistema pone el código RNDC a partir del producto que elijas. Solo cámbialo de producto si la descripción que aparece debajo no corresponde a lo que se transporta.",
   natureOfCargo: "Clasificación oficial del RNDC. Debe cuadrar con el código de mercancía: un producto peligroso reportado como carga normal se rechaza.",
   packagingCode: "Tipo de empaque según la tabla del RNDC (caja, estiba, granel…). El granel líquido no se puede reportar en kilogramos; la carga en contenedor usa un código de contenedor.",
   weightTons: "Peso de la mercancía en toneladas; se reporta en kilogramos (34 → 34.000 kg). Sin el contenedor vacío y sin superar la capacidad del vehículo.",

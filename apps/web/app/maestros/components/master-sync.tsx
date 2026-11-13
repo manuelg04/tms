@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { Id } from "../../../convex/_generated/dataModel";
 import { MASTER_SYNC_STATE_LABELS, type MasterSyncKind, type MasterSyncState } from "../../../convex/model/masterSync";
 
 export type MasterSyncSummaryView = { state: MasterSyncState; updatedAt?: number; error?: string };
@@ -52,4 +53,47 @@ export function MasterSyncAction({ kind, keyValue, summary, onDone, compact }: {
       {busy ? "Enviando…" : compact && summary?.state === "registered" ? "Reenviar" : label}
     </button>
   );
+}
+
+export type OwnershipPick = { _id: Id<"thirdParties">; document: string; documentType: string; name: string; phone?: string; cityCode?: string };
+
+export type OwnershipSyncOutcome = { ok: boolean; message: string; owner?: OwnershipPick; possessor?: OwnershipPick; syncedAt?: number; vehicleUpdated?: boolean };
+
+export function formatOwnershipSync(value: number | undefined): string | undefined {
+  return value ? new Date(value).toLocaleString("es-CO", { dateStyle: "medium", timeStyle: "short", timeZone: "America/Bogota" }) : undefined;
+}
+
+export async function requestOwnershipSync(plate: string): Promise<OwnershipSyncOutcome> {
+  const cleanPlate = plate.trim().toUpperCase();
+  if (!/^[A-Z0-9]{5,7}$/.test(cleanPlate)) return { ok: false, message: "Escribe primero la placa del vehículo." };
+  try {
+    const response = await fetch("/api/rndc/masters/ownership", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plate: cleanPlate })
+    });
+    const result = await response.json().catch(() => ({})) as { ok?: boolean; error?: string; owner?: OwnershipPick; possessor?: OwnershipPick; syncedAt?: number; vehicleUpdated?: boolean };
+    if (response.ok && result.ok) {
+      const names = [result.owner ? `propietario ${result.owner.name}` : null, result.possessor ? `poseedor ${result.possessor.name}` : null].filter(Boolean).join(" y ");
+      return { ok: true, message: `${cleanPlate}: el RNDC devolvió ${names}.`, owner: result.owner, possessor: result.possessor, syncedAt: result.syncedAt, vehicleUpdated: result.vehicleUpdated };
+    }
+    return { ok: false, message: `${cleanPlate}: ${result.error ?? "no se pudo consultar el RNDC."}` };
+  } catch (error) {
+    return { ok: false, message: error instanceof Error ? error.message : "No fue posible contactar el servicio RNDC." };
+  }
+}
+
+export function OwnershipSyncAction({ plate, onDone, label = "Sincronizar con RNDC" }: { plate: string | (() => string); onDone?: (outcome: OwnershipSyncOutcome) => void; label?: string }) {
+  const [busy, setBusy] = useState(false);
+  async function run(event: React.MouseEvent) {
+    event.stopPropagation();
+    if (busy) return;
+    setBusy(true);
+    try {
+      onDone?.(await requestOwnershipSync(typeof plate === "function" ? plate() : plate));
+    } finally {
+      setBusy(false);
+    }
+  }
+  return <button className="ghost-button" disabled={busy} onClick={run} type="button">{busy ? "Consultando el RNDC…" : label}</button>;
 }

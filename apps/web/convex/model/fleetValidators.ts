@@ -418,6 +418,7 @@ export const vehicleDetailValidator = v.object({
   axles: v.optional(v.string()),
   ownerDocumentType: v.optional(v.string()),
   possessorDocumentType: v.optional(v.string()),
+  ownershipSyncedAt: v.optional(v.number()),
   rndcRegisteredAt: v.optional(v.string()),
   source: v.optional(v.string()),
   sourceCompanyNit: v.optional(v.string()),
@@ -529,6 +530,7 @@ export const vehicleInputValidator = v.object({
   axles: v.optional(v.string()),
   ownerDocumentType: v.optional(v.string()),
   possessorDocumentType: v.optional(v.string()),
+  ownershipSyncedAt: v.optional(v.number()),
   rndcRegisteredAt: v.optional(v.string()),
   source: v.optional(v.string()),
   sourceCompanyNit: v.optional(v.string())

@@ -6,7 +6,7 @@ import { useMutation, usePaginatedQuery, useQuery } from "../lib/convex-hooks";
 import { api } from "../../convex/_generated/api";
 import { formatTimestamp } from "../lib/labels";
 import { isEmptyText, useDebounced } from "../lib/hooks";
-import { MasterSyncAction, MasterSyncBadge, type MasterSyncOutcome, type MasterSyncSummaryView } from "./components/master-sync";
+import { formatOwnershipSync, MasterSyncAction, MasterSyncBadge, OwnershipSyncAction, type MasterSyncOutcome, type MasterSyncSummaryView } from "./components/master-sync";
 import { Skeleton } from "../components/skeleton";
 import { SideSheet } from "../components/side-sheet";
 
@@ -153,6 +153,7 @@ type VehicleDetail = {
   axles?: string;
   ownerDocumentType?: string;
   possessorDocumentType?: string;
+  ownershipSyncedAt?: number;
   rndcRegisteredAt?: string;
   rndcSyncSummary?: MasterSyncSummaryView;
   updatedAt: number;
@@ -468,7 +469,7 @@ function VehicleDetailPanel({
 
   return (
     <SideSheet eyebrow="Vehículo" label="Detalle del vehículo" onClose={onClose} title={title}>
-      {detail ? <div className="sheet-actions"><MasterSyncAction keyValue={detail.plate} kind="vehicle" onDone={onSync} summary={detail.rndcSyncSummary} /></div> : null}
+      {detail ? <div className="sheet-actions"><OwnershipSyncAction onDone={(outcome) => onSync({ ok: outcome.ok, state: outcome.ok ? "registered" : "rejected", message: outcome.message })} plate={detail.plate} /><MasterSyncAction keyValue={detail.plate} kind="vehicle" onDone={onSync} summary={detail.rndcSyncSummary} /></div> : null}
       {detail === undefined ? (
         <Skeleton label="Cargando detalle" />
       ) : detail === null ? (
@@ -498,6 +499,9 @@ function VehicleDetailPanel({
                 detail.possessorCellphone,
                 detail.possessorPhone
               ])}
+            </ReadOnlyField>
+            <ReadOnlyField label="Propietario y poseedor" wide>
+              <small className="sync-error">{detail.ownershipSyncedAt ? `Datos del RNDC, no se editan en el TMS. Última sincronización: ${formatOwnershipSync(detail.ownershipSyncedAt)}` : "Datos del RNDC, no se editan en el TMS. Usa Sincronizar con RNDC para traerlos al día."}</small>
             </ReadOnlyField>
             <ReadOnlyField label="RNDC"><MasterSyncBadge summary={detail.rndcSyncSummary} />{detail.rndcSyncSummary?.error ? <small className="sync-error">{detail.rndcSyncSummary.error}</small> : detail.rndcRegisteredAt ? <small className="sync-error">Ingresado al RNDC el {detail.rndcRegisteredAt}</small> : null}</ReadOnlyField>
             <ReadOnlyField label="Actualizado">{formatTimestamp(detail.updatedAt)}</ReadOnlyField>

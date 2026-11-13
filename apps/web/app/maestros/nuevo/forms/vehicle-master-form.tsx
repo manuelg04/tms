@@ -7,7 +7,7 @@ import { BodyTypeField, DriverField, InsurerField, PartyField, TrailerField, Veh
 import { CheckboxField, MasterPhotoPicker, MasterSection, MasterSubmitBar, SelectField, TextAreaField, TextField } from "../../components/master-form-ui";
 import { checked, discardUploadedMasterPhotos, optionalText, readableError, requiredText, uploadMasterPhoto, type UploadedVehiclePhoto } from "./master-form-utils";
 import { readWorkReferences, WorkReferencesFields } from "./work-references-fields";
-import { requestMasterSync } from "../../components/master-sync";
+import { formatOwnershipSync, OwnershipSyncAction, requestMasterSync, type OwnershipSyncOutcome } from "../../components/master-sync";
 
 type PhotoSlot = "front" | "left" | "right" | "rear";
 
@@ -29,6 +29,25 @@ export function VehicleMasterForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const savingRef = useRef(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [ownership, setOwnership] = useState<{ plate: string; syncedAt: number } | null>(null);
+  const [ownershipNotice, setOwnershipNotice] = useState<{ ok: boolean; text: string } | null>(null);
+
+  function currentPlate() {
+    return String(new FormData(formRef.current ?? undefined).get("plate") ?? "").trim().toUpperCase();
+  }
+
+  function applyOwnership(outcome: OwnershipSyncOutcome) {
+    if (outcome.ok && (outcome.owner || outcome.possessor)) {
+      if (outcome.owner) setOwner(outcome.owner);
+      if (outcome.possessor) setPossessor(outcome.possessor);
+      setOwnership({ plate: currentPlate(), syncedAt: outcome.syncedAt ?? Date.now() });
+      setOwnershipNotice({ ok: true, text: outcome.message });
+      return;
+    }
+    setOwnership(null);
+    setOwnershipNotice({ ok: false, text: `${outcome.message} Puedes elegir propietario y poseedor de la lista; quedan registrados en el RNDC al guardar el vehículo.` });
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -129,9 +148,9 @@ export function VehicleMasterForm() {
   }
 
   return (
-    <form className="master-editor-form" onSubmit={submit}>
+    <form className="master-editor-form" onSubmit={submit} ref={formRef}>
       <MasterSection description="Identificación principal y clasificación del vehículo." title="Identificación">
-        <TextField autoCapitalize="characters" className="mono-input" label="Placa" maxLength={6} name="plate" pattern="[A-Za-z]{3}[0-9]{3}" placeholder="ABC123" required />
+        <TextField autoCapitalize="characters" className="mono-input" label="Placa" maxLength={6} name="plate" onChange={(event) => { if (ownership && event.target.value.trim().toUpperCase() !== ownership.plate) { setOwnership(null); setOwner(null); setPossessor(null); setOwnershipNotice(null); } }} pattern="[A-Za-z]{3}[0-9]{3}" placeholder="ABC123" required />
         <VehicleLineField onClear={() => setLine(null)} onSelect={setLine} required selected={line} />
         <TextField inputMode="numeric" label="Modelo" maxLength={4} name="modelYear" placeholder="2026" required />
         <TextField inputMode="numeric" label="Repotenciado a" maxLength={4} name="repoweredModelYear" />
@@ -201,8 +220,13 @@ export function VehicleMasterForm() {
       </MasterSection>
 
       <MasterSection description="Selecciona registros existentes; no es necesario volver a escribir sus datos." title="Personas">
-        <PartyField label="Propietario" onClear={() => setOwner(null)} onSelect={setOwner} required role="owner" selected={owner} />
-        <PartyField label="Poseedor" onClear={() => setPossessor(null)} onSelect={setPossessor} required role="possessor" selected={possessor} />
+        <div className="ownership-sync">
+          <OwnershipSyncAction onDone={applyOwnership} plate={currentPlate} />
+          <small>{ownership ? `Propietario y poseedor tomados del RNDC (${formatOwnershipSync(ownership.syncedAt)}). No se editan aquí.` : "Trae del RNDC el propietario y el poseedor de la placa. Esos datos viven en el RNDC; el resto del vehículo y el conductor se editan aquí."}</small>
+          {ownershipNotice ? <small className={ownershipNotice.ok ? "ownership-sync-ok" : "ownership-sync-bad"} role="status">{ownershipNotice.text}</small> : null}
+        </div>
+        <PartyField disabled={Boolean(ownership)} hint={ownership && owner ? `${owner.documentType} ${owner.document} · sincronizado con el RNDC` : undefined} label="Propietario" onClear={ownership ? undefined : () => setOwner(null)} onSelect={setOwner} required role="owner" selected={owner} />
+        <PartyField disabled={Boolean(ownership)} hint={ownership && possessor ? `${possessor.documentType} ${possessor.document} · sincronizado con el RNDC` : undefined} label="Poseedor" onClear={ownership ? undefined : () => setPossessor(null)} onSelect={setPossessor} required role="possessor" selected={possessor} />
         <DriverField label="Conductor principal" onClear={() => setDriver(null)} onSelect={setDriver} required selected={driver} />
         {vehicleKind === "cabezote" ? <TrailerField label="Remolque habitual" onClear={() => setTrailer(null)} onSelect={setTrailer} selected={trailer} /> : null}
       </MasterSection>

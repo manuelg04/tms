@@ -31,7 +31,9 @@ export type RndcVehicleMaster = {
   key: string;
   plate: string;
   configurationCode?: string;
+  ownerIdType?: string;
   ownerId?: string;
+  holderIdType?: string;
   holderId?: string;
   capacityKg?: number;
   soatNumber?: string;
@@ -239,7 +241,9 @@ export function normalizeVehicleMaster(parsed: unknown, now = new Date()): RndcV
     key: plate,
     plate,
     configurationCode: readText(document, "CODCONFIGURACIONUNIDADCARGA"),
+    ownerIdType: readText(document, "CODTIPOIDPROPIETARIO"),
     ownerId: readText(document, "NUMIDPROPIETARIO"),
+    holderIdType: readText(document, "CODTIPOIDTENEDOR"),
     holderId: readText(document, "NUMIDTENEDOR"),
     capacityKg: readNumber(document, "CAPACIDADUNIDADCARGA"),
     soatNumber: readText(document, "NUMSEGUROSOAT"),

@@ -305,3 +305,8 @@
 
 .remission-field-label { display: none; }
 @media (max-width: 900px) { .remission-field-label { display: block; } }
+
+.ownership-sync { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.ownership-sync small { color: var(--ink-soft); font-size: 11.5px; line-height: 1.5; }
+.ownership-sync .ownership-sync-ok { flex-basis: 100%; color: var(--ok, #1f7a4d); }
+.ownership-sync .ownership-sync-bad { flex-basis: 100%; color: var(--bad, #b3261e); }

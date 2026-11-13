@@ -438,3 +438,105 @@ export const createVehicleMaster = mutation({
   }
 });
 
+
+const ownershipPartyValidator = v.object({
+  idType: v.string(),
+  id: v.string(),
+  name: v.optional(v.string()),
+  phone: v.optional(v.string()),
+  cityCode: v.optional(v.string())
+});
+
+const ownershipPickValidator = v.object({
+  _id: v.id("thirdParties"),
+  document: v.string(),
+  documentType: v.string(),
+  name: v.string(),
+  phone: v.optional(v.string()),
+  cityCode: v.optional(v.string())
+});
+
+export const applyRndcOwnership = mutation({
+  args: {
+    plate: v.string(),
+    owner: v.optional(ownershipPartyValidator),
+    holder: v.optional(ownershipPartyValidator),
+    queriedAt: v.number()
+  },
+  returns: v.object({
+    vehicleUpdated: v.boolean(),
+    owner: v.optional(ownershipPickValidator),
+    possessor: v.optional(ownershipPickValidator),
+    syncedAt: v.number()
+  }),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, ["admin", "operator"]);
+    const plate = args.plate.trim().toUpperCase();
+    const now = Date.now();
+    const upsert = async (party: { idType: string; id: string; name?: string; phone?: string; cityCode?: string } | undefined, role: "owner" | "possessor") => {
+      if (!party) return undefined;
+      const document = party.id.trim();
+      const documentType = party.idType.trim().toUpperCase();
+      const existing = await ctx.db
+        .query("thirdParties")
+        .withIndex("by_organization_and_document", (q) => q.eq("organizationId", actor.organizationId).eq("document", document))
+        .first();
+      if (existing) {
+        const roles = existing.roles.includes(role) ? existing.roles : [...existing.roles, role];
+        const name = party.name?.trim() || existing.name;
+        await ctx.db.patch("thirdParties", existing._id, {
+          name,
+          documentType,
+          phone: party.phone ?? existing.phone,
+          cityCode: party.cityCode ?? existing.cityCode,
+          roles,
+          updatedBy: actor._id,
+          updatedAt: now
+        });
+        return { _id: existing._id, document, documentType, name, phone: party.phone ?? existing.phone, cityCode: party.cityCode ?? existing.cityCode };
+      }
+      const name = party.name?.trim() || `${documentType} ${document} (sin nombre en RNDC)`;
+      const id = await ctx.db.insert("thirdParties", {
+        organizationId: actor.organizationId,
+        personType: documentType === "N" ? "legal" : "natural",
+        documentType,
+        document,
+        name,
+        phone: party.phone,
+        cityCode: party.cityCode,
+        source: "rndc-consulta",
+        rndcRegisteredAt: new Date(args.queriedAt).toISOString(),
+        roles: [role],
+        createdBy: actor._id,
+        updatedBy: actor._id,
+        createdAt: now,
+        updatedAt: now
+      });
+      return { _id: id, document, documentType, name, phone: party.phone, cityCode: party.cityCode };
+    };
+    const owner = await upsert(args.owner, "owner");
+    const possessor = await upsert(args.holder ?? args.owner, "possessor");
+    const vehicle = await ctx.db
+      .query("vehicles")
+      .withIndex("by_organization_and_plate", (q) => q.eq("organizationId", actor.organizationId).eq("plate", plate))
+      .first();
+    if (vehicle && (owner || possessor)) {
+      await ctx.db.patch("vehicles", vehicle._id, {
+        ...(owner ? { ownerThirdPartyId: owner._id, ownerDocumentType: owner.documentType, ownerDocument: owner.document, ownerName: owner.name, ownerPhone: owner.phone ?? vehicle.ownerPhone } : {}),
+        ...(possessor ? { possessorThirdPartyId: possessor._id, possessorDocumentType: possessor.documentType, possessorDocument: possessor.document, possessorName: possessor.name, possessorPhone: possessor.phone ?? vehicle.possessorPhone } : {}),
+        ownershipSyncedAt: args.queriedAt,
+        updatedAt: now
+      });
+      await appendAudit(ctx, {
+        organizationId: actor.organizationId,
+        actorType: "user",
+        actorId: actor._id,
+        action: "vehicle.ownership_synced_from_rndc",
+        entityType: "vehicle",
+        entityId: vehicle._id,
+        createdAt: now
+      });
+    }
+    return { vehicleUpdated: Boolean(vehicle && (owner || possessor)), owner, possessor, syncedAt: args.queriedAt };
+  }
+});

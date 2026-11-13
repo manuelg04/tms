@@ -140,7 +140,7 @@ export function DocumentPrintSheet({ detail, kind, remesaId, documentId }: { det
   const observations = kind === "manifiesto" ? manifest?.observations : kind === "remesa" ? consignment.generalObservations ?? consignment.transporterObservations : order?.observations;
   const lines = kind === "orden_cargue" ? [{ remissionNumber: order?.customerReference ?? serviceOrder.customerReference, quantity: order?.cargoQuantity ?? serviceOrder.cargoQuantity, packagingClass: order?.packagingCode, weightTons: order?.weightTons ?? tons(serviceOrder.cargoWeightKg), volumeM3: order?.volumeM3, description: order?.cargoDescription ?? serviceOrder.cargoDescription }]
     : kind === "remesa" && consignment.remissions?.length ? consignment.remissions
-      : kind === "remesa" ? [{ remissionNumber: remesa?.number, quantity: remesa?.cargoQuantity, packagingClass: consignment.packagingCode, weightTons: tons(remesa?.cargoWeightKg), description: remesa?.cargoDescription }]
+      : kind === "remesa" ? [{ remissionNumber: undefined, quantity: remesa?.cargoQuantity, packagingClass: consignment.packagingCode, weightTons: tons(remesa?.cargoWeightKg), description: remesa?.cargoDescription }]
         : detail.remesas.map((item) => ({ remissionNumber: item.number, quantity: item.cargoQuantity, packagingClass: item.draft?.packagingCode, weightTons: tons(item.cargoWeightKg), description: item.cargoDescription }));
 
   return (

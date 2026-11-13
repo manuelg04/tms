@@ -32,6 +32,7 @@ import {
   claimConsecutive
 } from "./model/dispatchRecords";
 import { currentManifestDocument } from "./model/currentManifest";
+import { isMerchandiseCode, rememberMerchandiseProduct } from "./model/merchandiseProducts";
 
 export const reserveLoadingOrderNumber = mutation({
   args: { actorToken: v.optional(v.string()), token: v.string() },
@@ -277,6 +278,19 @@ export const saveLoadingOrderDraft = mutation({
       createdAt: now
     });
     await refreshDispatchSearchText(ctx, expediente._id);
+    if (args.draft.cargoDescription && isMerchandiseCode(args.draft.merchandiseCode)) {
+      await rememberMerchandiseProduct(
+        ctx,
+        expediente.organizationId,
+        {
+          name: args.draft.cargoDescription,
+          code: args.draft.merchandiseCode,
+          natureCode: args.draft.natureOfCargo,
+          packagingCode: args.draft.packagingCode
+        },
+        "tms"
+      );
+    }
     return null;
   }
 });

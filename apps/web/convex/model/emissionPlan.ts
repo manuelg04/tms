@@ -360,6 +360,7 @@ function buildConsignmentPayload(
       },
       missing
     ),
+    remissionNumber: (snapshot.remissions ?? []).map((line) => line.remissionNumber?.trim()).filter(Boolean).join(", ") || undefined,
     cargoPolicy: policyPayload(snapshot, missing),
     observations: snapshot.generalObservations
   };

@@ -530,5 +530,16 @@ export const masterTables = {
   })
     .index("by_organization_and_plate", ["organizationId", "plate"])
     .index("by_organization_and_status", ["organizationId", "status"])
-    .index("by_organization_and_linked_vehicle", ["organizationId", "linkedVehicleId"])
+    .index("by_organization_and_linked_vehicle", ["organizationId", "linkedVehicleId"]),
+  merchandiseProducts: defineTable({
+    organizationId: v.id("organizations"),
+    name: v.string(),
+    searchText: v.string(),
+    code: v.string(),
+    natureCode: v.optional(v.string()),
+    packagingCode: v.optional(v.string()),
+    uses: v.number(),
+    source: v.union(v.literal("rndc"), v.literal("tms")),
+    updatedAt: v.number()
+  }).index("by_organization_and_search", ["organizationId", "searchText"])
 };

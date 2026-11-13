@@ -39,6 +39,7 @@ export function buildScenarioFromForm(config: RndcConfig, payload: unknown, allo
   scenario.loadingAppointment = appointment(scenario.loadingAppointmentDate, scenario.loadingAppointmentTime);
   scenario.unloadingAppointment = appointment(scenario.unloadingAppointmentDate, scenario.unloadingAppointmentTime);
   scenario.observations = readString(record, "observations", scenario.observations);
+  scenario.remissionNumber = readOptionalString(record, "remissionNumber", scenario.remissionNumber);
   scenario.seals = readOptionalString(record, "seals", scenario.seals);
   scenario.preparedBy = readOptionalString(record, "preparedBy", scenario.preparedBy);
 

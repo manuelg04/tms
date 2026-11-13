@@ -13,7 +13,7 @@ import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { DateField } from "../../components/fields/date-field";
 import { MoneyField } from "../../components/fields/money-field";
-import { IdTypeField, MunicipalityField, PackagingField, PartyField, VehicleField, type PartyPick, type VehiclePick } from "../../components/fields/lookup-fields";
+import { CargoNatureField, IdTypeField, MerchandiseField, MunicipalityField, PackagingField, PartyField, VehicleField, type PartyPick, type VehiclePick } from "../../components/fields/lookup-fields";
 import { requiredDriverFreight } from "../components/vehicle-assignment-state";
 import { loadingWindowEnd, optionalNumber, required, value } from "../../lib/form-data";
 import { Skeleton } from "../../components/skeleton";
@@ -382,15 +382,14 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
 
             <div className="field-group-note"><strong>Datos de la mercancía</strong></div>
             <CargoGuidance />
+            <MerchandiseField code={copied?.merchandiseCode} codeName="merchandiseCode" name="cargoDescription" onProduct={(product) => { if (!state.packagingCode && product.packagingCode) update({ packagingCode: product.packagingCode, packagingDescription: "" }); }} required value={copied?.cargoDescription} />
             <Field defaultValue={copied?.weightTons} hint={cargoHints.weight} label="Peso (TN)" min="0" name="weightTons" required step="0.001" type="number" />
             <Field defaultValue={copied?.volumeM3} hint={cargoHints.volume} label="Volumen (m³)" min="0" name="volumeM3" step="0.01" type="number" />
             <Field defaultValue={copied?.cargoQuantity} hint={cargoHints.quantity} label="Cantidad" min="0" name="cargoQuantity" type="number" />
-            <Field defaultValue={copied?.cargoDescription} label="Mercancía" name="cargoDescription" required />
             <PackagingField code={state.packagingCode || undefined} description={state.packagingDescription} label="Tipo de empaque" name="packagingCode" onClear={() => update({ packagingCode: "", packagingDescription: "" })} onSelect={(option) => update({ packagingCode: option.code, packagingDescription: option.description })} required />
             <Field defaultValue={copied?.optionalCargoField} label="Campo opcional" name="optionalCargoField" />
             <input defaultValue={copied?.cargoUnit} name="cargoUnit" type="hidden" />
-            <input defaultValue={copied?.merchandiseCode} name="merchandiseCode" type="hidden" />
-            <input defaultValue={copied?.natureOfCargo} name="natureOfCargo" type="hidden" />
+            <CargoNatureField name="natureOfCargo" required value={copied?.natureOfCargo} />
 
             <div className="field-group-note"><strong>Observaciones especiales</strong></div>
             <FormField><span>Sellos y/o precintos</span><textarea defaultValue={copied?.sealNumbers} name="sealNumbers" rows={3} /></FormField>

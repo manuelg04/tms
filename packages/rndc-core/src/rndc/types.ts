@@ -283,6 +283,7 @@ export type DemoScenario = {
   balancePaymentDate: string;
   observations: string;
   seals?: string;
+  remissionNumber?: string;
   preparedBy?: string;
   compliance: ComplianceData;
 };

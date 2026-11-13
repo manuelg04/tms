@@ -179,6 +179,21 @@ export const packagingSearch = query({
   }
 });
 
+export const merchandiseProducts = query({
+  args: {},
+  returns: v.array(v.object({ name: v.string(), code: v.string(), natureCode: v.optional(v.string()), packagingCode: v.optional(v.string()) })),
+  handler: async (ctx) => {
+    const actor = await requireActor(ctx);
+    const rows = await ctx.db
+      .query("merchandiseProducts")
+      .withIndex("by_organization_and_search", (q) => q.eq("organizationId", actor.organizationId))
+      .take(600);
+    return rows
+      .sort((left, right) => right.uses - left.uses || left.name.localeCompare(right.name))
+      .map((row) => ({ name: row.name, code: row.code, natureCode: row.natureCode, packagingCode: row.packagingCode }));
+  }
+});
+
 export const insurersSearch = query({
   args: { term: v.string() },
   returns: v.array(v.object({ insurerNit: v.string(), name: v.string() })),

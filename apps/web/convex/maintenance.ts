@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { internalMutation } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
+import { rememberMerchandiseProduct } from "./model/merchandiseProducts";
 
 export const TEST_ORDER_CODE = /^OS-(GUIDED|ASYNC|EARLY|TMP|REM|MAN|UI|SMOKE|E2E|TEST)-\d+$/i;
 
@@ -246,5 +247,34 @@ export const purgeDemoData = internalMutation({
     }
 
     return done(false);
+  }
+});
+
+export const importMerchandiseProducts = internalMutation({
+  args: {
+    rows: v.array(
+      v.object({
+        name: v.string(),
+        code: v.string(),
+        natureCode: v.optional(v.string()),
+        packagingCode: v.optional(v.string()),
+        uses: v.optional(v.number())
+      })
+    )
+  },
+  returns: v.object({ created: v.number(), updated: v.number(), skipped: v.number() }),
+  handler: async (ctx, args) => {
+    const organizations = await ctx.db.query("organizations").collect();
+    if (organizations.length !== 1) {
+      throw new Error("La importación de productos espera una sola organización");
+    }
+    const result = { created: 0, updated: 0, skipped: 0 };
+    for (const row of args.rows.slice(0, 1000)) {
+      const outcome = await rememberMerchandiseProduct(ctx, organizations[0]._id, row, "rndc");
+      if (outcome === "created") result.created += 1;
+      else if (outcome === "updated") result.updated += 1;
+      else result.skipped += 1;
+    }
+    return result;
   }
 });

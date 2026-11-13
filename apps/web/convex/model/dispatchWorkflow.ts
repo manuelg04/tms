@@ -425,10 +425,10 @@ export function consignmentMissingFields(
   const remissions = draft.remissions ?? [];
   const remissionsComplete =
     remissions.length > 0 &&
-    remissions.every((line) => present(line.remissionNumber) && present(line.quantity) && present(line.packagingClass) && present(line.description) && present(line.weightTons));
+    remissions.every((line) => present(line.quantity) && present(line.packagingClass) && present(line.description) && present(line.weightTons));
 
   if (!remissionsComplete) {
-    missing.push("Remisiones con número, cantidad, clase de bultos, descripción y peso");
+    missing.push("Remisiones con cantidad, clase de bultos, descripción y peso");
   }
 
   return missing;

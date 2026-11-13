@@ -10,7 +10,7 @@ import { companyProfile } from "../../lib/company-profile";
 import { useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import { DateField } from "../../components/fields/date-field";
-import { CargoNatureField, IdTypeField, InsurerField, MunicipalityField, PackagingField, PartyField, SiteField, formatDocument, type PartyPick } from "../../components/fields/lookup-fields";
+import { CargoNatureField, IdTypeField, InsurerField, MerchandiseField, MunicipalityField, PackagingField, PartyField, SiteField, formatDocument, type PartyPick } from "../../components/fields/lookup-fields";
 import { MoneyField, formatThousands } from "../../components/fields/money-field";
 import { VehicleAssignmentPicker, type VehicleAssignmentValue } from "./vehicle-assignment-picker";
 import { MANIFEST_TYPE_OPTIONS, effectiveConsignment, normalizeManifestType } from "../../../convex/model/dispatchWorkflow";
@@ -238,8 +238,7 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
 
         <div className="field-group-note"><strong>Mercancía</strong></div>
         <CargoGuidance />
-        <Field className="span-2" label="Mercancía" name="cargoDescription" required value={draft.cargoDescription} />
-        <Field label="Código de mercancía" name="merchandiseCode" value={draft.merchandiseCode} />
+        <MerchandiseField className="span-2" code={draft.merchandiseCode} codeName="merchandiseCode" name="cargoDescription" onProduct={(product) => { if (!packaging.code && product.packagingCode) setPackaging({ code: product.packagingCode, description: "" }); }} readOnly={readOnly} required value={draft.cargoDescription} />
         <Field hint="Cantidad según la unidad indicada al lado: cajas, estibas u otra unidad de la remisión. Usa el dato del remitente." label="Cantidad" name="cargoQuantity" value={draft.cargoQuantity} />
         <Field label="Unidad" name="cargoUnit" value={draft.cargoUnit} />
         <Field hint={cargoHints.weight} label="Peso (TN)" min="0" name="weightTons" required step="0.001" type="number" value={draft.weightTons} />
@@ -378,10 +377,10 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
 
       <div className="field-group-note"><strong>Remisiones</strong></div>
       <div className="remission-table" onInput={(event) => setRemissionTotal(remissionWeightTotal(event.currentTarget))}>
-        <div className="remission-row remission-head" aria-hidden="true"><span>Remisión Nro.</span><span>Cantidad</span><span>Clase de bultos</span><span>Descripción</span><span>Peso (TN)</span><span>Volumen m³</span><span /></div>
+        <div className="remission-row remission-head" aria-hidden="true"><span>Remisión del cliente</span><span>Cantidad</span><span>Clase de bultos</span><span>Descripción</span><span>Peso (TN)</span><span>Volumen m³</span><span /></div>
         {remissions.map((line, index) => (
           <div className="remission-row" key={line.rowId}>
-            <FormField help={null} label={`Remisión ${index + 1} número`}><span className="remission-field-label">Nro. remisión</span><input aria-label={`Remisión ${index + 1} número`} defaultValue={line.remissionNumber} name={`${key}_rem${index}_number`} required /></FormField>
+            <FormField help={null} label={`Remisión ${index + 1} número`}><span className="remission-field-label">Nro. remisión</span><input aria-label={`Remisión ${index + 1} número`} defaultValue={line.remissionNumber} name={`${key}_rem${index}_number`} placeholder="Opcional" /></FormField>
             <FormField help={null} label={`Remisión ${index + 1} cantidad`}><span className="remission-field-label">Cantidad</span><input aria-label={`Remisión ${index + 1} cantidad`} defaultValue={line.quantity} name={`${key}_rem${index}_quantity`} placeholder={inherited(order.cargoQuantity)} required /></FormField>
             <FormField help={null} label={`Remisión ${index + 1} clase de bultos`}><span className="remission-field-label">Clase de bultos</span><input aria-label={`Remisión ${index + 1} clase de bultos`} defaultValue={line.packagingClass} name={`${key}_rem${index}_packagingClass`} placeholder={inherited(order.packagingCode)} required /></FormField>
             <FormField help={null} label={`Remisión ${index + 1} descripción`}><span className="remission-field-label">Descripción</span><input aria-label={`Remisión ${index + 1} descripción`} defaultValue={line.description} name={`${key}_rem${index}_description`} placeholder={inherited(order.cargoDescription)} required /></FormField>
@@ -392,7 +391,7 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
         ))}
         <input name={`${key}_remCount`} type="hidden" value={remissions.length} />
         <button className="ghost-button add-remission" onClick={() => setRemissions([...remissions, { rowId: Date.now() }])} type="button">Agregar remisión</button>
-        <small className="cargo-field-hint remission-total">Al RNDC se reporta la suma del peso de todas las remisiones{remissionTotal ? `: ${remissionTotal.toLocaleString("es-CO", { maximumFractionDigits: 3 })} t` : ""}.</small>
+        <small className="cargo-field-hint remission-total">El número de remisión es el documento con el que el cliente entrega la carga; si no lo tienes, déjalo vacío. Al RNDC se reporta la suma del peso de todas las remisiones{remissionTotal ? `: ${remissionTotal.toLocaleString("es-CO", { maximumFractionDigits: 3 })} t` : ""}.</small>
       </div>
 
       <div className="field-group-note"><strong>Resumen que pasa al manifiesto</strong></div>

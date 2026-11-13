@@ -454,7 +454,7 @@ function drawRemesaPage(doc: Doc, scenario: DemoScenario, authorization: Authori
   const ratios = [0.155, 0.1, 0.14, 0.105, 0.145, 0.355];
   y = headerRow(doc, x, y, w, 16, ratios, ["REMISIÓN", "CANTIDAD", "EMPAQUE", "PESO (Ton)", "VOLUMEN (m3)", "CONTENIDO"], 7.5);
   y = valueRow(doc, x, y, w, 16, ratios, [
-    scenario.remesaNumber,
+    scenario.remissionNumber ?? "",
     scenario.cargo.quantity ?? 1,
     scenario.cargo.packageName,
     formatTons(scenario.cargo.quantityKg),

@@ -335,6 +335,26 @@ test("a consignment inherits known order data and only asks for the differences"
   assert.deepEqual(missing, []);
 });
 
+test("the customer remission number is optional in a consignment", () => {
+  const missing = consignmentMissingFields(
+    {
+      consignmentClass: "terrestre_carga",
+      declaredValue: "5000000",
+      consignmentValue: "400000",
+      policyNumber: "POL-1",
+      policyExpiresOn: "2027-07-13",
+      insurerNit: "900123456",
+      remissions: [{ quantity: "10", packagingClass: "GRANEL", description: "MAIZ", weightTons: "34" }],
+      unitOfMeasure: "TN",
+      loading: { agreedHours: "1" },
+      unloading: { agreedHours: "2" }
+    },
+    completeOrder
+  );
+
+  assert.deepEqual(missing, []);
+});
+
 test("a consignment without inherited order data lists everything it needs", () => {
   const missing = consignmentMissingFields({ declaredValue: "100" }, null);
 
@@ -342,7 +362,7 @@ test("a consignment without inherited order data lists everything it needs", () 
   assert.ok(missing.includes("Remitente"));
   assert.ok(missing.includes("Destinatario"));
   assert.ok(missing.includes("Sitio y cita de descargue"));
-  assert.ok(missing.includes("Remisiones con número, cantidad, clase de bultos, descripción y peso"));
+  assert.ok(missing.includes("Remisiones con cantidad, clase de bultos, descripción y peso"));
   assert.ok(missing.includes("Póliza de la carga"));
   assert.ok(missing.includes("Valor de la remesa"));
   assert.ok(missing.includes("Unidad de medida"));

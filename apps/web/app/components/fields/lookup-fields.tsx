@@ -2,11 +2,12 @@
 
 import { FormField } from "./form-validation";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useQuery } from "../../lib/convex-hooks";
 import { useDebounced } from "../../lib/hooks";
 import { api } from "../../../convex/_generated/api";
 import { DEFAULT_PARTY_SITE } from "../../../convex/model/masterSync";
+import { matchMerchandiseProduct } from "../../../convex/model/merchandiseProducts";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { SearchSelect } from "./search-select";
 
@@ -146,7 +147,8 @@ export function PackagingField({ className, label, name, required, disabled, cod
   const query = useDebounced(term.trim(), 200);
   const results = useQuery(api.lookups.packagingSearch, { term: query });
   const known = results?.find((row) => row.code === code);
-  const selectedLabel = code ? `${known?.description ?? description ?? "Empaque"} (${code})` : undefined;
+  const byCode = useQuery(api.rndcReferenceCatalogs.packagingByCode, code && !known && !description ? { code } : "skip");
+  const selectedLabel = code ? `${known?.description || description || byCode?.description || "Empaque"} (${code})` : undefined;
   return (
     <>
       <SearchSelect
@@ -345,6 +347,53 @@ export const CARGO_NATURES = [
   { code: "6", label: "Semovientes" },
   { code: "7", label: "Refrigerada" }
 ];
+
+export type MerchandisePick = { name: string; code: string; natureCode?: string; packagingCode?: string };
+
+export function MerchandiseField({ className = "", name, codeName, value, code, required, codeRequired, readOnly, onProduct }: { className?: string; name: string; codeName: string; value?: string; code?: string; required?: boolean; codeRequired?: boolean; readOnly?: boolean; onProduct?: (product: MerchandisePick) => void }) {
+  const listId = useId();
+  const products = useQuery(api.lookups.merchandiseProducts, readOnly ? "skip" : {});
+  const [product, setProduct] = useState(value ?? "");
+  const [productCode, setProductCode] = useState(code ?? "");
+  const [filledFrom, setFilledFrom] = useState<string>();
+  const match = matchMerchandiseProduct(products ?? [], product);
+  const matched = Boolean(match && match.code === productCode.trim());
+  const hint = readOnly
+    ? undefined
+    : matched
+      ? "Código tomado de las remesas que MTM ya registró en el RNDC con este producto."
+      : product.trim() && products !== undefined && !match
+        ? "Producto nuevo para el TMS: escribe el código de 6 dígitos del RNDC una vez y queda guardado para la próxima."
+        : "Se llena solo al elegir un producto de la lista.";
+
+  function changeProduct(next: string) {
+    setProduct(next);
+    const found = matchMerchandiseProduct(products ?? [], next);
+    if (found) {
+      setProductCode(found.code);
+      setFilledFrom(found.name);
+      onProduct?.(found);
+    } else if (filledFrom) {
+      setProductCode("");
+      setFilledFrom(undefined);
+    }
+  }
+
+  return (
+    <>
+      <FormField className={className}>
+        <span>Mercancía{required ? <em aria-hidden="true"> *</em> : null}</span>
+        <input autoComplete="off" list={readOnly ? undefined : listId} name={name} onChange={(event) => changeProduct(event.target.value)} placeholder="Escribe o elige el producto" readOnly={readOnly} required={required} value={product} />
+        {readOnly ? null : <datalist id={listId}>{(products ?? []).map((item) => <option key={item.name} label={item.code} value={item.name} />)}</datalist>}
+      </FormField>
+      <FormField>
+        <span>Código de mercancía{codeRequired ? <em aria-hidden="true"> *</em> : null}</span>
+        <input aria-describedby={hint ? `${codeName}-hint` : undefined} inputMode="numeric" maxLength={6} name={codeName} onChange={(event) => { setProductCode(event.target.value); setFilledFrom(undefined); }} pattern="[0-9]{6}" placeholder="6 dígitos" readOnly={readOnly} required={codeRequired} title="Código de 6 dígitos de la tabla de productos del RNDC" value={productCode} />
+        {hint ? <small className="cargo-field-hint" id={`${codeName}-hint`}>{hint}</small> : null}
+      </FormField>
+    </>
+  );
+}
 
 export function CargoNatureField({ className = "", name, value, required, onChange }: { className?: string; name: string; value?: string; required?: boolean; onChange?: (value: string) => void }) {
   return (

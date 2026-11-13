@@ -278,3 +278,44 @@ export const importMerchandiseProducts = internalMutation({
     return result;
   }
 });
+
+export const purgeUnlinkedSyncRecords = internalMutation({
+  args: { dryRun: v.optional(v.boolean()) },
+  returns: v.object({ dryRun: v.boolean(), documents: v.number(), trips: v.number(), attempts: v.number(), notifications: v.number(), evidence: v.number() }),
+  handler: async (ctx, args) => {
+    const dryRun = args.dryRun !== false;
+    const result = { dryRun, documents: 0, trips: 0, attempts: 0, notifications: 0, evidence: 0 };
+    const documents = (await ctx.db.query("documents").collect()).filter((row) => !row.expedienteId && row.mode !== "live");
+    const tripIds = new Set<Id<"trips">>();
+
+    for (const document of documents) {
+      const trip = await ctx.db.get("trips", document.tripId);
+      if (trip && !trip.expedienteId) tripIds.add(trip._id);
+      const attempts = await ctx.db.query("rndcAttempts").withIndex("by_document", (q) => q.eq("documentId", document._id)).collect();
+      const evidence = await ctx.db.query("evidenceArtifacts").withIndex("by_document", (q) => q.eq("documentId", document._id)).collect();
+      result.attempts += attempts.length;
+      result.evidence += evidence.length;
+      result.documents += 1;
+      if (!dryRun) {
+        for (const attempt of attempts) await ctx.db.delete("rndcAttempts", attempt._id);
+        for (const artifact of evidence) {
+          await ctx.storage.delete(artifact.storageId).catch(() => undefined);
+          await ctx.db.delete("evidenceArtifacts", artifact._id);
+        }
+        await ctx.db.delete("documents", document._id);
+      }
+    }
+
+    const documentIds = new Set<string>(documents.map((document) => document._id));
+    const notifications = (await ctx.db.query("notifications").collect()).filter(
+      (row) => (row.relatedDocumentId && documentIds.has(row.relatedDocumentId)) || (row.relatedTripId && tripIds.has(row.relatedTripId))
+    );
+    result.notifications = notifications.length;
+    result.trips = tripIds.size;
+    if (!dryRun) {
+      for (const notification of notifications) await ctx.db.delete("notifications", notification._id);
+      for (const tripId of tripIds) await ctx.db.delete("trips", tripId);
+    }
+    return result;
+  }
+});

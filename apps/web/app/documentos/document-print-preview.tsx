@@ -96,7 +96,7 @@ export function DocumentPrintPreview({ kind, expedienteId, remesaId, documentId,
         <div><span className="eyebrow">Vista previa de impresión</span><h2>{titles[kind]}</h2></div>
         <div className="document-print-actions">
           <button className="ghost-button" onClick={onBack ?? (() => window.history.back())} type="button">Volver al listado</button>
-          {sourceUrl ? <a className="ghost-button action-link" download={pendingManifest ? "manifiesto-pendiente.pdf" : undefined} href={currentPdf?.url ?? sourceUrl}>Descargar PDF</a> : null}
+          {sourceUrl ? <a className="ghost-button action-link" download={pendingManifest ? "manifiesto-pendiente.pdf" : undefined} href={pendingManifest ? currentPdf?.url ?? sourceUrl : sourceUrl}>Descargar PDF</a> : null}
           <button className="primary-action" disabled={!canPrint} onClick={printDocument} type="button">Imprimir</button>
         </div>
       </div>

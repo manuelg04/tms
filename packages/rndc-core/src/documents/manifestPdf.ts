@@ -93,36 +93,43 @@ function createManifestDoc(scenario: DemoScenario): Doc {
 }
 
 function drawManifest(doc: Doc, scenario: DemoScenario, authorization: AuthorizationData, mode: RndcConfig["mode"], options: ManifestPdfOptions): void {
-  const pending = manifestIsPending(authorization, options);
+  const simulated = manifestIsSimulated(authorization, mode, options);
+  const pending = simulated || manifestIsPending(authorization, options);
   const remesas = resolveManifestRemesas(scenario);
-  drawHeader(doc, scenario, authorization, pending);
+  drawHeader(doc, scenario, authorization, pending, simulated);
   drawActors(doc, scenario);
   const bottom = drawCargo(doc, scenario, remesas, pending);
   drawValues(doc, scenario, bottom, pending);
-  const footer = pending
-    ? "Documento en preparación. No reemplaza el manifiesto electrónico de carga autorizado por el RNDC ni es válido para transitar."
-    : documentFooterText(mode);
+  const footer = simulated
+    ? "MODO PRUEBA - Documento sin validez oficial. La transmisión al RNDC fue simulada: este manifiesto no tiene autorización."
+    : pending
+      ? "Documento en preparación. No reemplaza el manifiesto electrónico de carga autorizado por el RNDC ni es válido para transitar."
+      : documentFooterText(mode);
   if (footer) {
     text(doc, footer, LEFT, bottom + 168, RIGHT - LEFT, { size: 6.5, align: "center", color: "#666666" });
   }
   if (pending) {
-    drawPendingMarks(doc);
+    drawPendingMarks(doc, simulated);
   }
 }
 
-function drawPendingMarks(doc: Doc): void {
+export function manifestIsSimulated(authorization: AuthorizationData, mode: RndcConfig["mode"], options: ManifestPdfOptions = {}): boolean {
+  return mode === "dry-run" && !manifestIsPending(authorization, options);
+}
+
+function drawPendingMarks(doc: Doc, simulated: boolean): void {
   doc.rect(LEFT, 9, RIGHT - LEFT, 15).fill("#b45309");
-  text(doc, `${manifestPendingNotice}  ·  Sin número de autorización ni código QR`, LEFT, 13.4, RIGHT - LEFT, { size: 8, bold: true, align: "center", color: "#ffffff" });
+  text(doc, simulated ? "MODO PRUEBA  ·  Transmisión simulada, sin autorización del RNDC  ·  Sin número de autorización ni código QR" : `${manifestPendingNotice}  ·  Sin número de autorización ni código QR`, LEFT, 13.4, RIGHT - LEFT, { size: 8, bold: true, align: "center", color: "#ffffff" });
   const height = doc.page.height;
   doc.save();
   doc.fillOpacity(0.07);
   doc.rotate(-24, { origin: [PAGE_WIDTH / 2, height / 2] });
-  text(doc, "PENDIENTE DE AUTORIZACIÓN", 0, height / 2 - 24, PAGE_WIDTH, { size: 40, bold: true, align: "center" });
+  text(doc, simulated ? "MODO PRUEBA · SIN AUTORIZACIÓN" : "PENDIENTE DE AUTORIZACIÓN", 0, height / 2 - 24, PAGE_WIDTH, { size: 40, bold: true, align: "center" });
   doc.restore();
   doc.fillOpacity(1);
 }
 
-function drawHeader(doc: Doc, scenario: DemoScenario, authorization: AuthorizationData, pending: boolean): void {
+function drawHeader(doc: Doc, scenario: DemoScenario, authorization: AuthorizationData, pending: boolean, simulated: boolean): void {
   doc.image(transporteLogoPng, 31, 30, { width: 100 });
   doc.image(superTransporteLogoPng, 31, 93, { width: 84 });
 
@@ -136,17 +143,17 @@ function drawHeader(doc: Doc, scenario: DemoScenario, authorization: Authorizati
   shaded(doc, 493.1, 84.7, 189.8, 19.8);
   text(doc, `Manifiesto : ${scenario.manifestNumber}`, 495.4, 89, 186, { size: 10.4, bold: true });
   shaded(doc, 493.1, 107.8, 189.8, 16.8);
-  text(doc, pending ? "Autorización: PENDIENTE" : `Autorización: ${authorization.manifestAuthorization}`, 495.4, 112, 186, { size: 11.3, bold: true });
+  text(doc, simulated ? "Autorización: MODO PRUEBA" : pending ? "Autorización: PENDIENTE" : `Autorización: ${authorization.manifestAuthorization}`, 495.4, 112, 186, { size: 11.3, bold: true });
 
   if (pending) {
     doc.rect(690.5, 36, 109, 109).dash(3, { space: 2 }).lineWidth(0.6).strokeColor("#666666").stroke().undash();
     text(doc, "SIN CÓDIGO QR", 690.5, 72, 109, { size: 8.4, bold: true, align: "center", color: "#444444" });
-    text(doc, "Se genera cuando el RNDC autorice el manifiesto", 698, 86, 94, { size: 6.2, align: "center", color: "#444444", lineGap: 1 });
+    text(doc, simulated ? "En modo prueba el RNDC no autoriza el manifiesto" : "Se genera cuando el RNDC autorice el manifiesto", 698, 86, 94, { size: 6.2, align: "center", color: "#444444", lineGap: 1 });
   } else {
     drawQr(doc, manifestQrText(scenario, authorization), 684.5, 30, 121);
   }
 
-  cell(doc, 116.4, 102.7, 85, 25.5, "FECHA HORA RADICACION", pending ? "" : authorization.radicatedAt ?? slashDate(scenario.expeditionDate), { valueSize: 8.5, labelAlign: "center", valueX: 4 });
+  cell(doc, 116.4, 102.7, 85, 25.5, "FECHA HORA RADICACION", pending ? "" : authorization.radicatedAt ?? slashDate(scenario.expeditionDate), { valueSize: 7.2, labelAlign: "center", valueX: 4 });
 
   const rowB = 128.1;
   cell(doc, LEFT, rowB, 87.6, 25.5, "FECHA DE EXPEDICION", slashDate(scenario.expeditionDate), { valueSize: 8.4 });

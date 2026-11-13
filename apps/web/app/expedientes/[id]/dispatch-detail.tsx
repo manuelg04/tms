@@ -440,7 +440,7 @@ export function DispatchDetail({
       await callDispatchRoute("fulfill", { scope: "manifiesto" });
       setNotice({
         tone: "ok",
-        text: "El manifiesto quedó cumplido y el despacho está cerrado.",
+        text: "El manifiesto quedó cumplido y el viaje está cerrado.",
       });
     }, true);
   }
@@ -528,6 +528,17 @@ export function DispatchDetail({
           "La operación RNDC no terminó correctamente.",
       );
     return result;
+  }
+
+  const remesasFulfilled =
+    detail.remesas.length > 0 &&
+    detail.remesas.every((remesa) => remesa.fulfillmentState === "fulfilled");
+  if (!focus && selectedStage === "cumplido_inicial" && remesasFulfilled) {
+    setSelectedStage(
+      manifestDocument?.fulfillmentState === "fulfilled"
+        ? null
+        : "cumplido_final",
+    );
   }
 
   const currentForm = selectedStage && operaciones.loading
@@ -1028,10 +1039,15 @@ export function DispatchDetail({
               >
                 Cerrar
               </button>
-              {canEdit && selectedDocument?.canEdit ? (
+              {canEdit &&
+              (selectedStage === "vehiculo_conductor"
+                ? isEditable
+                : (selectedDocument?.canEdit ??
+                  documentHubItems.find((item) => item.key === "fulfillment")
+                    ?.canEdit)) ? (
                 <SaveButtons
                   busy={busy}
-                  emits={emitStages.includes(selectedStage ?? "")}
+                  emits={false}
                   onIntent={(emit) => {
                     emitIntent.current = emit;
                   }}

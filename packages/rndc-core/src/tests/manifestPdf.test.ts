@@ -3,7 +3,7 @@ import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { buildMtmReferenceScenario, generateManifestDocument, loadConfig, manifestAmountInWords, manifestIsPending, manifestQrText, manifestRadicationStamp, renderManifestPdf } from "../index.js";
+import { buildMtmReferenceScenario, generateManifestDocument, loadConfig, manifestAmountInWords, manifestIsPending, manifestIsSimulated, manifestQrText, manifestRadicationStamp, renderManifestPdf } from "../index.js";
 
 const authorization = {
   loadingOrderAuthorization: "PENDIENTE",
@@ -72,4 +72,13 @@ test("el manifiesto sin autorización se marca pendiente y no lleva QR ni númer
   assert.match(pdf.toString("latin1"), /\/MediaBox \[0 0 855 612\]/);
   const authorized = await renderManifestPdf(scenario, authorization, "live");
   assert.ok(authorized.length > pdf.length);
+});
+
+test("en modo prueba el manifiesto no muestra el radicado simulado ni un QR", async () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  assert.equal(manifestIsSimulated(authorization, "dry-run"), true);
+  assert.equal(manifestIsSimulated(authorization, "live"), false);
+  const trial = await renderManifestPdf(scenario, authorization, "dry-run");
+  const live = await renderManifestPdf(scenario, authorization, "live");
+  assert.ok(live.length > trial.length + 2000);
 });

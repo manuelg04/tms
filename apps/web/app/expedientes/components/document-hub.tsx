@@ -52,7 +52,7 @@ export function DocumentHub({ busy, items, expedienteId, remesaCount, canEdit, o
                 <StatusBadge status={item.state} />
               </div>
               <strong className="document-hub-number">{item.number ?? (module ? "Sin crear" : "Pendiente")}</strong>
-              {official ? <p className="document-hub-ready">{item.key === "fulfillment" ? "Cumplidos registrados" : "Autorizado por el RNDC"}</p> : item.blockers.length > 0 ? <ul className="document-hub-blockers">{item.blockers.slice(0, 3).map((blocker) => <li key={blocker}>{blocker}</li>)}{item.blockers.length > 3 ? <li>y {item.blockers.length - 3} más</li> : null}</ul> : <p className="document-hub-ready">Listo para continuar</p>}
+              {official ? <p className="document-hub-ready">{item.key === "fulfillment" ? "Cumplidos registrados" : "Documento terminado"}</p> : item.blockers.length > 0 ? <ul className="document-hub-blockers">{item.blockers.slice(0, 3).map((blocker) => <li key={blocker}>{blocker}</li>)}{item.blockers.length > 3 ? <li>y {item.blockers.length - 3} más</li> : null}</ul> : <p className="document-hub-ready">Listo para continuar</p>}
               <div className="document-hub-actions">
                 {module ? <>
                   {exists

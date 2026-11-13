@@ -53,6 +53,7 @@ import type * as model_fulfillmentWorkflow from "../model/fulfillmentWorkflow.js
 import type * as model_loadingOrderReservation from "../model/loadingOrderReservation.js";
 import type * as model_masterData from "../model/masterData.js";
 import type * as model_masterSync from "../model/masterSync.js";
+import type * as model_merchandiseProducts from "../model/merchandiseProducts.js";
 import type * as model_mirrorValidators from "../model/mirrorValidators.js";
 import type * as model_monitoring from "../model/monitoring.js";
 import type * as model_monitoringValidators from "../model/monitoringValidators.js";
@@ -144,6 +145,7 @@ declare const fullApi: ApiFromModules<{
   "model/loadingOrderReservation": typeof model_loadingOrderReservation;
   "model/masterData": typeof model_masterData;
   "model/masterSync": typeof model_masterSync;
+  "model/merchandiseProducts": typeof model_merchandiseProducts;
   "model/mirrorValidators": typeof model_mirrorValidators;
   "model/monitoring": typeof model_monitoring;
   "model/monitoringValidators": typeof model_monitoringValidators;

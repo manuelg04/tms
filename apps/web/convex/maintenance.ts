@@ -319,3 +319,20 @@ export const purgeUnlinkedSyncRecords = internalMutation({
     return result;
   }
 });
+
+export const releaseOperacionesRequest = internalMutation({
+  args: { expedienteCode: v.string(), dryRun: v.optional(v.boolean()) },
+  returns: v.object({ dryRun: v.boolean(), released: v.number(), operacionesExpedienteIds: v.array(v.string()) }),
+  handler: async (ctx, args) => {
+    const dryRun = args.dryRun !== false;
+    const expedientes = (await ctx.db.query("expedientes").collect()).filter((row) => row.code === args.expedienteCode);
+    if (expedientes.length !== 1) {
+      throw new Error(`Se esperaba un solo viaje con el código ${args.expedienteCode}`);
+    }
+    const links = await ctx.db.query("operacionesLinks").withIndex("by_expediente", (q) => q.eq("expedienteId", expedientes[0]._id)).collect();
+    if (!dryRun) {
+      for (const link of links) await ctx.db.delete("operacionesLinks", link._id);
+    }
+    return { dryRun, released: links.length, operacionesExpedienteIds: links.map((link) => link.operacionesExpedienteId) };
+  }
+});

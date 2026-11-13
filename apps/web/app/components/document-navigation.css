@@ -96,3 +96,13 @@
     transition: none;
   }
 }
+
+.document-navigation .nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.document-navigation .nav-section + .nav-section {
+  margin-top: 16px;
+}

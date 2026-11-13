@@ -18,8 +18,25 @@ export default function Home() {
   const markAllRead = useMutation(api.notifications.markAllRead);
   const hasUnread = notifications?.some((notification) => notification.status === "unread") ?? false;
 
+  const canWork = user?.role === "admin" || user?.role === "operator";
+
   return (
     <>
+      {canWork ? (
+        <section className="start-here" aria-label="Qué vas a hacer">
+          <div className="start-here-head">
+            <h2>¿Qué vas a hacer?</h2>
+            <p>Cada documento tiene su módulo en el menú. Un viaje se arma en este orden.</p>
+          </div>
+          <ol className="start-here-steps">
+            <li><Link href="/documentos/ordenes/insertar"><span>1</span><strong>Orden de cargue</strong><em>Crea el viaje con cliente, carga, vehículo y conductor.</em></Link></li>
+            <li><Link href="/documentos/remesas/insertar"><span>2</span><strong>Remesa</strong><em>Se hace a partir de una orden de cargue.</em></Link></li>
+            <li><Link href="/documentos/manifiestos/insertar"><span>3</span><strong>Manifiesto</strong><em>Reúne las remesas y liquida el viaje.</em></Link></li>
+            <li><Link href="/documentos/cumplidos"><span>4</span><strong>Cumplidos</strong><em>Cierra la remesa y el manifiesto al entregar.</em></Link></li>
+          </ol>
+        </section>
+      ) : null}
+
       <section className="metric-strip" aria-label="Resumen de documentos">
         <article className="metric ok">
           <span className="eyebrow">Autorizados</span>
@@ -75,8 +92,7 @@ export default function Home() {
             <Skeleton label="Cargando" />
           ) : notifications.length === 0 ? (
             <div className="empty-state">
-              Aquí verás cada respuesta del RNDC. Inicia o continúa el recorrido desde{" "}
-              <Link href="/expedientes">Despachos</Link>.
+              Aquí verás cada respuesta del RNDC cuando emitas un documento.
             </div>
           ) : (
             <div className="notif-list">

@@ -102,26 +102,26 @@ export default function DespachosPage() {
     <>
       <section className="dispatch-list-head">
         <div>
-          <span className="eyebrow">Despachos</span>
-          <h2>Listado de despachos</h2>
+          <span className="eyebrow">Consulta</span>
+          <h2>Viajes y sus documentos</h2>
         </div>
         <div className="queue-header-actions">
           <details className="export-menu">
             <summary>Exportar Excel</summary>
             <div>
-              <a href={exportHref("dispatches")}>Resumen de despachos</a>
+              <a href={exportHref("dispatches")}>Resumen de viajes</a>
               <a href={exportHref("orders")}>Órdenes de cargue</a>
               <a href={exportHref("consignments")}>Remesas</a>
               <a href={exportHref("manifests")}>Manifiestos</a>
             </div>
           </details>
-          <Link className="primary-action action-link" href="/expedientes/nuevo">Nuevo despacho</Link>
+          <Link className="primary-action action-link" href="/documentos/ordenes/insertar">Nueva orden de cargue</Link>
         </div>
       </section>
 
-      <section className="panel dispatch-list-panel" aria-label="Listado de despachos">
+      <section className="panel dispatch-list-panel" aria-label="Listado de viajes">
         <div className="dispatch-toolbar">
-          <div className="state-tabs" role="tablist" aria-label="Filtrar por estado del despacho">
+          <div className="state-tabs" role="tablist" aria-label="Filtrar por estado del viaje">
             {stateTabs.filter((tab) => tab.always || (countFor(tab.value) ?? 0) > 0).map((tab) => (
               <button
                 aria-selected={(filters.state ?? "") === tab.value}
@@ -138,11 +138,11 @@ export default function DespachosPage() {
           </div>
           <div className="dispatch-toolbar-right">
             <label className="filter-search">
-              <span className="sr-only">Buscar despachos</span>
+              <span className="sr-only">Buscar viajes</span>
               <SearchIcon />
               <input
                 onChange={(event) => updateFilter("search", event.target.value)}
-                placeholder="Buscar por despacho, placa, cliente o manifiesto"
+                placeholder="Buscar por viaje, placa, cliente o manifiesto"
                 type="search"
                 value={filters.search ?? ""}
               />
@@ -184,12 +184,12 @@ export default function DespachosPage() {
         ) : null}
 
         {pageStatus === "LoadingFirstPage" ? (
-          <Skeleton label="Cargando despachos" />
+          <Skeleton label="Cargando viajes" />
         ) : rows.length === 0 ? (
           <div className="expediente-empty">
-            <strong>No hay despachos {hasFilters ? "con estos filtros" : "todavía"}</strong>
-            <p>{hasFilters ? "Ajusta la búsqueda o revisa la siguiente página del historial." : "Crea un nuevo despacho para comenzar."}</p>
-            {pageStatus === "CanLoadMore" ? <button className="load-more" onClick={() => loadMore(PAGE_SIZE)} type="button">Buscar en la siguiente página</button> : <Link className="primary-action action-link" href="/expedientes/nuevo">Crear despacho</Link>}
+            <strong>No hay viajes {hasFilters ? "con estos filtros" : "todavía"}</strong>
+            <p>{hasFilters ? "Ajusta la búsqueda o revisa la siguiente página del historial." : "Un viaje nace cuando creas su orden de cargue."}</p>
+            {pageStatus === "CanLoadMore" ? <button className="load-more" onClick={() => loadMore(PAGE_SIZE)} type="button">Buscar en la siguiente página</button> : <Link className="primary-action action-link" href="/documentos/ordenes/insertar">Nueva orden de cargue</Link>}
           </div>
         ) : (
           <div className="table-wrap dispatch-table-wrap">
@@ -197,7 +197,7 @@ export default function DespachosPage() {
               <thead>
                 <tr>
                   <th>Fecha</th>
-                  <th>Despacho</th>
+                  <th>Viaje</th>
                   <th>Cliente</th>
                   <th>Ruta</th>
                   <th>Placa · Conductor</th>
@@ -229,7 +229,7 @@ export default function DespachosPage() {
 
         {pageStatus !== "LoadingFirstPage" && rows.length > 0 ? (
           <div className="load-more-bar dispatch-load-more">
-            <span className="load-more-count">{rows.length} {rows.length === 1 ? "despacho" : "despachos"}{pageStatus === "Exhausted" ? "" : " cargados"}</span>
+            <span className="load-more-count">{rows.length} {rows.length === 1 ? "viaje" : "viajes"}{pageStatus === "Exhausted" ? "" : " cargados"}</span>
             {pageStatus === "CanLoadMore" || pageStatus === "LoadingMore" ? (
               <button className="load-more" disabled={pageStatus === "LoadingMore"} onClick={() => loadMore(PAGE_SIZE)} type="button">{pageStatus === "LoadingMore" ? "Cargando…" : `Cargar ${PAGE_SIZE} más`}</button>
             ) : null}

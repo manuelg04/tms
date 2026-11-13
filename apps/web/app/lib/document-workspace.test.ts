@@ -22,11 +22,13 @@ test("rejects an unknown document workspace", () => {
   assert.equal(resolveDocumentSection("desconocido"), undefined);
 });
 
-test("builds a dispatch link that opens the document stage", () => {
+test("builds a link that opens each document in its own module", () => {
   assert.equal(
-    documentDetailHref({ expedienteId: "dispatch-1", kind: "remesa" }),
-    "/expedientes/dispatch-1?stage=remesas#centro-documental"
+    documentDetailHref({ expedienteId: "dispatch-1", kind: "remesa", documentId: "doc-1" }),
+    "/documentos/remesas/listar?viaje=dispatch-1&doc=doc-1"
   );
+  assert.equal(documentDetailHref({ expedienteId: "dispatch-1", kind: "orden_cargue" }), "/documentos/ordenes/listar?viaje=dispatch-1");
+  assert.equal(documentDetailHref({ expedienteId: "dispatch-1", kind: "cumplido" }), "/expedientes/dispatch-1?stage=cumplido_inicial#cumplidos");
   assert.equal(documentDetailHref({ kind: "manifiesto" }), undefined);
 });
 

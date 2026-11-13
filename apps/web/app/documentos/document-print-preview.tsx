@@ -34,7 +34,10 @@ export function DocumentPrintPreview({ kind, expedienteId, remesaId, documentId,
   const evidence = useQuery(api.evidence.listForExpediente, user && expedienteId ? { expedienteId, limit: 250 } : "skip");
   const selection = detail ? selectDocument(detail, kind, remesaId, documentId) : undefined;
   const artifact = selection?.document ? selectDocumentPdfArtifact(evidence ?? [], selection.document._id) : undefined;
-  const sourceUrl = pdfArtifactId ? `/api/evidence/${pdfArtifactId}` : artifact ? `/api/evidence/${artifact._id}` : trustedPdfUrl(pdfUrl);
+  const savedUrl = pdfArtifactId ? `/api/evidence/${pdfArtifactId}` : artifact ? `/api/evidence/${artifact._id}` : trustedPdfUrl(pdfUrl);
+  const [previewFailed, setPreviewFailed] = useState(false);
+  const pendingManifest = kind === "manifiesto" && !savedUrl && !previewFailed && Boolean(expedienteId && detail && selection?.valid && evidence !== undefined);
+  const sourceUrl = savedUrl ?? (pendingManifest && detail ? `/api/rndc/dispatches/${expedienteId}/manifest-preview?v=${detail.expediente.updatedAt}` : undefined);
   const [pdf, setPdf] = useState<{ source: string; url?: string; error?: string }>();
   const [loadedPdf, setLoadedPdf] = useState<string>();
   const [printError, setPrintError] = useState<string>();
@@ -55,13 +58,15 @@ export function DocumentPrintPreview({ kind, expedienteId, remesaId, documentId,
         setPdf({ source: sourceUrl, url: objectUrl });
       })
       .catch((error: unknown) => {
-        if (!controller.signal.aborted) setPdf({ source: sourceUrl, error: error instanceof Error ? error.message : "No se pudo cargar el PDF guardado." });
+        if (controller.signal.aborted) return;
+        if (pendingManifest) setPreviewFailed(true);
+        else setPdf({ source: sourceUrl, error: error instanceof Error ? error.message : "No se pudo cargar el PDF guardado." });
       });
     return () => {
       controller.abort();
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [sourceUrl]);
+  }, [pendingManifest, sourceUrl]);
 
   const waiting = Boolean(expedienteId && (detail === undefined || evidence === undefined));
   const missing = Boolean(expedienteId && detail === null);
@@ -91,7 +96,7 @@ export function DocumentPrintPreview({ kind, expedienteId, remesaId, documentId,
         <div><span className="eyebrow">Vista previa de impresión</span><h2>{titles[kind]}</h2></div>
         <div className="document-print-actions">
           <button className="ghost-button" onClick={onBack ?? (() => window.history.back())} type="button">Volver al listado</button>
-          {sourceUrl ? <a className="ghost-button action-link" href={sourceUrl}>Descargar PDF</a> : null}
+          {sourceUrl ? <a className="ghost-button action-link" download={pendingManifest ? "manifiesto-pendiente.pdf" : undefined} href={currentPdf?.url ?? sourceUrl}>Descargar PDF</a> : null}
           <button className="primary-action" disabled={!canPrint} onClick={printDocument} type="button">Imprimir</button>
         </div>
       </div>
@@ -99,11 +104,14 @@ export function DocumentPrintPreview({ kind, expedienteId, remesaId, documentId,
       {missing || invalidSelection ? <p className="document-print-notice" role="alert">No se encontró este documento dentro del despacho seleccionado.</p> : null}
       {!waiting && !missing && !invalidSelection ? <>
         {sourceUrl ? <>
-          <div className="document-print-notice document-pdf-caption">
+          {pendingManifest ? <div className="document-print-notice document-pdf-caption pending">
+            <span>Así quedará el manifiesto en el formato del Ministerio de Transporte. Todavía no tiene autorización del RNDC: sale sin número de autorización y sin código QR, y solo muestra los datos que ya están diligenciados.</span>
+            <strong>Pendiente de autorización</strong>
+          </div> : <div className="document-print-notice document-pdf-caption">
             <span>Vista del PDF guardado{!expedienteId ? ". Este documento no tiene un despacho asociado." : "."}</span>
             {selection?.document ? <StatusBadge status={selection.document.officialState ?? selection.document.status} /> : null}
             {selection?.document?.mode === "dry-run" ? <strong>Documento de prueba</strong> : null}
-          </div>
+          </div>}
           {currentPdf?.error ? <p className="document-print-notice" role="alert">{currentPdf.error} Puedes volver a intentar desde el listado.</p> : !currentPdf?.url ? <p className="document-print-notice" role="status">Preparando PDF…</p> : <>
             <iframe className="document-pdf-frame" onLoad={() => setLoadedPdf(currentPdf.url)} ref={frame} src={`${currentPdf.url}#toolbar=1&view=FitH`} title={`PDF de ${titles[kind].toLowerCase()}`} />
             <p className="document-pdf-help">Si el visor no se muestra, <a href={currentPdf.url} rel="noreferrer" target="_blank">abrir PDF en otra pestaña</a>.</p>

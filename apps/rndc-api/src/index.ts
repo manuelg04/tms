@@ -15,6 +15,7 @@ import {
   buildRemesaMessages,
   buildTripMessages,
   loadConfig,
+  renderManifestPdf,
   RndcClient,
   runDemoFlow
 } from "@tms/rndc-core";
@@ -31,7 +32,7 @@ import {
 import type { RndcAppHooks } from "./runtimeSecurity.js";
 import { storeDurableEvidenceToConvex, validateDurableContextWithConvex } from "./durableEvidence.js";
 import type { DurableContextValidator, DurableEvidenceStore } from "./durableEvidence.js";
-import { scenarioToForm } from "./formScenario.js";
+import { buildScenarioFromForm, scenarioToForm } from "./formScenario.js";
 import { securityHeaders, createRequestLoggingMiddleware, createDurableEvidenceMiddleware, createLegacyCorsMiddleware, createServiceAuthenticationMiddleware, createExpectedModeMiddleware, createOperationalReadinessMiddleware, createLegacyMessageMiddleware, createDryRunOnlyMiddleware } from "./middleware.js";
 import { submitForm, summarizeFlow } from "./formOperations.js";
 import { createAvailabilityChecker } from "./availability.js";
@@ -165,6 +166,27 @@ export function createRndcApp(overrides: Partial<RndcConfig> = {}, hooks: RndcAp
 
   app.post("/rndc/forms/party", requireOperationalReadiness, (req, res, next) => {
     void submitForm(req, res, next, readConfig, "party", buildPartyMessages, evidenceStore);
+  });
+
+  app.post("/documents/manifest-preview", requireServiceAuthentication, async (req, res, next) => {
+    try {
+      const config = readConfig();
+      const scenario = buildScenarioFromForm(config, req.body, false);
+      const pdf = await renderManifestPdf(scenario, {
+        loadingOrderAuthorization: "PENDIENTE",
+        remesaAuthorization: "PENDIENTE",
+        manifestAuthorization: "PENDIENTE",
+        seguridadQr: "PENDIENTE",
+        observacionesQr: "PENDIENTE",
+        acceptances: []
+      }, config.mode, { pending: true });
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", "inline; filename=\"manifiesto-pendiente.pdf\"");
+      res.setHeader("Cache-Control", "no-store");
+      res.send(pdf);
+    } catch (error) {
+      next(error);
+    }
   });
 
   registerPhaseOneRoutes(app, readConfig, requireOperationalReadiness, evidenceStore);

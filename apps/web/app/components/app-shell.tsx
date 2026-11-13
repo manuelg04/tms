@@ -22,8 +22,15 @@ type NavItem = {
   href: string;
   label: string;
   icon: ReactNode;
+  group: "operacion" | "consulta" | "administracion";
   children?: Array<{ href: string; label: string }>;
 };
+
+const navGroups: Array<{ key: NavItem["group"]; label: string }> = [
+  { key: "operacion", label: "Operación" },
+  { key: "consulta", label: "Consulta" },
+  { key: "administracion", label: "Administración" }
+];
 
 const pageMeta: Record<string, PageMeta> = {
   "/rutas": { title: "Rutas y puestos de control", subtitle: "Catálogo operativo y planes por despacho" },
@@ -37,20 +44,20 @@ const pageMeta: Record<string, PageMeta> = {
   "/configuracion/usuarios": { title: "Usuarios", subtitle: "Cuentas de acceso y cargos de la empresa" },
   "/configuracion/mi-clave": { title: "Mi contraseña", subtitle: "Cambio de la contraseña de acceso" },
   "/": {
-    title: "Panel de operación",
-    subtitle: "Estado en vivo de tus documentos RNDC"
+    title: "Inicio",
+    subtitle: "Qué hacer ahora y cómo van tus documentos RNDC"
   },
   "/expedientes": {
-    title: "Despachos",
-    subtitle: "Listado, búsqueda y exportación de despachos"
+    title: "Viajes",
+    subtitle: "Cada viaje con su orden de cargue, remesas, manifiesto y cumplidos"
   },
   "/solicitudes": {
     title: "Solicitudes de planilla",
     subtitle: "Viajes pedidos desde MTM Operaciones, listos para crear el despacho"
   },
   "/expedientes/nuevo": {
-    title: "Nuevo despacho",
-    subtitle: "Datos base y apertura del centro documental"
+    title: "Nueva orden de cargue",
+    subtitle: "Primer documento del viaje"
   },
   "/documentos": {
     title: "Documentos",
@@ -77,94 +84,55 @@ const actionLabels: Record<string, string> = {
 };
 
 const allNavItems: NavItem[] = [
-  { href: "/rutas", label: "Rutas y P. Control", icon: <span className="nav-icon" aria-hidden>↗</span> },
-  { href: "/documentos/espejo", label: "Espejo RNDC", icon: <span className="nav-icon" aria-hidden>▤</span> },
-  {
-    href: "/",
-    label: "Panel",
-    icon: (
+  { href: "/", label: "Inicio", group: "operacion", icon: (
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <rect x="1.5" y="1.5" width="5.5" height="7" rx="1" />
         <rect x="9" y="1.5" width="5.5" height="4" rx="1" />
         <rect x="9" y="7.5" width="5.5" height="7" rx="1" />
         <rect x="1.5" y="10.5" width="5.5" height="4" rx="1" />
       </svg>
-    )
-  },
-  {
-    href: "/expedientes",
-    label: "Despachos",
-    icon: (
-      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
-        <path d="M1.5 4.5h5l1.4 1.7h6.6v7.3h-13v-9Z" strokeLinejoin="round" />
-        <path d="M3 4.5V2.3h4.8l1.2 1.5h4v2.4" strokeLinejoin="round" />
-      </svg>
-    )
-  },
-  {
-    href: "/solicitudes",
-    label: "Solicitudes",
-    icon: (
+    ) },
+  { href: "/solicitudes", label: "Solicitudes", group: "operacion", icon: (
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <path d="M1.5 9.5 3.6 3h8.8l2.1 6.5v4h-13v-4Z" strokeLinejoin="round" />
         <path d="M1.5 9.5h4l.8 1.6h3.4l.8-1.6h4" strokeLinejoin="round" />
       </svg>
-    )
-  },
-  {
-    href: "/documentos/ordenes",
-    label: "Orden de carga",
-    icon: (
+    ) },
+  { href: "/documentos/ordenes", label: "Órdenes de cargue", group: "operacion", icon: (
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <rect x="3" y="2.5" width="10" height="12" rx="1" />
         <path d="M6 1.5h4v3H6zM5.5 7.5h5M5.5 10.5h5" strokeLinejoin="round" />
       </svg>
-    ),
-    children: ["insertar", "listar", "actualizar", "eliminar", "anular", "imprimir"].map((action) => ({
-      href: `/documentos/ordenes/${action}`,
-      label: actionLabels[action]
-    }))
-  },
-  {
-    href: "/documentos/remesas",
-    label: "Remesas",
-    icon: (
+    ) },
+  { href: "/documentos/remesas", label: "Remesas", group: "operacion", icon: (
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <path d="M2 4.5 8 1.5l6 3v7l-6 3-6-3v-7Z" strokeLinejoin="round" />
         <path d="m2 4.5 6 3 6-3M8 7.5v7M5 3l6 3v3" strokeLinejoin="round" />
       </svg>
-    ),
-    children: ["insertar", "listar", "actualizar", "anular", "eliminar", "imprimir"].map((action) => ({
-      href: `/documentos/remesas/${action}`,
-      label: actionLabels[action]
-    }))
-  },
-  {
-    href: "/documentos/manifiestos",
-    label: "Manifiestos",
-    icon: (
+    ) },
+  { href: "/documentos/manifiestos", label: "Manifiestos", group: "operacion", icon: (
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <path d="M4 1.5h5.5L13 5v9.5H4v-13Z" strokeLinejoin="round" />
         <path d="M9.5 1.5V5H13M6 8h4.5M6 10.5h4.5" />
       </svg>
-    ),
-    children: ["insertar", "listar", "actualizar", "anular", "imprimir", "duplicar"].map((action) => ({
-      href: `/documentos/manifiestos/${action}`,
-      label: actionLabels[action]
-    }))
-  },
-  {
-    href: "/documentos/cumplidos",
-    label: "Cumplidos",
-    icon: (
+    ) },
+  { href: "/documentos/cumplidos", label: "Cumplidos", group: "operacion", icon: (
       <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
         <path d="M13.5 7.5v6h-11v-11h7M6 6.5l2.5 2.5L14 3.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-    )
-  },
+    ) },
+  { href: "/expedientes", label: "Viajes", group: "consulta", icon: (
+      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+        <path d="M1.5 4.5h5l1.4 1.7h6.6v7.3h-13v-9Z" strokeLinejoin="round" />
+        <path d="M3 4.5V2.3h4.8l1.2 1.5h4v2.4" strokeLinejoin="round" />
+      </svg>
+    ) },
+  { href: "/documentos/espejo", label: "Espejo RNDC", group: "consulta", icon: <span className="nav-icon" aria-hidden>▤</span> },
+  { href: "/rutas", label: "Rutas y P. Control", group: "consulta", icon: <span className="nav-icon" aria-hidden>↗</span> },
   {
     href: "/control/bitacora",
     label: "Control",
+    group: "consulta",
     icon: <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden><circle cx="8" cy="8" r="6" /><circle cx="8" cy="8" r="2" /><path d="M8 0v4M8 12v4M0 8h4M12 8h4" /></svg>,
     children: [
       { href: "/control/bitacora", label: "Bitácora de monitoreo" },
@@ -172,36 +140,29 @@ const allNavItems: NavItem[] = [
       { href: "/control/seguimiento", label: "Seguimiento" }
     ]
   },
+  { href: "/maestros", label: "Maestros", group: "administracion", icon: (
+      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+        <path d="M5.5 7.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+        <path d="M1.5 14c.4-2.4 1.8-4 4-4s3.6 1.6 4 4" strokeLinecap="round" />
+        <path d="M10.5 5.5h2.2l1.8 2v3h-4V7M11 10.5h3.5M11.2 13.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM14.2 13.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ) },
+  { href: "/correcciones", label: "Correcciones y anulaciones", group: "administracion", icon: (
+      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+        <path d="M8 1.5 13.5 4v3.8c0 3.2-2.1 5.7-5.5 6.7-3.4-1-5.5-3.5-5.5-6.7V4L8 1.5Z" strokeLinejoin="round" />
+        <path d="M5.5 8h5M8 5.5v5" strokeLinecap="round" />
+      </svg>
+    ) },
   {
     href: "/configuracion/alertas-visuales",
     label: "Configuración",
+    group: "administracion",
     icon: <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden><path d="M3 2v12M8 2v12M13 2v12" /><path d="M1 5h4M6 10h4M11 6h4" strokeWidth="3" /></svg>,
     children: [
       { href: "/configuracion/alertas-visuales", label: "Alertas visuales" },
       { href: "/configuracion/usuarios", label: "Usuarios" },
       { href: "/configuracion/mi-clave", label: "Mi contraseña" }
     ]
-  },
-  {
-    href: "/correcciones",
-    label: "Correcciones y anulaciones",
-    icon: (
-      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
-        <path d="M8 1.5 13.5 4v3.8c0 3.2-2.1 5.7-5.5 6.7-3.4-1-5.5-3.5-5.5-6.7V4L8 1.5Z" strokeLinejoin="round" />
-        <path d="M5.5 8h5M8 5.5v5" strokeLinecap="round" />
-      </svg>
-    )
-  },
-  {
-    href: "/maestros",
-    label: "Maestros",
-    icon: (
-      <svg className="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
-        <path d="M5.5 7.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
-        <path d="M1.5 14c.4-2.4 1.8-4 4-4s3.6 1.6 4 4" strokeLinecap="round" />
-        <path d="M10.5 5.5h2.2l1.8 2v3h-4V7M11 10.5h3.5M11.2 13.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2ZM14.2 13.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    )
   }
 ];
 
@@ -243,6 +204,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
   const meta = resolvePageMeta(pathname);
   const items = isClient ? clientNavItems : navItems;
+  const groupedItems = isClient
+    ? [{ key: "operacion" as const, label: "Su empresa", items }]
+    : navGroups.map((group) => ({ ...group, items: items.filter((item) => item.group === group.key) })).filter((group) => group.items.length > 0);
   const hiddenModule = pathname !== "/login" && isHiddenModulePath(pathname);
   const clientHome = isHiddenModulePath("/control/bitacora") ? "/configuracion/mi-clave" : "/control/bitacora";
   const clientBlocked = isClient && pathname !== "/login" && (hiddenModule || !clientCanVisit(pathname));
@@ -335,45 +299,49 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
 
         <nav className="nav" aria-label="Módulos de operación">
-          <span className="nav-label">{isClient ? "Su empresa" : "Operación"}</span>
-          {loading ? <div className="nav-placeholder" aria-hidden>{Array.from({ length: 7 }, (_, index) => <span key={index} />)}</div> : null}
-          {(loading ? [] : items).map((item) => {
-            const active = isActiveNavItem(pathname, item);
-            const expanded = expandedGroups.includes(item.href);
-            const groupId = `nav-${item.href.split("/").filter(Boolean).join("-")}`;
-            return (
-              <div className={item.children ? "nav-group" : "nav-group single"} key={item.href}>
-                {item.children ? (
-                  <button
-                    aria-controls={groupId}
-                    aria-expanded={expanded}
-                    className={active ? "nav-item nav-group-toggle active" : "nav-item nav-group-toggle"}
-                    onClick={() => setExpandedGroups((current) => current.includes(item.href) ? current.filter((href) => href !== item.href) : [...current, item.href])}
-                    type="button"
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
-                    <svg className="nav-group-chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
-                      <path d="m4.5 2.5 3.5 3.5-3.5 3.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </button>
-                ) : (
-                  <Link aria-current={active ? "page" : undefined} className={active ? "nav-item active" : "nav-item"} href={item.href} onClick={() => setNavOpen(false)}>
-                    {item.icon}
-                    {item.label}
-                  </Link>
-                )}
-                {item.children ? (
-                  <div className="nav-subitems" hidden={!expanded} id={groupId}>
-                    {item.children.map((child) => {
-                      const childActive = isActivePath(pathname, child.href);
-                      return <Link aria-current={childActive ? "page" : undefined} className={childActive ? "active" : ""} href={child.href} key={child.href} onClick={() => setNavOpen(false)}>{child.label}</Link>;
-                    })}
+          {loading ? <><span className="nav-label">Operación</span><div className="nav-placeholder" aria-hidden>{Array.from({ length: 7 }, (_, index) => <span key={index} />)}</div></> : null}
+          {(loading ? [] : groupedItems).map((group) => (
+            <div className="nav-section" key={group.key}>
+              <span className="nav-label">{isClient ? "Su empresa" : group.label}</span>
+                  {group.items.map((item) => {
+                const active = isActiveNavItem(pathname, item);
+                const expanded = expandedGroups.includes(item.href);
+                const groupId = `nav-${item.href.split("/").filter(Boolean).join("-")}`;
+                return (
+                  <div className={item.children ? "nav-group" : "nav-group single"} key={item.href}>
+                    {item.children ? (
+                      <button
+                        aria-controls={groupId}
+                        aria-expanded={expanded}
+                        className={active ? "nav-item nav-group-toggle active" : "nav-item nav-group-toggle"}
+                        onClick={() => setExpandedGroups((current) => current.includes(item.href) ? current.filter((href) => href !== item.href) : [...current, item.href])}
+                        type="button"
+                      >
+                        {item.icon}
+                        <span>{item.label}</span>
+                        <svg className="nav-group-chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                          <path d="m4.5 2.5 3.5 3.5-3.5 3.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </button>
+                    ) : (
+                      <Link aria-current={active ? "page" : undefined} className={active ? "nav-item active" : "nav-item"} href={item.href} onClick={() => setNavOpen(false)}>
+                        {item.icon}
+                        {item.label}
+                      </Link>
+                    )}
+                    {item.children ? (
+                      <div className="nav-subitems" hidden={!expanded} id={groupId}>
+                        {item.children.map((child) => {
+                          const childActive = isActivePath(pathname, child.href);
+                          return <Link aria-current={childActive ? "page" : undefined} className={childActive ? "active" : ""} href={child.href} key={child.href} onClick={() => setNavOpen(false)}>{child.label}</Link>;
+                        })}
+                      </div>
+                    ) : null}
                   </div>
-                ) : null}
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         <div className="sidebar-foot">
@@ -444,8 +412,8 @@ function resolvePageMeta(pathname: string): PageMeta {
 
   if (pathname.startsWith("/expedientes/") && pathname !== "/expedientes/nuevo") {
     return {
-      title: "Expediente de viaje",
-      subtitle: "Orden, flota y documentos oficiales en un solo lugar"
+      title: "Viaje",
+      subtitle: "Documentos del viaje y cómo se relacionan"
     };
   }
 
@@ -457,8 +425,7 @@ function resolvePageMeta(pathname: string): PageMeta {
         return { title: `Vista previa de ${section.singular.toLowerCase()}`, subtitle: "Revisa el documento antes de imprimir" };
       }
       if (action && actionLabels[action]) {
-        const plural = action === "listar" || action === "imprimir";
-        return { title: `${actionLabels[action]} ${plural ? section.label.toLowerCase() : section.singular.toLowerCase()}`, subtitle: section.description };
+        return { title: section.label, subtitle: section.description };
       }
       return { title: section.label, subtitle: section.description };
     }

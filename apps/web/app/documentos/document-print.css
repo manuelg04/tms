@@ -81,3 +81,6 @@
   .document-paper-table tr { break-inside: avoid; }
   .document-paper-footer { flex-direction: row; }
 }
+.document-pdf-caption.pending { justify-content: space-between; border-left: 4px solid #b45309; background: #fff7ed; color: #7c2d12; }
+.document-pdf-caption.pending span { flex: 1 1 320px; }
+.document-pdf-caption.pending strong { padding: 4px 10px; border-radius: 999px; background: #b45309; color: #fff; font-size: 12px; white-space: nowrap; }

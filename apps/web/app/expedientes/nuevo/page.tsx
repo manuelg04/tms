@@ -5,6 +5,8 @@ import { FormField, FormValidationError, ValidatedForm } from "../../components/
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { emissionNotice } from "../../lib/emission-notice";
+import { moduleHref } from "../../lib/module-links";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
@@ -261,7 +263,29 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
         })] : [])
       ]);
 
-      router.push(action === "open" ? `/expedientes/${created.expedienteId}?stage=orden_cargue#centro-documental` : `/expedientes/${created.expedienteId}`);
+      if (action === "open") {
+        let notice: { tone: "ok" | "bad" | "wait"; text: string } = {
+          tone: "bad",
+          text: "La orden quedó guardada, pero no fue posible iniciar la transmisión. Usa Guardar y emitir para intentarlo de nuevo."
+        };
+        try {
+          const response = await fetch(`/api/rndc/dispatches/${created.expedienteId}/emit`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ scope: "orden", chain: true, queueIfUnavailable: true })
+          });
+          notice = emissionNotice(response.status, await response.json().catch(() => null));
+        } catch {
+          notice = { ...notice };
+        }
+        try {
+          window.sessionStorage.setItem(`tms:aviso:${created.expedienteId}`, JSON.stringify(notice));
+        } catch {
+          notice = { ...notice };
+        }
+      }
+
+      router.push(moduleHref("ordenes", "actualizar", { viaje: created.expedienteId }));
     } catch (cause) {
       setSavingAction(null);
       throw cause;
@@ -272,18 +296,18 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
 
   return (
     <ValidatedForm className="guided-dispatch-form base-dispatch-form form-compact" onSubmit={(event) => saveBase((event.nativeEvent as SubmitEvent).submitter?.getAttribute("value") === "draft" ? "draft" : "open")} ref={formRef}>
-      <section className="base-dispatch-intro">
+      {template || prefill ? <section className="base-dispatch-intro">
         <div>
           <span className="eyebrow">Nueva orden de cargue</span>
           <h2>{template ? `Copia de ${template.code}` : prefill ? `Solicitud de planilla · ${prefill.request.vehicle.plate ?? "sin placa"}` : "Datos de la orden de cargue"}</h2>
           <p>{prefill ? "Datos traídos de MTM Operaciones. Revisa cada campo antes de guardar; nada se crea hasta que guardes." : "La misma información operativa de Avansat, con búsquedas en los maestros del TMS."}</p>
         </div>
-        <div className="base-dispatch-outcome"><strong>Al guardar</strong><span>Se abre el centro documental del despacho</span></div>
-      </section>
+        <div className="base-dispatch-outcome"><strong>Al guardar y emitir</strong><span>La orden se transmite al RNDC y queda lista para hacer la remesa</span></div>
+      </section> : null}
 
       {template ? <div className="operation-notice ok" role="status"><span />Datos copiados de <Link href={`/expedientes/${sourceId}`}>{template.code}</Link>: revisa fechas, peso y observaciones antes de guardar. Nada se crea hasta que guardes.</div> : null}
       {prefill ? <SolicitudSummary prefill={prefill} /> : null}
-      <div className="base-document-path" aria-label="Documentos que se completan después"><span className="active">1. Orden de cargue</span><span>Remesas</span><span>Vehículo y conductor</span><span>Manifiesto</span><span>Cumplidos</span></div>
+      <div className="base-document-path" aria-label="Documentos que se completan después"><span className="active">1. Orden de cargue</span><span>2. Remesa</span><span>3. Manifiesto</span><span>4. Cumplidos</span></div>
 
       <div className="guided-form-stage">
         <section aria-labelledby="loading-order-title">
@@ -386,7 +410,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
         <span>Los demás documentos quedarán disponibles como borradores independientes.</span>
         <div>
           <button className="ghost-button" disabled={saving || !me || !reservation} value="draft" type="submit">{savingAction === "draft" ? "Guardando…" : "Guardar borrador"}</button>
-          <button className="primary-action" disabled={saving || !me || !reservation} value="open" type="submit">{savingAction === "open" ? "Creando…" : "Crear despacho y abrir documentos"}</button>
+          <button className="primary-action" disabled={saving || !me || !reservation} value="open" type="submit">{savingAction === "open" ? "Guardando y transmitiendo…" : "Guardar y emitir orden"}</button>
         </div>
       </div>
     </ValidatedForm>

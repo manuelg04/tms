@@ -35,8 +35,8 @@ export function DocumentTable({ rows, emptyMessage, section }: { rows: DocumentR
           "No hay documentos con este filtro."
         ) : (
           <>
-            Sin documentos todavía. Inicia tu primer recorrido desde{" "}
-            <Link href="/expedientes/nuevo">Nuevo despacho</Link>.
+            Sin documentos todavía. Empieza por una{" "}
+            <Link href="/documentos/ordenes/insertar">orden de cargue</Link>.
           </>
         )}
       </div>
@@ -60,7 +60,7 @@ export function DocumentTable({ rows, emptyMessage, section }: { rows: DocumentR
       </thead>
       <tbody>
         {rows.map((row) => {
-          const detailHref = documentDetailHref({ expedienteId: row.expedienteId, kind: row.kind });
+          const detailHref = documentDetailHref({ expedienteId: row.expedienteId, kind: row.kind, documentId: row._id });
           const actionLabel = section.slug === "todos" ? actionLabelByKind.get(row.kind) ?? "Abrir documento" : section.actionLabel;
           return <tr key={row._id}>
             <td>

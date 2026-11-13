@@ -254,6 +254,19 @@ type PayloadDraft = {
   missingFields: string[];
 };
 
+export function buildManifestPreviewPayload(input: EmissionPlanInput): PayloadDraft {
+  return buildManifestPayload(
+    input.manifest.number ?? "",
+    input.tripNumber,
+    input.order.number,
+    input.consignments.filter((item) => Boolean(item.number)),
+    input.order.snapshot ?? {},
+    input.manifest.snapshot ?? {},
+    input.assignment ?? emptyAssignment,
+    input.workflowVariant ?? "standard"
+  );
+}
+
 function finishStep(
   base: Omit<EmissionPlanStep, "state" | "payload" | "missingFields">,
   draft: PayloadDraft,

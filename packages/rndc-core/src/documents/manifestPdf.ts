@@ -55,27 +55,74 @@ export function manifestAmountInWords(value: number): string {
   return `${numberInWords(Math.max(0, Math.round(value))).toUpperCase()} PESOS`;
 }
 
-export async function writeManifestPdf(path: string, scenario: DemoScenario, authorization: AuthorizationData, mode: RndcConfig["mode"]): Promise<void> {
-  const remesas = resolveManifestRemesas(scenario);
-  const extra = Math.max(0, remesas.length * remesaRowHeight(remesas.length) - 40.5);
-  const doc = createDoc([PAGE_WIDTH, Math.max(PAGE_HEIGHT, 560 + extra + 30)]);
+export type ManifestPdfOptions = { pending?: boolean };
+
+export const manifestPendingNotice = "PENDIENTE DE AUTORIZACIÓN DEL RNDC";
+
+export function manifestIsPending(authorization: AuthorizationData, options: ManifestPdfOptions = {}): boolean {
+  const value = authorization.manifestAuthorization.trim();
+  return options.pending === true || !value || value.toUpperCase() === "PENDIENTE";
+}
+
+export async function writeManifestPdf(path: string, scenario: DemoScenario, authorization: AuthorizationData, mode: RndcConfig["mode"], options: ManifestPdfOptions = {}): Promise<void> {
+  const doc = createManifestDoc(scenario);
   const stream = createWriteStream(path);
   doc.pipe(stream);
-
-  drawHeader(doc, scenario, authorization);
-  drawActors(doc, scenario);
-  const bottom = drawCargo(doc, scenario, remesas);
-  drawValues(doc, scenario, bottom);
-  const footer = documentFooterText(mode);
-  if (footer) {
-    text(doc, footer, LEFT, bottom + 168, RIGHT - LEFT, { size: 6.5, align: "center", color: "#666666" });
-  }
-
+  drawManifest(doc, scenario, authorization, mode, options);
   doc.end();
   await waitForStream(stream);
 }
 
-function drawHeader(doc: Doc, scenario: DemoScenario, authorization: AuthorizationData): void {
+export async function renderManifestPdf(scenario: DemoScenario, authorization: AuthorizationData, mode: RndcConfig["mode"], options: ManifestPdfOptions = {}): Promise<Buffer> {
+  const doc = createManifestDoc(scenario);
+  const chunks: Buffer[] = [];
+  const finished = new Promise<Buffer>((resolve, reject) => {
+    doc.on("data", (chunk: Buffer) => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+  });
+  drawManifest(doc, scenario, authorization, mode, options);
+  doc.end();
+  return await finished;
+}
+
+function createManifestDoc(scenario: DemoScenario): Doc {
+  const remesas = resolveManifestRemesas(scenario);
+  const extra = Math.max(0, remesas.length * remesaRowHeight(remesas.length) - 40.5);
+  return createDoc([PAGE_WIDTH, Math.max(PAGE_HEIGHT, 560 + extra + 30)]);
+}
+
+function drawManifest(doc: Doc, scenario: DemoScenario, authorization: AuthorizationData, mode: RndcConfig["mode"], options: ManifestPdfOptions): void {
+  const pending = manifestIsPending(authorization, options);
+  const remesas = resolveManifestRemesas(scenario);
+  drawHeader(doc, scenario, authorization, pending);
+  drawActors(doc, scenario);
+  const bottom = drawCargo(doc, scenario, remesas, pending);
+  drawValues(doc, scenario, bottom, pending);
+  const footer = pending
+    ? "Documento en preparación. No reemplaza el manifiesto electrónico de carga autorizado por el RNDC ni es válido para transitar."
+    : documentFooterText(mode);
+  if (footer) {
+    text(doc, footer, LEFT, bottom + 168, RIGHT - LEFT, { size: 6.5, align: "center", color: "#666666" });
+  }
+  if (pending) {
+    drawPendingMarks(doc);
+  }
+}
+
+function drawPendingMarks(doc: Doc): void {
+  doc.rect(LEFT, 9, RIGHT - LEFT, 15).fill("#b45309");
+  text(doc, `${manifestPendingNotice}  ·  Sin número de autorización ni código QR`, LEFT, 13.4, RIGHT - LEFT, { size: 8, bold: true, align: "center", color: "#ffffff" });
+  const height = doc.page.height;
+  doc.save();
+  doc.fillOpacity(0.07);
+  doc.rotate(-24, { origin: [PAGE_WIDTH / 2, height / 2] });
+  text(doc, "PENDIENTE DE AUTORIZACIÓN", 0, height / 2 - 24, PAGE_WIDTH, { size: 40, bold: true, align: "center" });
+  doc.restore();
+  doc.fillOpacity(1);
+}
+
+function drawHeader(doc: Doc, scenario: DemoScenario, authorization: AuthorizationData, pending: boolean): void {
   doc.image(transporteLogoPng, 31, 30, { width: 100 });
   doc.image(superTransporteLogoPng, 31, 93, { width: 84 });
 
@@ -89,11 +136,17 @@ function drawHeader(doc: Doc, scenario: DemoScenario, authorization: Authorizati
   shaded(doc, 493.1, 84.7, 189.8, 19.8);
   text(doc, `Manifiesto : ${scenario.manifestNumber}`, 495.4, 89, 186, { size: 10.4, bold: true });
   shaded(doc, 493.1, 107.8, 189.8, 16.8);
-  text(doc, `Autorización: ${authorization.manifestAuthorization}`, 495.4, 112, 186, { size: 11.3, bold: true });
+  text(doc, pending ? "Autorización: PENDIENTE" : `Autorización: ${authorization.manifestAuthorization}`, 495.4, 112, 186, { size: 11.3, bold: true });
 
-  drawQr(doc, manifestQrText(scenario, authorization), 684.5, 30, 121);
+  if (pending) {
+    doc.rect(690.5, 36, 109, 109).dash(3, { space: 2 }).lineWidth(0.6).strokeColor("#666666").stroke().undash();
+    text(doc, "SIN CÓDIGO QR", 690.5, 72, 109, { size: 8.4, bold: true, align: "center", color: "#444444" });
+    text(doc, "Se genera cuando el RNDC autorice el manifiesto", 698, 86, 94, { size: 6.2, align: "center", color: "#444444", lineGap: 1 });
+  } else {
+    drawQr(doc, manifestQrText(scenario, authorization), 684.5, 30, 121);
+  }
 
-  cell(doc, 116.4, 102.7, 85, 25.5, "FECHA HORA RADICACION", authorization.radicatedAt ?? slashDate(scenario.expeditionDate), { valueSize: 8.5, labelAlign: "center", valueX: 4 });
+  cell(doc, 116.4, 102.7, 85, 25.5, "FECHA HORA RADICACION", pending ? "" : authorization.radicatedAt ?? slashDate(scenario.expeditionDate), { valueSize: 8.5, labelAlign: "center", valueX: 4 });
 
   const rowB = 128.1;
   cell(doc, LEFT, rowB, 87.6, 25.5, "FECHA DE EXPEDICION", slashDate(scenario.expeditionDate), { valueSize: 8.4 });
@@ -135,7 +188,7 @@ function drawActors(doc: Doc, scenario: DemoScenario): void {
   cell(doc, 93.9, rowF, 82.1, 25.5, "MARCA", vehicle.brand, { valueSize: big, labelAlign: "center", valueAlign: "center", clip: true });
   cell(doc, 176, rowF, 76.6, 25.5, "PLACA SEMIREMOLQUE", vehicle.trailerPlate, { valueSize: big, labelAlign: "center", valueAlign: "center" });
   cell(doc, 252.6, rowF, 71.3, 25.5, "PLACA SEMIREMOL 2", "", { labelAlign: "center", labelBold: false });
-  cell(doc, 323.9, rowF, 60.2, 25.5, "CONFIGURACION", vehicle.configuration, { valueSize: big, labelAlign: "center", valueAlign: "center" });
+  cell(doc, 323.9, rowF, 60.2, 25.5, "CONFIGURACION", vehicle.configuration, { valueSize: vehicle.configuration.length > 6 ? 5.6 : big, labelAlign: "center", valueAlign: "center", clip: vehicle.configuration.length <= 6 });
   box(doc, 384.1, rowF, 124.7, 25.5);
   text(doc, "PesoVacío", 394.3, rowF + 3.2, 40, { size: 5.6 });
   text(doc, "PesoVacíoRemolque", 431.4, rowF + 3.2, 70, { size: 5.6 });
@@ -164,7 +217,7 @@ function drawActors(doc: Doc, scenario: DemoScenario): void {
   cell(doc, 661.9, rowH, 132.7, 25.5, "CIUDAD CONDUCTOR 2", "", { labelBold: false, labelX: 22.2, labelY: 4.6 });
 }
 
-function drawCargo(doc: Doc, scenario: DemoScenario, remesas: ReturnType<typeof resolveManifestRemesas>): number {
+function drawCargo(doc: Doc, scenario: DemoScenario, remesas: ReturnType<typeof resolveManifestRemesas>, pending: boolean): number {
   sectionTitle(doc, 307.2, 16.5, "INFORMACION DE LA MERCANCIA TRANSPORTADA");
 
   const columns = [LEFT, 85.5, 142.2, 179.1, 232.9, 369, 541.9, 714.8, 794.3];
@@ -198,9 +251,13 @@ function drawCargo(doc: Doc, scenario: DemoScenario, remesas: ReturnType<typeof 
     const y = bodyTop + index * rowHeight;
     if (index > 0) line(doc, LEFT, y, columns[8], y);
     const top = y + 3.6;
+    if (pending && !remesa.number.trim()) {
+      text(doc, "Sin remesas asociadas todavía", 31.1, top + 12, columns[8] - LEFT - 4, { size: 6.6, align: "center", color: "#666666" });
+      return;
+    }
     text(doc, remesa.number, 31.1, top, 53, { size: 6.6, h: 8 });
     text(doc, "Kilogramos", 91.4, top, 50, { size: 6.6 });
-    text(doc, quantity(remesa.quantityKg), 143.2, top, 35, { size: 6.6, align: "right" });
+    text(doc, pending && !remesa.quantityKg ? "" : quantity(remesa.quantityKg), 143.2, top, 35, { size: 6.6, align: "right" });
     text(doc, remesa.nature, 181.2, top, 51, { size: 6.6, h: 34 });
     text(doc, remesa.packageName, 237.6, top, 46, { size: 6.6, h: 44, lineGap: 0.8 });
     text(doc, scenario.cargo.merchandiseCode, 288.1, top, 78, { size: 6.6 });
@@ -224,8 +281,9 @@ function drawParty(doc: Doc, party: DemoScenario["sender"], name: string, idX: n
   text(doc, party.cityName, idX, y + 32.6, nameX + nameWidth - idX, { size: 6.6, h: 8 });
 }
 
-function drawValues(doc: Doc, scenario: DemoScenario, top: number): void {
+function drawValues(doc: Doc, scenario: DemoScenario, top: number, pending: boolean): void {
   const money = scenario.money;
+  const withoutValues = pending && !money.freightValue;
   const net = money.freightValue - money.sourceRetention - money.icaRetention - money.fopatRetention;
   const barHeight = 14.1;
   const bodyTop = top + barHeight;
@@ -254,7 +312,7 @@ function drawValues(doc: Doc, scenario: DemoScenario, top: number): void {
     const y = bodyTop + index * 13.62;
     box(doc, 158.4, y, 107.7, 13.62);
     text(doc, label, 29.1, y + 5.6, 129.3, { size: 6.6, align: "center" });
-    text(doc, amount(value), 160, y + 5.2, 100.6, { size: 6.6, align: "right" });
+    text(doc, withoutValues ? "" : amount(value), 160, y + 5.2, 100.6, { size: 6.6, align: "right" });
   });
 
   text(doc, "LUGAR", 292.1, bodyTop + 7.1, 28, { size: 5.6 });
@@ -277,7 +335,7 @@ function drawValues(doc: Doc, scenario: DemoScenario, top: number): void {
   const lettersTop = bodyTop + bodyHeight;
   box(doc, 29.1, lettersTop, RIGHT - 29.1, 12.8);
   text(doc, "VALOR TOTAL DEL VIAJE EN LETRAS:", 36, lettersTop + 6.2, 140, { size: 5.6 });
-  text(doc, manifestAmountInWords(money.freightValue), 177.3, lettersTop + 3.5, 600, { size: 5.6, h: 7 });
+  text(doc, withoutValues ? "" : manifestAmountInWords(money.freightValue), 177.3, lettersTop + 3.5, 600, { size: 5.6, h: 7 });
 
   const signTop = lettersTop + 13;
   box(doc, 29.6, signTop, 283.5, 34);

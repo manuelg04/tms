@@ -118,7 +118,7 @@ export default function SolicitudesPage() {
                       <td className="cell-action solicitud-action">
                         {link
                           ? <Link className="text-button" href={`/expedientes/${link.expedienteId}`}>{link.code}</Link>
-                          : <Link className="primary-action action-link" href={`/expedientes/nuevo?solicitud=${encodeURIComponent(item.expedienteId)}`}>Crear despacho</Link>}
+                          : <Link className="primary-action action-link" href={`/documentos/ordenes/insertar?solicitud=${encodeURIComponent(item.expedienteId)}`}>Crear orden de cargue</Link>}
                       </td>
                     </tr>
                   );

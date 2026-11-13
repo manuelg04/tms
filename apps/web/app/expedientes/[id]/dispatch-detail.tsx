@@ -22,7 +22,8 @@ import { DocumentHub } from "../components/document-hub";
 import { DispatchRoutePlan } from "../components/dispatch-route-plan";
 import { OperacionesPanel } from "../components/operaciones-panel";
 import { useOperacionesSuggestions } from "../components/use-operaciones-suggestions";
-import { NextActionCard } from "../components/next-action-card";
+import { TripDocumentStrip } from "../components/trip-documents";
+import { fulfillmentHref, moduleHref, type ModuleSlug } from "../../lib/module-links";
 import { resolveDispatchEntry } from "../../lib/document-workspace";
 import { AdvancedActionModal } from "./advanced-action-modal";
 import {
@@ -120,12 +121,27 @@ export function DispatchDetail({
   }, [entry.stage]);
 
   useEffect(() => {
+    try {
+      const key = `tms:aviso:${expedienteId}`;
+      const stored = window.sessionStorage.getItem(key);
+      if (!stored) return;
+      window.sessionStorage.removeItem(key);
+      const parsed = JSON.parse(stored) as { tone?: unknown; text?: unknown };
+      if ((parsed.tone === "ok" || parsed.tone === "bad" || parsed.tone === "wait") && typeof parsed.text === "string") {
+        setNotice({ tone: parsed.tone, text: parsed.text });
+      }
+    } catch {
+      return;
+    }
+  }, [expedienteId]);
+
+  useEffect(() => {
     if (focus || !detailResult || (!entry.stage && !entry.showCorrections))
       return;
     requestAnimationFrame(() =>
       document
         .getElementById(
-          entry.showCorrections ? "correcciones" : "centro-documental",
+          entry.showCorrections ? "correcciones" : inlineStages.includes(entry.stage ?? "") ? "cumplidos" : "centro-documental",
         )
         ?.scrollIntoView(),
     );
@@ -216,19 +232,26 @@ export function DispatchDetail({
   if (detailResult === null || stageResult === null) {
     return (
       <section className="panel expediente-empty">
-        <strong>El despacho no existe o no está disponible.</strong>
+        <strong>El viaje no existe o no está disponible.</strong>
         <Link className="ghost-button action-link" href="/expedientes">
-          Volver a Despachos
+          Volver a Viajes
         </Link>
       </section>
     );
   }
 
-  const detail = focus?.remesaId
+  const focusRemesaId =
+    focus?.remesaId ??
+    (focus?.stage === "remesas" && focus.documentId
+      ? detailResult.remesas.find(
+          (remesa) => remesa.documentId === focus.documentId,
+        )?._id
+      : undefined);
+  const detail = focusRemesaId
     ? {
         ...detailResult,
         remesas: detailResult.remesas.filter(
-          (remesa) => remesa._id === focus.remesaId,
+          (remesa) => remesa._id === focusRemesaId,
         ),
       }
     : detailResult;
@@ -534,6 +557,16 @@ export function DispatchDetail({
   const selectedDocument = documentHubItems.find(
     (item) => item.stage === selectedStage,
   );
+  const tripEditable =
+    canEdit &&
+    ["draft", "in_progress", "ready"].includes(detail.expediente.status);
+  const tripItems = focus
+    ? buildDocumentHubItems({
+        detail: detailResult,
+        evidence: evidence ?? [],
+        isEditable: tripEditable,
+      })
+    : documentHubItems;
 
   if (focus) {
     const focusedDocument = focus.documentId
@@ -574,25 +607,178 @@ export function DispatchDetail({
         : documentState(
             focus.stage === "orden_cargue" ? orderDocument : manifestDocument,
           ) === "draft");
+    const focusKey =
+      focus.stage === "orden_cargue"
+        ? "order"
+        : focus.stage === "remesas"
+          ? "consignments"
+          : "manifest";
+    const focusSlug: ModuleSlug =
+      focus.stage === "orden_cargue"
+        ? "ordenes"
+        : focus.stage === "remesas"
+          ? "remesas"
+          : "manifiestos";
+    const focusName =
+      focus.stage === "orden_cargue"
+        ? "Orden de cargue"
+        : focus.stage === "remesas"
+          ? detail.remesas.length > 1
+            ? "Remesas"
+            : "Remesa"
+          : "Manifiesto";
+    const focusState =
+      focus.stage === "orden_cargue"
+        ? documentState(orderDocument)
+        : focus.stage === "manifiesto"
+          ? documentState(manifestDocument)
+          : detail.remesas.length > 0 &&
+              detail.remesas.every((remesa) =>
+                ["authorized", "fulfilled"].includes(remesa.officialState),
+              )
+            ? "authorized"
+            : detail.remesas.some((remesa) => remesa.officialState === "annulled")
+              ? "annulled"
+              : "draft";
+    const focusNumber =
+      focus.stage === "orden_cargue"
+        ? (detail.expediente.loadingOrderDraft?.orderNumber ??
+          detail.expediente.cargoNumber)
+        : focus.stage === "manifiesto"
+          ? (manifestDocument?.number ??
+            detail.expediente.manifestDraft?.manifestNumber ??
+            detail.expediente.manifestNumber)
+          : detail.remesas
+              .flatMap((remesa) => (remesa.number ? [remesa.number] : []))
+              .join(", ") || undefined;
+    const focusDone = ["authorized", "fulfilled"].includes(focusState);
+    const focusTarget = {
+      viaje: detail.expediente._id,
+      remesa: focusRemesaId,
+      doc: focus.documentId,
+    };
+    const trial =
+      (focus.stage === "orden_cargue"
+        ? orderDocument?.mode
+        : focus.stage === "manifiesto"
+          ? manifestDocument?.mode
+          : detail.documents.find((document) => document.kind === "remesa")
+              ?.mode) === "dry-run";
+    const official = (key: string) =>
+      ["authorized", "fulfilled"].includes(
+        tripItems.find((item) => item.key === key)?.state ?? "",
+      );
+    const followUp =
+      focus.stage === "orden_cargue"
+        ? official("consignments")
+          ? null
+          : {
+              label:
+                detailResult.remesas.length > 0
+                  ? "Continuar con la remesa"
+                  : "Crear la remesa",
+              href: moduleHref(
+                "remesas",
+                detailResult.remesas.length > 0 ? "actualizar" : "insertar",
+                { viaje: detail.expediente._id },
+              ),
+            }
+        : focus.stage === "remesas"
+          ? official("manifest")
+            ? null
+            : {
+                label: "Crear el manifiesto",
+                href: moduleHref("manifiestos", "insertar", {
+                  viaje: detail.expediente._id,
+                }),
+              }
+          : tripItems.find((item) => item.key === "fulfillment")?.state ===
+              "fulfilled"
+            ? null
+            : {
+                label: "Registrar cumplidos",
+                href: fulfillmentHref(detail.expediente._id),
+              };
     return (
       <section className="document-focused-editor">
         <div className="registry-selection">
           <div>
-            <strong>{detail.customer.name}</strong>
+            <strong>
+              {focusName} {focusNumber ?? "sin número"} · {detail.customer.name}
+            </strong>
             <span>
               {detail.vehicle?.plate ?? "Sin placa"} ·{" "}
               {detail.loadingLocation.city} → {detail.unloadingLocation.city}
             </span>
           </div>
-          <button
-            className="ghost-button"
-            onClick={focus.onClose}
-            type="button"
-          >
-            Volver
-          </button>
+          <div className="registry-selection-actions">
+            <StatusBadge status={focusState} />
+            {focus.action === "ver" && tripEditable && focusState === "draft" ? (
+              <Link
+                className="ghost-button action-link"
+                href={moduleHref(focusSlug, "actualizar", focusTarget)}
+              >
+                Editar
+              </Link>
+            ) : null}
+            {focus.action !== "insertar" || focusNumber ? (
+              <Link
+                className="ghost-button action-link"
+                href={moduleHref(focusSlug, "imprimir", focusTarget)}
+              >
+                {focus.stage === "manifiesto" && !focusDone
+                  ? "Vista previa"
+                  : "Imprimir"}
+              </Link>
+            ) : null}
+            <button
+              className="ghost-button"
+              onClick={focus.onClose}
+              type="button"
+            >
+              Volver al listado
+            </button>
+          </div>
         </div>
-        {notice ? (
+        <TripDocumentStrip
+          code={detail.expediente.code}
+          current={focusKey}
+          expedienteId={detail.expediente._id}
+          items={tripItems}
+          remesaCount={detailResult.remesas.length}
+        />
+        {focusDone && focus.action !== "anular" ? (
+          <div className="document-done" role="status">
+            <div>
+              <strong>
+                Listo: {focusName.toLowerCase()} {focusNumber ?? ""}{" "}
+                {focus.stage === "manifiesto" ? "autorizado" : "autorizada"}
+                {focus.stage === "remesas" && detail.remesas.length > 1
+                  ? "s"
+                  : ""}
+                {trial ? " (modo prueba)" : " por el RNDC"}.
+              </strong>
+              <span>
+                Este documento ya está terminado.
+                {followUp ? " El viaje sigue con el próximo documento." : ""}
+              </span>
+            </div>
+            <div className="document-done-actions">
+              <Link
+                className="ghost-button action-link"
+                href={moduleHref(focusSlug, "imprimir", focusTarget)}
+              >
+                Imprimir
+              </Link>
+              {followUp && canEdit ? (
+                <Link className="primary-action action-link" href={followUp.href}>
+                  {followUp.label}
+                </Link>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+        {notice && !(focusDone && notice.tone === "ok") ? (
           <div className={`operation-notice ${notice.tone}`} role="status">
             {notice.text}
           </div>
@@ -677,7 +863,7 @@ export function DispatchDetail({
   return (
     <>
       <div className="detail-breadcrumb">
-        <Link href="/expedientes">Despachos</Link>
+        <Link href="/expedientes">Viajes</Link>
         <span>›</span>
         <span>{detail.expediente.code}</span>
       </div>
@@ -701,10 +887,10 @@ export function DispatchDetail({
           {detail.expediente.loadingOrderDraft ? (
             <Link
               className="ghost-button duplicate-link"
-              href={`/expedientes/nuevo?desde=${detail.expediente._id}`}
-              title="Crear un despacho nuevo con los mismos datos base"
+              href={`/documentos/ordenes/insertar?desde=${detail.expediente._id}`}
+              title="Crear una orden de cargue nueva con los mismos datos"
             >
-              Duplicar despacho
+              Duplicar viaje
             </Link>
           ) : null}
         </div>
@@ -793,71 +979,46 @@ export function DispatchDetail({
         </div>
       ) : null}
 
-      <NextActionCard
-        action={
-          formId && emitStages.includes(stageResult.stage)
-            ? { ...primaryAction, label: "Guardar y emitir" }
-            : primaryAction
-        }
-        blockers={stageResult.blockers}
-        busy={busy}
-        formId={formId}
-        onAction={() => void runPrimaryAction()}
-        onFormSubmit={() => {
-          emitIntent.current = true;
-        }}
-      />
+      {primaryAction.kind === "reconcile" ||
+      primaryAction.kind === "review_rejection" ? (
+        <div className="operation-notice bad">
+          <span />
+          {primaryAction.description}
+          {canEdit ? (
+            <button
+              className="text-button"
+              onClick={() => void runPrimaryAction()}
+              type="button"
+            >
+              {primaryAction.label}
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="document-hub-anchor" id="centro-documental">
         <DocumentHub
           busy={busy}
+          canEdit={canEdit}
+          expedienteId={detail.expediente._id}
           items={documentHubItems}
-          onEdit={(stage) => {
+          onOpenInline={(stage) => {
             setSelectedStage(stage);
             requestAnimationFrame(() => {
               const title = document.getElementById("active-stage-title");
               title?.focus();
-              title?.scrollIntoView({ behavior: "smooth", block: "start" });
+              document
+                .getElementById("cumplidos")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
             });
           }}
-          onEmit={(scope) => void emitScope(scope)}
+          remesaCount={detail.remesas.length}
         />
       </div>
 
-      <OperacionesPanel canSend={isEditable} expedienteId={detail.expediente._id} />
-
-      <DispatchRoutePlan
-        destination={detail.unloadingLocation.city}
-        expedienteId={detail.expediente._id}
-        origin={detail.loadingLocation.city}
-      />
-
-      <div id="correcciones">
-        <AdvancedActions
-          canManageOfficial={
-            user?.role === "operator" || user?.role === "admin"
-          }
-          canManageStructural={user?.role === "admin"}
-          exceptions={(exceptions ?? []).map((item) => ({
-            _id: item._id,
-            type: item.type,
-            status: item.status,
-            reason: item.reason,
-            createdAt: item.createdAt,
-          }))}
-          onAction={setAdvancedModal}
-        />
-      </div>
-
-      {selectedStage && currentForm ? (
-        <div className="guided-detail-layout single">
-          <section className="active-stage-panel" aria-live="polite">
-            {notice ? (
-              <div className={`operation-notice ${notice.tone}`}>
-                <span />
-                {notice.text}
-              </div>
-            ) : null}
+      <div id="cumplidos">
+        {selectedStage && inlineStages.includes(selectedStage) && currentForm ? (
+          <section className="active-stage-panel trip-inline-panel" aria-live="polite">
             {currentForm}
             <div className="active-stage-actions">
               <button
@@ -877,13 +1038,41 @@ export function DispatchDetail({
                 />
               ) : null}
             </div>
-            {selectedStage !== stageResult.stage &&
-            stageResult.blockers.length > 0 ? (
-              <BlockerList blockers={stageResult.blockers} />
-            ) : null}
           </section>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
+
+      <details className="trip-more">
+        <summary>Plan de ruta</summary>
+        <DispatchRoutePlan
+          destination={detail.unloadingLocation.city}
+          expedienteId={detail.expediente._id}
+          origin={detail.loadingLocation.city}
+        />
+      </details>
+
+      <details className="trip-more">
+        <summary>MTM Operaciones</summary>
+        <OperacionesPanel canSend={isEditable} expedienteId={detail.expediente._id} />
+      </details>
+
+      <details className="trip-more" id="correcciones" open={entry.showCorrections || undefined}>
+        <summary>Correcciones y anulaciones</summary>
+        <AdvancedActions
+          canManageOfficial={
+            user?.role === "operator" || user?.role === "admin"
+          }
+          canManageStructural={user?.role === "admin"}
+          exceptions={(exceptions ?? []).map((item) => ({
+            _id: item._id,
+            type: item.type,
+            status: item.status,
+            reason: item.reason,
+            createdAt: item.createdAt,
+          }))}
+          onAction={setAdvancedModal}
+        />
+      </details>
 
       {advancedModal ? (
         <AdvancedActionModal
@@ -900,6 +1089,12 @@ export function DispatchDetail({
     </>
   );
 }
+
+const inlineStages: string[] = [
+  "vehiculo_conductor",
+  "cumplido_inicial",
+  "cumplido_final",
+];
 
 const emitStages: string[] = [
   "orden_cargue",

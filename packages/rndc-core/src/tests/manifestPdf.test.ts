@@ -3,7 +3,7 @@ import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { buildMtmReferenceScenario, generateManifestDocument, loadConfig, manifestAmountInWords, manifestQrText, manifestRadicationStamp } from "../index.js";
+import { buildMtmReferenceScenario, generateManifestDocument, loadConfig, manifestAmountInWords, manifestIsPending, manifestQrText, manifestRadicationStamp, renderManifestPdf } from "../index.js";
 
 const authorization = {
   loadingOrderAuthorization: "PENDIENTE",
@@ -59,4 +59,17 @@ test("el manifiesto se genera apaisado y crece con varias remesas", async () => 
   const multiple = await generateManifestDocument(scenario, authorization, directory, "dry-run");
   const height = Number(/\/MediaBox \[0 0 855 ([\d.]+)\]/.exec((await readFile(multiple.path)).toString("latin1"))?.[1]);
   assert.ok(height > 612);
+});
+
+test("el manifiesto sin autorización se marca pendiente y no lleva QR ni número simulado", async () => {
+  const scenario = buildMtmReferenceScenario(loadConfig());
+  const pending = { ...authorization, manifestAuthorization: "PENDIENTE", seguridadQr: "PENDIENTE" };
+  assert.equal(manifestIsPending(pending), true);
+  assert.equal(manifestIsPending(authorization), false);
+  assert.equal(manifestIsPending(authorization, { pending: true }), true);
+  const pdf = await renderManifestPdf(scenario, pending, "live");
+  assert.equal(pdf.subarray(0, 5).toString("latin1"), "%PDF-");
+  assert.match(pdf.toString("latin1"), /\/MediaBox \[0 0 855 612\]/);
+  const authorized = await renderManifestPdf(scenario, authorization, "live");
+  assert.ok(authorized.length > pdf.length);
 });

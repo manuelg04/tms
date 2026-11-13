@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useConvex, useMutation, useQuery } from "../lib/convex-hooks";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -20,6 +21,7 @@ import {
   type RegistryAction,
   type RegistryModule,
 } from "./registry-config";
+import { moduleHref } from "../lib/module-links";
 import "./document-registry.css";
 import { Skeleton } from "../components/skeleton";
 
@@ -38,6 +40,23 @@ export function DocumentRegistry({
   const [pageSize, setPageSize] = useState(25);
   const debouncedFilters = useDebounced(filters, 300);
   const { user } = useDemoUser();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const linkedTrip = searchParams.get("viaje");
+  const linkedRemesa = searchParams.get("remesa");
+  const linkedDocument = searchParams.get("doc");
+  const linkKey = linkedTrip ? `${linkedTrip}:${linkedRemesa ?? ""}:${linkedDocument ?? ""}` : "";
+
+  useEffect(() => {
+    if (!linkKey || action === "insertar" || action === "eliminar" || action === "duplicar") return;
+    setSelected(linkedRow(module, linkKey));
+  }, [action, linkKey, module]);
+
+  function closeSelection() {
+    setSelected(null);
+    if (linkKey) router.replace(pathname);
+  }
   const lookup = !["listar", "imprimir", "insertar"].includes(action);
   const invalidDates = Boolean(
     filters.dateFrom && filters.dateTo && filters.dateFrom > filters.dateTo,
@@ -73,9 +92,16 @@ export function DocumentRegistry({
 
   if (action === "insertar")
     return module.slug === "ordenes" ? (
-      <NuevoDespachoPage />
+      <>
+        <RegistryHeading module={module} action={action} />
+        <NuevoDespachoPage />
+      </>
     ) : (
-      <InsertDocument module={module} />
+      <InsertDocument
+        key={linkedTrip ?? "nuevo"}
+        module={module}
+        tripId={linkedTrip ? (linkedTrip as Id<"expedientes">) : undefined}
+      />
     );
   if (selected)
     return (
@@ -93,19 +119,19 @@ export function DocumentRegistry({
             documentId={selected.documentId}
             pdfArtifactId={selected.pdfArtifactId}
             pdfUrl={selected.pdfUrl}
-            onBack={() => setSelected(null)}
+            onBack={closeSelection}
           />
         ) : action === "eliminar" ? (
           <DeleteDocument
             module={module}
             row={selected}
-            onBack={() => setSelected(null)}
+            onBack={closeSelection}
           />
         ) : action === "duplicar" ? (
           <DuplicateDocument
             module={module}
             row={selected}
-            onBack={() => setSelected(null)}
+            onBack={closeSelection}
           />
         ) : selected.expedienteId ? (
           <DispatchDetail
@@ -121,7 +147,7 @@ export function DocumentRegistry({
                   : action === "anular"
                     ? "anular"
                     : "actualizar",
-              onClose: () => setSelected(null),
+              onClose: closeSelection,
             }}
           />
         ) : (
@@ -132,7 +158,7 @@ export function DocumentRegistry({
             </p>
             <button
               className="ghost-button"
-              onClick={() => setSelected(null)}
+              onClick={closeSelection}
               type="button"
             >
               Volver al listado
@@ -379,6 +405,34 @@ export function DocumentRegistry({
   );
 }
 
+const moduleGuides: Record<RegistryModule["slug"], { what: string; done: string; create: string }> = {
+  ordenes: {
+    what: "Aquí creas la orden de cargue, el primer documento del viaje.",
+    done: "Terminas cuando el estado pasa a Autorizado; después sigue la remesa.",
+    create: "Nueva orden de cargue",
+  },
+  remesas: {
+    what: "Aquí haces la remesa a partir de una orden de cargue ya creada.",
+    done: "Terminas cuando el estado pasa a Autorizado; después sigue el manifiesto.",
+    create: "Nueva remesa",
+  },
+  manifiestos: {
+    what: "Aquí haces el manifiesto del viaje con sus remesas, el vehículo y el conductor.",
+    done: "Terminas cuando el RNDC lo autoriza; puedes ver e imprimir el formato del Ministerio desde que lo preparas.",
+    create: "Nuevo manifiesto",
+  },
+};
+
+const tabLabels: Record<RegistryAction, string> = {
+  insertar: "Nuevo",
+  listar: "Listado",
+  actualizar: "Actualizar",
+  eliminar: "Eliminar",
+  anular: "Anular",
+  imprimir: "Imprimir",
+  duplicar: "Duplicar",
+};
+
 function RegistryHeading({
   module,
   action,
@@ -388,27 +442,91 @@ function RegistryHeading({
   action: RegistryAction;
   number?: string;
 }) {
+  const guide = moduleGuides[module.slug];
+  const tabs: RegistryAction[] = [
+    "listar",
+    ...module.actions.filter((item) => item !== "listar" && item !== "insertar"),
+  ];
   return (
-    <div className="registry-heading">
-      <div>
-        <p>{module.label}</p>
-        <h2>
-          {actionLabels[action]} {module.singular}
-          {number ? ` · ${number}` : ""}
-        </h2>
+    <header className="module-heading">
+      <div className="module-heading-top">
+        <div>
+          <h2>
+            {action === "insertar"
+              ? guide.create
+              : action === "listar"
+                ? module.label
+                : `${actionLabels[action]} ${module.singular}`}
+            {number ? ` · ${number}` : ""}
+          </h2>
+          <p>
+            {guide.what} <strong>{guide.done}</strong>
+          </p>
+        </div>
+        {action === "insertar" ? null : (
+          <Link
+            className="primary-action action-link"
+            href={`/documentos/${module.slug}/insertar`}
+          >
+            {guide.create}
+          </Link>
+        )}
       </div>
-      <Link
-        className="ghost-button action-link"
-        href={`/documentos/${module.slug}/${action === "insertar" ? "listar" : "insertar"}`}
-      >
-        {action === "insertar" ? "Ver listado" : `Insertar ${module.singular}`}
-      </Link>
-    </div>
+      <nav className="module-tabs" aria-label={`Acciones de ${module.label}`}>
+        {tabs.map((item) => (
+          <Link
+            aria-current={item === action ? "page" : undefined}
+            className={item === action ? "active" : ""}
+            href={`/documentos/${module.slug}/${item}`}
+            key={item}
+          >
+            {tabLabels[item]}
+          </Link>
+        ))}
+        {action === "insertar" ? (
+          <span aria-current="page" className="active">
+            {tabLabels.insertar}
+          </span>
+        ) : null}
+      </nav>
+    </header>
   );
 }
 
-function InsertDocument({ module }: { module: RegistryModule }) {
+function linkedRow(module: RegistryModule, linkKey: string): RegistryRow {
+  const [expedienteId, remesaId, documentId] = linkKey.split(":");
+  return {
+    key: `enlace:${linkKey}`,
+    kind: module.kind,
+    number: "",
+    date: "",
+    plate: "",
+    customer: "",
+    agency: "",
+    origin: "",
+    destination: "",
+    status: "",
+    statusLabel: "",
+    createdBy: "",
+    createdAt: 0,
+    createdAtLabel: "",
+    expedienteId: expedienteId as Id<"expedientes">,
+    remesaId: remesaId ? (remesaId as Id<"expedienteRemesas">) : undefined,
+    documentId: documentId ? (documentId as Id<"documents">) : undefined,
+  };
+}
+
+function InsertDocument({
+  module,
+  tripId,
+}: {
+  module: RegistryModule;
+  tripId?: Id<"expedientes">;
+}) {
   const convex = useConvex();
+  const router = useRouter();
+  const pathname = usePathname();
+  const started = useRef(false);
   const [number, setNumber] = useState("");
   const [matches, setMatches] = useState<RegistryRow[]>([]);
   const [prepared, setPrepared] = useState<{
@@ -425,11 +543,32 @@ function InsertDocument({ module }: { module: RegistryModule }) {
     api.documentDraftActions.ensureManifestDraft,
   );
 
+  const recent = useQuery(
+    api.documentRegistry.list,
+    user && !prepared && !tripId
+      ? { kind: sourceKind, filters: {}, page: 1, pageSize: 8 }
+      : "skip",
+  );
+
+  useEffect(() => {
+    if (!tripId || !user || started.current) return;
+    started.current = true;
+    setBusy(true);
+    void prepareTrip(tripId)
+      .catch((cause) => setError(readError(cause)))
+      .finally(() => setBusy(false));
+  });
+
   async function prepare(source: RegistryRow) {
     if (!source.expedienteId)
       throw new Error(
-        "Este registro histórico no tiene un despacho asociado. Selecciona un documento creado desde el TMS.",
+        "Este registro histórico no tiene un viaje asociado. Selecciona un documento creado desde el TMS.",
       );
+    await prepareTrip(source.expedienteId);
+  }
+
+  async function prepareTrip(expedienteId: Id<"expedientes">) {
+    const source = { expedienteId };
     const detail = await convex.query(api.expedientes.detail, {
       expedienteId: source.expedienteId,
     });
@@ -437,9 +576,13 @@ function InsertDocument({ module }: { module: RegistryModule }) {
       !detail ||
       !["draft", "in_progress", "ready"].includes(detail.expediente.status)
     )
-      throw new Error("El despacho seleccionado no admite nuevos borradores.");
+      throw new Error("Este viaje ya está cerrado o anulado y no admite documentos nuevos.");
     if (module.kind === "remesa") {
+      const reusable = detail.remesas.find(
+        (row) => row.officialState === "draft" && !row.documentId,
+      );
       const sequence =
+        reusable?.sequence ??
         Math.max(0, ...detail.remesas.map((row) => row.sequence)) + 1;
       const remesa = await ensureConsignment({
         expedienteId: source.expedienteId,
@@ -491,6 +634,7 @@ function InsertDocument({ module }: { module: RegistryModule }) {
             onClose: () => {
               setPrepared(null);
               setMatches([]);
+              router.replace(tripId ? `/documentos/${module.slug}/listar` : pathname);
             },
           }}
         />
@@ -500,8 +644,9 @@ function InsertDocument({ module }: { module: RegistryModule }) {
             {module.kind === "remesa" ? "Nueva remesa" : "Nuevo manifiesto"}
           </h3>
           <p>
-            Ingresa el número de {sourceLabel} para cargar sus datos y completar
-            el formulario.
+            {tripId && busy
+              ? "Preparando el documento con los datos del viaje…"
+              : `Escribe el número de la ${sourceLabel} para traer sus datos y completar el formulario.`}
           </p>
           <form
             className="registry-lookup"
@@ -528,6 +673,38 @@ function InsertDocument({ module }: { module: RegistryModule }) {
               {busy ? "Cargando datos…" : "Cargar datos"}
             </button>
           </form>
+          {matches.length <= 1 && recent && recent.rows.length > 0 ? (
+            <>
+              <p>
+                O elige una de las {sourceLabel === "remesa" ? "remesas" : "órdenes de cargue"} más recientes:
+              </p>
+              {recent.rows.map((row) => (
+                <button
+                  className="registry-source"
+                  disabled={busy || user?.role === "auditor"}
+                  key={row.key}
+                  onClick={() => void load(row)}
+                  type="button"
+                >
+                  <strong>{row.number || "Sin número"}</strong>
+                  <span>
+                    {row.customer} · {row.plate || "Sin placa"} · {row.origin}
+                    {row.destination ? ` → ${row.destination}` : ""} · {row.statusLabel}
+                  </span>
+                  <span>Usar</span>
+                </button>
+              ))}
+            </>
+          ) : null}
+          {recent && recent.rows.length === 0 && !tripId ? (
+            <p className="registry-note">
+              Todavía no hay {sourceLabel === "remesa" ? "remesas" : "órdenes de cargue"}. Empieza por{" "}
+              <Link href={sourceLabel === "remesa" ? "/documentos/remesas/insertar" : "/documentos/ordenes/insertar"}>
+                {sourceLabel === "remesa" ? "crear la remesa" : "crear la orden de cargue"}
+              </Link>
+              .
+            </p>
+          ) : null}
           {matches.length > 1 ? (
             <>
               <p>Selecciona el documento que corresponde al viaje.</p>

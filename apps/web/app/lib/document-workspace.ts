@@ -1,3 +1,5 @@
+import { fulfillmentHref, moduleHref } from "./module-links";
+
 export type DocumentKind = "orden_cargue" | "remesa" | "manifiesto" | "cumplido" | "anulacion";
 
 export type DocumentStage = "orden_cargue" | "remesas" | "manifiesto" | "cumplido_inicial";
@@ -62,13 +64,6 @@ export const documentSections: DocumentSection[] = [
   }
 ];
 
-const stageByKind: Partial<Record<DocumentKind, DocumentStage>> = {
-  orden_cargue: "orden_cargue",
-  remesa: "remesas",
-  manifiesto: "manifiesto",
-  cumplido: "cumplido_inicial"
-};
-
 const dispatchEntryStages = new Set<DispatchEntryStage>([
   "orden_cargue",
   "remesas",
@@ -85,11 +80,13 @@ export function resolveDocumentSection(slug: string): DocumentSection | undefine
   return documentSections.find((section) => section.slug === slug);
 }
 
-export function documentDetailHref(input: { expedienteId?: string; kind: string }): string | undefined {
+export function documentDetailHref(input: { expedienteId?: string; kind: string; documentId?: string }): string | undefined {
   if (!input.expedienteId) return undefined;
-  const stage = stageByKind[input.kind as DocumentKind];
-  if (!stage) return `/expedientes/${input.expedienteId}`;
-  return `/expedientes/${input.expedienteId}?stage=${stage}#centro-documental`;
+  if (input.kind === "orden_cargue") return moduleHref("ordenes", "listar", { viaje: input.expedienteId });
+  if (input.kind === "remesa") return moduleHref("remesas", "listar", { viaje: input.expedienteId, doc: input.documentId });
+  if (input.kind === "manifiesto") return moduleHref("manifiestos", "listar", { viaje: input.expedienteId, doc: input.documentId });
+  if (input.kind === "cumplido") return fulfillmentHref(input.expedienteId);
+  return `/expedientes/${input.expedienteId}`;
 }
 
 export function correctionDetailHref(expedienteId: string, action?: ProtectedDocumentAction): string {

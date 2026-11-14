@@ -43,6 +43,7 @@ import { Skeleton } from "../../components/skeleton";
 import { emissionNotice } from "../../lib/emission-notice";
 import { currentManifestDocument } from "../../../convex/model/currentManifest";
 import type { ChainScope } from "../../../convex/model/pendingEmission";
+import { hasOpenRejection } from "../../../convex/model/openRejection";
 
 type AdvancedModal = AdvancedAction | null;
 
@@ -266,9 +267,7 @@ export function DispatchDetail({
     (operation) =>
       operation.status === "uncertain" || operation.status === "reconciling",
   );
-  const hasRejectedOperation = (operations ?? []).some(
-    (operation) => operation.status === "failed",
-  );
+  const hasRejectedOperation = hasOpenRejection(operations ?? [], detail.documents);
   const hasOperationInFlight = (operations ?? []).some(
     (operation) =>
       operation.status === "queued" || operation.status === "claimed",

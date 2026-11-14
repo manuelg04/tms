@@ -13,6 +13,7 @@ import {
 } from "./dispatchWorkflow";
 import { dispatchPrimaryAction } from "./dispatchPresentation";
 import { loadMoneyLimits } from "./moneyLimits";
+import { hasOpenRejection } from "./openRejection";
 import {
   consignmentDraftValidator,
   fulfillmentDraftValidator,
@@ -385,8 +386,7 @@ export async function toListRow(ctx: Pick<QueryCtx, "db">, expediente: Doc<"expe
   const stageResult = deriveDispatchStage(projection);
   const hasUncertainOperation = operations.some((operation) => operation.status === "uncertain" || operation.status === "reconciling");
   const hasOperationInFlight = operations.some((operation) => operation.status === "queued" || operation.status === "claimed");
-  const hasRejectedOperation = operations.some((operation) => operation.status === "failed")
-    || documents.some((document) => Boolean(document.errorText));
+  const hasRejectedOperation = hasOpenRejection(operations, documents);
   const nextAction = dispatchPrimaryAction({
     stage: stageResult.stage,
     blockers: stageResult.blockers,

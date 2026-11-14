@@ -5,7 +5,7 @@ type AdvancedModule = {
   advancedCapabilities?: (role: string) => string[];
   validateExceptionRequest?: (input: Record<string, unknown>) => { ok: boolean; errors: string[] };
   buildCorrectionComparison?: (before: Record<string, unknown>, after: Record<string, unknown>) => Array<{ field: string; before: unknown; after: unknown }>;
-  buildAnnulmentPlan?: (input: Record<string, unknown>) => { ok: boolean; steps: string[]; blockers: string[] };
+  buildAnnulmentPlan?: (input: Record<string, unknown>) => { ok: boolean; steps: string[]; blockers: string[]; optionalSteps: string[] };
   documentIdsForRemesas?: (remesas: Array<{ documentId?: string }>) => string[];
   buildTransshipmentPlan?: (input: Record<string, unknown>) => { ok: boolean; blockers: string[]; sourceManifestNumber?: string; beforeAssignment?: unknown; afterAssignment?: unknown };
   validateEmptyManifest?: (input: Record<string, unknown>) => { ok: boolean; errors: string[]; payload: Record<string, unknown> };
@@ -89,6 +89,7 @@ test("document dependencies use official remesa document identifiers", () => {
 test("whole-set annulment follows reverse documentary dependency order", () => {
   const result = buildAnnulmentPlan({
     wholeSet: true,
+    tripRegistered: true,
     documents: [
       { id: "order-1", kind: "orden_cargue", officialState: "authorized" },
       { id: "rem-1", kind: "remesa", officialState: "fulfilled", fulfillmentState: "fulfilled" },
@@ -153,11 +154,13 @@ test("a replacement reason annuls only the manifest and never the whole set", ()
     { id: "rem-1", kind: "remesa", officialState: "authorized" },
     { id: "man-1", kind: "manifiesto", officialState: "authorized", remesaIds: ["rem-1"] }
   ];
-  const single = buildAnnulmentPlan({ target: documents[1], documents, reasonCode: "C" });
+  const single = buildAnnulmentPlan({ target: documents[1], documents, reasonCode: "C", tripRegistered: true });
+  const neverRegistered = buildAnnulmentPlan({ target: documents[1], documents, reasonCode: "C" });
   const whole = buildAnnulmentPlan({ wholeSet: true, documents, reasonCode: "C" });
   const remesa = buildAnnulmentPlan({ target: { id: "rem-9", kind: "remesa", officialState: "authorized" }, documents: [], reasonCode: "T" });
 
   assert.deepEqual(single.steps, ["annul_manifest", "annul_trip"]);
+  assert.deepEqual(neverRegistered.steps, ["annul_manifest"]);
   assert.equal(whole.ok, false);
   assert.equal(remesa.ok, false);
 });
@@ -248,4 +251,51 @@ test("manual reconciliation never confirms a different document", () => {
   });
 
   assert.deepEqual(result, { status: "mismatch", identityMatched: false });
+});
+
+test("an initial fulfillment reported by the GPS company is annulled before the manifest", () => {
+  const documents = [
+    { id: "rem-1", kind: "remesa", officialState: "authorized", fulfillmentState: "not_requested" },
+    { id: "man-1", kind: "manifiesto", officialState: "authorized", remesaIds: ["rem-1"] }
+  ];
+  const unaware = buildAnnulmentPlan({ target: documents[1], documents, reasonCode: "D" });
+  const single = buildAnnulmentPlan({ target: documents[1], documents, reasonCode: "D", rndcFulfillment: { "rem-1": { initial: "found", final: "none" } } });
+  const whole = buildAnnulmentPlan({ wholeSet: true, documents, reasonCode: "D", rndcFulfillment: { "rem-1": { initial: "found", final: "none" } } });
+
+  assert.deepEqual(unaware.steps, ["annul_manifest"]);
+  assert.deepEqual(single.steps, ["annul_remesa_initial_fulfillment:rem-1", "annul_manifest"]);
+  assert.deepEqual(whole.steps, ["annul_remesa_initial_fulfillment:rem-1", "annul_manifest:man-1", "annul_remesa:rem-1"]);
+  assert.deepEqual(whole.optionalSteps, []);
+});
+
+test("without an answer from the RNDC the initial fulfillment is tried but may be skipped", () => {
+  const documents = [
+    { id: "rem-1", kind: "remesa", officialState: "authorized" },
+    { id: "man-1", kind: "manifiesto", officialState: "authorized", remesaIds: ["rem-1"] }
+  ];
+  const plan = buildAnnulmentPlan({ wholeSet: true, documents, reasonCode: "S", rndcFulfillment: { "rem-1": { initial: "unknown", final: "unknown" } } });
+  const clean = buildAnnulmentPlan({ wholeSet: true, documents, reasonCode: "S", rndcFulfillment: { "rem-1": { initial: "none", final: "none" } } });
+
+  assert.deepEqual(plan.steps, ["annul_remesa_initial_fulfillment:rem-1", "annul_manifest:man-1", "annul_remesa:rem-1"]);
+  assert.deepEqual(plan.optionalSteps, ["annul_remesa_initial_fulfillment:rem-1"]);
+  assert.deepEqual(clean.steps, ["annul_manifest:man-1", "annul_remesa:rem-1"]);
+});
+
+test("a fulfillment registered outside the TMS stops the annulment and trip information is never touched unless registered", () => {
+  const documents = [
+    { id: "rem-1", kind: "remesa", officialState: "authorized" },
+    { id: "man-1", kind: "manifiesto", officialState: "authorized", remesaIds: ["rem-1"] }
+  ];
+  const rndcFulfillment = { "rem-1": { initial: "found", final: "found" } };
+  const whole = buildAnnulmentPlan({ wholeSet: true, documents, reasonCode: "D", rndcFulfillment });
+  const single = buildAnnulmentPlan({ target: documents[1], documents, reasonCode: "D", rndcFulfillment });
+  const clean = buildAnnulmentPlan({ wholeSet: true, documents, reasonCode: "D" });
+  const remesa = buildAnnulmentPlan({ target: documents[0], documents: [documents[0]], reasonCode: "D", rndcFulfillment: { "rem-1": { initial: "found" } } });
+
+  assert.equal(whole.ok, false);
+  assert.match(whole.blockers[0], /fuera del TMS/);
+  assert.equal(single.ok, false);
+  assert.deepEqual(clean.steps, ["annul_manifest:man-1", "annul_remesa:rem-1"]);
+  assert.equal(clean.steps.includes("annul_trip"), false);
+  assert.deepEqual(remesa.steps, ["annul_remesa_initial_fulfillment", "annul_remesa"]);
 });

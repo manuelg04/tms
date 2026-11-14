@@ -508,6 +508,19 @@ function ModalMunicipalityField({
 
 const replacementReasons = ["R", "T", "G", "C", "V"];
 
+type AnnulmentPreviewBody = {
+  ok: boolean;
+  error?: string;
+  blockers: string[];
+  notes: string[];
+  steps: Array<{ step: string; label: string; documentNumber?: string; optional: boolean }>;
+};
+
+type AnnulmentPreview =
+  | { state: "loading" }
+  | { state: "error"; message: string }
+  | { state: "ready"; body: AnnulmentPreviewBody };
+
 function AnnulFields({
   detail,
   eligible,
@@ -523,6 +536,32 @@ function AnnulFields({
   const quota = useQuery(api.dispatchExceptions.annulmentQuota, {
     expedienteId: detail.expediente._id,
   });
+  const [preview, setPreview] = useState<AnnulmentPreview | null>(null);
+  const expedienteId = detail.expediente._id;
+
+  useEffect(() => {
+    if (!documentId) {
+      setPreview(null);
+      return;
+    }
+    let active = true;
+    setPreview({ state: "loading" });
+    const params = new URLSearchParams({ documentId, wholeSet: String(wholeSet) });
+    if (reason) params.set("reasonCode", reason);
+    void fetch(`/api/rndc/dispatches/${expedienteId}/annul?${params.toString()}`, { cache: "no-store" })
+      .then(async (response) => {
+        const body = (await response.json().catch(() => null)) as AnnulmentPreviewBody | null;
+        if (!active) return;
+        setPreview(response.ok && body ? { state: "ready", body } : { state: "error", message: body?.error ?? "No fue posible calcular el plan de anulación." });
+      })
+      .catch(() => {
+        if (active) setPreview({ state: "error", message: "No fue posible calcular el plan de anulación." });
+      });
+    return () => {
+      active = false;
+    };
+  }, [documentId, expedienteId, reason, wholeSet]);
+
   const kind = eligible.find((document) => document._id === documentId)?.kind;
   const manifest = kind === "manifiesto" && !wholeSet;
   const replacement = manifest && replacementReasons.includes(reason);
@@ -584,6 +623,30 @@ function AnnulFields({
           permita.
         </span>
       </label>
+      {preview ? (
+        <div className={preview.state === "ready" && !preview.body.ok ? "form-error wide" : "modal-info wide"} aria-live="polite">
+          {preview.state === "loading" ? "Consultando en el RNDC los cumplidos de las remesas y armando el plan…" : null}
+          {preview.state === "error" ? preview.message : null}
+          {preview.state === "ready" ? (
+            <>
+              <strong>{preview.body.ok ? "Orden en que se anulará ante el RNDC" : "Esta anulación no puede iniciar"}</strong>
+              {preview.body.ok ? (
+                <ol className="annulment-plan">
+                  {preview.body.steps.map((step) => (
+                    <li key={step.step}>
+                      {step.label}{step.documentNumber ? ` ${step.documentNumber}` : ""}
+                      {step.optional ? " (si existe en el RNDC)" : ""}
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p>{preview.body.blockers[0]}</p>
+              )}
+              {preview.body.notes.map((note) => <p key={note}>{note}</p>)}
+            </>
+          ) : null}
+        </div>
+      ) : null}
       {replacement ? (
         <div className="modal-info wide">
           El TMS reserva el siguiente consecutivo de manifiesto y lo reporta al

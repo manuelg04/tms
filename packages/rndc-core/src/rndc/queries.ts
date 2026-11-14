@@ -1,5 +1,5 @@
 import { extractRndcDocuments } from "./masterData.js";
-import type { RndcInitialRemesaCompliance, RndcLogisticsMoment, RndcManifestAcceptance, RndcMessageRequest, RndcScalar, RndcXmlRecord } from "./types.js";
+import type { RndcInitialRemesaCompliance, RndcRemesaComplianceRecord, RndcLogisticsMoment, RndcManifestAcceptance, RndcMessageRequest, RndcScalar, RndcXmlRecord } from "./types.js";
 
 export type RndcDocumentQueryInput = {
   companyRndcNit: string;
@@ -88,6 +88,28 @@ export function normalizeInitialCompliance(parsed: unknown): RndcInitialRemesaCo
       unloadingArrival: logisticsMoment(record.FECHALLEGADADESCARGUE, record.HORALLEGADADESCARGUE),
       unloadingExit: logisticsMoment(record.FECHASALIDADESCARGUE, record.HORASALIDADESCARGUE)
     }];
+  });
+}
+
+export function buildRemesaComplianceQuery(input: { companyRndcNit: string; remesaNumber: string }): RndcMessageRequest {
+  return buildRndcDocumentQuery({
+    companyRndcNit: input.companyRndcNit,
+    processId: 5,
+    variables: ["INGRESOID", "FECHAING", "CONSECUTIVOREMESA", "NUMMANIFIESTOCARGA"],
+    filters: { CONSECUTIVOREMESA: input.remesaNumber }
+  });
+}
+
+export function normalizeRemesaCompliance(parsed: unknown): RndcRemesaComplianceRecord[] {
+  return normalizeRndcQueryRecords(parsed).flatMap((record) => {
+    const id = record.INGRESOID;
+    const remesaNumber = record.CONSECUTIVOREMESA;
+
+    if (!id || !remesaNumber) {
+      return [];
+    }
+
+    return [{ id, remesaNumber, manifestNumber: record.NUMMANIFIESTOCARGA || undefined, registeredAt: record.FECHAING || undefined }];
   });
 }
 

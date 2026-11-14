@@ -312,6 +312,21 @@ test("builds and normalizes the initial remesa compliance query", () => {
   assert.deepEqual(normalizeInitialCompliance(parseXml("<root><ErrorMSG>Error RNDC11: Documento no encontrado.</ErrorMSG></root>")), []);
 });
 
+test("builds and normalizes the remesa compliance query", () => {
+  const buildRemesaComplianceQuery = requireApi<(input: Record<string, unknown>) => RndcMessageRequest>("buildRemesaComplianceQuery");
+  const normalizeRemesaCompliance = requireApi<(parsed: unknown) => unknown[]>("normalizeRemesaCompliance");
+  const request = buildRemesaComplianceQuery({ companyRndcNit: "9007736849", remesaNumber: "90001" });
+
+  assert.equal(request.tipo, 3);
+  assert.equal(request.procesoId, 5);
+  assert.deepEqual(request.documento, { NUMNITEMPRESATRANSPORTE: "9007736849", CONSECUTIVOREMESA: "'90001'" });
+  assert.deepEqual(
+    normalizeRemesaCompliance(parseXml("<root><documento><ingresoid>4596999</ingresoid><fechaing>14/11/2026</fechaing><consecutivoremesa>90001</consecutivoremesa><nummanifiestocarga>0900001</nummanifiestocarga></documento></root>")),
+    [{ id: "4596999", remesaNumber: "90001", manifestNumber: "0900001", registeredAt: "14/11/2026" }]
+  );
+  assert.deepEqual(normalizeRemesaCompliance(parseXml("<root><ErrorMSG>Error RNDC11: Documento no encontrado.</ErrorMSG></root>")), []);
+});
+
 test("normalizes RNDC type 3 records and electronic acceptances", () => {
   const normalizeRndcQueryRecords = requireApi<(parsed: unknown) => Record<string, string>[]>("normalizeRndcQueryRecords");
   const normalizeManifestAcceptances = requireApi<(parsed: unknown) => unknown[]>("normalizeManifestAcceptances");

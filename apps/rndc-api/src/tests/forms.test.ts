@@ -1001,6 +1001,27 @@ test("initial compliance query reads process 45 for one remesa without writing",
   assert.equal(invalid.status, 400);
 });
 
+test("remesa compliance query reads process 5 for one remesa without writing", async () => {
+  const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-remesa-compliance-"));
+  const app = createRndcApp({
+    outputDir: join(base, "runs"),
+    pdfDir: join(base, "pdfs"),
+    mode: "dry-run"
+  });
+  const response = await requestJson(app, "/rndc/remesa-compliance/90001", { method: "GET" });
+  const xml = await readFile((response.body.request as { path: string }).path, "utf8");
+
+  assert.equal(response.status, 200);
+  assert.equal(response.body.operation, "remesa-compliance-query");
+  assert.deepEqual(response.body.records, []);
+  assert.match(xml, /<tipo>3<\/tipo>/);
+  assert.match(xml, /<procesoid>5<\/procesoid>/);
+  assert.match(xml, /<CONSECUTIVOREMESA>&apos;90001&apos;<\/CONSECUTIVOREMESA>/);
+
+  const invalid = await requestJson(app, "/rndc/remesa-compliance/90001%27%20OR", { method: "GET" });
+  assert.equal(invalid.status, 400);
+});
+
 test("rejects unsupported fulfillment types before building durable RNDC XML", async () => {
   const base = await mkdtemp(join(tmpdir(), "tms-demo-rndc-api-invalid-fulfillment-type-"));
   process.env.CONVEX_URL = "https://convex.example";

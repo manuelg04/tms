@@ -206,6 +206,13 @@ export type RndcInitialRemesaCompliance = {
   unloadingExit?: RndcLogisticsMoment;
 };
 
+export type RndcRemesaComplianceRecord = {
+  id: string;
+  remesaNumber: string;
+  manifestNumber?: string;
+  registeredAt?: string;
+};
+
 export type ComplianceData = {
   remesaType: string;
   manifestType: string;

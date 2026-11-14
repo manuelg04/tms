@@ -63,55 +63,90 @@ export function annulmentReasonAllowed(kind: AdvancedDocument["kind"], reasonCod
     : reasonCode === "D" || reasonCode === "S";
 }
 
+export type RndcFulfillmentFinding = "found" | "none" | "unknown";
+
+export type RndcRemesaFulfillment = { initial?: RndcFulfillmentFinding; final?: RndcFulfillmentFinding };
+
+export type AnnulmentPlan = { ok: boolean; steps: string[]; blockers: string[]; optionalSteps: string[] };
+
 export function buildAnnulmentPlan(input: {
   target?: AdvancedDocument;
   documents: AdvancedDocument[];
   wholeSet?: boolean;
   reasonCode?: string;
-}): { ok: boolean; steps: string[]; blockers: string[] } {
+  rndcFulfillment?: Record<string, RndcRemesaFulfillment>;
+  tripRegistered?: boolean;
+}): AnnulmentPlan {
   const replacement = needsReplacementManifest(input.reasonCode);
   const converted = input.documents.some((document) => document.kind === "remesa" && everOfficial(document));
+  const blocked = (blocker: string): AnnulmentPlan => ({ ok: false, steps: [], blockers: [blocker], optionalSteps: [] });
+  const finding = (document: AdvancedDocument): RndcRemesaFulfillment => (document.id ? input.rndcFulfillment?.[document.id] : undefined) ?? {};
+  const fulfilledOutside = (document: AdvancedDocument) => document.kind === "remesa" && active(document) && !fulfilled(document) && finding(document).final === "found";
+  const initialFound = (document: AdvancedDocument) => finding(document).initial === "found";
+  const outside = (input.wholeSet || input.target?.kind !== "remesa" ? input.documents : input.target ? [input.target] : []).filter(fulfilledOutside);
+
+  if (outside.length > 0) {
+    return blocked("El RNDC tiene un cumplido de remesa registrado fuera del TMS. El TMS todavía no puede anular ese cumplido: anúlalo en el sistema donde se registró o en el portal del RNDC y vuelve a intentar");
+  }
+
+  const initialPossible = (document: AdvancedDocument) => fulfilled(document) || initialFound(document) || finding(document).initial === "unknown";
+  const tripSteps = input.tripRegistered === true ? ["annul_trip"] : [];
 
   if (input.wholeSet) {
     if (replacement) {
-      return { ok: false, steps: [], blockers: ["El reemplazo aplica solo al manifiesto; anúlalo sin marcar el conjunto completo"] };
+      return blocked("El reemplazo aplica solo al manifiesto; anúlalo sin marcar el conjunto completo");
     }
 
     const manifests = input.documents.filter((document) => document.kind === "manifiesto" && active(document));
     const remesas = input.documents.filter((document) => document.kind === "remesa" && active(document));
     const orders = converted ? [] : input.documents.filter((document) => document.kind === "orden_cargue" && active(document));
+    const initialSteps = remesas.filter(initialPossible);
     const steps = [
       ...manifests.filter(fulfilled).map((document) => `annul_manifest_fulfillment:${document.id ?? "unknown"}`),
       ...remesas.filter(fulfilled).map((document) => `annul_remesa_fulfillment:${document.id ?? "unknown"}`),
-      ...remesas.filter(fulfilled).map((document) => `annul_remesa_initial_fulfillment:${document.id ?? "unknown"}`),
+      ...initialSteps.map((document) => `annul_remesa_initial_fulfillment:${document.id ?? "unknown"}`),
       ...manifests.map((document) => `annul_manifest:${document.id ?? "unknown"}`),
       ...remesas.map((document) => `annul_remesa:${document.id ?? "unknown"}`),
-      ...(manifests.length > 0 ? ["annul_trip"] : []),
+      ...(manifests.length > 0 ? tripSteps : []),
       ...orders.map((document) => `annul_cargo:${document.id ?? "unknown"}`)
     ];
-    return { ok: steps.length > 0, steps, blockers: steps.length > 0 ? [] : ["No hay documentos oficiales anulables"] };
+    const optionalSteps = initialSteps.filter((document) => !initialFound(document)).map((document) => `annul_remesa_initial_fulfillment:${document.id ?? "unknown"}`);
+    return { ok: steps.length > 0, steps, blockers: steps.length > 0 ? [] : ["No hay documentos oficiales anulables"], optionalSteps };
   }
 
   const target = input.target;
 
   if (!target || !active(target)) {
-    return { ok: false, steps: [], blockers: ["El documento no está en un estado anulable"] };
+    return blocked("El documento no está en un estado anulable");
   }
 
   if (replacement && target.kind !== "manifiesto") {
-    return { ok: false, steps: [], blockers: ["El motivo con reemplazo solo aplica al manifiesto"] };
+    return blocked("El motivo con reemplazo solo aplica al manifiesto");
   }
 
   if (target.kind === "manifiesto") {
     const linked = input.documents.filter((document) => document.kind === "remesa" && target.remesaIds?.includes(document.id ?? ""));
 
     if (linked.some(fulfilled)) {
-      return { ok: false, steps: [], blockers: ["El manifiesto tiene remesas cumplidas; anula primero esos cumplidos o usa el conjunto completo"] };
+      return blocked("El manifiesto tiene remesas cumplidas; anula primero esos cumplidos o usa el conjunto completo");
     }
 
     if (replacement && fulfilled(target)) {
-      return { ok: false, steps: [], blockers: ["Un manifiesto cumplido no se reemplaza; anula primero su cumplido"] };
+      return blocked("Un manifiesto cumplido no se reemplaza; anula primero su cumplido");
     }
+
+    const initialSteps = linked.filter((document) => active(document) && (initialFound(document) || finding(document).initial === "unknown"));
+    const steps = [
+      ...initialSteps.map((document) => `annul_remesa_initial_fulfillment:${document.id ?? "unknown"}`),
+      ...(fulfilled(target) ? ["annul_manifest_fulfillment"] : []),
+      "annul_manifest",
+      ...(replacement ? tripSteps : [])
+    ];
+    const optionalSteps = [
+      ...initialSteps.filter((document) => !initialFound(document)).map((document) => `annul_remesa_initial_fulfillment:${document.id ?? "unknown"}`),
+      ...(replacement ? tripSteps : [])
+    ];
+    return { ok: true, steps, blockers: [], optionalSteps };
   }
 
   if (target.kind === "remesa") {
@@ -120,31 +155,42 @@ export function buildAnnulmentPlan(input: {
     );
 
     if (dependent) {
-      return { ok: false, steps: [], blockers: [`Anula o libera primero el manifiesto ${dependent.id ?? "asociado"}`] };
+      return blocked(`Anula o libera primero el manifiesto ${dependent.id ?? "asociado"}`);
     }
+
+    const steps = [
+      ...(fulfilled(target) ? ["annul_remesa_fulfillment"] : []),
+      ...(initialPossible(target) ? ["annul_remesa_initial_fulfillment"] : []),
+      "annul_remesa"
+    ];
+    return { ok: true, steps, blockers: [], optionalSteps: initialPossible(target) && !initialFound(target) ? ["annul_remesa_initial_fulfillment"] : [] };
   }
 
-  if (target.kind === "orden_cargue") {
-    const pending = input.documents.filter((document) => document.kind === "remesa" && active(document));
+  const pending = input.documents.filter((document) => document.kind === "remesa" && active(document));
 
-    if (pending.length > 0) {
-      return { ok: false, steps: [], blockers: ["Anula primero las remesas asociadas"] };
-    }
-
-    if (converted) {
-      return { ok: false, steps: [], blockers: ["La orden ya se convirtió en remesa; el RNDC la conserva como registro histórico y no permite anularla"] };
-    }
+  if (pending.length > 0) {
+    return blocked("Anula primero las remesas asociadas");
   }
 
-  const prefix = target.kind === "manifiesto" ? "manifest" : target.kind === "remesa" ? "remesa" : "cargo";
-  const steps = fulfilled(target) && target.kind === "remesa"
-    ? ["annul_remesa_fulfillment", "annul_remesa_initial_fulfillment", "annul_remesa"]
-    : fulfilled(target) && target.kind === "manifiesto"
-      ? ["annul_manifest_fulfillment", "annul_manifest"]
-      : replacement
-        ? ["annul_manifest", "annul_trip"]
-        : [`annul_${prefix}`];
-  return { ok: true, steps, blockers: [] };
+  if (converted) {
+    return blocked("La orden ya se convirtió en remesa; el RNDC la conserva como registro histórico y no permite anularla");
+  }
+
+  return { ok: true, steps: ["annul_cargo"], blockers: [], optionalSteps: [] };
+}
+
+const ANNULMENT_STEP_LABELS: Record<string, string> = {
+  annul_manifest_fulfillment: "Anular el cumplido del manifiesto",
+  annul_remesa_fulfillment: "Anular el cumplido de la remesa",
+  annul_remesa_initial_fulfillment: "Anular el cumplido inicial de la remesa",
+  annul_manifest: "Anular el manifiesto",
+  annul_remesa: "Anular la remesa",
+  annul_trip: "Anular la información del viaje",
+  annul_cargo: "Anular la orden de cargue"
+};
+
+export function annulmentStepLabel(step: string): string {
+  return ANNULMENT_STEP_LABELS[step.split(":")[0]] ?? step;
 }
 
 export type AnnulmentQuota = {

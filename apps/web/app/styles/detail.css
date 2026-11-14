@@ -704,6 +704,15 @@
   padding: 12px 14px;
 }
 
+.active-stage-actions:has(.emit-confirm) {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.active-stage-actions:has(.emit-confirm) > .emit-confirm {
+  order: -1;
+}
+
 .emit-confirm small {
   display: block;
   margin-bottom: 4px;

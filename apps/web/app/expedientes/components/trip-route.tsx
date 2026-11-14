@@ -46,7 +46,7 @@ export function TripRouteNotices({ review }: { review: RouteReview }) {
     <div className="operation-notice bad trip-route-notices" role="alert">
       <span />
       <ul>
-        {notices.map((notice) => <li key={notice}>{notice}</li>)}
+        {notices.map((notice) => <li key={notice}>{/[.!?]$/.test(notice) ? notice : `${notice}.`}</li>)}
       </ul>
     </div>
   );

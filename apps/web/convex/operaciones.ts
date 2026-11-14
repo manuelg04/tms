@@ -9,7 +9,8 @@ const deliveryKind = v.union(
   v.literal("loading_order"),
   v.literal("manifest_numbers"),
   v.literal("official_manifest"),
-  v.literal("official_remesa")
+  v.literal("official_remesa"),
+  v.literal("route_plan")
 );
 const deliveryStatus = v.union(v.literal("applied"), v.literal("pending"), v.literal("failed"));
 const deliveryValidator = v.object({
@@ -331,10 +332,15 @@ async function loadLinkedDispatch(ctx: QueryCtx, expedienteId: Id<"expedientes">
     .query("documents")
     .withIndex("by_expediente", (q) => q.eq("expedienteId", expedienteId))
     .take(100);
+  const routePlan = await ctx.db
+    .query("dispatchRoutePlans")
+    .withIndex("by_expediente", (q) => q.eq("expedienteId", expedienteId))
+    .order("desc")
+    .first();
 
   return {
     link,
     code: expediente.code,
-    plan: buildOperacionesDeliveryPlan({ code: expediente.code, expediente, documents })
+    plan: buildOperacionesDeliveryPlan({ code: expediente.code, expediente, documents, routePlan })
   };
 }

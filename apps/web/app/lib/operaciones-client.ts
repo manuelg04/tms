@@ -2,7 +2,7 @@ import { isOperacionesRequest, type OperacionesRequest } from "./operaciones-req
 
 export type OperacionesDeliveryPayload = {
   expedienteId: string;
-  kind: "loading_order" | "manifest_numbers" | "official_manifest" | "official_remesa";
+  kind: "loading_order" | "manifest_numbers" | "official_manifest" | "official_remesa" | "route_plan";
   deliveryKey: string;
   tmsDispatchCode: string;
   actorName: string;

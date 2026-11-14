@@ -8,11 +8,12 @@ import "./operaciones-panel.css";
 
 type Row = { key: string; label: string; number?: string; tone: "ok" | "wait" | "bad" | "muted"; state: string; detail?: string };
 
-const expected: Array<{ kind: "loading_order" | "manifest_numbers" | "official_remesa" | "official_manifest"; label: string }> = [
+const expected: Array<{ kind: "loading_order" | "manifest_numbers" | "official_remesa" | "official_manifest" | "route_plan"; label: string }> = [
   { kind: "loading_order", label: "Orden de cargue" },
   { kind: "manifest_numbers", label: "Números de manifiesto y remesa" },
   { kind: "official_remesa", label: "Remesa" },
-  { kind: "official_manifest", label: "Manifiesto" }
+  { kind: "official_manifest", label: "Manifiesto" },
+  { kind: "route_plan", label: "Plan de ruta" }
 ];
 
 export function OperacionesPanel({ expedienteId, canSend }: { expedienteId: Id<"expedientes">; canSend: boolean }) {

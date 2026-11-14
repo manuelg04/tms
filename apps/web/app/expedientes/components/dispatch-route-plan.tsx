@@ -83,6 +83,7 @@ function AssignForm({ expedienteId, origin, destination, onAssigned }: { expedie
     setError("");
     try {
       await assign({ expedienteId, routeId: route._id, departureAt: departure, expectedRouteRevision: route.revision, requestKey: crypto.randomUUID() });
+      void fetch(`/api/operaciones/entregas/${expedienteId}?pendientes=1`, { method: "POST" }).catch(() => undefined);
       onAssigned();
     } catch (reason) {
       setError(convexErrorMessage(reason, "No se pudo asignar el plan de ruta."));

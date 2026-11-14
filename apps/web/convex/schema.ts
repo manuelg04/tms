@@ -405,7 +405,8 @@ export default defineSchema({
       v.literal("loading_order"),
       v.literal("manifest_numbers"),
       v.literal("official_manifest"),
-      v.literal("official_remesa")
+      v.literal("official_remesa"),
+      v.literal("route_plan")
     ),
     deliveryKey: v.string(),
     number: v.optional(v.string()),

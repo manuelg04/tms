@@ -1,6 +1,6 @@
 import { currentManifestDocument } from "./currentManifest";
 
-export type OperacionesDeliveryKind = "loading_order" | "manifest_numbers" | "official_manifest" | "official_remesa";
+export type OperacionesDeliveryKind = "loading_order" | "manifest_numbers" | "official_manifest" | "official_remesa" | "route_plan";
 
 export type DeliveryDocument = {
   _id: string;
@@ -30,6 +30,7 @@ export function buildOperacionesDeliveryPlan(input: {
     manifestDraft?: { manifestNumber?: string } | null;
   };
   documents: DeliveryDocument[];
+  routePlan?: { routeCode: string; departureAt: string } | null;
 }): DeliveryPlanItem[] {
   const official = (document: DeliveryDocument | undefined) =>
     Boolean(document && (document.officialState === "authorized" || document.officialState === "fulfilled"));
@@ -84,6 +85,16 @@ export function buildOperacionesDeliveryPlan(input: {
       number: manifest.number,
       documentId: manifest._id,
       fileName: `manifiesto-${fileToken(manifest.number)}.pdf`
+    });
+  }
+
+  if (manifest?.number && input.routePlan) {
+    items.push({
+      kind: "route_plan",
+      deliveryKey: `${input.code}:plan-ruta:${input.routePlan.routeCode}:${input.routePlan.departureAt}`,
+      label: "Plan de ruta",
+      number: input.routePlan.routeCode,
+      fileName: `plan-ruta-${fileToken(input.code)}.pdf`
     });
   }
 

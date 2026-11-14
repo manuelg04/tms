@@ -19,7 +19,8 @@ export async function POST(request: Request, context: { params: Promise<{ expedi
   const { expedienteId } = await context.params;
 
   try {
-    const result = await syncOperacionesDeliveries(expedienteId as Id<"expedientes">, authorization.name, runtime, { force: true });
+    const onlyPending = new URL(request.url).searchParams.get("pendientes") === "1";
+    const result = await syncOperacionesDeliveries(expedienteId as Id<"expedientes">, authorization.name, runtime, { force: !onlyPending });
 
     if (!result.linked) {
       return jsonResponse({ error: "Este despacho no viene de una solicitud de Operaciones" }, 409);

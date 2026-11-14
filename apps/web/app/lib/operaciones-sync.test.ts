@@ -18,6 +18,7 @@ function runtime(overrides: Partial<SyncRuntime> & { plan: DeliveryPlan | null }
     configured: () => true,
     loadPlan: async () => overrides.plan,
     loadPdf: async () => new TextEncoder().encode("%PDF-1.4"),
+    loadRoutePlanPdf: async () => new TextEncoder().encode("%PDF-plan"),
     send: async (payload) => {
       sent.push(payload);
       return { ok: true, outcome: "applied", message: "Orden de cargue agregada al expediente" };
@@ -95,4 +96,22 @@ test("the connection needs an address and a long key", () => {
   assert.equal(operacionesSettings({}), null);
   assert.equal(operacionesSettings({ OPERACIONES_API_URL: "https://x.convex.site", OPERACIONES_INTEGRATION_KEY: "short" }), null);
   assert.deepEqual(operacionesSettings({ OPERACIONES_API_URL: "https://x.convex.site/", OPERACIONES_INTEGRATION_KEY: "k".repeat(32) }), { baseUrl: "https://x.convex.site", key: "k".repeat(32) });
+});
+
+test("the route plan travels as its own PDF built at send time", async () => {
+  const routePlan = { kind: "route_plan" as const, deliveryKey: "DSP-000200:plan-ruta:1284:2026-11-13T18:14", label: "Plan de ruta", number: "1284", fileName: "plan-ruta-DSP-000200.pdf", settled: false };
+  const fake = runtime({ plan: plan([routePlan]) });
+  const result = await syncOperacionesDeliveries(expedienteId, "Operador", fake.value);
+  assert.equal(result.linked && result.items[0].status, "applied");
+  assert.equal(fake.sent[0].kind, "route_plan");
+  assert.equal(fake.sent[0].fileName, "plan-ruta-DSP-000200.pdf");
+  assert.equal(Buffer.from(fake.sent[0].pdfBase64 ?? "", "base64").toString(), "%PDF-plan");
+});
+
+test("a route plan that cannot be built is reported and nothing is sent", async () => {
+  const routePlan = { kind: "route_plan" as const, deliveryKey: "DSP-000200:plan-ruta:1284:2026-11-13T18:14", label: "Plan de ruta", number: "1284", fileName: "plan-ruta-DSP-000200.pdf", settled: false };
+  const fake = runtime({ plan: plan([routePlan]), loadRoutePlanPdf: async () => { throw new Error("sin datos"); } });
+  const result = await syncOperacionesDeliveries(expedienteId, "Operador", fake.value);
+  assert.equal(result.linked && result.items[0].status, "failed");
+  assert.equal(fake.sent.length, 0);
 });

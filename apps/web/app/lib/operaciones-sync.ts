@@ -2,7 +2,9 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import type { DemoUser } from "./auth";
+import { buildRoutePlanPdf } from "@tms/rndc-core";
 import { createConvexToken, getAuthSettings } from "./auth-server";
+import { routePlanPdfInput } from "./route-plan-pdf";
 import {
   OperacionesUnavailableError,
   operacionesSettings,
@@ -41,6 +43,7 @@ export type SyncRuntime = {
   configured: () => boolean;
   loadPlan: (expedienteId: Id<"expedientes">) => Promise<DeliveryPlan | null>;
   loadPdf: (artifactId: Id<"evidenceArtifacts">) => Promise<Uint8Array | null>;
+  loadRoutePlanPdf: (expedienteId: Id<"expedientes">) => Promise<Uint8Array | null>;
   send: (payload: OperacionesDeliveryPayload) => Promise<OperacionesDeliveryOutcome>;
   record: (input: {
     expedienteId: Id<"expedientes">;
@@ -90,7 +93,11 @@ export async function syncOperacionesDeliveries(
       payload.manifestNumber = item.manifestNumber;
       payload.remesaNumber = item.remesaNumber;
     } else {
-      const pdf = item.artifactId ? await runtime.loadPdf(item.artifactId) : null;
+      const pdf = item.kind === "route_plan"
+        ? await runtime.loadRoutePlanPdf(expedienteId).catch(() => null)
+        : item.artifactId
+          ? await runtime.loadPdf(item.artifactId)
+          : null;
 
       if (!pdf) {
         items.push({ ...base, status: "failed", message: "El PDF todavía no está disponible en el TMS" });
@@ -138,6 +145,10 @@ export function createSyncRuntime(user: DemoUser): SyncRuntime | null {
       if (!result?.url) return null;
       const stored = await fetch(result.url, { cache: "no-store" });
       return stored.ok ? new Uint8Array(await stored.arrayBuffer()) : null;
+    },
+    loadRoutePlanPdf: async (expedienteId) => {
+      const data = await client.query(api.dispatchRoutePlans.forDispatch, { expedienteId });
+      return data?.plan ? await buildRoutePlanPdf(routePlanPdfInput(data.plan, data.sheet, Date.now())) : null;
     },
     send: (payload) => sendOperacionesDelivery(payload),
     record: async (input) => {

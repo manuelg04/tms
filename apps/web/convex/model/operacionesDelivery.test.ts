@@ -63,3 +63,26 @@ test("an annulled manifest is not delivered and a replacement gets its own key",
   const annulled = buildOperacionesDeliveryPlan({ code: "DSP-000135", expediente: { manifestDocumentId: "d3" }, documents });
   assert.equal(annulled.find((item) => item.kind === "official_manifest"), undefined);
 });
+
+test("the route plan is delivered once the manifest is official and changes key when the route or departure change", () => {
+  const documents = [
+    { _id: "d2", kind: "remesa", number: "45945", officialState: "authorized", updatedAt: 2 },
+    { _id: "d3", kind: "manifiesto", number: "0045202", officialState: "authorized", updatedAt: 3 }
+  ];
+  const routePlan = { routeCode: "1284", departureAt: "2026-11-13T18:14" };
+  const plan = buildOperacionesDeliveryPlan({ code: "DSP-000200", expediente, documents, routePlan });
+  assert.deepEqual(plan.at(-1), {
+    kind: "route_plan",
+    deliveryKey: "DSP-000200:plan-ruta:1284:2026-11-13T18:14",
+    label: "Plan de ruta",
+    number: "1284",
+    fileName: "plan-ruta-DSP-000200.pdf"
+  });
+  const changed = buildOperacionesDeliveryPlan({ code: "DSP-000200", expediente, documents, routePlan: { routeCode: "30", departureAt: "2026-11-13T18:14" } });
+  assert.notEqual(changed.at(-1)?.deliveryKey, plan.at(-1)?.deliveryKey);
+  assert.equal(buildOperacionesDeliveryPlan({ code: "DSP-000200", expediente, documents }).some((item) => item.kind === "route_plan"), false);
+  assert.equal(
+    buildOperacionesDeliveryPlan({ code: "DSP-000200", expediente, documents: documents.slice(0, 1), routePlan }).some((item) => item.kind === "route_plan"),
+    false
+  );
+});

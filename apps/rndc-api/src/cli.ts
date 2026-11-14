@@ -1,4 +1,4 @@
-import { applyScenarioOverlay, buildAnnulmentMessages, buildComplianceMessages, buildDriverMasterQuery, buildLoadingOrderMessages, buildMtmProductionScenario, buildThirdPartyMasterQuery, buildVehicleMasterQuery, endpointFor, endpointTargetFor, endpointUrlFor, generateLoadingOrderDocument, loadConfig, loadScenarioOverlay, normalizeDriverMaster, normalizeThirdPartyMaster, normalizeThirdPartySites, normalizeVehicleMaster, prepareOperationRequests, RndcClient, RndcFlowError, runDemoFlow, runMtmProductionFlow, saveLocalMasterSnapshot, saveLocalOwnerVehicleSnapshot } from "@tms/rndc-core";
+import { applyScenarioOverlay, buildAnnulmentMessages, buildFailureResponse, buildComplianceMessages, buildDriverMasterQuery, buildLoadingOrderMessages, buildMtmProductionScenario, buildThirdPartyMasterQuery, buildVehicleMasterQuery, endpointFor, endpointTargetFor, endpointUrlFor, generateLoadingOrderDocument, loadConfig, loadScenarioOverlay, normalizeDriverMaster, normalizeThirdPartyMaster, normalizeThirdPartySites, normalizeVehicleMaster, prepareOperationRequests, RndcClient, RndcFlowError, runDemoFlow, runMtmProductionFlow, saveLocalMasterSnapshot, saveLocalOwnerVehicleSnapshot } from "@tms/rndc-core";
 import type { DemoScenario, RndcConfig, RndcDriverMaster, RndcMessageResponse, RndcThirdPartyMaster, RndcVehicleMaster } from "@tms/rndc-core";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
@@ -260,7 +260,7 @@ async function lookupSites(): Promise<void> {
   const results = [];
 
   for (const target of targets) {
-    const response = await client.sendMessage(buildThirdPartyMasterQuery({ companyRndcNit: config.companyRndcNit, idType: target.idType, id: target.id }));
+    const response = await sendSiteLookup(client, config, target);
     const sites = normalizeThirdPartySites(response.parsed);
     const notFound = !response.ok && /^Error RNDC11: Documento no encontrado\./i.test(response.errorText ?? "");
     results.push({
@@ -293,6 +293,31 @@ async function lookupSites(): Promise<void> {
     }))
   }, null, 2));
   process.exit(ok ? 0 : 1);
+}
+
+async function sendSiteLookup(client: RndcClient, config: RndcConfig, target: { idType: string; id: string }): Promise<RndcMessageResponse> {
+  const request = buildThirdPartyMasterQuery({ companyRndcNit: config.companyRndcNit, idType: target.idType, id: target.id });
+  let failure: unknown;
+
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    if (attempt > 0) {
+      await new Promise((done) => setTimeout(done, attempt * 5000));
+    }
+
+    try {
+      const response = await client.sendMessage(request);
+
+      if (response.status !== 0) {
+        return response;
+      }
+
+      failure = new Error(response.errorText ?? "RNDC did not respond");
+    } catch (error) {
+      failure = error;
+    }
+  }
+
+  return buildFailureResponse(config, request, failure);
 }
 
 function readSiteTarget(value: string): { idType: string; id: string } {

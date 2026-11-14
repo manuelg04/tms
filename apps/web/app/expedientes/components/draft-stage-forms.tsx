@@ -15,6 +15,7 @@ import { MoneyField, formatThousands } from "../../components/fields/money-field
 import { VehicleAssignmentPicker, type VehicleAssignmentValue } from "./vehicle-assignment-picker";
 import { MANIFEST_TYPE_OPTIONS, effectiveConsignment, normalizeManifestType } from "../../../convex/model/dispatchWorkflow";
 import { amountInWords, manifestMoneyReview, type MoneyLimits } from "../../../convex/model/moneyChecks";
+import { companyCargoPolicy } from "../../lib/default-cargo-policy";
 
 type LoadingOrder = {
   expeditionDate?: string;
@@ -293,7 +294,8 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
     cityName: effective.unloading?.cityName ?? effective.recipient?.cityName ?? "",
     municipalityCode: effective.unloading?.municipalityCode ?? effective.recipient?.municipalityCode ?? ""
   }));
-  const [insurer, setInsurer] = useState({ nit: draft.insurerNit ?? "", name: "" });
+  const [policyDefaults] = useState(() => companyCargoPolicy(new Date().toISOString().slice(0, 10)));
+  const [insurer, setInsurer] = useState({ nit: draft.insurerNit || policyDefaults.insurerNit, name: "" });
   const [packaging, setPackaging] = useState({ code: effective.packagingCode ?? "", description: "" });
   const [remissions, setRemissions] = useState<Array<Remission & { rowId: number }>>(() => (effective.remissions?.length ? effective.remissions : [{}]).map((line, index) => ({ ...line, rowId: index })));
   const [remissionTotal, setRemissionTotal] = useState(() => (effective.remissions ?? []).reduce((sum, line) => sum + (Number(line.weightTons ?? 0) || 0), 0));
@@ -374,8 +376,8 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
       <div className="field-group-note"><strong>Datos de la póliza</strong></div>
       <Field label="Tomador del seguro" name={`${key}_policyHolderPreview`} readOnly value="Empresa de transporte" />
       <InsurerField className="span-2" insurerName={insurerName} label="Aseguradora" name={`${key}_insurerNit`} nit={insurer.nit || undefined} onClear={() => setInsurer({ nit: "", name: "" })} onSelect={(option) => setInsurer({ nit: option.insurerNit, name: option.name })} required />
-      <Field label="Nro. póliza" name={`${key}_policyNumber`} required value={draft.policyNumber} />
-      <DateField label="Vigencia final" name={`${key}_policyExpiresOn`} required value={draft.policyExpiresOn} />
+      <Field label="Nro. póliza" name={`${key}_policyNumber`} required value={draft.policyNumber || policyDefaults.number} />
+      <DateField label="Vigencia final" name={`${key}_policyExpiresOn`} required value={draft.policyExpiresOn || policyDefaults.expiresOn} />
       <input name={`${key}_policyHolder`} type="hidden" value="transport_company" />
 
       <div className="field-group-note"><strong>Remisiones</strong></div>

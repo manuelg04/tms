@@ -8,8 +8,10 @@ import { Skeleton } from "../../components/skeleton";
 import { useQuery } from "../../lib/convex-hooks";
 import "../components/operaciones-panel.css";
 import {
+  documentKey,
   parseMoney,
   parseTons,
+  pickByDocument,
   pickByName,
   pickByPlate,
   pickMunicipality,
@@ -47,11 +49,14 @@ type PrefillDefaults = {
   observations?: string;
 };
 
+type DriverMatch = NonNullable<VehiclePick["drivers"]>[number];
+
 export type PrefillNote = { label: string; value: string; tone: "ok" | "wait" | "bad"; detail: string };
 
 export type SolicitudPrefill = {
   request: OperacionesRequest;
   state: Partial<PrefillState>;
+  driver: DriverMatch | null;
   defaults: PrefillDefaults;
   notes: PrefillNote[];
 };
@@ -97,8 +102,10 @@ function SolicitudMatcher({ request, children }: { request: OperacionesRequest; 
   const plate = request.vehicle.plate?.trim();
   const customer = request.customerName?.trim();
   const packaging = request.packaging?.trim();
+  const driverDocument = documentKey(request.driver.document);
   const existing = useQuery(api.operaciones.linkedRequests, { operacionesExpedienteIds: [request.expedienteId] });
   const vehicles = useQuery(api.lookups.vehiclesWithDriversSearch, plate && plate.length >= 2 ? { term: plate } : "skip");
+  const drivers = useQuery(api.lookups.driversLookup, driverDocument.length >= 2 ? { term: driverDocument } : "skip");
   const parties = useQuery(api.lookups.partiesSearch, customer && customer.length >= 2 ? { term: customer } : "skip");
   const origins = useQuery(api.lookups.divisionsSearch, route.origin && route.origin.length >= 2 ? { term: route.origin } : "skip");
   const destinations = useQuery(api.lookups.divisionsSearch, route.destination && route.destination.length >= 2 ? { term: route.destination } : "skip");
@@ -108,13 +115,14 @@ function SolicitudMatcher({ request, children }: { request: OperacionesRequest; 
   const waiting = existing === undefined
     || (clientCandidate && clientSites === undefined)
     || (plate && plate.length >= 2 && vehicles === undefined)
+    || (driverDocument.length >= 2 && drivers === undefined)
     || (customer && customer.length >= 2 && parties === undefined)
     || (route.origin && route.origin.length >= 2 && origins === undefined)
     || (route.destination && route.destination.length >= 2 && destinations === undefined)
     || (packaging && packagings === undefined);
   const prefill = useMemo(
-    () => waiting ? null : buildPrefill(request, route, { vehicles, parties, origins, destinations, packagings, clientSites }),
-    [waiting, request, route, vehicles, parties, origins, destinations, packagings, clientSites]
+    () => waiting ? null : buildPrefill(request, route, { vehicles, drivers, parties, origins, destinations, packagings, clientSites }),
+    [waiting, request, route, vehicles, drivers, parties, origins, destinations, packagings, clientSites]
   );
 
   if (!prefill) return <Skeleton label="Buscando la placa y el cliente en los maestros" variant="detail" />;
@@ -134,6 +142,7 @@ function SolicitudMatcher({ request, children }: { request: OperacionesRequest; 
 
 type Lookups = {
   vehicles: VehiclePick[] | undefined;
+  drivers?: DriverMatch[];
   parties: PartyPick[] | undefined;
   origins: Array<{ code: string; name: string; isMunicipality: boolean; municipalityName: string; departmentName: string }> | undefined;
   destinations: Array<{ code: string; name: string; isMunicipality: boolean; municipalityName: string; departmentName: string }> | undefined;
@@ -143,6 +152,7 @@ type Lookups = {
 
 export function buildPrefill(request: OperacionesRequest, route: { origin?: string; destination?: string }, lookups: Lookups): SolicitudPrefill {
   const vehicle = pickByPlate(lookups.vehicles, request.vehicle.plate);
+  const driver = pickByDocument(lookups.drivers, request.driver.document) ?? pickByDocument(vehicle?.drivers, request.driver.document);
   const client = pickByName(lookups.parties, request.customerName);
   const origin = pickMunicipality(lookups.origins, route.origin);
   const destination = pickMunicipality(lookups.destinations, route.destination);
@@ -158,6 +168,18 @@ export function buildPrefill(request: OperacionesRequest, route: { origin?: stri
 
   if (vehicle) state.vehicle = vehicle;
   add("Placa", request.vehicle.plate, vehicle ? "ok" : "bad", vehicle ? "Encontrada en maestros" : "No está en maestros del TMS: regístrala o elige otra");
+
+  const driverLabel = [request.driver.name?.trim(), documentKey(request.driver.document) ? `CC ${request.driver.document?.trim()}` : undefined].filter(Boolean).join(" · ");
+  const licenseExpired = Boolean(driver?.licenseExpiresAt && driver.licenseExpiresAt < new Date().toISOString().slice(0, 10));
+  if (!documentKey(request.driver.document)) {
+    add("Conductor", driverLabel, "wait", "La solicitud no trae la cédula: elige el conductor en el despacho");
+  } else if (!driver) {
+    add("Conductor", driverLabel, "bad", "No está en maestros del TMS: créalo en Maestros y asígnalo en el despacho");
+  } else if (licenseExpired) {
+    add("Conductor", driverLabel, "wait", `Encontrado en maestros, con la licencia vencida desde ${driver.licenseExpiresAt}`);
+  } else {
+    add("Conductor", driverLabel, "ok", `Encontrado en maestros: ${driver.name ?? driver.document}`);
+  }
 
   if (client) {
     Object.assign(state, { client, clientName: client.name, clientDocument: client.document, clientIdType: client.documentType });
@@ -195,6 +217,7 @@ export function buildPrefill(request: OperacionesRequest, route: { origin?: stri
   return {
     request,
     state,
+    driver,
     defaults: {
       cargoDescription: request.product?.trim() || undefined,
       weightTons,

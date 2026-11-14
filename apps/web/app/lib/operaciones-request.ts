@@ -82,6 +82,23 @@ export function pickByPlate<Row extends { plate: string }>(rows: Row[] | undefin
   return rows.find((row) => plateKey(row.plate) === wanted) ?? null;
 }
 
+export function documentKey(text: string | undefined): string {
+  return (text ?? "").replace(/\D/g, "");
+}
+
+export function pickByDocument<Row extends { document: string }>(rows: Row[] | undefined, document: string | undefined): Row | null {
+  const wanted = documentKey(document);
+  if (!wanted || !rows) return null;
+  return rows.find((row) => documentKey(row.document) === wanted) ?? null;
+}
+
+export function requestedDriverId<Id>(input: { requestedDocument?: string; matched?: { _id: Id } | null; linked: Array<{ _id: Id; document: string }> }): Id | undefined {
+  if (documentKey(input.requestedDocument)) {
+    return input.matched?._id ?? pickByDocument(input.linked, input.requestedDocument)?._id;
+  }
+  return input.linked.length === 1 ? input.linked[0]._id : undefined;
+}
+
 export function pickByName<Row extends { name: string }>(rows: Row[] | undefined, name: string | undefined): Row | null {
   const wanted = nameKey(name);
   if (!wanted || !rows || rows.length === 0) return null;

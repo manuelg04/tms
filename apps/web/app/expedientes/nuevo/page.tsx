@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { emissionNotice } from "../../lib/emission-notice";
 import { moduleHref } from "../../lib/module-links";
+import { requestedDriverId } from "../../lib/operaciones-request";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
@@ -418,10 +419,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
 }
 
 function assignedDriverId(vehicle: VehiclePick, prefill: SolicitudPrefill | undefined) {
-  const drivers = vehicle.drivers ?? [];
-  const wanted = (prefill?.request.driver.document ?? "").replace(/\D/g, "");
-  const requested = wanted ? drivers.find((driver) => driver.document.replace(/\D/g, "") === wanted) : undefined;
-  return requested?._id ?? (drivers.length === 1 ? drivers[0]._id : undefined);
+  return requestedDriverId({ requestedDocument: prefill?.request.driver.document, matched: prefill?.driver, linked: vehicle.drivers ?? [] });
 }
 
 function StageHeading({ id, text, title }: { id: string; text: string; title: string }) {

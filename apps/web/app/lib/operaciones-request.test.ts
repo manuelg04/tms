@@ -3,11 +3,13 @@ import { test } from "node:test";
 import {
   parseMoney,
   parseTons,
+  pickByDocument,
   pickByName,
   pickByPlate,
   pickMunicipality,
   pickPackaging,
   requestObservations,
+  requestedDriverId,
   splitRoute,
   type OperacionesRequest
 } from "./operaciones-request";
@@ -56,4 +58,21 @@ test("joins the worksheet notes for the order observations", () => {
   const request = { remesaObservations: "Entregar en bodega 3", odc: "4500123", policy: "POL-9" } as OperacionesRequest;
   assert.equal(requestObservations(request), "Entregar en bodega 3 · ODC: 4500123 · Póliza: POL-9");
   assert.equal(requestObservations({} as OperacionesRequest), undefined);
+});
+
+test("finds the requested driver by exact document", () => {
+  const rows = [{ document: "10836874381" }, { document: "1083687438" }];
+  assert.equal(pickByDocument(rows, "1.083.687.438")?.document, "1083687438");
+  assert.equal(pickByDocument(rows, "108368743"), null);
+  assert.equal(pickByDocument(rows, undefined), null);
+  assert.equal(pickByDocument(undefined, "1083687438"), null);
+});
+
+test("never assigns a different driver than the one in the worksheet request", () => {
+  const linked = [{ _id: "linked", document: "111" }];
+  assert.equal(requestedDriverId({ requestedDocument: "222", matched: { _id: "found" }, linked }), "found");
+  assert.equal(requestedDriverId({ requestedDocument: "222", matched: null, linked }), undefined);
+  assert.equal(requestedDriverId({ requestedDocument: "1.1.1", matched: null, linked }), "linked");
+  assert.equal(requestedDriverId({ requestedDocument: undefined, matched: null, linked }), "linked");
+  assert.equal(requestedDriverId({ requestedDocument: " ", linked: [...linked, { _id: "other", document: "333" }] }), undefined);
 });

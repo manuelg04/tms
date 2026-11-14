@@ -12,10 +12,10 @@ import {
 
 const bogota = { cityName: "BOGOTA", municipalityCode: "11001000" };
 const piedecuesta = { cityName: "PIEDECUESTA", municipalityCode: "68547000" };
-const edinsa = { name: "EDINSA", identificationNumber: "860000001" };
+const customer = { name: "CLIENTE DEMO", identificationNumber: "860000001" };
 const order = {
-  sender: { ...edinsa, siteCode: "27", ...bogota },
-  recipient: { ...edinsa, siteCode: "0", ...bogota },
+  sender: { ...customer, siteCode: "27", ...bogota },
+  recipient: { ...customer, siteCode: "0", ...bogota },
   loading: { address: "CRA 1", ...bogota },
   unloading: { address: "CRA 2", ...bogota }
 };
@@ -63,7 +63,7 @@ test("the unloading municipality must be the one of the recipient site", () => {
     { document: "860000001", siteCode: "26", cityCode: "68547000", city: "PIEDECUESTA" }
   ];
   const wrong = siteRouteBlockers(
-    { sender: order.sender, recipient: { ...edinsa, siteCode: "26" } },
+    { sender: order.sender, recipient: { ...customer, siteCode: "26" } },
     { origin: { code: "11001000", city: "BOGOTA" }, destination: { code: "11001000", city: "BOGOTA" } },
     sites
   );
@@ -71,13 +71,13 @@ test("the unloading municipality must be the one of the recipient site", () => {
   assert.match(wrong[0], /sede 26 del destinatario queda en PIEDECUESTA.*descargue es BOGOTA/);
   assert.deepEqual(
     siteRouteBlockers(
-      { sender: order.sender, recipient: { ...edinsa, siteCode: "26" } },
+      { sender: order.sender, recipient: { ...customer, siteCode: "26" } },
       { origin: { code: "11001000", city: "BOGOTA" }, destination: { code: "68547000", city: "PIEDECUESTA" } },
       sites
     ),
     []
   );
-  assert.deepEqual(siteRouteBlockers({ recipient: { ...edinsa, siteCode: "99" } }, { origin: {}, destination: { code: "11001000" } }, sites), []);
+  assert.deepEqual(siteRouteBlockers({ recipient: { ...customer, siteCode: "99" } }, { origin: {}, destination: { code: "11001000" } }, sites), []);
 });
 
 test("differences between drafts and emitted documents are reported", () => {

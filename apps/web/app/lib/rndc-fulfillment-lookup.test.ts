@@ -7,7 +7,7 @@ function json(body: unknown, status = 200): Response {
 }
 
 test("reads whether the RNDC has a fulfillment for a remesa", () => {
-  assert.equal(readFinding(true, { records: [{ id: "4596876" }] }), "found");
+  assert.equal(readFinding(true, { records: [{ id: "1234567" }] }), "found");
   assert.equal(readFinding(true, { records: [] }), "none");
   assert.equal(readFinding(true, { records: [], response: { errorText: "Error RNDC11: Documento no encontrado." } }), "none");
   assert.equal(readFinding(true, { records: [], response: { errorText: "Error de conexión" } }), "unknown");
@@ -21,7 +21,7 @@ test("only read-only queries are sent, one pair per remesa with number", async (
     [{ documentId: "doc-1", number: "90001" }, { documentId: "doc-2" }],
     async (path) => {
       paths.push(path);
-      return path.includes("initial-compliance") ? json({ records: [{ id: "4596876" }] }) : json({ records: [] });
+      return path.includes("initial-compliance") ? json({ records: [{ id: "1234567" }] }) : json({ records: [] });
     }
   );
 

@@ -20,6 +20,7 @@
     "rndc:annul": "npm run build -w @tms/rndc-core && tsx src/cli.ts annul",
     "rndc:lookup-pair": "npm run build -w @tms/rndc-core && tsx src/cli.ts lookup-pair",
     "rndc:lookup-pairs": "npm run build -w @tms/rndc-core && tsx src/cli.ts lookup-pairs",
+    "rndc:lookup-sites": "npm run build -w @tms/rndc-core && tsx src/cli.ts lookup-sites",
     "rndc:lookup-owner-vehicle": "npm run build -w @tms/rndc-core && tsx src/cli.ts lookup-owner-vehicle",
     "rndc:lookup-owner-vehicles": "npm run build -w @tms/rndc-core && tsx src/cli.ts lookup-owner-vehicles"
   },

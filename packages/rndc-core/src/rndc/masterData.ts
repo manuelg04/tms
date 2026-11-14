@@ -27,6 +27,20 @@ export type RndcThirdPartyMaster = {
   reviewReasons: string[];
 };
 
+export type RndcThirdPartySite = {
+  idType: string;
+  id: string;
+  name?: string;
+  siteCode: string;
+  siteName?: string;
+  address?: string;
+  cityCode?: string;
+  latitude?: string;
+  longitude?: string;
+};
+
+export type RndcCoordinates = { latitude: string; longitude: string };
+
 export type RndcVehicleMaster = {
   key: string;
   plate: string;
@@ -219,6 +233,82 @@ export function normalizeThirdPartyMaster(parsed: unknown): RndcThirdPartyMaster
     readyForDocuments: true,
     reviewReasons: []
   };
+}
+
+const LATITUDE_RANGE = { min: -5, max: 14 };
+const LONGITUDE_RANGE = { min: -82, max: -66 };
+
+export function normalizeRndcCoordinates(latitude: unknown, longitude: unknown): RndcCoordinates | undefined {
+  const first = coordinateText(latitude);
+  const second = coordinateText(longitude);
+
+  if (!first || !second) {
+    return undefined;
+  }
+
+  if (inRange(first, LATITUDE_RANGE) && inRange(second, LONGITUDE_RANGE)) {
+    return { latitude: first, longitude: second };
+  }
+
+  if (inRange(second, LATITUDE_RANGE) && inRange(first, LONGITUDE_RANGE)) {
+    return { latitude: second, longitude: first };
+  }
+
+  return undefined;
+}
+
+export function normalizeThirdPartySites(parsed: unknown): RndcThirdPartySite[] {
+  const sites = new Map<string, RndcThirdPartySite>();
+
+  for (const document of extractRndcDocuments(parsed)) {
+    const id = readText(document, "NUMIDTERCERO");
+
+    if (!id) {
+      continue;
+    }
+
+    const idType = (readText(document, "CODTIPOIDTERCERO") ?? "N").toUpperCase();
+    const siteCode = readText(document, "CODSEDETERCERO") ?? "0";
+    const names = [
+      readText(document, "NOMIDTERCERO"),
+      readText(document, "PRIMERAPELLIDOIDTERCERO"),
+      readText(document, "SEGUNDOAPELLIDOIDTERCERO")
+    ].filter(isPresent);
+    const coordinates = normalizeRndcCoordinates(readField(document, "LATITUD"), readField(document, "LONGITUD"));
+
+    sites.set(`${idType}-${id}-${siteCode}`, {
+      idType,
+      id,
+      name: names.join(" ") || undefined,
+      siteCode,
+      siteName: readText(document, "NOMSEDETERCERO"),
+      address: readText(document, "NOMENCLATURADIRECCION"),
+      cityCode: readText(document, "CODMUNICIPIORNDC"),
+      latitude: coordinates?.latitude,
+      longitude: coordinates?.longitude
+    });
+  }
+
+  return [...sites.values()].sort((a, b) => Number(a.siteCode) - Number(b.siteCode) || a.siteCode.localeCompare(b.siteCode));
+}
+
+function coordinateText(value: unknown): string | undefined {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+
+  const text = String(value).trim().replace(",", ".");
+
+  if (!/^-?\d+(\.\d+)?$/.test(text) || Number(text) === 0) {
+    return undefined;
+  }
+
+  return text;
+}
+
+function inRange(value: string, range: { min: number; max: number }): boolean {
+  const number = Number(value);
+  return number >= range.min && number <= range.max;
 }
 
 export function normalizeVehicleMaster(parsed: unknown, now = new Date()): RndcVehicleMaster | undefined {

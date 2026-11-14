@@ -9,7 +9,9 @@ import {
   buildThirdPartyMasterQuery,
   buildVehicleMasterQuery,
   normalizeDriverMaster,
+  normalizeRndcCoordinates,
   normalizeThirdPartyMaster,
+  normalizeThirdPartySites,
   normalizeVehicleMaster,
   saveLocalOwnerVehicleSnapshot,
   saveLocalMasterSnapshot
@@ -261,4 +263,62 @@ test("dry-run master queries return local records that can be saved", async () =
 
   assert.equal(saved.readyForDocuments, true);
   assert.ok(existsSync(saved.pairPath));
+});
+
+test("lists every site of a third party with its coordinates", () => {
+  const parsed = parseXml([
+    "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>",
+    "<root>",
+    "<documento>",
+    "<CODTIPOIDTERCERO>N</CODTIPOIDTERCERO>",
+    "<NUMIDTERCERO>9001234567</NUMIDTERCERO>",
+    "<NOMIDTERCERO>EMPRESA DE PRUEBA</NOMIDTERCERO>",
+    "<CODSEDETERCERO>26</CODSEDETERCERO>",
+    "<NOMSEDETERCERO>PLANTA NORTE</NOMSEDETERCERO>",
+    "<NOMENCLATURADIRECCION>KM 7 VIA PRINCIPAL</NOMENCLATURADIRECCION>",
+    "<CODMUNICIPIORNDC>68547000</CODMUNICIPIORNDC>",
+    "<LATITUD>6,995415</LATITUD>",
+    "<LONGITUD>-73,071613</LONGITUD>",
+    "</documento>",
+    "<documento>",
+    "<CODTIPOIDTERCERO>N</CODTIPOIDTERCERO>",
+    "<NUMIDTERCERO>9001234567</NUMIDTERCERO>",
+    "<NOMIDTERCERO>EMPRESA DE PRUEBA</NOMIDTERCERO>",
+    "<CODSEDETERCERO>6</CODSEDETERCERO>",
+    "<NOMSEDETERCERO>BODEGA</NOMSEDETERCERO>",
+    "<CODMUNICIPIORNDC>68547000</CODMUNICIPIORNDC>",
+    "<LATITUD>0</LATITUD>",
+    "<LONGITUD>0</LONGITUD>",
+    "</documento>",
+    "</root>"
+  ].join(""));
+
+  const sites = normalizeThirdPartySites(parsed);
+
+  assert.deepEqual(sites.map((site) => site.siteCode), ["6", "26"]);
+  assert.equal(sites[0].latitude, undefined);
+  assert.equal(sites[0].longitude, undefined);
+  assert.deepEqual(sites[1], {
+    idType: "N",
+    id: "9001234567",
+    name: "EMPRESA DE PRUEBA",
+    siteCode: "26",
+    siteName: "PLANTA NORTE",
+    address: "KM 7 VIA PRINCIPAL",
+    cityCode: "68547000",
+    latitude: "6.995415",
+    longitude: "-73.071613"
+  });
+  assert.deepEqual(normalizeThirdPartySites(parseXml("<root><ErrorMSG>Error RNDC11: Documento no encontrado.</ErrorMSG></root>")), []);
+});
+
+test("keeps only coordinates that fall inside Colombia", () => {
+  assert.deepEqual(normalizeRndcCoordinates("4.710735", "-74.073311"), { latitude: "4.710735", longitude: "-74.073311" });
+  assert.deepEqual(normalizeRndcCoordinates(" -74.073311 ", "4.710735"), { latitude: "4.710735", longitude: "-74.073311" });
+  assert.deepEqual(normalizeRndcCoordinates(7.06, -73.85), { latitude: "7.06", longitude: "-73.85" });
+  assert.equal(normalizeRndcCoordinates("4.710735", ""), undefined);
+  assert.equal(normalizeRndcCoordinates(" ", " "), undefined);
+  assert.equal(normalizeRndcCoordinates("0", "0"), undefined);
+  assert.equal(normalizeRndcCoordinates("40.41", "-3.70"), undefined);
+  assert.equal(normalizeRndcCoordinates("abc", "-74"), undefined);
 });

@@ -1,4 +1,4 @@
-import { applyScenarioOverlay, buildAnnulmentMessages, buildComplianceMessages, buildDriverMasterQuery, buildLoadingOrderMessages, buildMtmProductionScenario, buildThirdPartyMasterQuery, buildVehicleMasterQuery, endpointFor, endpointTargetFor, endpointUrlFor, generateLoadingOrderDocument, loadConfig, loadScenarioOverlay, normalizeDriverMaster, normalizeThirdPartyMaster, normalizeVehicleMaster, prepareOperationRequests, RndcClient, RndcFlowError, runDemoFlow, runMtmProductionFlow, saveLocalMasterSnapshot, saveLocalOwnerVehicleSnapshot } from "@tms/rndc-core";
+import { applyScenarioOverlay, buildAnnulmentMessages, buildComplianceMessages, buildDriverMasterQuery, buildLoadingOrderMessages, buildMtmProductionScenario, buildThirdPartyMasterQuery, buildVehicleMasterQuery, endpointFor, endpointTargetFor, endpointUrlFor, generateLoadingOrderDocument, loadConfig, loadScenarioOverlay, normalizeDriverMaster, normalizeThirdPartyMaster, normalizeThirdPartySites, normalizeVehicleMaster, prepareOperationRequests, RndcClient, RndcFlowError, runDemoFlow, runMtmProductionFlow, saveLocalMasterSnapshot, saveLocalOwnerVehicleSnapshot } from "@tms/rndc-core";
 import type { DemoScenario, RndcConfig, RndcDriverMaster, RndcMessageResponse, RndcThirdPartyMaster, RndcVehicleMaster } from "@tms/rndc-core";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
@@ -34,6 +34,8 @@ if (command === "ping") {
   await runSafely(lookupPairs);
 } else if (command === "lookup-owner-vehicle") {
   await runSafely(lookupOwnerVehicle);
+} else if (command === "lookup-sites") {
+  await lookupSites();
 } else if (command === "lookup-owner-vehicles") {
   await runSafely(lookupOwnerVehicles);
 } else {
@@ -242,6 +244,65 @@ async function lookupPairs(): Promise<void> {
     results
   }, null, 2));
   process.exit(ok ? 0 : 1);
+}
+
+async function lookupSites(): Promise<void> {
+  const config = loadConfig();
+  const args = process.argv.slice(3);
+  const outPath = args.find((value) => value.toLowerCase().endsWith(".json"));
+  const targets = args.filter((value) => value !== outPath).map(readSiteTarget);
+
+  if (targets.length === 0) {
+    throw new Error("Usage: npm run rndc:lookup-sites -- <id-type>:<id> [<id-type>:<id> ...] [<output-file.json>]");
+  }
+
+  const client = new RndcClient(config);
+  const results = [];
+
+  for (const target of targets) {
+    const response = await client.sendMessage(buildThirdPartyMasterQuery({ companyRndcNit: config.companyRndcNit, idType: target.idType, id: target.id }));
+    const sites = normalizeThirdPartySites(response.parsed);
+    const notFound = !response.ok && /^Error RNDC11: Documento no encontrado\./i.test(response.errorText ?? "");
+    results.push({
+      idType: target.idType,
+      id: target.id,
+      ok: response.ok || notFound,
+      httpStatus: response.status,
+      error: response.ok || notFound ? undefined : response.errorText,
+      siteCount: sites.length,
+      withCoordinates: sites.filter((site) => site.latitude && site.longitude).length,
+      sites
+    });
+  }
+
+  const fetchedAt = new Date().toISOString();
+  const filePath = resolveInputPath(outPath ?? join(config.localDataDir, "third-party-sites", `${fetchedAt.replace(/[:.]/g, "-")}.json`));
+  const ok = results.every((result) => result.ok);
+  await mkdir(dirname(filePath), { recursive: true });
+  await writeFile(filePath, `${JSON.stringify({ fetchedAt, mode: config.mode, environment: config.environment, results }, null, 2)}\n`, "utf8");
+  console.log(JSON.stringify({
+    ok,
+    mode: config.mode,
+    transport: config.transport,
+    environment: config.environment,
+    filePath,
+    results: results.map(({ sites, ...summary }) => ({
+      ...summary,
+      sitesWithCoordinates: sites.filter((site) => site.latitude && site.longitude).map((site) => `${site.siteCode}:${site.latitude},${site.longitude}`),
+      sitesWithoutCoordinates: sites.filter((site) => !site.latitude || !site.longitude).map((site) => site.siteCode)
+    }))
+  }, null, 2));
+  process.exit(ok ? 0 : 1);
+}
+
+function readSiteTarget(value: string): { idType: string; id: string } {
+  const match = /^([A-Za-z]):([0-9A-Za-z]+)$/.exec(value.trim());
+
+  if (!match) {
+    throw new Error(`Invalid third party ${value}; use <id-type>:<id>, for example N:9001234567`);
+  }
+
+  return { idType: match[1].toUpperCase(), id: match[2] };
 }
 
 async function lookupOwnerVehicle(): Promise<void> {

@@ -4,6 +4,9 @@ import {
   parseMoney,
   parseTons,
   dispatcherTerms,
+  inboxFilter,
+  isRequestedSince,
+  requestsSince,
   matchesDispatcher,
   pickByDocument,
   pickByName,
@@ -89,4 +92,26 @@ test("limits the worksheet inbox to the enabled dispatcher", () => {
   assert.equal(matchesDispatcher({ requestedBy: undefined, dispatcherName: undefined }, terms), false);
   assert.equal(matchesDispatcher({ requestedBy: "Alvaro", dispatcherName: "alvaro" }, dispatcherTerms(undefined)), true);
   assert.deepEqual(dispatcherTerms(" , = "), []);
+});
+
+test("hides worksheet requests saved before the pilot start date", () => {
+  const since = requestsSince("2026-11-14");
+  assert.equal(since, Date.parse("2026-11-14T00:00:00-05:00"));
+  assert.equal(requestsSince(" "), undefined);
+  assert.equal(requestsSince("14/11/2026"), undefined);
+  assert.equal(isRequestedSince({ requestedAt: Date.parse("2026-11-11T10:02:00-05:00"), updatedAt: Date.parse("2026-11-14T08:00:00-05:00") }, since), false);
+  assert.equal(isRequestedSince({ requestedAt: Date.parse("2026-11-14T00:00:00-05:00"), updatedAt: 0 }, since), true);
+  assert.equal(isRequestedSince({ requestedAt: undefined, updatedAt: Date.parse("2026-11-13T23:59:00-05:00") }, since), false);
+  assert.equal(isRequestedSince({ requestedAt: 1, updatedAt: 1 }, undefined), true);
+});
+
+test("combines the dispatcher and start date limits for the inbox", () => {
+  const base = { expedienteId: "kn7", status: "loading_order_available", statusLabel: "", updatedAt: 0, isPortTrip: false, driver: {}, owner: {}, vehicle: {}, ticketApproved: false, termsAccepted: false, documents: { loadingOrder: false, officialManifest: false, officialRemesa: false } };
+  const filter = inboxFilter({ OPERACIONES_ONLY_DISPATCHER: "mantilla", OPERACIONES_REQUESTS_SINCE: "2026-11-14" });
+  assert.equal(filter.limited, true);
+  assert.equal(filter.accepts({ ...base, dispatcherName: "Diego Antonio Mantilla", requestedAt: Date.parse("2026-11-14T09:00:00-05:00") }), true);
+  assert.equal(filter.accepts({ ...base, dispatcherName: "Diego Antonio Mantilla", requestedAt: Date.parse("2026-11-11T10:02:00-05:00") }), false);
+  assert.equal(filter.accepts({ ...base, dispatcherName: "Jorge Ariel Diaz", requestedAt: Date.parse("2026-11-14T09:00:00-05:00") }), false);
+  assert.equal(inboxFilter({}).limited, false);
+  assert.equal(inboxFilter({}).accepts({ ...base, requestedAt: 1 }), true);
 });

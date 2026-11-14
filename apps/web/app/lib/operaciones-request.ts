@@ -99,6 +99,26 @@ export function matchesDispatcher(request: Pick<OperacionesRequest, "requestedBy
   );
 }
 
+export function requestsSince(raw: string | undefined): number | undefined {
+  const match = (raw ?? "").trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return undefined;
+  return Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]), 5);
+}
+
+export function isRequestedSince(request: Pick<OperacionesRequest, "requestedAt" | "updatedAt">, since: number | undefined): boolean {
+  if (since === undefined) return true;
+  return (request.requestedAt ?? request.updatedAt) >= since;
+}
+
+export function inboxFilter(env: Record<string, string | undefined>) {
+  const terms = dispatcherTerms(env.OPERACIONES_ONLY_DISPATCHER);
+  const since = requestsSince(env.OPERACIONES_REQUESTS_SINCE);
+  return {
+    limited: terms.length > 0 || since !== undefined,
+    accepts: (request: OperacionesRequest) => matchesDispatcher(request, terms) && isRequestedSince(request, since)
+  };
+}
+
 export function documentKey(text: string | undefined): string {
   return (text ?? "").replace(/\D/g, "");
 }

@@ -89,7 +89,7 @@ export default function SolicitudesPage() {
         ) : rows.length === 0 ? (
           <div className="expediente-empty">
             <strong>{filter === "pending" ? "No hay solicitudes por crear" : "No hay solicitudes de planilla"}</strong>
-            <p>{inbox.onlyDispatcher ? "Por ahora solo se muestran las solicitudes del despachador habilitado para el piloto. Aparecen cuando guarda la planilla en Operaciones con el checklist del conductor aprobado." : "Aquí aparecen las solicitudes que los despachadores guardan en Operaciones cuando el checklist del conductor ya fue aprobado."}</p>
+            <p>{inbox.onlyDispatcher ? "Por ahora solo se muestran las solicitudes nuevas del despachador habilitado para el piloto. Aparecen cuando guarda la planilla en Operaciones con el checklist del conductor aprobado." : "Aquí aparecen las solicitudes que los despachadores guardan en Operaciones cuando el checklist del conductor ya fue aprobado."}</p>
           </div>
         ) : (
           <div className="table-wrap dispatch-table-wrap">

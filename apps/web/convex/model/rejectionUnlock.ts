@@ -24,7 +24,7 @@ export function rejectionUnlockProblem(
   if (operation.operationType !== "emit_remesa" && operation.operationType !== "emit_manifest") return "Solo aplica a emisiones de remesa o manifiesto";
   if (operation.status !== "failed") return "La operación no terminó en rechazo";
   if (operation.businessKey.includes(":rechazada:")) return "La operación ya fue archivada";
-  let result: { ok?: unknown; steps?: Array<{ accepted?: unknown }> } | null = null;
+  let result: { ok?: unknown; steps?: Array<{ accepted?: unknown; status?: unknown; errorText?: unknown }> } | null = null;
   try {
     result = operation.resultJson ? JSON.parse(operation.resultJson) : null;
   } catch {
@@ -32,6 +32,7 @@ export function rejectionUnlockProblem(
   }
   if (!result || result.ok !== false || !Array.isArray(result.steps) || result.steps.length === 0) return "No hay respuesta del RNDC que confirme el rechazo";
   if (result.steps.some((step) => step.accepted !== false)) return "El RNDC aceptó algún paso; no se puede reabrir";
+  if (result.steps.some((step) => step.status !== 200 || typeof step.errorText !== "string" || step.errorText.trim() === "")) return "La respuesta no es un rechazo claro del RNDC; revísala antes de reabrir";
   if (!document) return "No se encontró el documento";
   if (operation.documentId !== document._id) return "La operación no corresponde a este documento";
   if (document.officialState !== "pending") return "El documento no está pendiente";

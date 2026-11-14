@@ -9,7 +9,7 @@ const rejected = {
   mode: "live",
   requestKey: "emit-exp-remesa:90001",
   businessKey: "emit:exp:remesa:90001",
-  resultJson: JSON.stringify({ ok: false, steps: [{ accepted: false, errorText: "Error REM502" }] }),
+  resultJson: JSON.stringify({ ok: false, steps: [{ accepted: false, status: 200, errorText: "Error REM502" }] }),
   expedienteRemesaId: "rem1",
   documentId: "doc1"
 };
@@ -38,4 +38,12 @@ test("reopens a rejected manifest through its own document", () => {
   assert.notEqual(rejectionUnlockProblem(manifest, null, { ...manifestDocument, _id: "other" }), null);
   assert.notEqual(rejectionUnlockProblem(manifest, remesa, manifestDocument), null);
   assert.notEqual(rejectionUnlockProblem({ ...manifest, status: "succeeded" }, null, manifestDocument), null);
+});
+
+test("does not reopen when the RNDC answer is an outage or carries no error", () => {
+  const withSteps = (steps: unknown[]) => ({ ...rejected, resultJson: JSON.stringify({ ok: false, steps }) });
+  assert.notEqual(rejectionUnlockProblem(withSteps([{ accepted: false, status: 503, errorText: "Service Unavailable" }]), remesa, document), null);
+  assert.notEqual(rejectionUnlockProblem(withSteps([{ accepted: false, status: 500, errorText: "Error REM502" }]), remesa, document), null);
+  assert.notEqual(rejectionUnlockProblem(withSteps([{ accepted: false, status: 200 }]), remesa, document), null);
+  assert.notEqual(rejectionUnlockProblem(withSteps([{ accepted: false, status: 200, errorText: "  " }]), remesa, document), null);
 });

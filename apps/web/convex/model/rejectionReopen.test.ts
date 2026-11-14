@@ -55,7 +55,7 @@ function seed(overrides: { resultJson?: string; status?: string } = {}) {
       mode: "live",
       requestKey: "emit-exp1-remesa:90001",
       businessKey: "emit:exp1:remesa:90001",
-      resultJson: overrides.resultJson ?? JSON.stringify({ ok: false, steps: [{ accepted: false, errorText: "Error REM502" }] })
+      resultJson: overrides.resultJson ?? JSON.stringify({ ok: false, steps: [{ accepted: false, status: 200, errorText: "Error REM502" }] })
     }],
     rndcRequestKeys: [{ _id: "key1", organizationId: "org1", requestKey: "emit-exp1-remesa:90001", operationId: "op1" }],
     expedienteRemesas: [{ _id: "rem1", number: "90001", officialState: "pending", documentId: "doc1", updatedBy: "user1" }],

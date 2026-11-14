@@ -45,3 +45,26 @@ export function rejectionUnlockProblem(
   if (remesa.officialState !== "pending") return "La remesa no está pendiente";
   return null;
 }
+
+export const REJECTED_UNCHANGED_MESSAGE = "El RNDC ya rechazó este mismo documento sin cambios. Corrige lo que indicó el rechazo y guarda antes de volver a enviarlo.";
+
+function withoutPreparer(payloadJson: string): string | null {
+  try {
+    const parsed = JSON.parse(payloadJson) as unknown;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return payloadJson;
+    const { preparedBy: _preparedBy, ...rest } = parsed as Record<string, unknown>;
+    return JSON.stringify(rest);
+  } catch {
+    return null;
+  }
+}
+
+export function repeatsRejectedSubmission(
+  previous: { status: string; businessKey: string; payloadJson: string } | null | undefined,
+  businessKey: string,
+  payloadJson: string
+): boolean {
+  if (!previous || previous.status !== "failed" || !previous.businessKey.startsWith(`${businessKey}:rechazada:`)) return false;
+  const before = withoutPreparer(previous.payloadJson);
+  return before !== null && before === withoutPreparer(payloadJson);
+}

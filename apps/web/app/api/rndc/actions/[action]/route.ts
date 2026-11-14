@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { ConvexHttpClient } from "convex/browser";
+import { ConvexError } from "convex/values";
 import { api } from "../../../../../convex/_generated/api";
 import type { Id } from "../../../../../convex/_generated/dataModel";
 import { getAuthSettings, createConvexToken, jsonResponse } from "../../../../lib/auth-server";
@@ -189,7 +190,7 @@ export async function POST(
     serviceKey,
     documentId: validated.documentId as Id<"documents">
   });
-  const queued = await client.mutation(api.rndcOperations.enqueue, {
+  const enqueue = () => client.mutation(api.rndcOperations.enqueue, {
     organizationId: validated.organizationId as Id<"organizations">,
     expedienteId: validated.expedienteId as Id<"expedientes">,
     documentId: validated.documentId as Id<"documents"> | undefined,
@@ -202,6 +203,15 @@ export async function POST(
     payloadJson,
     maxAttempts: 3
   });
+  let queued: Awaited<ReturnType<typeof enqueue>>;
+  try {
+    queued = await enqueue();
+  } catch (error) {
+    if (error instanceof ConvexError && isRecord(error.data) && error.data.code === "REJECTED_UNCHANGED") {
+      return jsonResponse({ error: String(error.data.message), code: "REJECTED_UNCHANGED" }, 409);
+    }
+    throw error;
+  }
   const existing = await client.query(api.rndcOperations.get, { operationId: queued.operationId });
 
   if (

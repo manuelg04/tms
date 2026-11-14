@@ -1,4 +1,5 @@
 import { ConvexError, v } from "convex/values";
+import { REJECTED_UNCHANGED_MESSAGE, repeatsRejectedSubmission } from "./rejectionUnlock";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { appendAudit } from "./access";
@@ -195,6 +196,18 @@ export async function enqueueOperation(
     }
 
     return { operationId: existing._id, created: false, status: existingStatus };
+  }
+
+  if (input.documentId && (input.operationType === "emit_remesa" || input.operationType === "emit_manifest")) {
+    const documentId = input.documentId;
+    const latest = await ctx.db
+      .query("rndcOperations")
+      .withIndex("by_document_and_created_at", (q) => q.eq("documentId", documentId))
+      .order("desc")
+      .first();
+    if (repeatsRejectedSubmission(latest, businessKey, input.payloadJson)) {
+      throw new ConvexError({ code: "REJECTED_UNCHANGED", message: REJECTED_UNCHANGED_MESSAGE });
+    }
   }
 
   if (input.documentId && lifecyclePlanForOperation(input.operationType)) {

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { archivedKey, rejectionUnlockProblem } from "./rejectionUnlock";
+import { archivedKey, rejectionUnlockProblem, repeatsRejectedSubmission } from "./rejectionUnlock";
 
 const rejected = {
   _id: "op1",
@@ -46,4 +46,13 @@ test("does not reopen when the RNDC answer is an outage or carries no error", ()
   assert.notEqual(rejectionUnlockProblem(withSteps([{ accepted: false, status: 500, errorText: "Error REM502" }]), remesa, document), null);
   assert.notEqual(rejectionUnlockProblem(withSteps([{ accepted: false, status: 200 }]), remesa, document), null);
   assert.notEqual(rejectionUnlockProblem(withSteps([{ accepted: false, status: 200, errorText: "  " }]), remesa, document), null);
+});
+
+test("an identical resend of a rejected document is recognised, a corrected one is not", () => {
+  const previous = { status: "failed", businessKey: "emit:exp:remesa:90001:rechazada:op1", payloadJson: JSON.stringify({ remesa: { number: "90001", siteCode: "27" }, preparedBy: "Ana" }) };
+  assert.equal(repeatsRejectedSubmission(previous, "emit:exp:remesa:90001", JSON.stringify({ remesa: { number: "90001", siteCode: "27" }, preparedBy: "Luis" })), true);
+  assert.equal(repeatsRejectedSubmission(previous, "emit:exp:remesa:90001", JSON.stringify({ remesa: { number: "90001", siteCode: "26" }, preparedBy: "Ana" })), false);
+  assert.equal(repeatsRejectedSubmission({ ...previous, status: "succeeded" }, "emit:exp:remesa:90001", previous.payloadJson), false);
+  assert.equal(repeatsRejectedSubmission({ ...previous, businessKey: "emit:exp:remesa:90001" }, "emit:exp:remesa:90001", previous.payloadJson), false);
+  assert.equal(repeatsRejectedSubmission(null, "emit:exp:remesa:90001", previous.payloadJson), false);
 });

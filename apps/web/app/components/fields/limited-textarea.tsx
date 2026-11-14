@@ -12,7 +12,7 @@ export function LimitedTextarea({ className, field, label, name, rows, value }: 
   return (
     <FormField className={className}>
       <span>{label}</span>
-      <textarea aria-describedby={`${name}-count`} aria-invalid={over || undefined} name={name} onChange={(event) => setText(event.target.value.length > limit && event.target.value.length > text.length ? event.target.value.slice(0, Math.max(limit, text.length)) : event.target.value)} rows={rows} value={text} />
+      <textarea aria-describedby={`${name}-count`} aria-invalid={over || undefined} name={name} onChange={(event) => setText(event.target.value)} rows={rows} value={text} />
       <small className={over ? "text-count over" : "text-count"} id={`${name}-count`}>
         {over ? `${length} de ${limit} caracteres: el RNDC rechaza el documento si pasa de ${limit}. Recorta ${length - limit}.` : `${length} de ${limit} caracteres`}
       </small>

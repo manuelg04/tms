@@ -271,7 +271,8 @@ export const saveLoadingOrderDraft = mutation({
     }
 
     const now = Date.now();
-    const draft = await completeCargoClassification(ctx, expediente.organizationId, args.draft);
+    const completed = await completeCargoClassification(ctx, expediente.organizationId, args.draft);
+    const draft = { ...completed, orderNumber: expediente.loadingOrderDraft?.orderNumber ?? completed.orderNumber };
     await ctx.db.patch("expedientes", expediente._id, {
       loadingOrderDraft: draft,
       loadingOrderRevision: currentRevision(expediente.loadingOrderRevision) + 1,
@@ -403,7 +404,7 @@ export const saveConsignmentsDraft = mutation({
         expectedRevision: v.optional(v.number())
       })
     ),
-    removals: v.optional(v.array(v.id("expedienteRemesas"))),
+    removals: v.optional(v.array(v.object({ remesaId: v.id("expedienteRemesas"), expectedRevision: v.optional(v.number()) }))),
     expectedOrderRevision: v.optional(v.number())
   },
   returns: v.array(v.id("expedienteRemesas")),
@@ -415,7 +416,8 @@ export const saveConsignmentsDraft = mutation({
       .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
       .collect();
     const existingById = new Map(existingRows.map((row) => [row._id, row]));
-    const removals = args.removals ?? [];
+    const removalRequests = args.removals ?? [];
+    const removals = removalRequests.map((removal) => removal.remesaId);
     const removalSet = new Set(removals);
 
     for (const upsert of args.upserts) {
@@ -436,14 +438,15 @@ export const saveConsignmentsDraft = mutation({
     }
     requireFreshDraft("orden_cargue", args.expectedOrderRevision, expediente.loadingOrderRevision);
 
-    for (const remesaId of removals) {
-      const row = existingById.get(remesaId);
+    for (const removal of removalRequests) {
+      const row = existingById.get(removal.remesaId);
       if (!row) {
         throw new ConvexError({ code: "NOT_FOUND", message: "Remesa no encontrada en este despacho" });
       }
       if (row.officialState !== "draft" || row.documentId) {
         throw new ConvexError({ code: "INVALID_STATE", message: "Sólo una remesa en borrador sin documento puede eliminarse" });
       }
+      requireFreshDraft("remesa", removal.expectedRevision ?? 0, row.draftRevision, row.number);
     }
 
     const finalSequences = new Map<number, string>();
@@ -637,6 +640,7 @@ export const saveManifestDraft = mutation({
     await ctx.db.patch("expedientes", expediente._id, {
       manifestDraft: {
         ...args.draft,
+        manifestNumber: expediente.manifestDraft?.manifestNumber,
         originCityName: route.origin.city ?? args.draft.originCityName,
         originMunicipalityCode: route.origin.code ?? args.draft.originMunicipalityCode,
         destinationCityName: route.destination.city ?? args.draft.destinationCityName,

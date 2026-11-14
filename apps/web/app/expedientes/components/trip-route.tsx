@@ -10,7 +10,12 @@ type RouteReview = {
   sameMunicipality: boolean;
   blockers: string[];
   differences: string[];
+  warnings: string[];
 };
+
+function sentence(text: string): string {
+  return /[.!?]$/.test(text) ? text : `${text}.`;
+}
 
 function cityKey(value: string | undefined): string {
   return (value ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase().replace(/[^A-Z0-9]/g, "");
@@ -41,14 +46,26 @@ export function TripRouteNotices({ review }: { review: RouteReview }) {
     ...review.blockers,
     ...review.differences
   ];
-  if (notices.length === 0) return null;
+  if (notices.length === 0 && review.warnings.length === 0) return null;
   return (
-    <div className="operation-notice bad trip-route-notices" role="alert">
-      <span />
-      <ul>
-        {notices.map((notice) => <li key={notice}>{/[.!?]$/.test(notice) ? notice : `${notice}.`}</li>)}
-      </ul>
-    </div>
+    <>
+      {notices.length > 0 ? (
+        <div className="operation-notice bad trip-route-notices" role="alert">
+          <span />
+          <ul>
+            {notices.map((notice) => <li key={notice}>{sentence(notice)}</li>)}
+          </ul>
+        </div>
+      ) : null}
+      {review.warnings.length > 0 ? (
+        <div className="operation-notice wait trip-route-notices" role="status">
+          <span />
+          <ul>
+            {review.warnings.map((warning) => <li key={warning}>{sentence(warning)}</li>)}
+          </ul>
+        </div>
+      ) : null}
+    </>
   );
 }
 
@@ -58,7 +75,8 @@ export function EmitButtons({
   confirmLabel,
   internal,
   onIntent,
-  readRoute
+  readRoute,
+  warnings
 }: {
   busy: boolean;
   blocked?: string;
@@ -66,6 +84,7 @@ export function EmitButtons({
   internal?: boolean;
   onIntent: (emit: boolean) => void;
   readRoute: () => RouteView;
+  warnings?: string[];
 }) {
   const [confirming, setConfirming] = useState<RouteView | null>(null);
 
@@ -77,6 +96,7 @@ export function EmitButtons({
           <small>Vas a emitir {confirmLabel} ante el RNDC con este recorrido</small>
           <TripRouteLine large route={confirming} />
           {same ? <p className="emit-confirm-warning">El origen y el destino son el mismo municipio. Emite así solo si el viaje es urbano.</p> : null}
+          {warnings?.map((warning) => <p className="emit-confirm-caution" key={warning}>{sentence(warning)}</p>)}
         </div>
         <div className="emit-confirm-actions">
           <button className="ghost-button" onClick={() => setConfirming(null)} type="button">Volver a revisar</button>

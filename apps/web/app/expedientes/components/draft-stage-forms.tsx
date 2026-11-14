@@ -154,7 +154,7 @@ function partyState(source: { name?: string; identificationType?: string; identi
   return { party: null, name: source?.name ?? "", idType: source?.identificationType ?? "N", document: source?.identificationNumber ?? "", siteCode: source?.siteCode ?? "", siteName: "" };
 }
 
-function PartyBlock({ label, role, state, onChange, siteLabel, onSite }: { label: string; role: "sender" | "recipient"; state: PartyState; onChange: (next: PartyState) => void; siteLabel: string; onSite?: (site: { siteName: string; address?: string; city?: string; cityCode?: string }) => void }) {
+function PartyBlock({ label, role, state, onChange, siteLabel, onSite, place }: { label: string; role: "sender" | "recipient"; state: PartyState; onChange: (next: PartyState) => void; siteLabel: string; place?: { code?: string; city?: string }; onSite?: (site: { siteName: string; address?: string; city?: string; cityCode?: string }) => void }) {
   const prefix = role === "sender" ? "sender" : "recipient";
   const resolved = useQuery(api.lookups.partiesSearch, !state.party && state.document.length >= 2 ? { term: state.document, role } : "skip");
   useEffect(() => {
@@ -190,6 +190,7 @@ function PartyBlock({ label, role, state, onChange, siteLabel, onSite }: { label
           onChange({ ...state, siteCode: site.siteCode, siteName: site.siteName });
           onSite?.(site);
         }}
+        place={place}
         required
         selectedCode={state.siteCode || undefined}
         selectedName={state.siteName || undefined}
@@ -221,7 +222,7 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
         <FormField className="checkbox-field"><span>Genera remesa</span><span className="checkbox-control"><input defaultChecked={draft.generatesConsignment ?? true} name="generatesConsignment" type="checkbox" /><em>Crear la remesa a partir de esta orden</em></span></FormField>
 
         <div className="field-group-note"><strong>Remitente y cargue</strong></div>
-        <PartyBlock label="Remitente" onChange={setSender} onSite={(site) => setLoading((current) => ({ siteName: site.siteName, address: site.address ?? current.address, cityName: site.city ?? current.cityName, municipalityCode: site.cityCode ?? current.municipalityCode }))} role="sender" siteLabel="Sede RNDC remitente" state={sender} />
+        <PartyBlock label="Remitente" onChange={setSender} onSite={(site) => setLoading((current) => ({ siteName: site.siteName, address: site.address ?? current.address, cityName: site.city ?? current.cityName, municipalityCode: site.cityCode ?? current.municipalityCode }))} place={{ code: loading.municipalityCode, city: loading.cityName }} role="sender" siteLabel="Sede RNDC remitente" state={sender} />
         <Field label="Teléfono remitente" name="senderPhone" required type="tel" value={draft.sender?.phone} />
         <Field label="Celular remitente" name="senderCellphone" type="tel" value={draft.sender?.cellphone} />
         <Field label="Lugar de cargue" name="loadingName" onChange={(event) => setLoading({ ...loading, siteName: event.target.value })} required value={loading.siteName} />
@@ -231,7 +232,7 @@ export function LoadingOrderForm({ draft, onSubmit, readOnly }: { draft: Loading
         <input name="loadingCity" type="hidden" value={loading.cityName ?? ""} />
 
         <div className="field-group-note"><strong>Destinatario y descargue</strong></div>
-        <PartyBlock label="Destinatario" onChange={setRecipient} onSite={(site) => setUnloading((current) => ({ siteName: current.siteName || site.siteName, address: current.address || (site.address ?? ""), cityName: current.cityName || (site.city ?? ""), municipalityCode: current.municipalityCode || (site.cityCode ?? "") }))} role="recipient" siteLabel="Sede RNDC destinatario" state={recipient} />
+        <PartyBlock label="Destinatario" onChange={setRecipient} onSite={(site) => setUnloading((current) => ({ siteName: current.siteName || site.siteName, address: current.address || (site.address ?? ""), cityName: current.cityName || (site.city ?? ""), municipalityCode: current.municipalityCode || (site.cityCode ?? "") }))} place={{ code: unloading.municipalityCode, city: unloading.cityName }} role="recipient" siteLabel="Sede RNDC destinatario" state={recipient} />
         <Field label="Teléfono destinatario" name="recipientPhone" required type="tel" value={draft.recipient?.phone} />
         <Field label="Celular destinatario" name="recipientCellphone" type="tel" value={draft.recipient?.cellphone} />
         <Field label="Lugar de descargue" name="unloadingName" onChange={(event) => setUnloading({ ...unloading, siteName: event.target.value })} required value={unloading.siteName} />

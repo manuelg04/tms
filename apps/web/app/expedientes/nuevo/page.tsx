@@ -361,7 +361,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
             <Field label="Celular remitente" name="senderCellphone" onChange={(event) => update({ senderCellphone: event.target.value })} type="tel" value={state.senderCellphone} />
             <input name="senderName" type="hidden" value={state.senderName} />
             <input name="senderCity" type="hidden" value={state.senderCity} />
-            <OrderPartySite document={state.senderId} label="Sede del remitente" name="senderSiteCode" onParty={(party) => update({ sender: party })} onSite={(siteCode) => update({ senderSiteCode: siteCode })} party={state.sender} role="sender" siteCode={state.senderSiteCode} />
+            <OrderPartySite document={state.senderId} label="Sede del remitente" name="senderSiteCode" onParty={(party) => update({ sender: party })} onSite={(siteCode) => update({ senderSiteCode: siteCode })} party={state.sender} place={{ code: state.senderMunicipality, city: state.senderCity }} role="sender" siteCode={state.senderSiteCode} />
 
             <div className="field-group-note"><strong>Datos del destinatario</strong></div>
             <PartyField
@@ -384,7 +384,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
             <input name="recipientName" type="hidden" value={state.recipientName} />
             <input name="recipientCity" type="hidden" value={state.recipientCity} />
             {sameMunicipality ? <FormField className="checkbox-field span-2"><span>Origen y destino iguales</span><span className="checkbox-control"><input name="urbanTrip" type="checkbox" /><em>Es un viaje urbano dentro de {state.senderCity}. Si el viaje es entre ciudades, corrige la ciudad del destinatario.</em></span></FormField> : null}
-            <OrderPartySite document={state.recipientId} label="Sede del destinatario" name="recipientSiteCode" onParty={(party) => update({ recipient: party })} onSite={(siteCode) => update({ recipientSiteCode: siteCode })} party={state.recipient} role="recipient" siteCode={state.recipientSiteCode} />
+            <OrderPartySite document={state.recipientId} label="Sede del destinatario" name="recipientSiteCode" onParty={(party) => update({ recipient: party })} onSite={(siteCode) => update({ recipientSiteCode: siteCode })} party={state.recipient} place={{ code: state.recipientMunicipality, city: state.recipientCity }} role="recipient" siteCode={state.recipientSiteCode} />
 
             <div className="field-group-note"><strong>Datos del vehículo</strong></div>
             <VehicleField label="Placa" onClear={() => update({ vehicle: null })} onSelect={(vehicle) => update({ vehicle })} required selected={state.vehicle} />
@@ -516,7 +516,7 @@ function readError(cause: unknown): string {
   return cause instanceof Error ? cause.message.replace(/^.*?: /, "") : "No fue posible guardar el despacho.";
 }
 
-function OrderPartySite({ document, label, name, onParty, onSite, party, role, siteCode }: { document: string; label: string; name: string; onParty: (party: PartyPick) => void; onSite: (siteCode: string) => void; party: PartyPick | null; role: "sender" | "recipient"; siteCode: string }) {
+function OrderPartySite({ document, label, name, onParty, onSite, party, place, role, siteCode }: { document: string; label: string; name: string; place?: { code?: string; city?: string }; onParty: (party: PartyPick) => void; onSite: (siteCode: string) => void; party: PartyPick | null; role: "sender" | "recipient"; siteCode: string }) {
   const matches = useQuery(api.lookups.partiesSearch, !party && document.trim().length >= 5 ? { term: document.trim(), role } : "skip");
   const exact = matches?.find((row) => row.document === document.trim());
   const onPartyRef = useRef(onParty);
@@ -540,6 +540,7 @@ function OrderPartySite({ document, label, name, onParty, onSite, party, role, s
           onClear={() => onSite("")}
           onDefault={(site) => onSite(site.siteCode)}
           onSelect={(site) => onSite(site.siteCode)}
+          place={place}
           required
           selectedCode={siteCode || undefined}
           thirdPartyId={party._id}

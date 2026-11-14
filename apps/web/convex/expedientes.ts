@@ -453,7 +453,8 @@ export const detail = query({
         destination: v.object({ code: v.optional(v.string()), city: v.optional(v.string()) }),
         sameMunicipality: v.boolean(),
         blockers: v.array(v.string()),
-        differences: v.array(v.string())
+        differences: v.array(v.string()),
+        warnings: v.array(v.string())
       })
     })
   ),
@@ -656,7 +657,8 @@ export const detail = query({
         destination: routeReview.route.destination,
         sameMunicipality: Boolean((routeReview.route.origin.code || routeReview.route.origin.city) && (routeReview.route.destination.code || routeReview.route.destination.city) && sameMunicipality(routeReview.route)),
         blockers: routeReview.siteBlockers,
-        differences: routeReview.differences
+        differences: routeReview.differences,
+        warnings: routeReview.coordinateWarnings
       }
     };
   }

@@ -8,11 +8,13 @@ import { useDebounced } from "../../lib/hooks";
 import { api } from "../../../convex/_generated/api";
 import { DEFAULT_PARTY_SITE } from "../../../convex/model/masterSync";
 import { merchandiseShortName } from "../../../convex/model/merchandiseSearch";
+import { preferredSite, rankSites, siteAlternatives } from "../../../convex/model/siteCoordinates";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { SearchSelect } from "./search-select";
 
 export type PartyPick = { _id: Id<"thirdParties">; document: string; documentType: string; name: string; address?: string; city?: string; cityCode?: string; phone?: string; siteCount?: number };
-export type SitePick = { _id: Id<"thirdPartySites">; siteCode: string; siteName: string; address?: string; city?: string; cityCode?: string };
+export type SitePick = { _id: Id<"thirdPartySites">; siteCode: string; siteName: string; address?: string; city?: string; cityCode?: string; latitude?: string; longitude?: string; hasCoordinates: boolean };
+export type SitePlace = { code?: string; city?: string };
 export type DivisionPick = { code: string; name: string; isMunicipality: boolean; municipalityName: string; departmentName: string };
 export type DriverPick = { _id: Id<"drivers">; document: string; name?: string; phone?: string; licenseCategory?: string; licenseExpiresAt?: string };
 export type VehiclePick = { _id: Id<"vehicles">; plate: string; make?: string; line?: string; modelYear?: string; configuration?: string; status?: string; drivers?: DriverPick[] };
@@ -67,15 +69,27 @@ export function PartyField({ className, name, label, role, required, disabled, s
   );
 }
 
-export function SiteField({ className = "", name, label, thirdPartyId, required, disabled, selectedCode, selectedName, onSelect, onClear, onManual, onDefault }: { className?: string; name?: string; label: string; thirdPartyId?: Id<"thirdParties"> | null; required?: boolean; disabled?: boolean; selectedCode?: string; selectedName?: string; onSelect: (site: SitePick) => void; onClear?: () => void; onManual?: (code: string) => void; onDefault?: (site: { siteCode: string; siteName: string }) => void }) {
+export function SiteField({ className = "", name, label, thirdPartyId, required, disabled, selectedCode, selectedName, place, onSelect, onClear, onManual, onDefault }: { className?: string; name?: string; label: string; thirdPartyId?: Id<"thirdParties"> | null; required?: boolean; disabled?: boolean; selectedCode?: string; selectedName?: string; place?: SitePlace; onSelect: (site: SitePick) => void; onClear?: () => void; onManual?: (code: string) => void; onDefault?: (site: { siteCode: string; siteName: string }) => void }) {
   const [term, setTerm] = useState("");
   const sites = useQuery(api.lookups.partySites, thirdPartyId ? { thirdPartyId } : "skip");
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  const suggested = useRef("");
+  const placeCode = place?.code?.trim() || undefined;
+  const placeCity = place?.city?.trim() || undefined;
   useEffect(() => {
     if (thirdPartyId && sites?.length === 0 && !selectedCode) onDefault?.(DEFAULT_PARTY_SITE);
-    if (thirdPartyId && sites?.length === 1 && !selectedCode && !disabled) onSelectRef.current(sites[0]);
-  }, [thirdPartyId, sites, selectedCode, onDefault, disabled]);
+    if (!thirdPartyId || !sites || sites.length === 0 || selectedCode || disabled) return;
+    if (sites.length === 1) {
+      onSelectRef.current(sites[0]);
+      return;
+    }
+    const key = `${thirdPartyId}:${placeCode ?? placeCity ?? ""}`;
+    if (suggested.current === key) return;
+    suggested.current = key;
+    const preferred = preferredSite(sites, { code: placeCode, city: placeCity });
+    if (preferred) onSelectRef.current(preferred);
+  }, [thirdPartyId, sites, selectedCode, onDefault, disabled, placeCode, placeCity]);
   if (!thirdPartyId) {
     return (
       <FormField name={name ?? label} required={required} value={selectedCode ?? ""} className={className}>
@@ -85,31 +99,59 @@ export function SiteField({ className = "", name, label, thirdPartyId, required,
       </FormField>
     );
   }
+  const target = { code: placeCode, city: placeCity };
   const needle = term.trim().toLowerCase();
-  const filtered = sites?.filter((site) => !needle || `${site.siteCode} ${site.siteName} ${site.city ?? ""} ${site.address ?? ""}`.toLowerCase().includes(needle));
-  const knownName = selectedName ?? sites?.find((site) => site.siteCode === selectedCode)?.siteName ?? (sites?.length === 0 && selectedCode === DEFAULT_PARTY_SITE.siteCode ? DEFAULT_PARTY_SITE.siteName : undefined);
+  const ranked = sites ? rankSites(sites, target) : undefined;
+  const filtered = ranked?.filter((site) => !needle || `${site.siteCode} ${site.siteName} ${site.city ?? ""} ${site.address ?? ""}`.toLowerCase().includes(needle));
+  const current = sites?.find((site) => site.siteCode === selectedCode);
+  const knownName = selectedName ?? current?.siteName ?? (sites?.length === 0 && selectedCode === DEFAULT_PARTY_SITE.siteCode ? DEFAULT_PARTY_SITE.siteName : undefined);
   const selectedLabel = selectedCode ? `${selectedCode} · ${knownName ?? "Sede"}` : undefined;
+  const located = sites?.filter((site) => site.hasCoordinates).length ?? 0;
+  const alternatives = sites && selectedCode && !current?.hasCoordinates ? siteAlternatives(sites, current ?? { siteCode: selectedCode }, target) : [];
+  const hint = !sites
+    ? undefined
+    : sites.length === 0
+      ? `Sin sedes registradas: se usa la sede ${DEFAULT_PARTY_SITE.siteCode} · ${DEFAULT_PARTY_SITE.siteName}`
+      : current
+        ? current.hasCoordinates
+          ? `Sede con coordenadas en el RNDC (${current.latitude}, ${current.longitude})`
+          : "Esta sede no tiene coordenadas en el RNDC"
+        : `${sites.length} sede${sites.length === 1 ? "" : "s"} en el RNDC · ${located} con coordenadas`;
   return (
-    <SearchSelect
-      name={name}
-      validationValue={selectedCode ?? ""}
-      className={className}
-      disabled={disabled}
-      emptyText={sites && sites.length === 0 ? "Este tercero no tiene sedes registradas en el RNDC" : "Ninguna sede coincide"}
-      hint={sites ? sites.length === 0 ? `Sin sedes registradas: se usa la sede ${DEFAULT_PARTY_SITE.siteCode} · ${DEFAULT_PARTY_SITE.siteName}` : `${sites.length} sede${sites.length === 1 ? "" : "s"} en el RNDC` : undefined}
-      label={label}
-      minLength={0}
-      onClear={onClear}
-      onSearch={setTerm}
-      onSelect={(key) => {
-        const site = sites?.find((row) => row._id === key);
-        if (site) onSelect(site);
-      }}
-      options={filtered?.map((site) => ({ key: site._id, title: site.siteName, badge: `Sede ${site.siteCode}`, subtitle: [site.address, site.city].filter(Boolean).join(" · ") }))}
-      placeholder="Buscar sede"
-      required={required}
-      selectedLabel={selectedLabel}
-    />
+    <>
+      <SearchSelect
+        name={name}
+        validationValue={selectedCode ?? ""}
+        className={className}
+        disabled={disabled}
+        emptyText={sites && sites.length === 0 ? "Este tercero no tiene sedes registradas en el RNDC" : "Ninguna sede coincide"}
+        hint={hint}
+        label={label}
+        minLength={0}
+        onClear={onClear}
+        onSearch={setTerm}
+        onSelect={(key) => {
+          const site = sites?.find((row) => row._id === key);
+          if (site) onSelect(site);
+        }}
+        options={filtered?.map((site) => ({ key: site._id, title: site.siteName, badge: `Sede ${site.siteCode}`, subtitle: [site.address, site.city, site.hasCoordinates ? "Con coordenadas" : "Sin coordenadas"].filter(Boolean).join(" · ") }))}
+        placeholder="Buscar sede"
+        required={required}
+        selectedLabel={selectedLabel}
+      />
+      {sites && selectedCode && sites.length > 0 && !current?.hasCoordinates && !disabled ? (
+        <div className="site-coordinate-note" role="status">
+          <span>
+            {alternatives.length > 0
+              ? "Con monitoreo GPS el RNDC rechaza la remesa si la sede no tiene coordenadas. En el mismo municipio sí las tiene:"
+              : "Con monitoreo GPS el RNDC rechaza la remesa si la sede no tiene coordenadas, y este tercero no tiene otra sede con coordenadas en ese municipio."}
+          </span>
+          {alternatives.slice(0, 3).map((site) => (
+            <button key={site._id} onClick={() => onSelect(site)} type="button">Usar sede {site.siteCode} · {site.siteName}</button>
+          ))}
+        </div>
+      ) : null}
+    </>
   );
 }
 

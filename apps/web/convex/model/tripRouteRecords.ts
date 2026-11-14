@@ -1,7 +1,8 @@
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { effectiveConsignment, type ConsignmentDraft, type LoadingOrderDraft, type PartyDraft } from "./dispatchWorkflow";
-import { consignmentRoute, orderRoute, routeDifferences, siteRouteBlockers, tripRoute, type RouteEnd, type RouteSource, type SiteCity, type TripRoute } from "./tripRoute";
+import { siteCoordinateWarnings, tripIsMonitored, type SiteRecord } from "./siteCoordinates";
+import { consignmentRoute, orderRoute, routeDifferences, siteRouteBlockers, tripRoute, type RouteEnd, type RouteSource, type TripRoute } from "./tripRoute";
 
 type LocationCity = { city?: string; municipalityCode?: string } | null | undefined;
 
@@ -29,26 +30,33 @@ export function expedienteRoute(
   );
 }
 
-export async function loadSiteCities(
+export async function loadPartySites(
   ctx: Pick<QueryCtx, "db">,
   organizationId: Id<"organizations">,
   parties: ReadonlyArray<PartyDraft | undefined>
-): Promise<SiteCity[]> {
-  const wanted = new Map<string, { document: string; siteCode: string }>();
+): Promise<SiteRecord[]> {
+  const documents = new Set<string>();
   for (const party of parties) {
     const document = party?.identificationNumber?.trim();
-    const siteCode = party?.siteCode?.trim();
-    if (document && siteCode) wanted.set(`${document}:${siteCode}`, { document, siteCode });
+    if (document && party?.siteCode?.trim()) documents.add(document);
   }
   const rows = await Promise.all(
-    [...wanted.values()].map((key) =>
+    [...documents].map((document) =>
       ctx.db
         .query("thirdPartySites")
-        .withIndex("by_organization_and_document_and_site", (q) => q.eq("organizationId", organizationId).eq("document", key.document).eq("siteCode", key.siteCode))
-        .first()
+        .withIndex("by_organization_and_document_and_site", (q) => q.eq("organizationId", organizationId).eq("document", document))
+        .take(200)
     )
   );
-  return rows.flatMap((row) => (row ? [{ document: row.document, siteCode: row.siteCode, cityCode: row.cityCode, city: row.city }] : []));
+  return rows.flat().map((row) => ({
+    document: row.document,
+    siteCode: row.siteCode,
+    siteName: row.siteName,
+    cityCode: row.cityCode,
+    city: row.city,
+    latitude: row.latitude,
+    longitude: row.longitude
+  }));
 }
 
 export async function expedienteRouteReview(
@@ -57,19 +65,26 @@ export async function expedienteRouteReview(
   remesas: ReadonlyArray<Doc<"expedienteRemesas">>,
   states: { orderEmitted: boolean; manifestEmitted: boolean },
   locations?: { loading?: LocationCity; unloading?: LocationCity }
-): Promise<{ route: TripRoute; siteBlockers: string[]; differences: string[] }> {
+): Promise<{ route: TripRoute; siteBlockers: string[]; differences: string[]; coordinateWarnings: string[] }> {
   const order = (expediente.loadingOrderDraft ?? null) as LoadingOrderDraft | null;
   const route = expedienteRoute(expediente, remesas, locations);
   const effective = remesas.map((remesa) => effectiveConsignment((remesa.draft ?? {}) as ConsignmentDraft, order));
-  const sites = await loadSiteCities(ctx, expediente.organizationId, [order?.sender, order?.recipient, ...effective.flatMap((item) => [item.sender, item.recipient])]);
+  const sites = await loadPartySites(ctx, expediente.organizationId, [order?.sender, order?.recipient, ...effective.flatMap((item) => [item.sender, item.recipient])]);
   const siteBlockers = new Set<string>();
+  const coordinateWarnings = new Set<string>();
+  const monitored = tripIsMonitored(expediente.manifestDraft);
+  if (order && remesas.length === 0) {
+    for (const warning of siteCoordinateWarnings({ sender: order.sender, recipient: order.recipient }, orderRoute(order), sites, monitored)) coordinateWarnings.add(warning);
+  }
   if (order && !states.orderEmitted) {
     for (const blocker of siteRouteBlockers({ sender: order.sender, recipient: order.recipient }, orderRoute(order), sites)) siteBlockers.add(blocker);
   }
   remesas.forEach((remesa, index) => {
     if (remesa.officialState !== "draft" && remesa.officialState !== "pending") return;
     const item = effective[index];
-    for (const blocker of siteRouteBlockers({ sender: item.sender, recipient: item.recipient }, consignmentRoute(remesa.draft as ConsignmentDraft | undefined, order), sites)) siteBlockers.add(blocker);
+    const itemRoute = consignmentRoute(remesa.draft as ConsignmentDraft | undefined, order);
+    for (const blocker of siteRouteBlockers({ sender: item.sender, recipient: item.recipient }, itemRoute, sites)) siteBlockers.add(blocker);
+    for (const warning of siteCoordinateWarnings({ sender: item.sender, recipient: item.recipient }, itemRoute, sites, monitored)) coordinateWarnings.add(warning);
   });
   const sources: RouteSource[] = [];
   if (order) sources.push({ label: "La orden de cargue", route: orderRoute(order), emitted: states.orderEmitted });
@@ -91,7 +106,7 @@ export async function expedienteRouteReview(
       emitted: true
     });
   }
-  return { route, siteBlockers: [...siteBlockers], differences: routeDifferences(sources) };
+  return { route, siteBlockers: [...siteBlockers], differences: routeDifferences(sources), coordinateWarnings: [...coordinateWarnings] };
 }
 
 export async function syncTripRoute(ctx: MutationCtx, expedienteId: Id<"expedientes">): Promise<void> {

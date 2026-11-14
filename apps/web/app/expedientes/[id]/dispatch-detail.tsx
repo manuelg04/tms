@@ -920,6 +920,7 @@ export function DispatchDetail({
                           routeView,
                         )
                   }
+                  warnings={focus.stage === "remesas" ? detail.route.warnings : undefined}
                 />
               ) : null}
             </div>
@@ -1226,6 +1227,7 @@ function SaveButtons({
   internal,
   onIntent,
   readRoute,
+  warnings,
 }: {
   busy: boolean;
   blocked?: string;
@@ -1234,6 +1236,7 @@ function SaveButtons({
   internal?: boolean;
   onIntent: (emit: boolean) => void;
   readRoute?: () => RouteView;
+  warnings?: string[];
 }) {
   if (!emits)
     return (
@@ -1255,6 +1258,7 @@ function SaveButtons({
       internal={internal}
       onIntent={onIntent}
       readRoute={readRoute ?? (() => ({}))}
+      warnings={warnings}
     />
   );
 }

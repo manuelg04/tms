@@ -84,6 +84,11 @@ export function sameEnd(left: RouteEnd, right: RouteEnd): boolean {
   return true;
 }
 
+export function placeMatches(left: RouteEnd, right: RouteEnd): boolean {
+  if (left.code && right.code) return codeKey(left.code) === codeKey(right.code);
+  return sameCity(left, right);
+}
+
 function cityLabel(value: RouteEnd): string {
   return value.city ?? value.code ?? "sin definir";
 }

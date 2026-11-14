@@ -3,6 +3,7 @@ import { mutation, query } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { requireActor } from "./model/access";
 import { normalizeSearchText } from "./model/searchText";
+import { hasSiteCoordinates } from "./model/siteCoordinates";
 import { resolveMerchandiseCode, rndcProductName, searchMerchandiseCatalog } from "./model/merchandiseCatalog";
 
 const LIMIT = 12;
@@ -50,7 +51,10 @@ const siteOptionValidator = v.object({
   siteName: v.string(),
   address: v.optional(v.string()),
   city: v.optional(v.string()),
-  cityCode: v.optional(v.string())
+  cityCode: v.optional(v.string()),
+  latitude: v.optional(v.string()),
+  longitude: v.optional(v.string()),
+  hasCoordinates: v.boolean()
 });
 
 const roleValidator = v.union(
@@ -127,7 +131,20 @@ export const partySites = query({
     const sites = await ctx.db.query("thirdPartySites").withIndex("by_third_party", (q) => q.eq("thirdPartyId", party._id)).take(200);
     return sites
       .sort((a, b) => Number(a.siteCode) - Number(b.siteCode) || a.siteCode.localeCompare(b.siteCode))
-      .map((site) => ({ _id: site._id, siteCode: site.siteCode, siteName: site.siteName, address: site.address, city: site.city, cityCode: site.cityCode }));
+      .map((site) => {
+        const located = hasSiteCoordinates(site);
+        return {
+          _id: site._id,
+          siteCode: site.siteCode,
+          siteName: site.siteName,
+          address: site.address,
+          city: site.city,
+          cityCode: site.cityCode,
+          latitude: located ? site.latitude : undefined,
+          longitude: located ? site.longitude : undefined,
+          hasCoordinates: located
+        };
+      });
   }
 });
 

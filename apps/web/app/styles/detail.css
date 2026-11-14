@@ -727,6 +727,13 @@
   font-weight: 600;
 }
 
+.emit-confirm-caution {
+  margin: 6px 0 0;
+  max-width: 68ch;
+  color: var(--wait);
+  font-size: 12px;
+}
+
 .emit-confirm-actions {
   display: flex;
   gap: 8px;

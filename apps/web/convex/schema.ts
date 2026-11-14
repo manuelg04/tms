@@ -45,7 +45,9 @@ export default defineSchema({
   operationalPoints: defineTable(pointFields).index("by_org_code", ["organizationId", "code"]),
   operationalRoutes: defineTable(routeFields).index("by_org_code", ["organizationId", "code"]),
   routePlans: defineTable(planFields).index("by_dispatch", ["dispatchId"]),
-  dispatchRoutePlans: defineTable(dispatchPlanFields).index("by_expediente", ["expedienteId"]),
+  dispatchRoutePlans: defineTable(dispatchPlanFields)
+    .index("by_expediente", ["expedienteId"])
+    .index("by_organization_and_created_at", ["organizationId", "createdAt"]),
   pendingEmissions: defineTable(pendingEmissionFields)
     .index("by_expediente", ["expedienteId"])
     .index("by_organization_and_requested_at", ["organizationId", "requestedAt"])

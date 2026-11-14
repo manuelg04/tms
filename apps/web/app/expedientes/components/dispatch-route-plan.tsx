@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { routeName } from "../../../convex/model/routes";
+import { bogotaDeparture } from "../../../convex/model/routePlanAutomation";
 import { convexErrorMessage } from "../../lib/convex-error";
 import "./dispatch-route-plan.css";
 
@@ -63,13 +64,15 @@ export function DispatchRoutePlan({ expedienteId, origin, destination }: { exped
 
 function AssignForm({ expedienteId, origin, destination, onAssigned }: { expedienteId: Id<"expedientes">; origin: string; destination: string; onAssigned: () => void }) {
   const [search, setSearch] = useState("");
-  const [routeId, setRouteId] = useState("");
-  const [departure, setDeparture] = useState("");
+  const [chosenRouteId, setRouteId] = useState<string | null>(null);
+  const [departure, setDeparture] = useState(() => bogotaDeparture(Date.now()));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const saving = useRef(false);
   const options = useQuery(api.dispatchRoutePlans.routeOptions, { origin, destination, search: search.trim() });
   const assign = useMutation(api.dispatchRoutePlans.assign);
+  const suggestedRouteId = options?.suggestedRouteId ?? "";
+  const routeId = chosenRouteId ?? suggestedRouteId;
   const route = options?.routes.find((entry) => entry._id === routeId);
 
   async function submit(event: FormEvent) {
@@ -97,7 +100,7 @@ function AssignForm({ expedienteId, origin, destination, onAssigned }: { expedie
           disabled={busy}
           onChange={(event) => {
             setSearch(event.target.value);
-            setRouteId("");
+            setRouteId(event.target.value.trim() ? "" : null);
           }}
           placeholder="Código, origen, destino o vía"
           value={search}
@@ -119,7 +122,11 @@ function AssignForm({ expedienteId, origin, destination, onAssigned }: { expedie
             : options.routes.length === 0
               ? "No hay rutas activas con ese criterio."
               : options.matchesTrip
-                ? "Rutas del catálogo para el origen y destino de este despacho."
+                ? suggestedRouteId && routeId === suggestedRouteId
+                  ? options.routes.length === 1
+                    ? "Es la única ruta del catálogo para este origen y destino."
+                    : "Sugerida: la última ruta usada en este trayecto."
+                  : "Rutas del catálogo para el origen y destino de este despacho."
                 : options.truncated
                   ? "Hay más rutas; escribe para acotar la búsqueda."
                   : ""}

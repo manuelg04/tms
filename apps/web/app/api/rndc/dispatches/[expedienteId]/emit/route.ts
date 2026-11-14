@@ -1,5 +1,6 @@
 import { jsonResponse } from "../../../../../lib/auth-server";
 import { syncAfterEmission } from "../../../../../lib/operaciones-sync";
+import { ensureRoutePlanAfterEmission } from "../../../../../lib/route-plan-auto";
 import { authorizeGatewayRequest } from "../../../../../lib/rndc-gateway";
 import { handleEmitWithRuntime } from "./handler";
 
@@ -20,12 +21,19 @@ export async function POST(
   }
 
   const { expedienteId } = await context.params;
+  const routePlan = await ensureRoutePlanAfterEmission(session, expedienteId);
   const operaciones = await syncAfterEmission(session, expedienteId);
+  const linked = operaciones && operaciones.linked ? operaciones : null;
 
-  if (!operaciones || !operaciones.linked) {
+  if (!linked && !routePlan) {
     return response;
   }
 
   const payload = await response.json().catch(() => null) as Record<string, unknown> | null;
-  return payload ? jsonResponse({ ...payload, operaciones }, response.status) : response;
+
+  if (!payload) {
+    return response;
+  }
+
+  return jsonResponse({ ...payload, ...(linked ? { operaciones: linked } : {}), ...(routePlan ? { routePlan } : {}) }, response.status);
 }

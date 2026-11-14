@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, type MutationCtx, type QueryCtx } from "./_generated/server";
+import type { Doc, Id } from "./_generated/dataModel";
 import {
   appendAudit,
   requireActor,
@@ -7,6 +8,7 @@ import {
 } from "./model/access";
 import { dispatchPlanDoc } from "./model/routeValidators";
 import { operationalRouteStops, routeSchedule } from "./model/routes";
+import { automaticRouteChoice, bogotaDeparture, tripRouteCandidates } from "./model/routePlanAutomation";
 
 const readers = ["admin", "operator", "auditor"] as const;
 const writers = ["admin", "operator"] as const;
@@ -135,6 +137,7 @@ export const routeOptions = query({
     routes: v.array(routeOption),
     matchesTrip: v.boolean(),
     truncated: v.boolean(),
+    suggestedRouteId: v.union(v.id("operationalRoutes"), v.null()),
   }),
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx, undefined, [...readers]);
@@ -147,16 +150,8 @@ export const routeOptions = query({
         .collect()
     ).filter((route) => route.active);
     const search = cityKey(args.search);
-    const origin = cityKey(args.origin.split(",")[0] ?? "");
-    const destination = cityKey(args.destination.split(",")[0] ?? "");
-    const forTrip =
-      origin && destination
-        ? routes.filter(
-            (route) =>
-              cityKey(route.origin).includes(origin) &&
-              cityKey(route.destination).includes(destination),
-          )
-        : [];
+    const forTrip = tripRouteCandidates(routes, args.origin, args.destination);
+    const lastUsed = forTrip.length > 1 ? await lastUsedRouteId(ctx, actor.organizationId, forTrip) : null;
     const matchesTrip = !search && forTrip.length > 0;
     const selected = search
       ? routes.filter((route) =>
@@ -169,6 +164,7 @@ export const routeOptions = query({
         : routes;
     return {
       matchesTrip,
+      suggestedRouteId: matchesTrip ? automaticRouteChoice(forTrip, lastUsed).suggestedRouteId : null,
       truncated: selected.length > optionLimit,
       routes: selected.slice(0, optionLimit).map((route) => ({
         _id: route._id,
@@ -223,65 +219,13 @@ export const assign = mutation({
         "La ruta cambió. Actualiza la pantalla antes de asignarla.",
       );
     if (!route.active) throw new ConvexError("La ruta debe estar activa.");
-    let operationalStops;
-    try {
-      operationalStops = operationalRouteStops(route.stops, route.source);
-      routeSchedule(args.departureAt, 0);
-    } catch (error) {
-      throw new ConvexError(
-        `Revisa la salida y los tiempos de la ruta antes de asignarla: ${error instanceof Error ? error.message : "Datos incompletos."}`,
-      );
-    }
-    const stops = [];
-    for (const stop of operationalStops) {
-      const point =
-        stop.pointCode === "9999"
-          ? null
-          : await ctx.db
-              .query("operationalPoints")
-              .withIndex("by_org_code", (q) =>
-                q
-                  .eq("organizationId", actor.organizationId)
-                  .eq("code", stop.pointCode),
-              )
-              .unique();
-      if (stop.pointCode !== "9999" && (!point || !point.active))
-        throw new ConvexError(`El puesto ${stop.pointCode} no está activo.`);
-      stops.push({
-        key: stop.key,
-        code: stop.pointCode,
-        label: point?.name ?? "Lugar Entrega",
-        kind: point
-          ? point.virtual
-            ? ("virtual" as const)
-            : ("physical" as const)
-          : ("delivery" as const),
-        minutes: stop.minutes,
-        kilometers: stop.kilometers,
-        scheduledAt: routeSchedule(args.departureAt, stop.minutes),
-        controller: point?.controller ?? "",
-        address: point?.address ?? "",
-        phone: point?.phone ?? "",
-      });
-    }
-    for (const plan of previous)
-      await ctx.db.delete("dispatchRoutePlans", plan._id);
-    const id = await ctx.db.insert("dispatchRoutePlans", {
-      organizationId: actor.organizationId,
-      expedienteId: expediente._id,
-      routeId: route._id,
-      routeCode: route.code,
-      routeRevision: route.revision,
-      origin: route.origin,
-      originCode: route.originCode,
-      destination: route.destination,
-      destinationCode: route.destinationCode,
-      via: route.via,
+    const id = await createPlan(ctx, {
+      expediente,
+      route,
       departureAt: args.departureAt,
-      stops,
-      createdAt: Date.now(),
       createdBy: actor._id,
       requestKey,
+      previous,
     });
     await appendAudit(ctx, {
       organizationId: actor.organizationId,
@@ -294,3 +238,174 @@ export const assign = mutation({
     return id;
   },
 });
+
+export const ensureAutomatic = mutation({
+  args: { expedienteId: v.id("expedientes") },
+  returns: v.object({
+    status: v.union(
+      v.literal("created"),
+      v.literal("exists"),
+      v.literal("needs_choice"),
+      v.literal("no_route"),
+      v.literal("not_ready"),
+      v.literal("blocked"),
+    ),
+    message: v.string(),
+  }),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, [...writers]);
+    const expediente = await ctx.db.get("expedientes", args.expedienteId);
+    if (!expediente) throw new ConvexError("Despacho no disponible.");
+    requireSameOrganization(actor, expediente.organizationId);
+    const previous = await ctx.db
+      .query("dispatchRoutePlans")
+      .withIndex("by_expediente", (q) => q.eq("expedienteId", expediente._id))
+      .collect();
+    if (previous.length)
+      return { status: "exists" as const, message: "El despacho ya tiene plan de ruta." };
+    const documents = await ctx.db
+      .query("documents")
+      .withIndex("by_expediente", (q) => q.eq("expedienteId", expediente._id))
+      .take(100);
+    const official = (kind: string) =>
+      documents.some(
+        (document) =>
+          document.kind === kind &&
+          (document.officialState === "authorized" || document.officialState === "fulfilled"),
+      );
+    if (!official("remesa") || !official("manifiesto"))
+      return { status: "not_ready" as const, message: "El plan de ruta se genera cuando la remesa y el manifiesto están aceptados." };
+    const order = await ctx.db.get("serviceOrders", expediente.serviceOrderId);
+    const [loading, unloading] = await Promise.all([
+      order ? ctx.db.get("customerLocations", order.loadingLocationId) : null,
+      order ? ctx.db.get("customerLocations", order.unloadingLocationId) : null,
+    ]);
+    const routes = (
+      await ctx.db
+        .query("operationalRoutes")
+        .withIndex("by_org_code", (q) => q.eq("organizationId", actor.organizationId))
+        .collect()
+    ).filter((route) => route.active);
+    const candidates = tripRouteCandidates(
+      routes,
+      { city: loading?.city ?? "", code: loading?.municipalityCode },
+      { city: unloading?.city ?? "", code: unloading?.municipalityCode },
+    );
+    const choice = automaticRouteChoice(candidates, null);
+    if (choice.status === "none")
+      return { status: "no_route" as const, message: "No hay una ruta activa para el origen y destino del despacho." };
+    if (choice.status === "several")
+      return { status: "needs_choice" as const, message: "Hay varias rutas para este trayecto; elige una en el despacho." };
+    const route = candidates[0];
+    try {
+      await createPlan(ctx, {
+        expediente,
+        route,
+        departureAt: bogotaDeparture(Date.now()),
+        createdBy: actor._id,
+        requestKey: `auto:${expediente._id}`,
+        previous,
+      });
+    } catch (error) {
+      return {
+        status: "blocked" as const,
+        message: error instanceof ConvexError && typeof error.data === "string" ? error.data : "La ruta tiene datos incompletos.",
+      };
+    }
+    await appendAudit(ctx, {
+      organizationId: actor.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "dispatch.route.plan.generated",
+      entityType: "expediente",
+      entityId: expediente._id,
+      detailsJson: JSON.stringify({ routeCode: route.code }),
+    });
+    return { status: "created" as const, message: `Plan de ruta generado con la ruta ${route.code}.` };
+  },
+});
+
+async function lastUsedRouteId(
+  ctx: QueryCtx,
+  organizationId: Id<"organizations">,
+  candidates: Doc<"operationalRoutes">[],
+): Promise<Id<"operationalRoutes"> | null> {
+  const ids = new Set(candidates.map((route) => route._id));
+  const recent = await ctx.db
+    .query("dispatchRoutePlans")
+    .withIndex("by_organization_and_created_at", (q) => q.eq("organizationId", organizationId))
+    .order("desc")
+    .take(300);
+  return recent.find((plan) => ids.has(plan.routeId))?.routeId ?? null;
+}
+
+async function createPlan(
+  ctx: MutationCtx,
+  input: {
+    expediente: Doc<"expedientes">;
+    route: Doc<"operationalRoutes">;
+    departureAt: string;
+    createdBy: Id<"users">;
+    requestKey: string;
+    previous: Doc<"dispatchRoutePlans">[];
+  },
+): Promise<Id<"dispatchRoutePlans">> {
+  const { expediente, route } = input;
+  let operationalStops;
+  try {
+    operationalStops = operationalRouteStops(route.stops, route.source);
+    routeSchedule(input.departureAt, 0);
+  } catch (error) {
+    throw new ConvexError(
+      `Revisa la salida y los tiempos de la ruta antes de asignarla: ${error instanceof Error ? error.message : "Datos incompletos."}`,
+    );
+  }
+  const stops = [];
+  for (const stop of operationalStops) {
+    const point =
+      stop.pointCode === "9999"
+        ? null
+        : await ctx.db
+            .query("operationalPoints")
+            .withIndex("by_org_code", (q) =>
+              q.eq("organizationId", expediente.organizationId).eq("code", stop.pointCode),
+            )
+            .unique();
+    if (stop.pointCode !== "9999" && (!point || !point.active))
+      throw new ConvexError(`El puesto ${stop.pointCode} no está activo.`);
+    stops.push({
+      key: stop.key,
+      code: stop.pointCode,
+      label: point?.name ?? "Lugar Entrega",
+      kind: point
+        ? point.virtual
+          ? ("virtual" as const)
+          : ("physical" as const)
+        : ("delivery" as const),
+      minutes: stop.minutes,
+      kilometers: stop.kilometers,
+      scheduledAt: routeSchedule(input.departureAt, stop.minutes),
+      controller: point?.controller ?? "",
+      address: point?.address ?? "",
+      phone: point?.phone ?? "",
+    });
+  }
+  for (const plan of input.previous) await ctx.db.delete("dispatchRoutePlans", plan._id);
+  return await ctx.db.insert("dispatchRoutePlans", {
+    organizationId: expediente.organizationId,
+    expedienteId: expediente._id,
+    routeId: route._id,
+    routeCode: route.code,
+    routeRevision: route.revision,
+    origin: route.origin,
+    originCode: route.originCode,
+    destination: route.destination,
+    destinationCode: route.destinationCode,
+    via: route.via,
+    departureAt: input.departureAt,
+    stops,
+    createdAt: Date.now(),
+    createdBy: input.createdBy,
+    requestKey: input.requestKey,
+  });
+}

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "../../lib/convex-hooks";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
@@ -46,6 +46,7 @@ import { currentManifestDocument } from "../../../convex/model/currentManifest";
 import type { ChainScope } from "../../../convex/model/pendingEmission";
 import { hasOpenRejection } from "../../../convex/model/openRejection";
 import { rejectedDocuments } from "../../lib/rndc-rejection";
+import { STALE_FORM_MESSAGE, captureOpenedForm, staleFormChanges, type OpenedForm } from "../../lib/stale-form";
 import { RejectionPanel } from "../components/rejection-panel";
 
 type AdvancedModal = AdvancedAction | null;
@@ -108,6 +109,8 @@ export function DispatchDetail({
     text: string;
   } | null>(null);
   const [advancedModal, setAdvancedModal] = useState<AdvancedModal>(null);
+  const [formEpoch, setFormEpoch] = useState(0);
+  const openedForm = useRef<OpenedForm | null>(null);
   const appliedActionEntry = useRef("");
   const ensuringConsignment = useRef("");
   const saveLoadingOrder = useMutation(api.dispatches.saveLoadingOrderDraft);
@@ -325,13 +328,16 @@ export function DispatchDetail({
   async function saveOrder(data: FormData) {
     if (!isEditable) return;
     await run(async () => {
+      requireFreshForm();
       await saveLoadingOrder({
         expedienteId,
         draft: loadingOrderDraftFromForm(
           data,
           detail.expediente.loadingOrderDraft,
         ),
+        expectedRevision: opened.order,
       });
+      opened.order += 1;
       moveTo(
         "remesas",
         "La orden de cargue quedó guardada. Los datos conocidos ya están disponibles para las remesas.",
@@ -343,10 +349,19 @@ export function DispatchDetail({
   async function saveRemesas(data: FormData) {
     if (!isEditable) return;
     await run(async () => {
+      requireFreshForm();
+      const upserts = consignmentUpsertsFromForm(data, detail).map((upsert) => ({
+        ...upsert,
+        expectedRevision: upsert.remesaId ? opened.remesas[upsert.remesaId] ?? 0 : undefined,
+      }));
       await saveConsignments({
         expedienteId,
-        upserts: consignmentUpsertsFromForm(data, detail),
+        upserts,
+        expectedOrderRevision: opened.order,
       });
+      for (const upsert of upserts) {
+        if (upsert.remesaId) opened.remesas[upsert.remesaId] = (opened.remesas[upsert.remesaId] ?? 0) + 1;
+      }
       moveTo(
         "vehiculo_conductor",
         "Las remesas quedaron guardadas y siguen heredando la información de la orden.",
@@ -378,17 +393,24 @@ export function DispatchDetail({
   async function saveManifestStage(data: FormData) {
     if (!isEditable) return;
     await run(async () => {
+      requireFreshForm();
       await saveManifest({
         expedienteId,
         draft: manifestDraftFromForm(data, detail),
         moneyConfirmedKey: String(data.get("moneyConfirmed") ?? "") || undefined,
+        expectedRevision: opened.manifest,
       });
+      opened.manifest += 1;
       moveTo(
         "envio_rndc",
         "El manifiesto quedó guardado. Revisa el resumen y los bloqueos antes de enviar.",
       );
       await emitIfRequested("manifiesto");
     }, true);
+  }
+
+  function requireFreshForm() {
+    if (staleChanges) throw new Error(STALE_FORM_MESSAGE);
   }
 
   async function emitIfRequested(scope: ChainScope) {
@@ -545,11 +567,27 @@ export function DispatchDetail({
   }
 
   const rejections = rejectedDocuments(detailResult.documents);
+  const openKey = `${selectedStage ?? ""}:${formEpoch}`;
+  if (!openedForm.current || openedForm.current.key !== openKey) {
+    openedForm.current = captureOpenedForm(openKey, detailResult);
+  }
+  const opened = openedForm.current;
+  const staleChanges = staleFormChanges(selectedStage, opened, detail);
   const routeView: RouteView = {
     origin: detail.route.origin.city,
     destination: detail.route.destination.city,
   };
-  const currentForm = selectedStage && operaciones.loading
+  const staleNotice = staleChanges ? (
+    <div className="operation-notice bad form-stale-notice" role="alert">
+      <span />
+      <div>
+        <strong>{STALE_FORM_MESSAGE}</strong>
+        <p>Cambió: {staleChanges.join(", ")}. Si recargas se pierde lo que hayas escrito aquí sin guardar.</p>
+      </div>
+      <button className="text-button" onClick={() => setFormEpoch((epoch) => epoch + 1)} type="button">Recargar datos</button>
+    </div>
+  ) : null;
+  const stageForm = selectedStage && operaciones.loading
     ? <Skeleton label="Trayendo datos de la solicitud de planilla" />
     : selectedStage
     ? renderStage({
@@ -568,6 +606,12 @@ export function DispatchDetail({
         fulfillManifest,
       })
     : null;
+  const currentForm = stageForm ? (
+    <Fragment key={openKey}>
+      {staleNotice}
+      {stageForm}
+    </Fragment>
+  ) : null;
   const documentHubItems = buildDocumentHubItems({
     detail,
     evidence: evidence ?? [],
@@ -854,6 +898,7 @@ export function DispatchDetail({
               </button>
               {canSave ? (
                 <SaveButtons
+                  blocked={staleChanges ? "Recarga los datos antes de guardar" : undefined}
                   busy={busy}
                   confirmLabel={focus.stage === "manifiesto" ? "el manifiesto" : "la remesa"}
                   emits={emitStages.includes(selectedStage ?? "")}
@@ -1092,6 +1137,7 @@ export function DispatchDetail({
                   documentHubItems.find((item) => item.key === "fulfillment")
                     ?.canEdit)) ? (
                 <SaveButtons
+                  blocked={staleChanges ? "Recarga los datos antes de guardar" : undefined}
                   busy={busy}
                   emits={false}
                   onIntent={(emit) => {

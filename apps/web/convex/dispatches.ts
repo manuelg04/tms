@@ -5,6 +5,7 @@ import { appendAudit, requireActor, requireSameOrganization } from "./model/acce
 import { resolveConsignmentNumberClaim } from "./model/consecutiveRange";
 import { expedienteRoute, syncTripRoute } from "./model/tripRouteRecords";
 import { rndcTextBlocker } from "./model/rndcTextLimits";
+import { currentRevision, staleDraftProblem, type DraftKind } from "./model/draftRevision";
 import { assertStageEditable, deriveDispatchStage, effectiveConsignment, type LoadingOrderDraft } from "./model/dispatchWorkflow";
 import { initialDocumentLifecycle } from "./model/documentLifecycle";
 import { formatLoadingOrderNumber, normalizeLoadingOrderReservationToken, resolveLoadingOrderReservation } from "./model/loadingOrderReservation";
@@ -251,7 +252,8 @@ export const saveLoadingOrderDraft = mutation({
   args: {
     actorToken: v.optional(v.string()),
     expedienteId: v.id("expedientes"),
-    draft: loadingOrderDraftValidator
+    draft: loadingOrderDraftValidator,
+    expectedRevision: v.optional(v.number())
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -259,6 +261,7 @@ export const saveLoadingOrderDraft = mutation({
     const expediente = await requireEditableExpediente(ctx, actor, args.expedienteId);
     const cargoInfoState = await officialStateFor(ctx, expediente, "orden_cargue");
     guardEdit(() => assertStageEditable("orden_cargue", { officialState: "draft", cargoInfoState }));
+    requireFreshDraft("orden_cargue", args.expectedRevision, expediente.loadingOrderRevision);
 
     if (args.draft.customerId) {
       const customer = await ctx.db.get("customers", args.draft.customerId);
@@ -271,6 +274,7 @@ export const saveLoadingOrderDraft = mutation({
     const draft = await completeCargoClassification(ctx, expediente.organizationId, args.draft);
     await ctx.db.patch("expedientes", expediente._id, {
       loadingOrderDraft: draft,
+      loadingOrderRevision: currentRevision(expediente.loadingOrderRevision) + 1,
       agencyCode: draft.agencyCode ?? expediente.agencyCode,
       updatedBy: actor._id,
       updatedAt: now
@@ -395,10 +399,12 @@ export const saveConsignmentsDraft = mutation({
       v.object({
         remesaId: v.optional(v.id("expedienteRemesas")),
         sequence: v.number(),
-        draft: consignmentDraftValidator
+        draft: consignmentDraftValidator,
+        expectedRevision: v.optional(v.number())
       })
     ),
-    removals: v.optional(v.array(v.id("expedienteRemesas")))
+    removals: v.optional(v.array(v.id("expedienteRemesas"))),
+    expectedOrderRevision: v.optional(v.number())
   },
   returns: v.array(v.id("expedienteRemesas")),
   handler: async (ctx, args) => {
@@ -425,8 +431,10 @@ export const saveConsignmentsDraft = mutation({
           throw new ConvexError({ code: "INVALID_INPUT", message: "Una remesa no puede actualizarse y eliminarse a la vez" });
         }
         guardEdit(() => assertStageEditable("remesa", { officialState: row.officialState }));
+        requireFreshDraft("remesa", upsert.expectedRevision, row.draftRevision, row.number);
       }
     }
+    requireFreshDraft("orden_cargue", args.expectedOrderRevision, expediente.loadingOrderRevision);
 
     for (const remesaId of removals) {
       const row = existingById.get(remesaId);
@@ -485,6 +493,7 @@ export const saveConsignmentsDraft = mutation({
         await ctx.db.patch("expedienteRemesas", upsert.remesaId, {
           sequence: upsert.sequence,
           draft: upsert.draft,
+          draftRevision: currentRevision(existingById.get(upsert.remesaId)?.draftRevision) + 1,
           ...denormalized,
           updatedBy: actor._id,
           updatedAt: now
@@ -603,7 +612,8 @@ export const saveManifestDraft = mutation({
     actorToken: v.optional(v.string()),
     expedienteId: v.id("expedientes"),
     draft: manifestDraftValidator,
-    moneyConfirmedKey: v.optional(v.string())
+    moneyConfirmedKey: v.optional(v.string()),
+    expectedRevision: v.optional(v.number())
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -611,6 +621,7 @@ export const saveManifestDraft = mutation({
     const expediente = await requireEditableExpediente(ctx, actor, args.expedienteId);
     const manifestState = await officialStateFor(ctx, expediente, "manifiesto");
     guardEdit(() => assertStageEditable("manifiesto", { officialState: manifestState }));
+    requireFreshDraft("manifiesto", args.expectedRevision, expediente.manifestRevision);
     const now = Date.now();
     const review = manifestMoneyReview(args.draft, await loadMoneyLimits(ctx, expediente.organizationId));
     if (review.blockers.length > 0) {
@@ -632,6 +643,7 @@ export const saveManifestDraft = mutation({
         destinationMunicipalityCode: route.destination.code ?? args.draft.destinationMunicipalityCode,
         moneyConfirmation
       },
+      manifestRevision: currentRevision(expediente.manifestRevision) + 1,
       updatedBy: actor._id,
       updatedAt: now
     });
@@ -1024,3 +1036,10 @@ export const setMoneyLimits = mutation({
     return limits;
   }
 });
+
+function requireFreshDraft(kind: DraftKind, expected: number | undefined, stored: number | undefined, label?: string): void {
+  const problem = staleDraftProblem(kind, expected, stored, label);
+  if (problem) {
+    throw new ConvexError({ code: "STALE_FORM", message: problem });
+  }
+}

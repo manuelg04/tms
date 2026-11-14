@@ -58,6 +58,8 @@ import type * as model_merchandiseCatalog from "../model/merchandiseCatalog.js";
 import type * as model_merchandiseProducts from "../model/merchandiseProducts.js";
 import type * as model_merchandiseSearch from "../model/merchandiseSearch.js";
 import type * as model_mirrorValidators from "../model/mirrorValidators.js";
+import type * as model_moneyChecks from "../model/moneyChecks.js";
+import type * as model_moneyLimits from "../model/moneyLimits.js";
 import type * as model_monitoring from "../model/monitoring.js";
 import type * as model_monitoringValidators from "../model/monitoringValidators.js";
 import type * as model_officialDocumentIdentity from "../model/officialDocumentIdentity.js";
@@ -154,6 +156,8 @@ declare const fullApi: ApiFromModules<{
   "model/merchandiseProducts": typeof model_merchandiseProducts;
   "model/merchandiseSearch": typeof model_merchandiseSearch;
   "model/mirrorValidators": typeof model_mirrorValidators;
+  "model/moneyChecks": typeof model_moneyChecks;
+  "model/moneyLimits": typeof model_moneyLimits;
   "model/monitoring": typeof model_monitoring;
   "model/monitoringValidators": typeof model_monitoringValidators;
   "model/officialDocumentIdentity": typeof model_officialDocumentIdentity;

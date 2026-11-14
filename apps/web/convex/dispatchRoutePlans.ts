@@ -9,6 +9,7 @@ import {
 import { dispatchPlanDoc } from "./model/routeValidators";
 import { operationalRouteStops, routeSchedule } from "./model/routes";
 import { automaticRouteChoice, bogotaDeparture, tripRouteCandidates } from "./model/routePlanAutomation";
+import { readMasterAttachments, storeMasterAttachment } from "./model/fleetRecords";
 
 const readers = ["admin", "operator", "auditor"] as const;
 const writers = ["admin", "operator"] as const;
@@ -64,6 +65,12 @@ export const forDispatch = query({
       plan: v.union(dispatchPlanDoc, v.null()),
       sheet,
       canAssign: v.boolean(),
+      photos: v.object({
+        vehicle: v.union(v.string(), v.null()),
+        driver: v.union(v.string(), v.null()),
+        hasVehicle: v.boolean(),
+        hasDriver: v.boolean(),
+      }),
     }),
   ),
   handler: async (ctx, args) => {
@@ -99,8 +106,23 @@ export const forDispatch = query({
       [driver?.firstNames, driver?.firstLastName, driver?.secondLastName]
         .filter(Boolean)
         .join(" ");
+    const [vehiclePhotos, driverPhotos] = await Promise.all([
+      vehicle ? readMasterAttachments(ctx, expediente.organizationId, "vehicle", vehicle._id) : [],
+      driver ? readMasterAttachments(ctx, expediente.organizationId, "driver", driver._id) : [],
+    ]);
+    const vehiclePhoto =
+      ["front", "left", "right", "rear"]
+        .map((slot) => vehiclePhotos.find((photo) => photo.slot === slot))
+        .find(Boolean)?.url ?? null;
+    const driverPhoto = driverPhotos.find((photo) => photo.slot === "profile")?.url ?? null;
     return {
       plan,
+      photos: {
+        vehicle: vehiclePhoto,
+        driver: driverPhoto,
+        hasVehicle: Boolean(vehicle),
+        hasDriver: Boolean(driver),
+      },
       canAssign: actor.roles.some((role) =>
         writers.includes(role as (typeof writers)[number]),
       ),
@@ -236,6 +258,44 @@ export const assign = mutation({
       entityId: id,
     });
     return id;
+  },
+});
+
+export const attachPhoto = mutation({
+  args: {
+    expedienteId: v.id("expedientes"),
+    target: v.union(v.literal("vehicle"), v.literal("driver")),
+    photo: v.object({ storageId: v.id("_storage"), fileName: v.string() }),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, undefined, [...writers]);
+    const expediente = await ctx.db.get("expedientes", args.expedienteId);
+    if (!expediente) throw new ConvexError("Despacho no disponible.");
+    requireSameOrganization(actor, expediente.organizationId);
+    const resourceId = args.target === "vehicle" ? expediente.vehicleId : expediente.driverId;
+    if (!resourceId)
+      throw new ConvexError(
+        args.target === "vehicle" ? "El despacho no tiene vehículo asignado." : "El despacho no tiene conductor asignado.",
+      );
+    await storeMasterAttachment(
+      ctx,
+      actor,
+      args.target,
+      resourceId,
+      args.target === "vehicle" ? "front" : "profile",
+      args.photo,
+      Date.now(),
+    );
+    await appendAudit(ctx, {
+      organizationId: actor.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "dispatch.route.plan.photo_attached",
+      entityType: args.target,
+      entityId: resourceId,
+    });
+    return null;
   },
 });
 

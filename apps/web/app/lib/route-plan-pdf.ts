@@ -16,8 +16,15 @@ export function routePlanStopTitle(stop: { label: string; kind: "physical" | "vi
   return stop.kind === "virtual" && !/virtual/i.test(stop.label) ? `${stop.label} (Virtual)` : stop.label;
 }
 
-export function routePlanPdfInput(plan: { departureAt: string; stops: PlanStop[] }, sheet: PlanSheet, now: number): RoutePlanPdfInput {
+export function routePlanPdfInput(
+  plan: { departureAt: string; stops: PlanStop[] },
+  sheet: PlanSheet,
+  now: number,
+  photos: { vehicle?: Buffer | null; driver?: Buffer | null } = {}
+): RoutePlanPdfInput {
   return {
+    vehiclePhoto: photos.vehicle ?? null,
+    driverPhoto: photos.driver ?? null,
     company: { name: companyProfile.name, nit: companyProfile.nit, address: companyProfile.address, phones: companyProfile.phones },
     dispatchCode: sheet.dispatchCode,
     manifestNumber: sheet.manifestNumber,

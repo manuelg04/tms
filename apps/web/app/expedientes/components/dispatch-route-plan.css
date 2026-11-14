@@ -18,3 +18,8 @@
   .dispatch-route-plan-form { grid-template-columns: minmax(0, 1fr); }
   .dispatch-route-plan-form button { margin-top: 0; }
 }
+.dispatch-route-plan-photos { display: grid; gap: 6px; padding: 12px 14px; border: 1px solid #e0b252; border-radius: 6px; background: #fff8e6; font-size: 13px; }
+.dispatch-route-plan-photos span { color: var(--ink-soft, #4b5a6b); }
+.dispatch-route-plan-photo-inputs { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 4px; }
+.dispatch-route-plan-photo-inputs label { display: grid; gap: 4px; font-size: 12px; font-weight: 600; }
+.dispatch-route-plan-photo-inputs small { font-weight: 400; min-height: 14px; color: var(--bad, #b42318); }

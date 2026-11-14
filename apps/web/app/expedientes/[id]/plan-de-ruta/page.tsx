@@ -32,7 +32,8 @@ export default function RoutePlanSheetPage({ params }: { params: Promise<{ id: s
     );
   }
 
-  const { plan, sheet } = data;
+  const { plan, sheet, photos } = data;
+  const missingPhotos = [photos.vehicle ? "" : "la foto del vehículo", photos.driver ? "" : "la foto del conductor"].filter(Boolean);
   const departure = plan.departureAt.replace("T", " ");
   const arrival = plan.stops.at(-1)?.scheduledAt ?? "";
 
@@ -46,6 +47,11 @@ export default function RoutePlanSheetPage({ params }: { params: Promise<{ id: s
           Imprimir
         </button>
       </div>
+      {missingPhotos.length ? (
+        <p className="route-plan-missing" role="status">
+          Este plan de ruta sale sin {missingPhotos.join(" ni ")}. Súbela desde el despacho, en la sección Plan de ruta.
+        </p>
+      ) : null}
 
       <article className="route-plan-sheet">
         <header className="route-plan-sheet-head">
@@ -66,11 +72,11 @@ export default function RoutePlanSheetPage({ params }: { params: Promise<{ id: s
           <div className="route-plan-photos">
             <figure>
               <figcaption>FOTO DEL VEHICULO</figcaption>
-              <div />
+              {photos.vehicle ? <img alt="Vehículo" src={photos.vehicle} /> : <div>SIN FOTO</div>}
             </figure>
             <figure>
               <figcaption>FOTO DEL CONDUCTOR</figcaption>
-              <div />
+              {photos.driver ? <img alt="Conductor" src={photos.driver} /> : <div>SIN FOTO</div>}
             </figure>
           </div>
         </header>

@@ -148,13 +148,25 @@ export function createSyncRuntime(user: DemoUser): SyncRuntime | null {
     },
     loadRoutePlanPdf: async (expedienteId) => {
       const data = await client.query(api.dispatchRoutePlans.forDispatch, { expedienteId });
-      return data?.plan ? await buildRoutePlanPdf(routePlanPdfInput(data.plan, data.sheet, Date.now())) : null;
+      if (!data?.plan) return null;
+      const [vehicle, driver] = await Promise.all([loadPhoto(data.photos.vehicle), loadPhoto(data.photos.driver)]);
+      return await buildRoutePlanPdf(routePlanPdfInput(data.plan, data.sheet, Date.now(), { vehicle, driver }));
     },
     send: (payload) => sendOperacionesDelivery(payload),
     record: async (input) => {
       await client.mutation(api.operaciones.recordDelivery, input);
     }
   };
+}
+
+async function loadPhoto(url: string | null): Promise<Buffer | null> {
+  if (!url) return null;
+  try {
+    const stored = await fetch(url, { cache: "no-store" });
+    return stored.ok ? Buffer.from(await stored.arrayBuffer()) : null;
+  } catch {
+    return null;
+  }
 }
 
 export async function syncAfterEmission(user: DemoUser, expedienteId: string): Promise<SyncResult | null> {

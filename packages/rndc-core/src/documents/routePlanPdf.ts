@@ -22,6 +22,8 @@ export type RoutePlanPdfInput = {
   stops: RoutePlanPdfStop[];
   observations: string;
   printedAt: string;
+  vehiclePhoto?: Buffer | null;
+  driverPhoto?: Buffer | null;
 };
 
 const PAGE: [number, number] = [792, 612];
@@ -67,13 +69,26 @@ function drawHeader(doc: Doc, input: RoutePlanPdfInput): void {
   }
 
   text(doc, "PLAN DE RUTA", centerX, cursor + 4, centerW, { size: 14, bold: true, align: "center" });
-  photoBox(doc, "FOTO DEL VEHICULO", LEFT + WIDTH - 216, 36);
-  photoBox(doc, "FOTO DEL CONDUCTOR", LEFT + WIDTH - 104, 36);
+  photoBox(doc, "FOTO DEL VEHICULO", LEFT + WIDTH - 216, 36, input.vehiclePhoto);
+  photoBox(doc, "FOTO DEL CONDUCTOR", LEFT + WIDTH - 104, 36, input.driverPhoto);
 }
 
-function photoBox(doc: Doc, label: string, x: number, y: number): void {
+function photoBox(doc: Doc, label: string, x: number, y: number, photo?: Buffer | null): void {
   text(doc, label, x, y, 104, { size: 7.5, bold: true, align: "center" });
+
+  if (photo) {
+    try {
+      doc.image(photo, x + 4, y + 11, { fit: [96, 72], align: "center", valign: "center" });
+      return;
+    } catch {
+      text(doc, "FOTO NO COMPATIBLE", x + 4, y + 43, 96, { size: 6.5, align: "center" });
+      box(doc, x + 4, y + 11, 96, 72);
+      return;
+    }
+  }
+
   box(doc, x + 4, y + 11, 96, 72);
+  text(doc, "SIN FOTO", x + 4, y + 43, 96, { size: 6.5, align: "center" });
 }
 
 function drawDispatch(doc: Doc, input: RoutePlanPdfInput, top: number): number {

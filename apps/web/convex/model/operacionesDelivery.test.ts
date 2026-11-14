@@ -86,3 +86,14 @@ test("the route plan is delivered once the manifest is official and changes key 
     false
   );
 });
+
+test("adding a photo to the route plan makes a new delivery so Operaciones gets the updated PDF", () => {
+  const documents = [
+    { _id: "d2", kind: "remesa", number: "45945", officialState: "authorized", updatedAt: 2 },
+    { _id: "d3", kind: "manifiesto", number: "0045202", officialState: "authorized", updatedAt: 3 }
+  ];
+  const key = (photoMark: string) =>
+    buildOperacionesDeliveryPlan({ code: "DSP-000200", expediente, documents, routePlan: { routeCode: "1284", departureAt: "2026-11-13T18:14", photoMark } }).at(-1)?.deliveryKey;
+  assert.equal(key(""), "DSP-000200:plan-ruta:1284:2026-11-13T18:14");
+  assert.equal(key("vc"), "DSP-000200:plan-ruta:1284:2026-11-13T18:14:vc");
+});

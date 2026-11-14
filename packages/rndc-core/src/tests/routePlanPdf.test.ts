@@ -39,3 +39,14 @@ test("route plan PDF adds pages instead of dropping control posts on long routes
 
   assert.ok((pdf.toString("latin1").match(/\/Type \/Page\b/g) ?? []).length > 1);
 });
+
+test("route plan PDF says when a photo is missing and embeds the ones that exist", async () => {
+  const empty = (await buildRoutePlanPdf(input)).toString("latin1");
+  const png = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==", "base64");
+  const withPhotos = (await buildRoutePlanPdf({ ...input, vehiclePhoto: png, driverPhoto: png })).toString("latin1");
+  const broken = await buildRoutePlanPdf({ ...input, vehiclePhoto: Buffer.from("no es una imagen") });
+
+  assert.equal((empty.match(/\/Subtype \/Image/g) ?? []).length, 1);
+  assert.equal((withPhotos.match(/\/Subtype \/Image/g) ?? []).length >= 2, true);
+  assert.equal(broken.toString("latin1").slice(0, 5), "%PDF-");
+});

@@ -30,7 +30,7 @@ export function buildOperacionesDeliveryPlan(input: {
     manifestDraft?: { manifestNumber?: string } | null;
   };
   documents: DeliveryDocument[];
-  routePlan?: { routeCode: string; departureAt: string } | null;
+  routePlan?: { routeCode: string; departureAt: string; photoMark?: string } | null;
 }): DeliveryPlanItem[] {
   const official = (document: DeliveryDocument | undefined) =>
     Boolean(document && (document.officialState === "authorized" || document.officialState === "fulfilled"));
@@ -91,7 +91,7 @@ export function buildOperacionesDeliveryPlan(input: {
   if (manifest?.number && input.routePlan) {
     items.push({
       kind: "route_plan",
-      deliveryKey: `${input.code}:plan-ruta:${input.routePlan.routeCode}:${input.routePlan.departureAt}`,
+      deliveryKey: `${input.code}:plan-ruta:${input.routePlan.routeCode}:${input.routePlan.departureAt}${input.routePlan.photoMark ? `:${input.routePlan.photoMark}` : ""}`,
       label: "Plan de ruta",
       number: input.routePlan.routeCode,
       fileName: `plan-ruta-${fileToken(input.code)}.pdf`

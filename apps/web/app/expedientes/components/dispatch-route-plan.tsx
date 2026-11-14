@@ -8,6 +8,7 @@ import type { Id } from "../../../convex/_generated/dataModel";
 import { routeName } from "../../../convex/model/routes";
 import { bogotaDeparture } from "../../../convex/model/routePlanAutomation";
 import { convexErrorMessage } from "../../lib/convex-error";
+import { uploadMasterPhoto } from "../../maestros/nuevo/forms/master-form-utils";
 import "./dispatch-route-plan.css";
 
 export function DispatchRoutePlan({ expedienteId, origin, destination }: { expedienteId: Id<"expedientes">; origin: string; destination: string }) {
@@ -15,7 +16,11 @@ export function DispatchRoutePlan({ expedienteId, origin, destination }: { exped
   const [editing, setEditing] = useState(false);
 
   if (!data) return null;
-  const { plan, canAssign } = data;
+  const { plan, canAssign, photos } = data;
+  const missing: Array<{ target: "vehicle" | "driver"; label: string; available: boolean }> = [
+    ...(photos.vehicle ? [] : [{ target: "vehicle" as const, label: "Foto del vehículo", available: photos.hasVehicle }]),
+    ...(photos.driver ? [] : [{ target: "driver" as const, label: "Foto del conductor", available: photos.hasDriver }])
+  ];
   const showForm = canAssign && (editing || !plan);
 
   return (
@@ -46,6 +51,28 @@ export function DispatchRoutePlan({ expedienteId, origin, destination }: { exped
         </div>
       </header>
 
+      {missing.length ? (
+        <div className="dispatch-route-plan-photos" role="status">
+          <strong>
+            {missing.length === 2
+              ? "El plan de ruta saldrá sin la foto del vehículo ni la del conductor."
+              : `El plan de ruta saldrá sin la ${missing[0].target === "vehicle" ? "foto del vehículo" : "foto del conductor"}.`}
+          </strong>
+          <span>
+            {canAssign
+              ? "Súbela aquí y queda guardada en el maestro para los próximos viajes. Imagen JPG o PNG de máximo 2 MB."
+              : "Pide a un operador que la suba desde este despacho."}
+          </span>
+          {canAssign ? (
+            <div className="dispatch-route-plan-photo-inputs">
+              {missing.map((item) => (
+                <PhotoUpload available={item.available} expedienteId={expedienteId} key={item.target} label={item.label} target={item.target} />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
       {plan ? (
         <ol className="dispatch-route-plan-stops">
           {plan.stops.map((stop) => (
@@ -59,6 +86,57 @@ export function DispatchRoutePlan({ expedienteId, origin, destination }: { exped
 
       {showForm ? <AssignForm destination={destination} expedienteId={expedienteId} onAssigned={() => setEditing(false)} origin={origin} /> : null}
     </section>
+  );
+}
+
+function PhotoUpload({ expedienteId, target, label, available }: { expedienteId: Id<"expedientes">; target: "vehicle" | "driver"; label: string; available: boolean }) {
+  const generateUploadUrl = useMutation(api.fleetMasters.generateMasterUploadUrl);
+  const discard = useMutation(api.fleetMasters.discardMasterUploads);
+  const attach = useMutation(api.dispatchRoutePlans.attachPhoto);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function upload(file: File | undefined) {
+    if (!file || busy) return;
+    setBusy(true);
+    setError("");
+    let uploaded;
+    try {
+      if (!["image/jpeg", "image/png"].includes(file.type)) throw new Error("La imagen debe ser JPG o PNG.");
+      if (file.size > 2 * 1024 * 1024) throw new Error("La imagen no puede superar 2 MB.");
+      uploaded = await uploadMasterPhoto(generateUploadUrl, file);
+      await attach({ expedienteId, target, photo: uploaded });
+      void fetch(`/api/operaciones/entregas/${expedienteId}?pendientes=1`, { method: "POST" }).catch(() => undefined);
+    } catch (reason) {
+      if (uploaded) await discard({ storageIds: [uploaded.storageId] }).catch(() => undefined);
+      setError(convexErrorMessage(reason, reason instanceof Error ? reason.message : "No se pudo guardar la foto."));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <label>
+      {label}
+      <input
+        accept="image/jpeg,image/png"
+        disabled={busy || !available}
+        onChange={(event) => {
+          void upload(event.target.files?.[0]);
+          event.target.value = "";
+        }}
+        type="file"
+      />
+      <small>
+        {!available
+          ? target === "vehicle"
+            ? "Asigna primero el vehículo al despacho."
+            : "Asigna primero el conductor al despacho."
+          : busy
+            ? "Subiendo…"
+            : error}
+      </small>
+    </label>
   );
 }
 

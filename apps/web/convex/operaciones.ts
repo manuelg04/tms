@@ -1,3 +1,4 @@
+import { readMasterAttachments } from "./model/fleetRecords";
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
@@ -337,10 +338,22 @@ async function loadLinkedDispatch(ctx: QueryCtx, expedienteId: Id<"expedientes">
     .withIndex("by_expediente", (q) => q.eq("expedienteId", expedienteId))
     .order("desc")
     .first();
+  const [vehiclePhotos, driverPhotos] = routePlan
+    ? await Promise.all([
+        expediente.vehicleId ? readMasterAttachments(ctx, organizationId, "vehicle", expediente.vehicleId) : [],
+        expediente.driverId ? readMasterAttachments(ctx, organizationId, "driver", expediente.driverId) : []
+      ])
+    : [[], []];
+  const photoMark = `${vehiclePhotos.length ? "v" : ""}${driverPhotos.some((photo) => photo.slot === "profile") ? "c" : ""}`;
 
   return {
     link,
     code: expediente.code,
-    plan: buildOperacionesDeliveryPlan({ code: expediente.code, expediente, documents, routePlan })
+    plan: buildOperacionesDeliveryPlan({
+      code: expediente.code,
+      expediente,
+      documents,
+      routePlan: routePlan ? { routeCode: routePlan.routeCode, departureAt: routePlan.departureAt, photoMark } : null
+    })
   };
 }

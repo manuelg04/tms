@@ -13,6 +13,7 @@ const DIVISIONS_FILE = "Maestro_División Política Administrativa_RNDC.xls";
 type Options = {
   filePaths: string[];
   divisionsPath?: string;
+  skipPath?: string;
   dryRun: boolean;
   organizationSlug: string;
 };
@@ -27,12 +28,14 @@ function parseArgs(argv: string[]): Options {
       options.organizationSlug = argv[++index] ?? options.organizationSlug;
     } else if (arg === "--divisions") {
       options.divisionsPath = argv[++index];
+    } else if (arg === "--skip") {
+      options.skipPath = argv[++index];
     } else {
       options.filePaths.push(arg);
     }
   }
   if (options.filePaths.length === 0) {
-    console.error(`Uso: npm run ingest:avansat-drivers -- <Excel_Conductores_Mes.xls> [más archivos] [--divisions "${DIVISIONS_FILE}"] [--dry-run] [--org slug]`);
+    console.error(`Uso: npm run ingest:avansat-drivers -- <Excel_Conductores_Mes.xls> [más archivos] [--divisions "${DIVISIONS_FILE}"] [--skip cedulas.txt] [--dry-run] [--org slug]`);
     process.exit(1);
   }
   if (!options.divisionsPath) {
@@ -88,6 +91,13 @@ async function main(): Promise<void> {
     options.filePaths.map((filePath) => ({ name: path.basename(filePath), text: readFileSync(filePath, "latin1") })),
     { today, cities }
   );
+
+  if (options.skipPath) {
+    const skipped = new Set(readFileSync(options.skipPath, "utf8").split(/\r?\n/).map((line) => line.trim()).filter(Boolean));
+    const before = parsed.drivers.length;
+    parsed.drivers = parsed.drivers.filter((driver) => !skipped.has(driver.document));
+    console.log(`Omitidos por --skip: ${before - parsed.drivers.length} · Quedan para cargar: ${parsed.drivers.length}`);
+  }
 
   console.log(`Archivos: ${options.filePaths.map((filePath) => path.basename(filePath)).join(", ")}`);
   console.log(cities ? `Municipios tomados de: ${path.resolve(options.divisionsPath!)}` : "Sin maestro de municipios: los conductores quedan sin código de ciudad.");

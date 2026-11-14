@@ -1,6 +1,7 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { ANY_ROLE, appendAudit, requireActor, requireServiceKey } from "./model/access";
+import { userJobTitle } from "./model/schemaValidators";
 
 const roleValidator = v.union(
   v.literal("admin"),
@@ -22,6 +23,7 @@ const userOutputValidator = v.object({
   email: v.string(),
   roles: v.array(roleValidator),
   status: statusValidator,
+  jobTitle: v.optional(userJobTitle),
   createdAt: v.number(),
   updatedAt: v.number()
 });
@@ -140,8 +142,20 @@ export const me = query({
   returns: userOutputValidator,
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx, args.actorToken, ANY_ROLE);
-    const { actorToken: _actorToken, ...safeActor } = actor;
-    return safeActor;
+    return {
+      _id: actor._id,
+      _creationTime: actor._creationTime,
+      organizationId: actor.organizationId,
+      externalId: actor.externalId,
+      authSubject: actor.authSubject,
+      name: actor.name,
+      email: actor.email,
+      roles: actor.roles,
+      status: actor.status,
+      jobTitle: actor.jobTitle,
+      createdAt: actor.createdAt,
+      updatedAt: actor.updatedAt
+    };
   }
 });
 

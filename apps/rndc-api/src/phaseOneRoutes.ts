@@ -62,6 +62,10 @@ export type PhaseOneOperationResult = {
   };
   records?: Record<string, string>[] | ReturnType<typeof normalizeManifestAcceptances> | ReturnType<typeof normalizeInitialCompliance> | ReturnType<typeof normalizeRemesaCompliance>;
   classification?: ReturnType<typeof classifyRndcError>;
+  xml?: {
+    request: string;
+    response: string;
+  };
   convexSync: {
     synced: false;
     reason: string;
@@ -371,6 +375,8 @@ function digitsOnly(value: string | undefined): string {
   return (value ?? "").replace(/\D/g, "");
 }
 
+const RETURNS_XML: ReadonlySet<PhaseOneOperation> = new Set(["initial-compliance-query", "remesa-compliance-query"]);
+
 async function executePhaseOneOperation(
   config: RndcConfig,
   operation: PhaseOneOperation,
@@ -398,7 +404,8 @@ async function executePhaseOneOperation(
 
   const preparedRequestXml = maskSecrets(buildRndcXml(config, request));
   const response = await sendMessage(config, request);
-  await writeFile(requestPath, `${maskSecrets(response.requestXml || preparedRequestXml)}\n`, "utf8");
+  const maskedRequestXml = maskSecrets(response.requestXml || preparedRequestXml);
+  await writeFile(requestPath, `${maskedRequestXml}\n`, "utf8");
   await writeFile(responsePath, `${response.rndcResponseXml}\n`, "utf8");
 
   const result: PhaseOneOperationResult = {
@@ -425,6 +432,7 @@ async function executePhaseOneOperation(
     },
     records: normalize ? normalize(response.parsed) : undefined,
     classification: response.errorText ? classifyRndcError(response.errorText) : undefined,
+    xml: RETURNS_XML.has(operation) ? { request: maskedRequestXml, response: maskSecrets(response.rndcResponseXml ?? "") } : undefined,
     convexSync: {
       synced: false,
       reason: durableContext.requested && "context" in durableContext

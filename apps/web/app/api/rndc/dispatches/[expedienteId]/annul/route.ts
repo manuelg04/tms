@@ -3,7 +3,9 @@ import type { FunctionReturnType } from "convex/server";
 import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 import { annulmentReasonAllowed, annulmentStepLabel, buildAnnulmentPlan, documentIdsForRemesas, needsReplacementManifest } from "../../../../../../convex/model/advancedWorkflow";
-import { fulfillmentNotes, lookupRemesaFulfillment } from "../../../../../lib/rndc-fulfillment-lookup";
+import { fulfillmentNotes, lookupRemesaFulfillmentDetailed, type FulfillmentCache } from "../../../../../lib/rndc-fulfillment-lookup";
+
+const previewLookupCache: FulfillmentCache = new Map();
 import { ANNULMENT_DENIED_REASON, canAnnulOfficialDocuments } from "../../../../../../convex/model/annulmentPolicy";
 import { createConvexToken, getAuthSettings, jsonResponse } from "../../../../../lib/auth-server";
 import { authorizeGatewayRequest, forwardRndcRequest } from "../../../../../lib/rndc-gateway";
@@ -55,7 +57,7 @@ async function annul(request: Request, context: { params: Promise<{ expedienteId
     return jsonResponse({ error: "La observación no puede superar 200 caracteres" }, 400);
   }
 
-  const { target, documents, plan } = await planAnnulment(client, detail, { documentId: body.documentId, wholeSet, reasonCode: body.reasonCode });
+  const { target, documents, plan, rndcLookups } = await planAnnulment(client, detail, { documentId: body.documentId, wholeSet, reasonCode: body.reasonCode });
 
   if (!plan.ok) return jsonResponse({ error: plan.blockers[0], blockers: plan.blockers }, 409);
 
@@ -75,7 +77,7 @@ async function annul(request: Request, context: { params: Promise<{ expedienteId
     request,
     expedienteId,
     type: "annulment",
-    body: { ...body, observation, dependencyPlan: plan.steps },
+    body: { ...body, observation, dependencyPlan: { steps: plan.steps, rndcLookups } },
     steps: steps.filter((step): step is NonNullable<typeof step> => Boolean(step)),
     responseExtra: replacementManifestNumber ? { replacementManifestNumber } : undefined
   });
@@ -110,7 +112,8 @@ export async function GET(request: Request, context: { params: Promise<{ expedie
   const { documents, plan, notes } = await planAnnulment(client, detail, {
     documentId,
     wholeSet: url.searchParams.get("wholeSet") === "true",
-    reasonCode: url.searchParams.get("reasonCode") ?? undefined
+    reasonCode: url.searchParams.get("reasonCode") ?? undefined,
+    cache: previewLookupCache
   });
   return jsonResponse({
     ok: plan.ok,
@@ -130,14 +133,14 @@ export async function GET(request: Request, context: { params: Promise<{ expedie
   }, 200);
 }
 
-async function planAnnulment(client: ConvexHttpClient, detail: Detail, input: { documentId: string; wholeSet: boolean; reasonCode?: string }) {
+async function planAnnulment(client: ConvexHttpClient, detail: Detail, input: { documentId: string; wholeSet: boolean; reasonCode?: string; cache?: FulfillmentCache }) {
   const documents = detail.documents.map((document) => documentProjection(document, detail));
   const target = documents.find((document) => document.id === input.documentId);
   const lookupTargets = documents
     .filter((document) => document.kind === "remesa" && (document.officialState === "authorized" || document.officialState === "fulfilled"))
     .map((document) => ({ documentId: document.id as string, number: detail.documents.find((item) => item._id === document.id)?.number }));
-  const [rndcFulfillment, inputs] = await Promise.all([
-    lookupRemesaFulfillment(lookupTargets, (path) => forwardRndcRequest(path)),
+  const [{ findings: rndcFulfillment, evidence: rndcLookups }, inputs] = await Promise.all([
+    lookupRemesaFulfillmentDetailed(lookupTargets, (path) => forwardRndcRequest(path), { cache: input.cache }),
     client.query(api.dispatches.emissionInputs, { expedienteId: detail.expediente._id })
   ]);
   const plan = buildAnnulmentPlan({
@@ -149,7 +152,7 @@ async function planAnnulment(client: ConvexHttpClient, detail: Detail, input: { 
     tripRegistered: inputs?.tripEmitted === true
   });
   const knownFulfilled = new Set(documents.filter((document) => document.officialState === "fulfilled" || document.fulfillmentState === "fulfilled").map((document) => document.id as string));
-  return { target, documents, plan, notes: fulfillmentNotes(lookupTargets, rndcFulfillment, knownFulfilled) };
+  return { target, documents, plan, rndcLookups, notes: fulfillmentNotes(lookupTargets, rndcFulfillment, knownFulfilled) };
 }
 
 type AnnulmentBody = { reasonCode?: string; observation: string; replacementManifestNumber?: string };

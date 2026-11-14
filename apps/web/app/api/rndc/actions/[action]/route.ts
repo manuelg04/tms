@@ -5,6 +5,7 @@ import type { Id } from "../../../../../convex/_generated/dataModel";
 import { getAuthSettings, createConvexToken, jsonResponse } from "../../../../lib/auth-server";
 import { authorizeGatewayRequest, buildDurableEvidenceHeaders, durableEvidenceWasStored, forwardRndcRequest, safeRndcMode } from "../../../../lib/rndc-gateway";
 import { getRndcActionConfig } from "../../../../lib/rndc-action-config";
+import { ANNULMENT_DENIED_REASON, canAnnulOfficialDocuments } from "../../../../../convex/model/annulmentPolicy";
 import { resolveActionOutcome } from "../../../../lib/rndc-action-outcome";
 import { durablePreflightMessage, validateDurableActionPayload } from "../../../../lib/rndc-action-preflight";
 import {
@@ -45,6 +46,10 @@ export async function POST(
 
   if (!actionConfig) {
     return jsonResponse({ error: "RNDC action not found" }, 404);
+  }
+
+  if (actionConfig.operationType.startsWith("annul_") && !canAnnulOfficialDocuments({ roles: [authorization.role], jobTitle: authorization.jobTitle })) {
+    return jsonResponse({ error: ANNULMENT_DENIED_REASON }, 403);
   }
 
   const body = await request.json().catch(() => null) as ActionBody | null;

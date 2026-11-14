@@ -5,6 +5,7 @@ import { POST as annul } from "./[expedienteId]/annul/route.js";
 import { POST as correct } from "./[expedienteId]/correct/route.js";
 import { POST as reconcile } from "./[expedienteId]/reconcile/route.js";
 import { POST as structural } from "./[expedienteId]/exceptions/route.js";
+import { POST as runAction } from "../actions/[action]/route.js";
 
 const originalEnv = { ...process.env };
 const secret = "advanced-routes-session-secret-long-enough";
@@ -109,6 +110,20 @@ test("structural exceptions remain hidden behind administration permission", asy
   }), context());
 
   assert.equal(response.status, 403);
+});
+
+test("the direct RNDC action route applies the same annulment rule", async () => {
+  const actionContext = (action: string) => ({ params: Promise.resolve({ action }) });
+  const assistant = await runAction(request("operator", {}, "auxiliar_seguridad"), actionContext("annul_manifest"));
+  assert.equal(assistant.status, 403);
+  const plainOperator = await runAction(request("operator", {}), actionContext("annul_remesa_initial_fulfillment"));
+  assert.equal(plainOperator.status, 403);
+  const chief = await runAction(request("operator", {}, "jefe_seguridad"), actionContext("annul_manifest"));
+  assert.notEqual(chief.status, 403);
+  const admin = await runAction(request("admin", {}), actionContext("annul_remesa"));
+  assert.notEqual(admin.status, 403);
+  const emission = await runAction(request("operator", {}, "auxiliar_seguridad"), actionContext("emit_remesa"));
+  assert.notEqual(emission.status, 403);
 });
 
 function request(role: "admin" | "operator", body: Record<string, unknown>, jobTitle?: "jefe_seguridad" | "auxiliar_seguridad"): Request {

@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { reopenRejectedDocument } from "./model/rejectionReopen";
+import { ANNULMENT_DENIED_REASON, canAnnulOfficialDocuments } from "./model/annulmentPolicy";
 import { mutation, query } from "./_generated/server";
 import { appendAudit, requireActor, requireSameOrganization, requireServiceKey } from "./model/access";
 import { canClaimOperation, nextOperationState } from "./model/operationState";
@@ -44,6 +45,9 @@ export const enqueue = mutation({
   handler: async (ctx, args) => {
     const actor = await requireActor(ctx, args.actorToken, ["admin", "operator"]);
     requireSameOrganization(actor, args.organizationId);
+    if (args.operationType.startsWith("annul_") && !canAnnulOfficialDocuments(actor)) {
+      throw new ConvexError({ code: "FORBIDDEN", message: ANNULMENT_DENIED_REASON });
+    }
     const { actorToken: _actorToken, ...input } = args;
     return await enqueueOperation(ctx, input, actor._id, "user");
   }

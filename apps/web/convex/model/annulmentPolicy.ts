@@ -2,10 +2,10 @@ export type AnnulmentActor = { roles: readonly string[]; jobTitle?: string | nul
 
 export const ANNULMENT_POLICY: { roles: readonly string[]; jobTitles: readonly string[] } = {
   roles: ["admin"],
-  jobTitles: []
+  jobTitles: ["jefe_seguridad"]
 };
 
-export const ANNULMENT_DENIED_REASON = "Tu cargo no permite anular documentos oficiales. Pídele la anulación a un administrador.";
+export const ANNULMENT_DENIED_REASON = "Tu cargo no permite anular documentos oficiales. Pídele la anulación a un administrador o al jefe de seguridad.";
 
 export const ANNULMENT_QUOTA_SCOPE = "Este conteo solo incluye los manifiestos expedidos desde el TMS. Los que la empresa expide por Avansat u otro sistema no se cuentan aquí, así que el tope real del RNDC puede estar más cerca.";
 

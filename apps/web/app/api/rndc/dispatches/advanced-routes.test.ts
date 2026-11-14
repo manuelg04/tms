@@ -51,10 +51,14 @@ test("the annulment flow follows the single annulment rule before anything is fi
     confirmed: true
   };
   const denied = await annul(request("operator", body), context());
+  const assistant = await annul(request("operator", body, "auxiliar_seguridad"), context());
+  const securityChief = await annul(request("operator", body, "jefe_seguridad"), context());
   const allowed = await annul(request("admin", body), context());
 
   assert.equal(denied.status, 403);
   assert.match(((await denied.json()) as { error: string }).error, /Tu cargo no permite anular/);
+  assert.equal(assistant.status, 403);
+  assert.equal(securityChief.status, 503);
   assert.equal(allowed.status, 503);
 });
 
@@ -107,10 +111,10 @@ test("structural exceptions remain hidden behind administration permission", asy
   assert.equal(response.status, 403);
 });
 
-function request(role: "admin" | "operator", body: Record<string, unknown>): Request {
+function request(role: "admin" | "operator", body: Record<string, unknown>, jobTitle?: "jefe_seguridad" | "auxiliar_seguridad"): Request {
   const user = demoUsers.find((candidate) => candidate.role === role);
   if (!user) throw new Error("Demo user missing");
-  const token = createSessionToken(user, secret, Date.now(), 3600);
+  const token = createSessionToken(jobTitle ? { ...user, jobTitle } : user, secret, Date.now(), 3600);
   return new Request("http://localhost/api/rndc/dispatches/exp-1/advanced", {
     method: "POST",
     headers: { "Content-Type": "application/json", cookie: `tms_session=${encodeURIComponent(token)}` },

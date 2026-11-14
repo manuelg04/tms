@@ -1,4 +1,5 @@
 import { ConvexError, v } from "convex/values";
+import { reopenRejectedDocument } from "./model/rejectionReopen";
 import { mutation, query } from "./_generated/server";
 import { appendAudit, requireActor, requireSameOrganization, requireServiceKey } from "./model/access";
 import { canClaimOperation, nextOperationState } from "./model/operationState";
@@ -473,6 +474,10 @@ export const finishDocumentOperationFromService = mutation({
       entityId: operation._id,
       createdAt: now
     });
+    if (status === "failed") {
+      const rejected = await ctx.db.get("rndcOperations", operation._id);
+      if (rejected) await reopenRejectedDocument(ctx, rejected, { type: "service" });
+    }
     return status;
   }
 });

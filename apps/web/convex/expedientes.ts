@@ -614,6 +614,8 @@ export const detail = query({
         acceptanceActorName: document.acceptanceActorName,
         acceptanceActorDocument: document.acceptanceActorDocument,
         acceptanceRecordedAt: document.acceptanceRecordedAt,
+        errorText: document.errorText,
+        expedienteRemesaId: document.expedienteRemesaId,
         updatedAt: document.updatedAt
       })),
       complianceChecks: complianceChecks.map((check) => ({

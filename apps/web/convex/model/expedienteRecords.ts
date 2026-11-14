@@ -194,6 +194,8 @@ export const documentValidator = v.object({
   acceptanceActorName: v.optional(v.string()),
   acceptanceActorDocument: v.optional(v.string()),
   acceptanceRecordedAt: v.optional(v.number()),
+  errorText: v.optional(v.string()),
+  expedienteRemesaId: v.optional(v.id("expedienteRemesas")),
   updatedAt: v.number()
 });
 

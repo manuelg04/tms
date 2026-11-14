@@ -45,6 +45,8 @@ import { emissionNotice } from "../../lib/emission-notice";
 import { currentManifestDocument } from "../../../convex/model/currentManifest";
 import type { ChainScope } from "../../../convex/model/pendingEmission";
 import { hasOpenRejection } from "../../../convex/model/openRejection";
+import { rejectedDocuments } from "../../lib/rndc-rejection";
+import { RejectionPanel } from "../components/rejection-panel";
 
 type AdvancedModal = AdvancedAction | null;
 
@@ -542,6 +544,7 @@ export function DispatchDetail({
     );
   }
 
+  const rejections = rejectedDocuments(detailResult.documents);
   const routeView: RouteView = {
     origin: detail.route.origin.city,
     destination: detail.route.destination.city,
@@ -764,6 +767,16 @@ export function DispatchDetail({
           remesaCount={detailResult.remesas.length}
         />
         <TripRouteNotices review={detail.route} />
+        <RejectionPanel
+          canEdit={canEdit}
+          expedienteId={detail.expediente._id}
+          linkToEditor={false}
+          rejections={rejections.filter((rejection) =>
+            focus.stage === "manifiesto"
+              ? rejection.kind === "manifiesto"
+              : focus.stage === "remesas" && rejection.kind === "remesa" && (!focusRemesaId || rejection.remesaId === focusRemesaId),
+          )}
+        />
         {focusDone && focus.action !== "anular" ? (
           <div className="document-done" role="status">
             <div>
@@ -1016,8 +1029,15 @@ export function DispatchDetail({
         </div>
       ) : null}
 
+      <RejectionPanel
+        canEdit={canEdit}
+        expedienteId={detail.expediente._id}
+        linkToEditor
+        rejections={rejections}
+      />
+
       {primaryAction.kind === "reconcile" ||
-      primaryAction.kind === "review_rejection" ? (
+      (primaryAction.kind === "review_rejection" && rejections.every((rejection) => !rejection.editable)) ? (
         <div className="operation-notice bad">
           <span />
           {primaryAction.description}

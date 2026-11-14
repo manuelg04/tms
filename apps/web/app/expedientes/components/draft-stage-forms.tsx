@@ -1,7 +1,7 @@
 "use client";
 
 import { CargoGuidance, cargoHints } from "./cargo-guidance";
-import { FormField, ValidatedForm } from "../../components/fields/form-validation";
+import { FormField, FormValidationError, ValidatedForm } from "../../components/fields/form-validation";
 import { FieldHelpProvider } from "../../components/fields/field-help";
 import { loadingOrderDraftFieldHelp, manifestFieldHelp } from "../../lib/rndc-field-help";
 
@@ -14,6 +14,7 @@ import { CargoNatureField, IdTypeField, InsurerField, MerchandiseField, Municipa
 import { MoneyField, formatThousands } from "../../components/fields/money-field";
 import { VehicleAssignmentPicker, type VehicleAssignmentValue } from "./vehicle-assignment-picker";
 import { MANIFEST_TYPE_OPTIONS, effectiveConsignment, normalizeManifestType } from "../../../convex/model/dispatchWorkflow";
+import { amountInWords, manifestMoneyReview, type MoneyLimits } from "../../../convex/model/moneyChecks";
 
 type LoadingOrder = {
   expeditionDate?: string;
@@ -112,6 +113,7 @@ type Manifest = {
   monitoringCompanyNit?: string;
   requiresTracking?: boolean;
   observations?: string;
+  moneyConfirmation?: { key: string };
 };
 
 type ManifestContext = {
@@ -123,6 +125,7 @@ type ManifestContext = {
   trailer?: { plate: string; trailerType?: string } | null;
   driver?: { document: string; name?: string } | null;
   secondDriver?: { document: string; name?: string } | null;
+  moneyLimits?: MoneyLimits;
 };
 
 const PAID_BY_OPTIONS = [
@@ -449,9 +452,13 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
   const suggested = String(Math.max(0, Number(money.freightTotal || 0) - Number(money.advance || 0) - Number(money.withholdingSource || 0) - icaAmount - Number(fopatValue || 0) + Number(money.adjustments || 0)));
   const [net, setNet] = useState<{ value: string; manual: boolean }>({ value: draft.netPayable ?? "", manual: Boolean(draft.netPayable) });
   const netValue = net.manual ? net.value : suggested;
+  const review = manifestMoneyReview({ ...money, manifestType, fopatContribution: fopatValue }, context.moneyLimits);
+  const freightWarning = review.warnings.find((warning) => warning.field === "freightTotal");
+  const advanceWarning = review.warnings.find((warning) => warning.field === "advance");
+  const moneyBlocker = review.blockers[0];
   return (
     <FieldHelpProvider help={manifestFieldHelp}>
-    <ValidatedForm className="form-compact" id="stage-primary-form" onSubmit={(event) => { return onSubmit(new FormData(event.currentTarget)); }}>
+    <ValidatedForm className="form-compact" id="stage-primary-form" onSubmit={(event) => { if (moneyBlocker) throw new FormValidationError("advance", "Corrige este valor antes de guardar."); return onSubmit(new FormData(event.currentTarget)); }}>
       <StageHeading number="04" title="Manifiesto" text="La ruta, flota y remesas ya están vinculadas. Revisa la operación y la liquidación." readOnly={readOnly} />
       <fieldset className="stage-form-fields" disabled={readOnly}>
         <div className="field-group-note"><strong>Datos básicos</strong></div>
@@ -488,13 +495,19 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         )}
 
         <div className="field-group-note"><strong>Datos del servicio</strong></div>
-        <MoneyField label="Valor flete" name="freightTotal" onChange={(value) => setMoney({ ...money, freightTotal: value })} required value={money.freightTotal} />
+        <MoneyField alert={freightWarning ? { tone: "warning", message: freightWarning.message } : undefined} label="Valor flete" name="freightTotal" onChange={(value) => setMoney({ ...money, freightTotal: value })} required value={money.freightTotal} />
         <MoneyField label="Retención en la fuente" name="withholdingSource" onChange={(value) => setMoney({ ...money, withholdingSource: value })} value={money.withholdingSource} />
         <Field hint={icaAmount ? `Equivale a $${formatThousands(String(icaAmount))} sobre el flete` : "Tarifa por cada $1.000 del flete"} inputMode="decimal" label="ReteICA (por mil)" max="20" min="0" name="withholdingIca" onChange={(event) => setMoney({ ...money, withholdingIca: event.target.value })} step="0.01" type="number" value={money.withholdingIca} />
-        <MoneyField label="Anticipo" name="advance" onChange={(value) => setMoney({ ...money, advance: value })} value={money.advance} />
+        <MoneyField alert={moneyBlocker ? { tone: "error", message: `${moneyBlocker}.` } : advanceWarning ? { tone: "warning", message: advanceWarning.message } : undefined} label="Anticipo" name="advance" onChange={(value) => setMoney({ ...money, advance: value })} value={money.advance} />
         <MoneyField hint={urbanManifest ? "No aplica a viajes municipales" : "Lo calcula el sistema: 0,1 % del flete"} key={fopatValue} label="FOPAT" name="fopatContribution" readOnly value={fopatValue} />
         <MoneyField label="Ajustes" name="adjustments" onChange={(value) => setMoney({ ...money, adjustments: value })} value={money.adjustments} />
         <MoneyField hint={net.manual && net.value !== suggested ? `Calculado: $${formatThousands(suggested)}` : "Flete − anticipo − retenciones + ajustes"} label="Neto a pagar" name="netPayable" onChange={(value) => setNet({ value, manual: true })} required value={netValue} />
+        {review.confirmationKey ? (
+          <FormField className="checkbox-field money-confirm span-2" key={review.confirmationKey}>
+            <span>Valores fuera de lo habitual<em aria-hidden="true"> *</em></span>
+            <span className="checkbox-control"><input defaultChecked={draft.moneyConfirmation?.key === review.confirmationKey} name="moneyConfirmed" required type="checkbox" value={review.confirmationKey} /><em>Confirmo que {review.warnings.map((warning) => `${warning.label} (${amountInWords(warning.field === "advance" ? money.advance : money.freightTotal)})`).join(" y ")} {review.warnings.length > 1 ? "son correctos" : "es correcto"}.</em></span>
+          </FormField>
+        ) : null}
         <Field label="Agencia de pago" name="paymentAgencyCode" placeholder={context.agencyCode ?? "—"} value={draft.paymentAgencyCode} />
         <Field label="Responsable de pago" name="paymentResponsible" required value={draft.paymentResponsible} />
         <FormField><span>Cargue pagado por</span><select defaultValue={draft.loadingResponsible ?? ""} name="loadingResponsible">{paidByOptions(draft.loadingResponsible).map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></FormField>

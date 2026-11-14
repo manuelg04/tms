@@ -379,6 +379,7 @@ export function DispatchDetail({
       await saveManifest({
         expedienteId,
         draft: manifestDraftFromForm(data, detail),
+        moneyConfirmedKey: String(data.get("moneyConfirmed") ?? "") || undefined,
       });
       moveTo(
         "envio_rndc",

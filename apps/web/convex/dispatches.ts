@@ -11,8 +11,11 @@ import {
   fulfillmentDraftValidator,
   loadingOrderDraftValidator,
   manifestDraftValidator,
-  manifestFulfillmentDraftValidator
+  manifestFulfillmentDraftValidator,
+  moneyLimitsValidator
 } from "./model/draftValidators";
+import { manifestMoneyReview, resolveMoneyConfirmation, resolveMoneyLimits } from "./model/moneyChecks";
+import { loadMoneyLimits } from "./model/moneyLimits";
 import { validateEntryTimes, validateFulfillmentQuantities } from "./model/fulfillmentWorkflow";
 import { normalizeSearchText } from "./model/dispatchSearch";
 import { refreshDispatchSearchText } from "./model/dispatchSearchProjection";
@@ -595,7 +598,8 @@ export const saveManifestDraft = mutation({
   args: {
     actorToken: v.optional(v.string()),
     expedienteId: v.id("expedientes"),
-    draft: manifestDraftValidator
+    draft: manifestDraftValidator,
+    moneyConfirmedKey: v.optional(v.string())
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -604,8 +608,14 @@ export const saveManifestDraft = mutation({
     const manifestState = await officialStateFor(ctx, expediente, "manifiesto");
     guardEdit(() => assertStageEditable("manifiesto", { officialState: manifestState }));
     const now = Date.now();
+    const review = manifestMoneyReview(args.draft, await loadMoneyLimits(ctx, expediente.organizationId));
+    if (review.blockers.length > 0) {
+      throw new ConvexError({ code: "INVALID_MONEY", message: review.blockers[0] });
+    }
+    const previous = expediente.manifestDraft?.moneyConfirmation;
+    const moneyConfirmation = resolveMoneyConfirmation(review, args.moneyConfirmedKey, previous, (key) => ({ key, confirmedBy: actor._id, confirmedAt: now }));
     await ctx.db.patch("expedientes", expediente._id, {
-      manifestDraft: args.draft,
+      manifestDraft: { ...args.draft, moneyConfirmation },
       updatedBy: actor._id,
       updatedAt: now
     });
@@ -618,6 +628,22 @@ export const saveManifestDraft = mutation({
       entityId: expediente._id,
       createdAt: now
     });
+    if (moneyConfirmation && moneyConfirmation !== previous) {
+      await appendAudit(ctx, {
+        organizationId: expediente.organizationId,
+        actorType: "user",
+        actorId: actor._id,
+        action: "dispatch.manifest_money_confirmed",
+        entityType: "expediente",
+        entityId: expediente._id,
+        detailsJson: JSON.stringify({
+          freightTotal: args.draft.freightTotal,
+          advance: args.draft.advance,
+          warnings: review.warnings.map((warning) => `${warning.label}: ${warning.message}`)
+        }),
+        createdAt: now
+      });
+    }
     await refreshDispatchSearchText(ctx, expediente._id);
     return null;
   }
@@ -949,5 +975,30 @@ export const seedCounterRange = mutation({
       createdAt: now
     });
     return null;
+  }
+});
+
+export const setMoneyLimits = mutation({
+  args: { actorToken: v.optional(v.string()), limits: moneyLimitsValidator },
+  returns: moneyLimitsValidator,
+  handler: async (ctx, args) => {
+    const actor = await requireActor(ctx, args.actorToken, ["admin"]);
+    const limits = resolveMoneyLimits(args.limits);
+    if (limits.freightMin !== args.limits.freightMin || limits.freightMax !== args.limits.freightMax || limits.advanceMaxPercent !== args.limits.advanceMaxPercent) {
+      throw new ConvexError({ code: "INVALID_INPUT", message: "Topes inválidos: el flete máximo debe superar al mínimo y el anticipo no puede pasar de 100 %" });
+    }
+    const now = Date.now();
+    await ctx.db.patch("organizations", actor.organizationId, { moneyLimits: limits, updatedAt: now });
+    await appendAudit(ctx, {
+      organizationId: actor.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "organization.money_limits_updated",
+      entityType: "organization",
+      entityId: actor.organizationId,
+      detailsJson: JSON.stringify(limits),
+      createdAt: now
+    });
+    return limits;
   }
 });

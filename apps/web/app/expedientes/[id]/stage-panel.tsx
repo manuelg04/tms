@@ -99,6 +99,7 @@ export function renderStage(input: {
           trailer: detail.trailer,
           driver: detail.driver,
           secondDriver: detail.secondDriver,
+          moneyLimits: detail.moneyLimits,
         }}
         draft={
           input.manifestReadOnly

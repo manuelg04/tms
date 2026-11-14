@@ -68,6 +68,7 @@ export function buildDocumentHubItems(input: {
         ...manifestMissingFields(
           detail.expediente.manifestDraft,
           detail.remesas.length,
+          detail.moneyLimits,
         ),
         ...assignmentBlockers,
         ...emissionDependencyBlockers("manifiesto", dependencyInput),

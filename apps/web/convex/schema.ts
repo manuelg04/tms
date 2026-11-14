@@ -11,6 +11,7 @@ import {
   loadingOrderDraftValidator,
   logisticsTimesDraftValidator,
   manifestDraftValidator,
+  moneyLimitsValidator,
   manifestFulfillmentDraftValidator,
   snapshotKindValidator
 } from "./model/draftValidators";
@@ -192,6 +193,7 @@ export default defineSchema({
     slug: v.string(),
     name: v.string(),
     status: organizationStatus,
+    moneyLimits: v.optional(moneyLimitsValidator),
     createdAt: v.number(),
     updatedAt: v.number()
   }).index("by_slug", ["slug"]),

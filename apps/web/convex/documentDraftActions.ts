@@ -333,6 +333,7 @@ export const duplicateManifest = mutation({
         paymentDate: undefined,
         sourceManifestNumber: undefined,
         printedAt: undefined,
+        moneyConfirmation: undefined,
       },
       createdBy: actor._id,
       updatedBy: actor._id,

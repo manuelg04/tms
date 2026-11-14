@@ -3,6 +3,7 @@ import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { appendAudit, requireActor, requireSameOrganization } from "./access";
 import { claimNextConsecutive } from "./consecutiveRange";
+import { loadMoneyLimits } from "./moneyLimits";
 import { buildDispatchSnapshot, snapshotDataMatches, snapshotDataOf, type SnapshotKind } from "./dispatchSnapshot";
 import {
   bogotaDate,
@@ -227,7 +228,7 @@ export async function prepareForEmissionHandler(
     }
   }
   if (targets.manifest) {
-    blockers.push(...manifestMissingFields(expediente.manifestDraft, remesas.length));
+    blockers.push(...manifestMissingFields(expediente.manifestDraft, remesas.length, await loadMoneyLimits(ctx, expediente.organizationId)));
   }
   if (targets.assignment && !scopeDocumentsAuthorized && assignmentData === undefined) {
     if (!expediente.driverId) {
@@ -505,9 +506,10 @@ export async function buildProjection(
   remesas: Doc<"expedienteRemesas">[]
 ): Promise<DispatchProjection> {
   const orderDraft = (expediente.loadingOrderDraft ?? null) as LoadingOrderDraft | null;
-  const [cargoInfoState, manifestState] = await Promise.all([
+  const [cargoInfoState, manifestState, moneyLimits] = await Promise.all([
     officialStateFor(ctx, expediente, "orden_cargue"),
-    officialStateFor(ctx, expediente, "manifiesto")
+    officialStateFor(ctx, expediente, "manifiesto"),
+    loadMoneyLimits(ctx, expediente.organizationId)
   ]);
   const manifestDocuments = await ctx.db
     .query("documents")
@@ -529,7 +531,7 @@ export async function buildProjection(
     assignment: { vehicleAssigned: !!expediente.vehicleId, driverAssigned: !!expediente.driverId },
     manifest: expediente.manifestDraft
       ? {
-          missingFields: manifestMissingFields(expediente.manifestDraft, remesas.length),
+          missingFields: manifestMissingFields(expediente.manifestDraft, remesas.length, moneyLimits),
           officialState: manifestState,
           fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
         }

@@ -128,7 +128,14 @@ export const manifestDraftValidator = v.object({
   sourceManifestNumber: v.optional(v.string()),
   monitoringCompanyNit: v.optional(v.string()),
   emptyManifestReason: v.optional(v.string()),
-  printedAt: v.optional(v.number())
+  printedAt: v.optional(v.number()),
+  moneyConfirmation: v.optional(v.object({ key: v.string(), confirmedBy: v.id("users"), confirmedAt: v.number() }))
+});
+
+export const moneyLimitsValidator = v.object({
+  freightMin: v.number(),
+  freightMax: v.number(),
+  advanceMaxPercent: v.number()
 });
 
 export const logisticsEventRecordValidator = v.object({

@@ -3,6 +3,8 @@ import { mutation, query } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
 import { initialDocumentLifecycle } from "./model/documentLifecycle";
+import { moneyLimitsValidator } from "./model/draftValidators";
+import { loadMoneyLimits } from "./model/moneyLimits";
 import { normalizeSearchText } from "./model/dispatchSearch";
 import {
   statusValidator,
@@ -441,7 +443,8 @@ export const detail = query({
       complianceChecks: v.array(complianceValidator),
       events: v.array(eventValidator),
       novelties: v.array(noveltyValidator),
-      deliveryEvidence: v.array(deliveryEvidenceValidator)
+      deliveryEvidence: v.array(deliveryEvidenceValidator),
+      moneyLimits: moneyLimitsValidator
     })
   ),
   handler: async (ctx, args) => {
@@ -623,7 +626,8 @@ export const detail = query({
         openedBy: novelty.openedBy,
         resolvedBy: novelty.resolvedBy
       })),
-      deliveryEvidence
+      deliveryEvidence,
+      moneyLimits: await loadMoneyLimits(ctx, expediente.organizationId)
     };
   }
 });

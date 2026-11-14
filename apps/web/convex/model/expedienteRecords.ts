@@ -12,6 +12,7 @@ import {
   type LoadingOrderDraft
 } from "./dispatchWorkflow";
 import { dispatchPrimaryAction } from "./dispatchPresentation";
+import { loadMoneyLimits } from "./moneyLimits";
 import {
   consignmentDraftValidator,
   fulfillmentDraftValidator,
@@ -326,6 +327,7 @@ export async function toListRow(ctx: Pick<QueryCtx, "db">, expediente: Doc<"expe
     throw new ConvexError({ code: "INTEGRITY_ERROR", message: "Service order is missing" });
   }
 
+  const moneyLimits = await loadMoneyLimits(ctx, expediente.organizationId);
   const [customer, loadingLocation, unloadingLocation, remesas, openNovelties, driver, vehicle, trip, documents, operations] = await Promise.all([
     ctx.db.get("customers", order.customerId),
     ctx.db.get("customerLocations", order.loadingLocationId),
@@ -373,7 +375,7 @@ export async function toListRow(ctx: Pick<QueryCtx, "db">, expediente: Doc<"expe
     assignment: { vehicleAssigned: Boolean(expediente.vehicleId), driverAssigned: Boolean(expediente.driverId) },
     manifest: expediente.manifestDraft
       ? {
-          missingFields: manifestMissingFields(expediente.manifestDraft, remesas.length),
+          missingFields: manifestMissingFields(expediente.manifestDraft, remesas.length, moneyLimits),
           officialState: officialState(manifestDocument),
           fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
         }

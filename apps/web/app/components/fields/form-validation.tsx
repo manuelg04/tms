@@ -34,7 +34,7 @@ function collectIssues(form: HTMLFormElement): FieldIssue[] {
     let message = "";
     if (required && !raw.trim()) message = "Completa este campo.";
     else if (control.validity && !control.validity.valid) {
-      if (control.validity.valueMissing) message = "Completa este campo.";
+      if (control.validity.valueMissing) message = control.type === "checkbox" ? "Marca la casilla para confirmar." : "Completa este campo.";
       else if (control.validity.rangeUnderflow) message = `El valor mínimo es ${(control as HTMLInputElement).min}.`;
       else if (control.validity.rangeOverflow) message = `El valor máximo es ${(control as HTMLInputElement).max}.`;
       else if (control.validity.badInput || control.validity.stepMismatch) message = "Ingresa un número válido con la precisión indicada.";

@@ -1,4 +1,5 @@
 import type { FulfillmentState, OfficialDocumentState } from "./documentLifecycle";
+import { manifestMoneyReview, moneyConfirmationBlocker, type MoneyLimits } from "./moneyChecks";
 
 export type EmissionScope = "orden" | "remesas" | "manifiesto" | "todo";
 
@@ -302,6 +303,7 @@ export type ManifestDraft = {
   monitoringCompanyNit?: string;
   emptyManifestReason?: string;
   printedAt?: number;
+  moneyConfirmation?: { key: string };
 };
 
 function present(value: string | undefined): boolean {
@@ -456,7 +458,7 @@ export function normalizeManifestType(value: string | undefined): ManifestTypeCo
   return byLabel?.value;
 }
 
-export function manifestMissingFields(draft: ManifestDraft | null | undefined, consignmentCount?: number): string[] {
+export function manifestMissingFields(draft: ManifestDraft | null | undefined, consignmentCount?: number, moneyLimits?: MoneyLimits): string[] {
   const missing: string[] = [];
 
   if (!draft) {
@@ -487,6 +489,12 @@ export function manifestMissingFields(draft: ManifestDraft | null | undefined, c
   }
   if (!present(draft.paymentResponsible)) {
     missing.push("Responsable de pago");
+  }
+  const moneyReview = manifestMoneyReview(draft, moneyLimits);
+  missing.push(...moneyReview.blockers);
+  const confirmation = moneyConfirmationBlocker(moneyReview, draft.moneyConfirmation?.key);
+  if (confirmation) {
+    missing.push(confirmation);
   }
 
   return missing;

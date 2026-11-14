@@ -46,6 +46,7 @@ import { currentManifestDocument } from "../../../convex/model/currentManifest";
 import type { ChainScope } from "../../../convex/model/pendingEmission";
 import { hasOpenRejection } from "../../../convex/model/openRejection";
 import { rejectedDocuments } from "../../lib/rndc-rejection";
+import { ANNULMENT_DENIED_REASON, canAnnulOfficialDocuments } from "../../../convex/model/annulmentPolicy";
 import { STALE_FORM_MESSAGE, captureOpenedForm, staleFormChanges, type OpenedForm } from "../../lib/stale-form";
 import { RejectionPanel } from "../components/rejection-panel";
 
@@ -109,6 +110,7 @@ export function DispatchDetail({
     text: string;
   } | null>(null);
   const [advancedModal, setAdvancedModal] = useState<AdvancedModal>(null);
+  const mayAnnul = canAnnulOfficialDocuments(user ? { roles: [user.role], jobTitle: user.jobTitle } : null);
   const [formEpoch, setFormEpoch] = useState(0);
   const openedForm = useRef<OpenedForm | null>(null);
   const appliedActionEntry = useRef("");
@@ -163,8 +165,9 @@ export function DispatchDetail({
     )
       return;
     appliedActionEntry.current = entryKey;
+    if (entry.action === "annul" && !mayAnnul) return;
     setAdvancedModal(entry.action);
-  }, [entry.action, entry.showCorrections, entryKey, user?.role]);
+  }, [entry.action, entry.showCorrections, entryKey, user?.role, mayAnnul]);
 
   useEffect(() => {
     if (
@@ -658,6 +661,7 @@ export function DispatchDetail({
       focusedDocument &&
       ["authorized", "fulfilled"].includes(documentState(focusedDocument)) &&
       canEdit &&
+      mayAnnul &&
       operations !== undefined &&
       !hasOperationInFlight &&
       !hasUncertainOperation,
@@ -881,6 +885,8 @@ export function DispatchDetail({
               >
                 Anular documento
               </button>
+            ) : !mayAnnul ? (
+              <p className="role-lock">{ANNULMENT_DENIED_REASON}</p>
             ) : (
               <p>Este documento no admite anulación en su estado actual.</p>
             )}
@@ -1167,6 +1173,7 @@ export function DispatchDetail({
       <details className="trip-more" id="correcciones" open={entry.showCorrections || undefined}>
         <summary>Correcciones y anulaciones</summary>
         <AdvancedActions
+          annulDeniedReason={mayAnnul ? undefined : ANNULMENT_DENIED_REASON}
           canManageOfficial={
             user?.role === "operator" || user?.role === "admin"
           }
@@ -1182,7 +1189,7 @@ export function DispatchDetail({
         />
       </details>
 
-      {advancedModal ? (
+      {advancedModal && (advancedModal !== "annul" || mayAnnul) ? (
         <AdvancedActionModal
           detail={detail}
           modal={advancedModal}

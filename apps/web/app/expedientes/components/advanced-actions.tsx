@@ -1,11 +1,13 @@
 export type AdvancedAction = "remesa_without_order" | "empty_manifest" | "transshipment" | "correct" | "annul" | "reconcile";
 
 export function AdvancedActions({
+  annulDeniedReason,
   canManageOfficial,
   canManageStructural,
   exceptions,
   onAction
 }: {
+  annulDeniedReason?: string;
   canManageOfficial: boolean;
   canManageStructural: boolean;
   exceptions: Array<{ _id: string; type: string; status: string; reason: string; createdAt: number }>;
@@ -15,7 +17,8 @@ export function AdvancedActions({
     <section className="advanced-actions compact" aria-labelledby="advanced-actions-title">
       <div className="advanced-actions-body">
         <div><h3 id="advanced-actions-title">Correcciones, anulaciones y soporte</h3><p>Cada acción pide motivo y confirmación; queda en la auditoría.</p></div>
-        {canManageOfficial || canManageStructural ? <div className="advanced-action-buttons">{canManageStructural ? <><button className="ghost-button" onClick={() => onAction("remesa_without_order")} type="button">Remesa sin orden</button><button className="ghost-button" onClick={() => onAction("empty_manifest")} type="button">Manifiesto vacío</button><button className="ghost-button" onClick={() => onAction("transshipment")} type="button">Transbordo</button></> : null}{canManageOfficial ? <><button className="ghost-button" onClick={() => onAction("reconcile")} type="button">Conciliar</button><button className="ghost-button" onClick={() => onAction("correct")} type="button">Corregir remesa</button><button className="danger-action" onClick={() => onAction("annul")} type="button">Anular documento</button></> : null}</div> : <span className="role-lock">Tu rol permite consultar el historial, pero no modificar documentos oficiales.</span>}
+        {canManageOfficial || canManageStructural ? <div className="advanced-action-buttons">{canManageStructural ? <><button className="ghost-button" onClick={() => onAction("remesa_without_order")} type="button">Remesa sin orden</button><button className="ghost-button" onClick={() => onAction("empty_manifest")} type="button">Manifiesto vacío</button><button className="ghost-button" onClick={() => onAction("transshipment")} type="button">Transbordo</button></> : null}{canManageOfficial ? <><button className="ghost-button" onClick={() => onAction("reconcile")} type="button">Conciliar</button><button className="ghost-button" onClick={() => onAction("correct")} type="button">Corregir remesa</button><button className="danger-action" disabled={Boolean(annulDeniedReason)} onClick={() => onAction("annul")} title={annulDeniedReason} type="button">Anular documento</button></> : null}</div> : <span className="role-lock">Tu rol permite consultar el historial, pero no modificar documentos oficiales.</span>}
+        {canManageOfficial && annulDeniedReason ? <span className="role-lock">{annulDeniedReason}</span> : null}
         {exceptions.length > 0 ? <div className="advanced-exception-history"><strong>Excepciones registradas</strong>{exceptions.map((exception) => <div key={exception._id}><span>{exceptionLabel(exception.type)}</span><b>{statusLabel(exception.status)}</b><small>{exception.reason} · {new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" }).format(exception.createdAt)}</small></div>)}</div> : null}
       </div>
     </section>

@@ -8,8 +8,12 @@ import { correctionDetailHref } from "../lib/document-workspace";
 import { formatTimestamp, kindLabels, statusLabels } from "../lib/labels";
 import { isEmptyText, useDebounced } from "../lib/hooks";
 import { Skeleton } from "../components/skeleton";
+import { useDemoUser } from "../providers";
+import { ANNULMENT_DENIED_REASON, canAnnulOfficialDocuments } from "../../convex/model/annulmentPolicy";
 
 export default function CorrectionsPage() {
+  const { user } = useDemoUser();
+  const mayAnnul = canAnnulOfficialDocuments(user ? { roles: [user.role], jobTitle: user.jobTitle } : null);
   const [search, setSearch] = useState("");
   const deferredSearch = useDebounced(search.trim(), 250, isEmptyText);
   const { results, status, loadMore } = usePaginatedQuery(
@@ -54,7 +58,7 @@ export default function CorrectionsPage() {
                   <div className="correction-document-actions">
                     <Link className="ghost-button action-link correction-action correction-action-review" href={correctionDetailHref(document.expedienteId)}>Revisar acciones</Link>
                     {canPrepareOfficialAction && document.kind === "remesa" ? <Link className="text-button correction-action correction-action-correct" href={correctionDetailHref(document.expedienteId, "correct")}>Preparar corrección</Link> : null}
-                    {canPrepareOfficialAction ? <Link className="text-button danger-text correction-action correction-action-annul" href={correctionDetailHref(document.expedienteId, "annul")}>Preparar anulación</Link> : null}
+                    {canPrepareOfficialAction ? mayAnnul ? <Link className="text-button danger-text correction-action correction-action-annul" href={correctionDetailHref(document.expedienteId, "annul")}>Preparar anulación</Link> : <span className="role-lock" title={ANNULMENT_DENIED_REASON}>Anulación: solo administrador</span> : null}
                   </div>
                 ) : <span className="document-unlinked">Sin despacho relacionado</span>}
               </article>;

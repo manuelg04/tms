@@ -3,6 +3,7 @@ import { mutation, query } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
+import { ANNULMENT_DENIED_REASON, canAnnulOfficialDocuments } from "./model/annulmentPolicy";
 import {
   buildCorrectionComparison,
   buildTransshipmentPlan,
@@ -153,7 +154,7 @@ export const reserveReplacementManifest = mutation({
   args: { expedienteId: v.id("expedientes"), documentId: v.id("documents") },
   returns: v.string(),
   handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, undefined, ["admin"]);
+    const actor = await requireAnnulmentActor(ctx, undefined);
     const expediente = await requireExpediente(ctx, args.expedienteId);
     requireSameOrganization(actor, expediente.organizationId);
     const document = await requireDocument(ctx, expediente, args.documentId);
@@ -184,7 +185,7 @@ export const openReplacementManifest = mutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, undefined, ["admin"]);
+    const actor = await requireAnnulmentActor(ctx, undefined);
     const expediente = await requireExpediente(ctx, args.expedienteId);
     requireSameOrganization(actor, expediente.organizationId);
     const replaced = await requireDocument(ctx, expediente, args.documentId);
@@ -242,7 +243,7 @@ export const start = mutation({
   },
   returns: v.id("dispatchExceptions"),
   handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken, ["admin"]);
+    const actor = await requireExceptionActor(ctx, args.actorToken, args.type);
     const expediente = await requireExpediente(ctx, args.expedienteId);
     requireSameOrganization(actor, expediente.organizationId);
     const validation = validateExceptionRequest(args);
@@ -300,10 +301,10 @@ export const complete = mutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const actor = await requireActor(ctx, args.actorToken, ["admin"]);
     const exception = await ctx.db.get("dispatchExceptions", args.exceptionId);
 
     if (!exception) throw new ConvexError({ code: "NOT_FOUND", message: "Excepción no encontrada" });
+    const actor = await requireExceptionActor(ctx, args.actorToken, exception.type);
     requireSameOrganization(actor, exception.organizationId);
 
     if (exception.status !== "in_progress" && exception.status !== "uncertain") {
@@ -574,4 +575,16 @@ function label(type: string) {
     reconciliation: "Conciliación"
   };
   return labels[type] ?? "Excepción operativa";
+}
+
+async function requireAnnulmentActor(ctx: QueryCtx | MutationCtx, actorToken: string | undefined): Promise<Doc<"users">> {
+  const actor = await requireActor(ctx, actorToken);
+  if (!canAnnulOfficialDocuments(actor)) {
+    throw new ConvexError({ code: "FORBIDDEN", message: ANNULMENT_DENIED_REASON });
+  }
+  return actor;
+}
+
+async function requireExceptionActor(ctx: QueryCtx | MutationCtx, actorToken: string | undefined, type: string): Promise<Doc<"users">> {
+  return type === "annulment" ? await requireAnnulmentActor(ctx, actorToken) : await requireActor(ctx, actorToken, ["admin"]);
 }

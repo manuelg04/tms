@@ -41,17 +41,21 @@ test("an operator can enter the controlled correction flow", async () => {
   assert.equal(response.status, 503);
 });
 
-test("an operator can enter the controlled manifest annulment flow", async () => {
-  const response = await annul(request("operator", {
+test("the annulment flow follows the single annulment rule before anything is filled in", async () => {
+  const body = {
     requestKey: "req-annul-1",
     documentId: "doc-1",
     reasonCode: "A",
     reason: "Manifiesto no utilizado",
     observation: "La operación fue cancelada antes de iniciar",
     confirmed: true
-  }), context());
+  };
+  const denied = await annul(request("operator", body), context());
+  const allowed = await annul(request("admin", body), context());
 
-  assert.equal(response.status, 503);
+  assert.equal(denied.status, 403);
+  assert.match(((await denied.json()) as { error: string }).error, /Tu cargo no permite anular/);
+  assert.equal(allowed.status, 503);
 });
 
 test("correction requires explicit confirmation and a before-after comparison", async () => {

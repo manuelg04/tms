@@ -3,6 +3,7 @@ import type { FunctionReturnType } from "convex/server";
 import { api } from "../../../../../../convex/_generated/api";
 import type { Id } from "../../../../../../convex/_generated/dataModel";
 import { annulmentReasonAllowed, buildAnnulmentPlan, documentIdsForRemesas, needsReplacementManifest } from "../../../../../../convex/model/advancedWorkflow";
+import { ANNULMENT_DENIED_REASON, canAnnulOfficialDocuments } from "../../../../../../convex/model/annulmentPolicy";
 import { createConvexToken, getAuthSettings, jsonResponse } from "../../../../../lib/auth-server";
 import { authorizeGatewayRequest } from "../../../../../lib/rndc-gateway";
 import { runOfficialExceptionSequence, validateOfficialExceptionBody } from "../../../../../lib/official-exception-runner";
@@ -17,7 +18,7 @@ export async function POST(request: Request, context: { params: Promise<{ expedi
     const code = data && typeof data === "object" ? (data as { code?: unknown }).code : undefined;
 
     if (code === "FORBIDDEN") {
-      return jsonResponse({ error: "Tu cargo no permite anular documentos oficiales; pídelo a un administrador" }, 403);
+      return jsonResponse({ error: ANNULMENT_DENIED_REASON }, 403);
     }
 
     return jsonResponse({ error: "La anulación no pudo iniciarse; ningún documento cambió de estado" }, 500);
@@ -27,6 +28,9 @@ export async function POST(request: Request, context: { params: Promise<{ expedi
 async function annul(request: Request, context: { params: Promise<{ expedienteId: string }> }): Promise<Response> {
   const authorization = authorizeGatewayRequest(request, "manage_official_documents");
   if (authorization instanceof Response) return authorization;
+  if (!canAnnulOfficialDocuments({ roles: [authorization.role], jobTitle: authorization.jobTitle })) {
+    return jsonResponse({ error: ANNULMENT_DENIED_REASON }, 403);
+  }
   const raw = await request.json().catch(() => null);
   const body = validateOfficialExceptionBody(raw);
   if (body instanceof Response) return body;

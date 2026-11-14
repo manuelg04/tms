@@ -1,5 +1,6 @@
 "use client";
 
+import { ANNULMENT_QUOTA_SCOPE } from "../../../convex/model/annulmentPolicy";
 import { useEffect, useState, type FormEvent } from "react";
 import type { Id } from "../../../convex/_generated/dataModel";
 import type { AdvancedAction } from "../components/advanced-actions";
@@ -608,6 +609,7 @@ function AnnulFields({
             ? ` Hay ${quota.replaced} anulados con reemplazo, que no cuentan.`
             : ""}
           {quota.partial ? " El conteo puede estar incompleto." : ""}
+          {" "}{ANNULMENT_QUOTA_SCOPE}
         </div>
       ) : null}
       <div className="modal-info wide">

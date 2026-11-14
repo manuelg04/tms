@@ -87,6 +87,7 @@ import type * as model_schemaValidators from "../model/schemaValidators.js";
 import type * as model_searchText from "../model/searchText.js";
 import type * as model_securityStudies from "../model/securityStudies.js";
 import type * as model_securityStudyValidators from "../model/securityStudyValidators.js";
+import type * as model_siteCoordinates from "../model/siteCoordinates.js";
 import type * as model_tracking from "../model/tracking.js";
 import type * as model_trackingValidators from "../model/trackingValidators.js";
 import type * as model_tripRoute from "../model/tripRoute.js";
@@ -194,6 +195,7 @@ declare const fullApi: ApiFromModules<{
   "model/searchText": typeof model_searchText;
   "model/securityStudies": typeof model_securityStudies;
   "model/securityStudyValidators": typeof model_securityStudyValidators;
+  "model/siteCoordinates": typeof model_siteCoordinates;
   "model/tracking": typeof model_tracking;
   "model/trackingValidators": typeof model_trackingValidators;
   "model/tripRoute": typeof model_tripRoute;

@@ -3,6 +3,7 @@ import { mutation, query } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
 import { appendAudit } from "./model/access";
+import { findCustomerByIdentity } from "./model/customerIdentity";
 import {
   canonicalizeAvansatCustomerBatch,
   canonicalizeAvansatCustomerPayload,
@@ -225,12 +226,7 @@ export const upsertBatch = mutation({
     const totals = emptyTotals();
     totals.batchesApplied = 1;
     for (const row of args.rows) {
-      const existingByIdentification = await ctx.db
-        .query("customers")
-        .withIndex("by_organization_and_identification", (q) =>
-          q.eq("organizationId", run.organizationId).eq("identificationNumber", row.customer.identificationNumber)
-        )
-        .unique();
+      const existingByIdentification = await findCustomerByIdentity(ctx, run.organizationId, row.customer.identificationType, row.customer.identificationNumber);
       const existingByCode = await ctx.db
         .query("customers")
         .withIndex("by_organization_and_code", (q) => q.eq("organizationId", run.organizationId).eq("code", row.customer.code))

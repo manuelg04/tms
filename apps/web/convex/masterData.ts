@@ -1,6 +1,7 @@
 import { ConvexError, v } from "convex/values";
 import { mutation } from "./_generated/server";
 import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
+import { findCustomerByIdentity } from "./model/customerIdentity";
 
 const activeStatusValidator = v.union(v.literal("active"), v.literal("inactive"));
 
@@ -38,10 +39,11 @@ export const upsertCustomer = mutation({
     requireSameOrganization(actor, args.organizationId);
     const code = normalizeCode(args.code);
     const now = Date.now();
-    const existing = await ctx.db
+    const existingByCode = await ctx.db
       .query("customers")
       .withIndex("by_organization_and_code", (q) => q.eq("organizationId", args.organizationId).eq("code", code))
       .unique();
+    const existing = existingByCode ?? await findCustomerByIdentity(ctx, args.organizationId, args.identificationType, args.identificationNumber);
     let customerId;
 
     if (existing) {
@@ -49,8 +51,8 @@ export const upsertCustomer = mutation({
         name: args.name.trim(),
         identificationType: args.identificationType,
         identificationNumber: args.identificationNumber,
-        email: args.email?.trim().toLowerCase(),
-        phone: args.phone,
+        email: args.email?.trim().toLowerCase() ?? existing.email,
+        phone: args.phone ?? existing.phone,
         status: args.status,
         updatedBy: actor._id,
         updatedAt: now

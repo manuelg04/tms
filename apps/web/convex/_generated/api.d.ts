@@ -34,6 +34,7 @@ import type * as model_advancedWorkflow from "../model/advancedWorkflow.js";
 import type * as model_avansatCustomers from "../model/avansatCustomers.js";
 import type * as model_consecutiveRange from "../model/consecutiveRange.js";
 import type * as model_currentManifest from "../model/currentManifest.js";
+import type * as model_customerIdentity from "../model/customerIdentity.js";
 import type * as model_dashboardStatus from "../model/dashboardStatus.js";
 import type * as model_dispatchPresentation from "../model/dispatchPresentation.js";
 import type * as model_dispatchRecords from "../model/dispatchRecords.js";
@@ -128,6 +129,7 @@ declare const fullApi: ApiFromModules<{
   "model/avansatCustomers": typeof model_avansatCustomers;
   "model/consecutiveRange": typeof model_consecutiveRange;
   "model/currentManifest": typeof model_currentManifest;
+  "model/customerIdentity": typeof model_customerIdentity;
   "model/dashboardStatus": typeof model_dashboardStatus;
   "model/dispatchPresentation": typeof model_dispatchPresentation;
   "model/dispatchRecords": typeof model_dispatchRecords;

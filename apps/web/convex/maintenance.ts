@@ -336,3 +336,121 @@ export const releaseOperacionesRequest = internalMutation({
     return { dryRun, released: links.length, operacionesExpedienteIds: links.map((link) => link.operacionesExpedienteId) };
   }
 });
+
+export const mergeCustomers = internalMutation({
+  args: { keepId: v.id("customers"), removeId: v.id("customers"), dryRun: v.optional(v.boolean()) },
+  returns: v.object({
+    dryRun: v.boolean(),
+    kept: v.string(),
+    removed: v.string(),
+    locationsMoved: v.number(),
+    locationsDropped: v.number(),
+    serviceOrders: v.number(),
+    users: v.number(),
+    monitoringTrips: v.number(),
+    securityStudies: v.number(),
+    expedientes: v.number(),
+    snapshots: v.number(),
+    fieldsFilled: v.array(v.string()),
+    rndcThirdParties: v.array(v.string())
+  }),
+  handler: async (ctx, args) => {
+    const dryRun = args.dryRun !== false;
+    if (args.keepId === args.removeId) throw new Error("Los dos clientes son el mismo registro");
+    const keep = await ctx.db.get("customers", args.keepId);
+    const remove = await ctx.db.get("customers", args.removeId);
+    if (!keep || !remove) throw new Error("No se encontró alguno de los dos clientes");
+    if (keep.organizationId !== remove.organizationId) throw new Error("Los clientes son de organizaciones distintas");
+    const organizationId = keep.organizationId;
+    const now = Date.now();
+
+    const orders = await ctx.db.query("serviceOrders").withIndex("by_customer", (q) => q.eq("customerId", remove._id)).collect();
+    const usedLocations = new Set<string>(orders.flatMap((order) => [order.loadingLocationId, order.unloadingLocationId]));
+    const locations = await ctx.db.query("customerLocations").withIndex("by_organization_and_customer", (q) => q.eq("organizationId", organizationId).eq("customerId", remove._id)).collect();
+    let locationsMoved = 0;
+    let locationsDropped = 0;
+    for (const location of locations) {
+      const clash = await ctx.db.query("customerLocations").withIndex("by_customer_and_code", (q) => q.eq("customerId", keep._id).eq("code", location.code)).first();
+      if (clash && !usedLocations.has(location._id)) {
+        locationsDropped += 1;
+        if (!dryRun) await ctx.db.delete("customerLocations", location._id);
+        continue;
+      }
+      locationsMoved += 1;
+      if (!dryRun) {
+        await ctx.db.patch("customerLocations", location._id, {
+          customerId: keep._id,
+          code: clash ? `${location.code}-${remove.code}` : location.code,
+          updatedAt: now
+        });
+      }
+    }
+
+    if (!dryRun) for (const order of orders) await ctx.db.patch("serviceOrders", order._id, { customerId: keep._id, updatedAt: now });
+
+    const users = (await ctx.db.query("users").collect()).filter((user) => user.customerId === remove._id);
+    if (!dryRun) for (const user of users) await ctx.db.patch("users", user._id, { customerId: keep._id });
+
+    const trips = await ctx.db.query("monitoringTrips").withIndex("by_org_customer", (q) => q.eq("organizationId", organizationId).eq("customerId", remove._id)).collect();
+    if (!dryRun) for (const trip of trips) await ctx.db.patch("monitoringTrips", trip._id, { customerId: keep._id });
+
+    const studies = await ctx.db.query("securityStudies").withIndex("by_org_customer", (q) => q.eq("organizationId", organizationId).eq("customerId", remove._id)).collect();
+    if (!dryRun) for (const study of studies) await ctx.db.patch("securityStudies", study._id, { customerId: keep._id });
+
+    const expedientes = (await ctx.db.query("expedientes").collect()).filter((row) => row.loadingOrderDraft?.customerId === remove._id);
+    if (!dryRun) {
+      for (const row of expedientes) {
+        if (row.loadingOrderDraft) await ctx.db.patch("expedientes", row._id, { loadingOrderDraft: { ...row.loadingOrderDraft, customerId: keep._id } });
+      }
+    }
+
+    const snapshots = await ctx.db.query("avansatCustomerSnapshots").withIndex("by_customer", (q) => q.eq("customerId", remove._id)).collect();
+    if (!dryRun) for (const snapshot of snapshots) await ctx.db.patch("avansatCustomerSnapshots", snapshot._id, { customerId: keep._id });
+
+    const filled: { identificationType?: string; identificationNumber?: string; email?: string; phone?: string } = {};
+    if (!keep.identificationNumber && remove.identificationNumber) {
+      filled.identificationNumber = remove.identificationNumber;
+      filled.identificationType = remove.identificationType;
+    }
+    if (!keep.email && remove.email) filled.email = remove.email;
+    if (!keep.phone && remove.phone) filled.phone = remove.phone;
+
+    const documents = [...new Set([keep.identificationNumber, remove.identificationNumber].filter((value): value is string => Boolean(value)))];
+    const rndcThirdParties: string[] = [];
+    for (const document of documents) {
+      const parties = await ctx.db.query("thirdParties").withIndex("by_organization_and_document", (q) => q.eq("organizationId", organizationId).eq("document", document)).take(3);
+      for (const party of parties) rndcThirdParties.push(`${party.documentType} ${party.document} ${party.name}`);
+    }
+
+    if (!dryRun) {
+      if (Object.keys(filled).length > 0) await ctx.db.patch("customers", keep._id, { ...filled, updatedAt: now });
+      await ctx.db.delete("customers", remove._id);
+      await ctx.db.insert("auditEvents", {
+        organizationId,
+        actorType: "system",
+        action: "customer.merged",
+        entityType: "customer",
+        entityId: keep._id,
+        reason: "Cliente duplicado",
+        detailsJson: JSON.stringify({ removedId: remove._id, removedCode: remove.code, removedName: remove.name, removedIdentification: remove.identificationNumber }),
+        createdAt: now
+      });
+    }
+
+    return {
+      dryRun,
+      kept: `${keep.identificationNumber ?? "sin documento"} ${keep.name}`,
+      removed: `${remove.identificationNumber ?? "sin documento"} ${remove.name}`,
+      locationsMoved,
+      locationsDropped,
+      serviceOrders: orders.length,
+      users: users.length,
+      monitoringTrips: trips.length,
+      securityStudies: studies.length,
+      expedientes: expedientes.length,
+      snapshots: snapshots.length,
+      fieldsFilled: Object.keys(filled),
+      rndcThirdParties
+    };
+  }
+});

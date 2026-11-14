@@ -1,5 +1,6 @@
 import { jsonResponse } from "../../../../lib/auth-server";
 import { OperacionesUnavailableError, getOperacionesRequest, operacionesSettings } from "../../../../lib/operaciones-client";
+import { dispatcherTerms, matchesDispatcher } from "../../../../lib/operaciones-request";
 import { authorizeGatewayRequest } from "../../../../lib/rndc-gateway";
 
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }): Promise<Response> {
@@ -20,7 +21,8 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
   }
 
   try {
-    const item = await getOperacionesRequest(id);
+    const found = await getOperacionesRequest(id);
+    const item = found && matchesDispatcher(found, dispatcherTerms(process.env.OPERACIONES_ONLY_DISPATCHER)) ? found : null;
     return item ? jsonResponse({ item }) : jsonResponse({ error: "La solicitud ya no está disponible en Operaciones" }, 404);
   } catch (error) {
     return jsonResponse({ error: error instanceof OperacionesUnavailableError ? error.message : "Operaciones no respondió" }, 502);

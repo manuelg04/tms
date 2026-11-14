@@ -7,7 +7,7 @@ import { Skeleton } from "../components/skeleton";
 import { useQuery } from "../lib/convex-hooks";
 import { splitRoute, type OperacionesRequest } from "../lib/operaciones-request";
 
-type Inbox = { state: "loading" } | { state: "ready"; configured: boolean; items: OperacionesRequest[]; error?: string };
+type Inbox = { state: "loading" } | { state: "ready"; configured: boolean; items: OperacionesRequest[]; error?: string; onlyDispatcher?: boolean };
 
 const shortDate = new Intl.DateTimeFormat("es-CO", { day: "2-digit", month: "short" });
 const shortTime = new Intl.DateTimeFormat("es-CO", { hour: "2-digit", minute: "2-digit", hour12: false });
@@ -21,11 +21,12 @@ export default function SolicitudesPage() {
     setRefreshing(true);
     try {
       const response = await fetch("/api/operaciones/solicitudes", { cache: "no-store" });
-      const body = await response.json().catch(() => null) as { configured?: boolean; items?: OperacionesRequest[]; error?: string } | null;
+      const body = await response.json().catch(() => null) as { configured?: boolean; items?: OperacionesRequest[]; error?: string; onlyDispatcher?: boolean } | null;
       setInbox({
         state: "ready",
         configured: body?.configured !== false,
         items: Array.isArray(body?.items) ? body.items : [],
+        onlyDispatcher: body?.onlyDispatcher === true,
         error: response.ok ? undefined : body?.error ?? "No fue posible consultar Operaciones"
       });
     } catch {
@@ -88,7 +89,7 @@ export default function SolicitudesPage() {
         ) : rows.length === 0 ? (
           <div className="expediente-empty">
             <strong>{filter === "pending" ? "No hay solicitudes por crear" : "No hay solicitudes de planilla"}</strong>
-            <p>Aquí aparecen las solicitudes que los despachadores guardan en Operaciones cuando el checklist del conductor ya fue aprobado.</p>
+            <p>{inbox.onlyDispatcher ? "Por ahora solo se muestran las solicitudes del despachador habilitado para el piloto. Aparecen cuando guarda la planilla en Operaciones con el checklist del conductor aprobado." : "Aquí aparecen las solicitudes que los despachadores guardan en Operaciones cuando el checklist del conductor ya fue aprobado."}</p>
           </div>
         ) : (
           <div className="table-wrap dispatch-table-wrap">

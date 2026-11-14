@@ -3,6 +3,8 @@ import { test } from "node:test";
 import {
   parseMoney,
   parseTons,
+  dispatcherTerms,
+  matchesDispatcher,
   pickByDocument,
   pickByName,
   pickByPlate,
@@ -75,4 +77,16 @@ test("never assigns a different driver than the one in the worksheet request", (
   assert.equal(requestedDriverId({ requestedDocument: "1.1.1", matched: null, linked }), "linked");
   assert.equal(requestedDriverId({ requestedDocument: undefined, matched: null, linked }), "linked");
   assert.equal(requestedDriverId({ requestedDocument: " ", linked: [...linked, { _id: "other", document: "333" }] }), undefined);
+});
+
+test("limits the worksheet inbox to the enabled dispatcher", () => {
+  const terms = dispatcherTerms(" Mantilla , =diego ");
+  assert.deepEqual(terms, ["MANTILLA", "=DIEGO"]);
+  assert.equal(matchesDispatcher({ requestedBy: "Diego Antonio Mantilla", dispatcherName: "otro" }, terms), true);
+  assert.equal(matchesDispatcher({ requestedBy: "Alvaro", dispatcherName: "diego" }, terms), true);
+  assert.equal(matchesDispatcher({ requestedBy: "Diego Pérez", dispatcherName: "Diego Pérez" }, terms), false);
+  assert.equal(matchesDispatcher({ requestedBy: "Ana Mantillana", dispatcherName: undefined }, terms), false);
+  assert.equal(matchesDispatcher({ requestedBy: undefined, dispatcherName: undefined }, terms), false);
+  assert.equal(matchesDispatcher({ requestedBy: "Alvaro", dispatcherName: "alvaro" }, dispatcherTerms(undefined)), true);
+  assert.deepEqual(dispatcherTerms(" , = "), []);
 });

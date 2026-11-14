@@ -82,6 +82,23 @@ export function pickByPlate<Row extends { plate: string }>(rows: Row[] | undefin
   return rows.find((row) => plateKey(row.plate) === wanted) ?? null;
 }
 
+export function dispatcherTerms(raw: string | undefined): string[] {
+  return (raw ?? "")
+    .split(",")
+    .map((term) => (term.trim().startsWith("=") ? `=${nameKey(term.trim().slice(1))}` : nameKey(term)))
+    .filter((term) => term !== "" && term !== "=");
+}
+
+export function matchesDispatcher(request: Pick<OperacionesRequest, "requestedBy" | "dispatcherName">, terms: string[]): boolean {
+  if (terms.length === 0) return true;
+  const names = [request.dispatcherName, request.requestedBy].map((name) => nameKey(name)).filter(Boolean);
+  return terms.some((term) =>
+    term.startsWith("=")
+      ? names.includes(term.slice(1))
+      : names.some((name) => ` ${name} `.includes(` ${term} `))
+  );
+}
+
 export function documentKey(text: string | undefined): string {
   return (text ?? "").replace(/\D/g, "");
 }

@@ -89,12 +89,9 @@ export function renderStage(input: {
         context={{
           agencyCode: detail.expediente.agencyCode,
           consignmentCount: detail.remesas.length,
-          originCity:
-            detail.remesas[0]?.draft?.loading?.cityName ??
-            detail.loadingLocation.city,
-          destinationCity:
-            detail.remesas[0]?.draft?.unloading?.cityName ??
-            detail.unloadingLocation.city,
+          originCity: detail.route.origin.city,
+          destinationCity: detail.route.destination.city,
+          sameMunicipality: detail.route.sameMunicipality,
           vehicle: detail.vehicle,
           trailer: detail.trailer,
           driver: detail.driver,

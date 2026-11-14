@@ -10,6 +10,7 @@ import {
   type LoadingOrderDraft,
   type ManifestDraft
 } from "./dispatchWorkflow";
+import { manifestRouteBlockers, tripRoute, type TripRoute } from "./tripRoute";
 
 export type { EmissionScope } from "./dispatchWorkflow";
 
@@ -180,7 +181,15 @@ export function buildEmissionPlan(input: EmissionPlanInput, scope: EmissionScope
   const manifestNumber = input.manifest.number;
   const assignment = input.assignment ?? emptyAssignment;
   const tripNumber = input.tripNumber;
+  const route = planRoute(order, input.consignments, manifest);
   const steps: EmissionPlanStep[] = [];
+
+  if (includesManifest && !isAuthorized(input.manifest.officialState)) {
+    const routeBlockers = manifestRouteBlockers(manifest, route);
+    if (routeBlockers.length > 0) {
+      return { ok: false, reason: "not_prepared", blockers: routeBlockers };
+    }
+  }
 
   if (includesOrder && orderNumber) {
     steps.push(
@@ -225,7 +234,7 @@ export function buildEmissionPlan(input: EmissionPlanInput, scope: EmissionScope
           documentKind: "manifiesto",
           documentNumber: manifestNumber
         },
-        buildTripPayload(tripNumber, orderNumber, order, manifest, assignment),
+        buildTripPayload(tripNumber, orderNumber, route, manifest, assignment),
         input.tripEmitted
       )
     );
@@ -240,7 +249,7 @@ export function buildEmissionPlan(input: EmissionPlanInput, scope: EmissionScope
           documentKind: "manifiesto",
           documentNumber: manifestNumber
         },
-        buildManifestPayload(manifestNumber, tripNumber, orderNumber, input.consignments, order, manifest, assignment, variant),
+        buildManifestPayload(manifestNumber, tripNumber, orderNumber, input.consignments, order, manifest, assignment, variant, route),
         isAuthorized(input.manifest.officialState)
       )
     );
@@ -255,15 +264,19 @@ type PayloadDraft = {
 };
 
 export function buildManifestPreviewPayload(input: EmissionPlanInput): PayloadDraft {
+  const consignments = input.consignments.filter((item) => Boolean(item.number));
+  const order = input.order.snapshot ?? {};
+  const manifest = input.manifest.snapshot ?? {};
   return buildManifestPayload(
     input.manifest.number ?? "",
     input.tripNumber,
     input.order.number,
-    input.consignments.filter((item) => Boolean(item.number)),
-    input.order.snapshot ?? {},
-    input.manifest.snapshot ?? {},
+    consignments,
+    order,
+    manifest,
     input.assignment ?? emptyAssignment,
-    input.workflowVariant ?? "standard"
+    input.workflowVariant ?? "standard",
+    planRoute(order, consignments, manifest)
   );
 }
 
@@ -370,7 +383,7 @@ function buildConsignmentPayload(
 function buildTripPayload(
   tripNumber: string,
   cargoNumber: string,
-  order: LoadingOrderDraft,
+  route: TripRoute,
   manifest: ManifestDraft,
   assignment: AssignmentSnapshotData
 ): PayloadDraft {
@@ -380,8 +393,8 @@ function buildTripPayload(
     cargoNumber,
     driver: driverPayload(assignment, missing),
     vehicle: vehiclePayload(assignment, missing),
-    sender: { cityCode: requireField(originCityCode(order, manifest), "sender.cityCode", missing) },
-    recipient: { cityCode: requireField(destinationCityCode(order, manifest), "recipient.cityCode", missing) },
+    sender: { cityCode: requireField(route.origin.code, "sender.cityCode", missing) },
+    recipient: { cityCode: requireField(route.destination.code, "recipient.cityCode", missing) },
     money: { freightValue: requireMoney(manifest.freightTotal, "money.freightValue", missing) }
   };
   return { payload: prune(payload), missingFields: missing };
@@ -395,7 +408,8 @@ function buildManifestPayload(
   order: LoadingOrderDraft,
   manifest: ManifestDraft,
   assignment: AssignmentSnapshotData,
-  workflowVariant: EmissionPlanInput["workflowVariant"]
+  workflowVariant: EmissionPlanInput["workflowVariant"],
+  route: TripRoute
 ): PayloadDraft {
   const missing: string[] = [];
   const remesaNumbers = consignments.map((item) => item.number!).filter(Boolean);
@@ -415,8 +429,8 @@ function buildManifestPayload(
     driver: driverPayload(assignment, missing),
     vehicle: vehiclePayload(assignment, missing),
     vehicleHolder: holderPayload(assignment, holderId, missing),
-    sender: { ...displayParty(order.sender, order.loading), cityCode: requireField(originCityCode(order, manifest), "sender.cityCode", missing) },
-    recipient: { ...displayParty(order.recipient, order.unloading), cityCode: requireField(destinationCityCode(order, manifest), "recipient.cityCode", missing) },
+    sender: { ...displayParty(order.sender, order.loading), cityName: route.origin.city ?? displayParty(order.sender, order.loading).cityName, cityCode: requireField(route.origin.code, "sender.cityCode", missing) },
+    recipient: { ...displayParty(order.recipient, order.unloading), cityName: route.destination.city ?? displayParty(order.recipient, order.unloading).cityName, cityCode: requireField(route.destination.code, "recipient.cityCode", missing) },
     money: {
       freightValue: requireMoney(manifest.freightTotal, "money.freightValue", missing),
       advanceValue: requireMoney(manifest.advance ?? "0", "money.advanceValue", missing),
@@ -551,12 +565,15 @@ function policyPayload(snapshot: ConsignmentDraft, missing: string[]): Record<st
   };
 }
 
-function originCityCode(order: LoadingOrderDraft, manifest: ManifestDraft): string | undefined {
-  return manifest.originMunicipalityCode ?? order.loading?.municipalityCode ?? order.sender?.municipalityCode;
-}
-
-function destinationCityCode(order: LoadingOrderDraft, manifest: ManifestDraft): string | undefined {
-  return manifest.destinationMunicipalityCode ?? order.unloading?.municipalityCode ?? order.recipient?.municipalityCode;
+function planRoute(order: LoadingOrderDraft, consignments: EmissionPlanInput["consignments"], manifest: ManifestDraft): TripRoute {
+  return tripRoute(
+    order,
+    consignments.flatMap((item) => (item.snapshot ? [item.snapshot] : [])),
+    {
+      origin: { code: manifest.originMunicipalityCode, city: manifest.originCityName },
+      destination: { code: manifest.destinationMunicipalityCode, city: manifest.destinationCityName }
+    }
+  );
 }
 
 function mapIdType(value: string | undefined, field: string, missing: string[]): string | undefined {

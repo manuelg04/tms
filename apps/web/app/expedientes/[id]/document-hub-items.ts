@@ -1,10 +1,10 @@
 import type { Id } from "../../../convex/_generated/dataModel";
+import { emissionDependencyBlockers } from "../../../convex/model/dispatchWorkflow";
 import {
-  consignmentMissingFields,
-  emissionDependencyBlockers,
-  loadingOrderMissingFields,
-  manifestMissingFields,
-} from "../../../convex/model/dispatchWorkflow";
+  consignmentBlockers,
+  loadingOrderBlockers,
+  manifestBlockers as manifestDraftBlockers,
+} from "../../../convex/model/emissionChecks";
 import type { OfficialDocumentState } from "../../../convex/model/documentLifecycle";
 import type { DocumentHubItem } from "../components/document-hub";
 import type { Detail } from "./detail-types";
@@ -45,7 +45,8 @@ export function buildDocumentHubItems(input: {
   const orderBlockers = isOfficial(orderState)
     ? []
     : unique([
-        ...loadingOrderMissingFields(detail.expediente.loadingOrderDraft),
+        ...loadingOrderBlockers(detail.expediente.loadingOrderDraft),
+        ...detail.route.blockers,
         ...assignmentBlockers,
         ...emissionDependencyBlockers("orden", dependencyInput),
       ]);
@@ -55,20 +56,24 @@ export function buildDocumentHubItems(input: {
         ...(detail.remesas.length === 0
           ? ["Agrega al menos una remesa"]
           : detail.remesas.flatMap((remesa) =>
-              consignmentMissingFields(
-                remesa.draft,
-                detail.expediente.loadingOrderDraft,
-              ).map((blocker) => `Remesa ${remesa.sequence}: ${blocker}`),
+              remesa.officialState === "draft" || remesa.officialState === "pending"
+                ? consignmentBlockers(
+                    remesa.draft,
+                    detail.expediente.loadingOrderDraft,
+                  ).map((blocker) => `Remesa ${remesa.sequence}: ${blocker}`)
+                : [],
             )),
+        ...detail.route.blockers,
         ...emissionDependencyBlockers("remesas", dependencyInput),
       ]);
   const manifestBlockers = isOfficial(manifestState)
     ? []
     : unique([
-        ...manifestMissingFields(
+        ...manifestDraftBlockers(
           detail.expediente.manifestDraft,
           detail.remesas.length,
           detail.moneyLimits,
+          { origin: detail.route.origin, destination: detail.route.destination },
         ),
         ...assignmentBlockers,
         ...emissionDependencyBlockers("manifiesto", dependencyInput),

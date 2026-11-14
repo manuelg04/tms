@@ -529,3 +529,49 @@ test("a remesa with several remissions reports the total loaded weight", () => {
   const cargo = (remesa?.payload as Record<string, unknown> | undefined)?.cargo as Record<string, unknown> | undefined;
   assert.equal(cargo?.quantityKg, 34500);
 });
+
+test("the manifest follows the destination corrected in the remesa instead of a stale manifest draft", () => {
+  const corrected = {
+    ...consignmentSnapshot,
+    recipient: { ...consignmentSnapshot.recipient, municipalityCode: "68547000", cityName: "PIEDECUESTA" },
+    unloading: { ...consignmentSnapshot.unloading, municipalityCode: "68547000", cityName: "PIEDECUESTA" }
+  };
+  const plan = buildEmissionPlan(
+    baseInput({
+      consignments: [{ remesaId: "rem1", number: "00001", snapshot: corrected, officialState: "authorized" }],
+      manifest: {
+        number: "0000001",
+        snapshot: { ...manifestSnapshot, originMunicipalityCode: "08001000", destinationMunicipalityCode: "08001000", destinationCityName: "BARRANQUILLA" },
+        officialState: "draft"
+      }
+    }),
+    "manifiesto"
+  );
+
+  assert.equal(plan.ok, true);
+  if (!plan.ok) return;
+  const manifest = plan.steps.find((step) => step.action === "issue_manifest")?.payload as Record<string, any>;
+  assert.equal(manifest.sender.cityCode, "08001000");
+  assert.equal(manifest.recipient.cityCode, "68547000");
+  assert.equal(manifest.recipient.cityName, "PIEDECUESTA");
+});
+
+test("an intermunicipal manifest with the same origin and destination never reaches the RNDC", () => {
+  const sameCity = {
+    ...consignmentSnapshot,
+    recipient: { ...consignmentSnapshot.recipient, municipalityCode: "08001000", cityName: "BARRANQUILLA" },
+    unloading: { ...consignmentSnapshot.unloading, municipalityCode: "08001000", cityName: "BARRANQUILLA" }
+  };
+  const input = baseInput({ consignments: [{ remesaId: "rem1", number: "00001", snapshot: sameCity, officialState: "authorized" }] });
+  const plan = buildEmissionPlan(input, "manifiesto");
+
+  assert.equal(plan.ok, false);
+  assert.equal(plan.ok ? "" : plan.reason, "not_prepared");
+  assert.match(plan.ok ? "" : plan.blockers[0], /mismo municipio \(BARRANQUILLA\)/);
+
+  const urban = buildEmissionPlan(
+    { ...input, manifest: { number: "0000001", snapshot: { ...manifestSnapshot, operationScope: "municipal", manifestType: "U" }, officialState: "draft" } },
+    "manifiesto"
+  );
+  assert.equal(urban.ok, true);
+});

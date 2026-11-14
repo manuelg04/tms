@@ -653,3 +653,117 @@
 .search-select-control input { padding-right: 34px; }
 .search-select-control input.mono { font-family: var(--font-mono); text-transform: uppercase; }
 .search-select.has-selection .search-select-control input { border-color: #9ec9b1; background: #f4fbf7; font-weight: 600; }
+
+.trip-route-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.trip-route-line strong {
+  color: var(--plate-border);
+}
+
+.trip-route-line.large {
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.trip-route-notices {
+  align-items: flex-start;
+  margin: 10px 0;
+}
+
+.trip-route-notices > span {
+  flex: 0 0 auto;
+  margin-top: 5px;
+}
+
+.trip-route-notices ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.emit-confirm {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface-alt);
+  padding: 12px 14px;
+}
+
+.emit-confirm small {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+.emit-confirm-warning {
+  margin: 6px 0 0;
+  color: var(--bad);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.emit-confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.form-stale-notice {
+  align-items: flex-start;
+  margin: 10px 0;
+}
+
+.form-stale-notice > span {
+  flex: 0 0 auto;
+  margin-top: 5px;
+}
+
+.form-stale-notice .text-button {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.text-count {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink-faint);
+  font-size: 11px;
+  text-align: right;
+}
+
+.text-count.over {
+  color: var(--bad);
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .trip-route-line.large {
+    font-size: 17px;
+  }
+
+  .emit-confirm-actions {
+    width: 100%;
+  }
+
+  .emit-confirm-actions > button {
+    flex: 1;
+  }
+}

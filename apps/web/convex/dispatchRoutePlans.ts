@@ -10,6 +10,7 @@ import { dispatchPlanDoc } from "./model/routeValidators";
 import { operationalRouteStops, routeSchedule } from "./model/routes";
 import { automaticRouteChoice, bogotaDeparture, tripRouteCandidates } from "./model/routePlanAutomation";
 import { readMasterAttachments, storeMasterAttachment } from "./model/fleetRecords";
+import { expedienteRoute } from "./model/tripRouteRecords";
 
 const readers = ["admin", "operator", "auditor"] as const;
 const writers = ["admin", "operator"] as const;
@@ -101,6 +102,7 @@ export const forDispatch = query({
           .order("desc")
           .first(),
       ]);
+    const tripNow = await currentRoute(ctx, expediente, loading, unloading);
     const driverName =
       driver?.name ||
       [driver?.firstNames, driver?.firstLastName, driver?.secondLastName]
@@ -130,8 +132,8 @@ export const forDispatch = query({
         organizationName: organization?.name ?? "",
         dispatchCode: expediente.code,
         manifestNumber: expediente.manifestNumber ?? "",
-        origin: plan?.origin ?? loading?.city ?? "",
-        destination: plan?.destination ?? unloading?.city ?? "",
+        origin: plan?.origin ?? tripNow.origin.city ?? "",
+        destination: plan?.destination ?? tripNow.destination.city ?? "",
         vehicle: {
           plate: vehicle?.plate ?? "",
           make: vehicle?.make ?? "",
@@ -346,10 +348,11 @@ export const ensureAutomatic = mutation({
         .withIndex("by_org_code", (q) => q.eq("organizationId", actor.organizationId))
         .collect()
     ).filter((route) => route.active);
+    const tripNow = await currentRoute(ctx, expediente, loading, unloading);
     const candidates = tripRouteCandidates(
       routes,
-      { city: loading?.city ?? "", code: loading?.municipalityCode },
-      { city: unloading?.city ?? "", code: unloading?.municipalityCode },
+      { city: tripNow.origin.city ?? "", code: tripNow.origin.code },
+      { city: tripNow.destination.city ?? "", code: tripNow.destination.code },
     );
     const choice = automaticRouteChoice(candidates, null);
     if (choice.status === "none")
@@ -468,4 +471,17 @@ async function createPlan(
     createdBy: input.createdBy,
     requestKey: input.requestKey,
   });
+}
+
+async function currentRoute(
+  ctx: Pick<QueryCtx, "db">,
+  expediente: Doc<"expedientes">,
+  loading: Doc<"customerLocations"> | null,
+  unloading: Doc<"customerLocations"> | null,
+) {
+  const remesas = await ctx.db
+    .query("expedienteRemesas")
+    .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
+    .collect();
+  return expedienteRoute(expediente, remesas, { loading, unloading });
 }

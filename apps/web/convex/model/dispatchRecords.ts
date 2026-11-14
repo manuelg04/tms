@@ -7,12 +7,9 @@ import { loadMoneyLimits } from "./moneyLimits";
 import { buildDispatchSnapshot, snapshotDataMatches, snapshotDataOf, type SnapshotKind } from "./dispatchSnapshot";
 import {
   bogotaDate,
-  consignmentMissingFields,
   emissionDependencyBlockers,
   emissionScopeTargets,
   effectiveConsignment,
-  loadingOrderMissingFields,
-  manifestMissingFields,
   type ConsignmentDraft,
   type DispatchProjection,
   type EmissionScope,
@@ -24,6 +21,8 @@ import { refreshDispatchSearchText } from "./dispatchSearchProjection";
 import { masterSyncSummary } from "./masterSync";
 import { completeCargoClassification } from "./merchandiseCatalog";
 import { currentManifestDocument } from "./currentManifest";
+import { consignmentBlockers, loadingOrderBlockers, manifestBlockers } from "./emissionChecks";
+import { expedienteRoute, expedienteRouteReview } from "./tripRouteRecords";
 
 export const stageValidator = v.union(
   v.literal("orden_cargue"),
@@ -214,7 +213,7 @@ export async function prepareForEmissionHandler(
   const blockers: string[] = [...dependencyBlockers];
 
   if (targets.order) {
-    blockers.push(...loadingOrderMissingFields(orderDraft));
+    blockers.push(...loadingOrderBlockers(orderDraft));
   }
   if (targets.consignments) {
     if (remesas.length === 0) {
@@ -222,13 +221,22 @@ export async function prepareForEmissionHandler(
     }
     for (let index = 0; index < remesas.length; index += 1) {
       blockers.push(
-        ...consignmentMissingFields((remesas[index].draft ?? null) as ConsignmentDraft | null, orderDraft)
+        ...consignmentBlockers((remesas[index].draft ?? null) as ConsignmentDraft | null, orderDraft)
           .map((blocker) => `Remesa ${index + 1}: ${blocker}`)
       );
     }
   }
   if (targets.manifest) {
-    blockers.push(...manifestMissingFields(expediente.manifestDraft, remesas.length, await loadMoneyLimits(ctx, expediente.organizationId)));
+    blockers.push(...manifestBlockers(expediente.manifestDraft, remesas.length, await loadMoneyLimits(ctx, expediente.organizationId), expedienteRoute({ ...expediente, loadingOrderDraft: orderDraft as Doc<"expedientes">["loadingOrderDraft"] }, remesas)));
+  }
+  if (targets.order || targets.consignments || targets.manifest) {
+    const review = await expedienteRouteReview(
+      ctx,
+      { ...expediente, loadingOrderDraft: orderDraft as Doc<"expedientes">["loadingOrderDraft"] },
+      remesas,
+      { orderEmitted: isAuthorizedState(orderState), manifestEmitted: isAuthorizedState(manifestState) }
+    );
+    blockers.push(...review.siteBlockers);
   }
   if (targets.assignment && !scopeDocumentsAuthorized && assignmentData === undefined) {
     if (!expediente.driverId) {
@@ -521,17 +529,17 @@ export async function buildProjection(
     annulled: expediente.status === "cancelled",
     workflowVariant: expediente.workflowVariant,
     loadingOrder: orderDraft
-      ? { missingFields: loadingOrderMissingFields(orderDraft), officialState: cargoInfoState }
+      ? { missingFields: loadingOrderBlockers(orderDraft), officialState: cargoInfoState }
       : cargoInfoState !== "draft" ? { missingFields: [], officialState: cargoInfoState } : null,
     consignments: remesas.map((remesa) => ({
-      missingFields: consignmentMissingFields((remesa.draft ?? null) as ConsignmentDraft | null, orderDraft),
+      missingFields: consignmentBlockers((remesa.draft ?? null) as ConsignmentDraft | null, orderDraft),
       officialState: remesa.officialState,
       fulfillmentState: remesa.fulfillmentState
     })),
     assignment: { vehicleAssigned: !!expediente.vehicleId, driverAssigned: !!expediente.driverId },
     manifest: expediente.manifestDraft
       ? {
-          missingFields: manifestMissingFields(expediente.manifestDraft, remesas.length, moneyLimits),
+          missingFields: manifestBlockers(expediente.manifestDraft, remesas.length, moneyLimits, expedienteRoute(expediente, remesas)),
           officialState: manifestState,
           fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
         }

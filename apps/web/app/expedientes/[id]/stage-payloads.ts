@@ -148,18 +148,10 @@ export function manifestDraftFromForm(data: FormData, detail: Detail) {
       | "intermunicipal",
     manifestType: required(data, "manifestType"),
     agencyCode: detail.expediente.agencyCode,
-    originCityName:
-      detail.remesas[0]?.draft?.loading?.cityName ??
-      detail.loadingLocation.city,
-    originMunicipalityCode:
-      detail.remesas[0]?.draft?.loading?.municipalityCode ??
-      detail.expediente.manifestDraft?.originMunicipalityCode,
-    destinationCityName:
-      detail.remesas[0]?.draft?.unloading?.cityName ??
-      detail.unloadingLocation.city,
-    destinationMunicipalityCode:
-      detail.remesas[0]?.draft?.unloading?.municipalityCode ??
-      detail.expediente.manifestDraft?.destinationMunicipalityCode,
+    originCityName: detail.route.origin.city,
+    originMunicipalityCode: detail.route.origin.code,
+    destinationCityName: detail.route.destination.city,
+    destinationMunicipalityCode: detail.route.destination.code,
     freightTotal: required(data, "freightTotal"),
     advance: value(data, "advance"),
     withholdingSource: value(data, "withholdingSource"),

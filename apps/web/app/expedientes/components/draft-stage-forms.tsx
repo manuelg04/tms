@@ -16,6 +16,7 @@ import { VehicleAssignmentPicker, type VehicleAssignmentValue } from "./vehicle-
 import { MANIFEST_TYPE_OPTIONS, effectiveConsignment, normalizeManifestType } from "../../../convex/model/dispatchWorkflow";
 import { amountInWords, manifestMoneyReview, type MoneyLimits } from "../../../convex/model/moneyChecks";
 import { companyCargoPolicy } from "../../lib/default-cargo-policy";
+import { RNDC_TEXT_LIMITS, fitRndcText, rndcTextLength, type RndcTextField } from "../../../convex/model/rndcTextLimits";
 
 type LoadingOrder = {
   expeditionDate?: string;
@@ -122,6 +123,7 @@ type ManifestContext = {
   consignmentCount: number;
   originCity?: string;
   destinationCity?: string;
+  sameMunicipality?: boolean;
   vehicle?: { plate: string; make?: string; line?: string; lineName?: string; modelYear?: string; configuration?: string; configurationLabel?: string; capacityTn?: string; ownerName?: string; ownerDocument?: string; possessorName?: string; possessorDocument?: string } | null;
   trailer?: { plate: string; trailerType?: string } | null;
   driver?: { document: string; name?: string } | null;
@@ -474,6 +476,7 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <Field hint="Empresa de GPS que reporta al RNDC llegadas y salidas" inputMode="numeric" label="NIT empresa de monitoreo" name="monitoringCompanyNit" pattern="[0-9]{6,12}" required={context.consignmentCount > 0} value={draft.monitoringCompanyNit ?? companyProfile.monitoringCompanyNit} />
         <Field label="Origen" name="originPreview" placeholder="—" readOnly value={context.originCity} />
         <Field label="Destino" name="destinationPreview" placeholder="—" readOnly value={context.destinationCity} />
+        {context.sameMunicipality ? <div className="field-hint span-2 route-same-hint" role="alert">El origen y el destino son el mismo municipio. Si el viaje es entre ciudades, corrige el destino en la remesa antes de emitir; si es urbano, usa alcance Municipal y tipo «Viaje municipal o urbano».</div> : null}
         <FormField><span>Alcance</span><select defaultValue={draft.operationScope ?? "intermunicipal"} name="operationScope"><option value="intermunicipal">Intermunicipal</option><option value="municipal">Municipal</option></select></FormField>
         <FormField className="checkbox-field"><span>Requiere seguimiento</span><span className="checkbox-control"><input defaultChecked={draft.requiresTracking ?? false} name="requiresTracking" type="checkbox" /><em>Marcar el viaje para control de tráfico</em></span></FormField>
 
@@ -517,10 +520,27 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <DateField label="Fecha de pago" name="paymentDate" value={draft.paymentDate} />
 
         <div className="field-group-note"><strong>Observaciones especiales</strong></div>
-        <FormField className="span-2"><span>Observaciones</span><textarea defaultValue={draft.observations} name="observations" rows={4} /></FormField>
+        <LimitedTextarea className="span-2" field="manifestObservations" label="Observaciones" name="observations" rows={4} value={draft.observations} />
       </fieldset>
     </ValidatedForm>
     </FieldHelpProvider>
+  );
+}
+
+export function LimitedTextarea({ className, field, label, name, rows, value }: { className?: string; field: RndcTextField; label: string; name: string; rows: number; value?: string }) {
+  const limit = RNDC_TEXT_LIMITS[field];
+  const [text, setText] = useState(value ?? "");
+  const length = rndcTextLength(text);
+  const over = length > limit;
+  return (
+    <FormField className={className}>
+      <span>{label}</span>
+      <textarea aria-describedby={`${name}-count`} aria-invalid={over || undefined} name={name} onChange={(event) => setText(event.target.value.length > limit && event.target.value.length > text.length ? event.target.value.slice(0, Math.max(limit, text.length)) : event.target.value)} rows={rows} value={text} />
+      <small className={over ? "text-count over" : "text-count"} id={`${name}-count`}>
+        {over ? `${length} de ${limit} caracteres: el RNDC rechaza el documento si pasa de ${limit}. Recorta ${length - limit}.` : `${length} de ${limit} caracteres`}
+      </small>
+      {over ? <button className="text-button" onClick={() => setText(fitRndcText(field, text))} type="button">Recortar a {limit}</button> : null}
+    </FormField>
   );
 }
 

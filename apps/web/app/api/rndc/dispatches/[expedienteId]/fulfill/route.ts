@@ -298,15 +298,15 @@ function basePayload(detail: Detail, remesa: Detail["remesas"][number] | undefin
       id: detail.vehicle?.possessorDocument ?? detail.vehicle?.ownerDocument,
       fullName: detail.vehicle?.possessorName ?? detail.vehicle?.ownerName
     },
-    sender: { name: detail.customer.name, cityName: detail.loadingLocation.city, address: detail.loadingLocation.address },
-    recipient: { name: remesa?.consigneeName ?? detail.customer.name, cityName: detail.unloadingLocation.city, address: detail.unloadingLocation.address },
+    sender: { name: detail.customer.name, cityName: detail.route?.origin.city ?? detail.loadingLocation.city, address: detail.loadingLocation.address },
+    recipient: { name: remesa?.consigneeName ?? detail.customer.name, cityName: detail.route?.destination.city ?? detail.unloadingLocation.city, address: detail.unloadingLocation.address },
     cargo: {
       productName: remesa?.cargoDescription ?? detail.serviceOrder.cargoDescription,
       shortDescription: remesa?.cargoDescription ?? detail.serviceOrder.cargoDescription,
       quantityKg: remesa?.cargoWeightKg ?? detail.serviceOrder.cargoWeightKg
     },
     money: { freightValue: detail.serviceOrder.agreedRate, advanceValue: 0 },
-    fopat: { operationType: detail.loadingLocation.city === detail.unloadingLocation.city ? "municipal" : "intermunicipal" },
+    fopat: { operationType: (detail.route ? detail.route.sameMunicipality : detail.loadingLocation.city === detail.unloadingLocation.city) ? "municipal" : "intermunicipal" },
     preparedBy
   };
 }

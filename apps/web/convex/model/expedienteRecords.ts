@@ -3,10 +3,7 @@ import type { Doc, Id } from "../_generated/dataModel";
 import type { QueryCtx } from "../_generated/server";
 import type { OfficialDocumentState } from "./documentLifecycle";
 import {
-  consignmentMissingFields,
   deriveDispatchStage,
-  loadingOrderMissingFields,
-  manifestMissingFields,
   type ConsignmentDraft,
   type DispatchProjection,
   type LoadingOrderDraft
@@ -14,6 +11,8 @@ import {
 import { dispatchPrimaryAction } from "./dispatchPresentation";
 import { loadMoneyLimits } from "./moneyLimits";
 import { hasOpenRejection } from "./openRejection";
+import { consignmentBlockers, loadingOrderBlockers, manifestBlockers } from "./emissionChecks";
+import { expedienteRoute } from "./tripRouteRecords";
 import {
   consignmentDraftValidator,
   fulfillmentDraftValidator,
@@ -362,21 +361,22 @@ export async function toListRow(ctx: Pick<QueryCtx, "db">, expediente: Doc<"expe
   const orderDocument = latestDocument("orden_cargue");
   const manifestDocument = latestDocument("manifiesto");
   const orderDraft = (expediente.loadingOrderDraft ?? null) as LoadingOrderDraft | null;
+  const route = expedienteRoute(expediente, remesas, { loading: loadingLocation, unloading: unloadingLocation });
   const projection: DispatchProjection = {
     annulled: expediente.status === "cancelled",
     workflowVariant: expediente.workflowVariant,
     loadingOrder: orderDraft
-      ? { missingFields: loadingOrderMissingFields(orderDraft), officialState: officialState(orderDocument) }
+      ? { missingFields: loadingOrderBlockers(orderDraft), officialState: officialState(orderDocument) }
       : orderDocument ? { missingFields: [], officialState: officialState(orderDocument) } : null,
     consignments: remesas.map((remesa) => ({
-      missingFields: consignmentMissingFields((remesa.draft ?? null) as ConsignmentDraft | null, orderDraft),
+      missingFields: consignmentBlockers((remesa.draft ?? null) as ConsignmentDraft | null, orderDraft),
       officialState: remesa.officialState,
       fulfillmentState: remesa.fulfillmentState
     })),
     assignment: { vehicleAssigned: Boolean(expediente.vehicleId), driverAssigned: Boolean(expediente.driverId) },
     manifest: expediente.manifestDraft
       ? {
-          missingFields: manifestMissingFields(expediente.manifestDraft, remesas.length, moneyLimits),
+          missingFields: manifestBlockers(expediente.manifestDraft, remesas.length, moneyLimits, route),
           officialState: officialState(manifestDocument),
           fulfillmentState: manifestDocument?.fulfillmentState ?? "not_requested"
         }
@@ -409,8 +409,8 @@ export async function toListRow(ctx: Pick<QueryCtx, "db">, expediente: Doc<"expe
     expediente,
     serviceOrderCode: order.code,
     customerName: customer.name,
-    originCity: loadingLocation.city,
-    destinationCity: unloadingLocation.city,
+    originCity: route.origin.city ?? loadingLocation.city,
+    destinationCity: route.destination.city ?? unloadingLocation.city,
     agencyCode: expediente.agencyCode,
     orderNumber: expediente.loadingOrderDraft?.orderNumber ?? expediente.cargoNumber,
     remesaNumbers: remesas.flatMap((remesa) => remesa.number ? [remesa.number] : []),

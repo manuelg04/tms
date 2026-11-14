@@ -4,6 +4,7 @@ import {
   parseMoney,
   parseTons,
   dispatcherTerms,
+  expandCity,
   inboxFilter,
   isRequestedSince,
   requestsSince,
@@ -24,6 +25,24 @@ test("splits the worksheet route into origin and destination", () => {
   assert.deepEqual(splitRoute({ route: "Cali / Bogotá" }), { origin: "Cali", destination: "Bogotá" });
   assert.deepEqual(splitRoute({ route: "CALI - X", origin: "BUGA", destination: "TULUA" }), { origin: "BUGA", destination: "TULUA" });
   assert.deepEqual(splitRoute({ route: "CARTAGENA" }), { origin: "CARTAGENA", destination: undefined });
+});
+
+test("splits tight hyphens and abbreviations and never repeats the origin", () => {
+  assert.deepEqual(splitRoute({ route: "BOGOTÁ-PCUESTA" }), { origin: "BOGOTÁ", destination: "PIEDECUESTA" });
+  assert.deepEqual(splitRoute({ route: "BTA-BGA" }), { origin: "BOGOTA", destination: "BUCARAMANGA" });
+  assert.deepEqual(splitRoute({ route: "BOGOTA - BOGOTÁ" }), { origin: "BOGOTA", destination: undefined });
+  assert.deepEqual(splitRoute({ route: "BOGOTA-TUNJA-SOGAMOSO" }), { origin: "BOGOTA-TUNJA-SOGAMOSO", destination: undefined });
+  assert.deepEqual(splitRoute({ route: "BOGOTÁ-PCUESTA", origin: "BOGOTA", destination: "BOGOTA" }), { origin: "BOGOTA", destination: undefined });
+});
+
+test("matches a municipality by its unique name prefix", () => {
+  const divisions = [
+    { name: "BOGOTA, D.C.", isMunicipality: true, municipalityName: "BOGOTA" },
+    { name: "PIEDECUESTA", isMunicipality: true, municipalityName: "PIEDECUESTA" }
+  ];
+  assert.equal(pickMunicipality(divisions, "Bogotá")?.name, "BOGOTA, D.C.");
+  assert.equal(pickMunicipality(divisions, expandCity("PCUESTA"))?.name, "PIEDECUESTA");
+  assert.equal(pickMunicipality([{ name: "SAN GIL", isMunicipality: true, municipalityName: "SAN GIL" }, { name: "SAN ALBERTO", isMunicipality: true, municipalityName: "SAN ALBERTO" }], "San"), null);
 });
 
 test("reads tons from free text", () => {

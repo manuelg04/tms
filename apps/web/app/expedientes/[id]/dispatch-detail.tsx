@@ -23,6 +23,7 @@ import { DispatchRoutePlan } from "../components/dispatch-route-plan";
 import { OperacionesPanel } from "../components/operaciones-panel";
 import { useOperacionesSuggestions } from "../components/use-operaciones-suggestions";
 import { TripDocumentStrip } from "../components/trip-documents";
+import { EmitButtons, TripRouteLine, TripRouteNotices, routeFromForm, type RouteView } from "../components/trip-route";
 import { fulfillmentHref, moduleHref, type ModuleSlug } from "../../lib/module-links";
 import { resolveDispatchEntry } from "../../lib/document-workspace";
 import { AdvancedActionModal } from "./advanced-action-modal";
@@ -541,6 +542,10 @@ export function DispatchDetail({
     );
   }
 
+  const routeView: RouteView = {
+    origin: detail.route.origin.city,
+    destination: detail.route.destination.city,
+  };
   const currentForm = selectedStage && operaciones.loading
     ? <Skeleton label="Trayendo datos de la solicitud de planilla" />
     : selectedStage
@@ -718,9 +723,9 @@ export function DispatchDetail({
               {focusName} {focusNumber ?? "sin número"} · {detail.customer.name}
             </strong>
             <span>
-              {detail.vehicle?.plate ?? "Sin placa"} ·{" "}
-              {detail.loadingLocation.city} → {detail.unloadingLocation.city}
+              {detail.vehicle?.plate ?? "Sin placa"}
             </span>
+            <TripRouteLine route={routeView} />
           </div>
           <div className="registry-selection-actions">
             <StatusBadge internal={focus.stage === "orden_cargue"} status={focusState} />
@@ -758,6 +763,7 @@ export function DispatchDetail({
           items={tripItems}
           remesaCount={detailResult.remesas.length}
         />
+        <TripRouteNotices review={detail.route} />
         {focusDone && focus.action !== "anular" ? (
           <div className="document-done" role="status">
             <div>
@@ -836,11 +842,20 @@ export function DispatchDetail({
               {canSave ? (
                 <SaveButtons
                   busy={busy}
+                  confirmLabel={focus.stage === "manifiesto" ? "el manifiesto" : "la remesa"}
                   emits={emitStages.includes(selectedStage ?? "")}
                   internal={selectedStage === "orden_cargue"}
                   onIntent={(emit) => {
                     emitIntent.current = emit;
                   }}
+                  readRoute={() =>
+                    focus.stage === "manifiesto"
+                      ? routeView
+                      : routeFromForm(
+                          document.getElementById("stage-primary-form") as HTMLFormElement | null,
+                          routeView,
+                        )
+                  }
                 />
               ) : null}
             </div>
@@ -900,9 +915,9 @@ export function DispatchDetail({
         </div>
         <div className="dispatch-hero-side">
           <div className="dispatch-hero-route">
-            <span>{detail.loadingLocation.city}</span>
+            <span>{routeView.origin ?? "Origen sin definir"}</span>
             <strong>→</strong>
-            <span>{detail.unloadingLocation.city}</span>
+            <span>{routeView.destination ?? "Destino sin definir"}</span>
           </div>
           {detail.expediente.loadingOrderDraft ? (
             <Link
@@ -963,6 +978,8 @@ export function DispatchDetail({
           }
         />
       </section>
+
+      <TripRouteNotices review={detail.route} />
 
       {pending ? (
         <div
@@ -1070,9 +1087,9 @@ export function DispatchDetail({
       <details className="trip-more">
         <summary>Plan de ruta</summary>
         <DispatchRoutePlan
-          destination={detail.unloadingLocation.city}
+          destination={routeView.destination ?? ""}
           expedienteId={detail.expediente._id}
-          origin={detail.loadingLocation.city}
+          origin={routeView.origin ?? ""}
         />
       </details>
 
@@ -1130,47 +1147,42 @@ const emitStages: string[] = [
 
 function SaveButtons({
   busy,
+  blocked,
+  confirmLabel = "el documento",
   emits,
   internal,
   onIntent,
+  readRoute,
 }: {
   busy: boolean;
+  blocked?: string;
+  confirmLabel?: string;
   emits: boolean;
   internal?: boolean;
   onIntent: (emit: boolean) => void;
+  readRoute?: () => RouteView;
 }) {
   if (!emits)
     return (
       <button
         className="primary-action"
-        disabled={busy}
+        disabled={busy || Boolean(blocked)}
         form="stage-primary-form"
+        title={blocked}
         type="submit"
       >
         {busy ? "Guardando…" : "Guardar cambios"}
       </button>
     );
   return (
-    <>
-      <button
-        className="ghost-button"
-        disabled={busy}
-        form="stage-primary-form"
-        onClick={() => onIntent(false)}
-        type="submit"
-      >
-        Guardar borrador
-      </button>
-      <button
-        className="primary-action"
-        disabled={busy}
-        form="stage-primary-form"
-        onClick={() => onIntent(true)}
-        type="submit"
-      >
-        {internal ? (busy ? "Guardando la orden…" : "Guardar orden") : busy ? "Guardando y transmitiendo…" : "Guardar y emitir"}
-      </button>
-    </>
+    <EmitButtons
+      blocked={blocked}
+      busy={busy}
+      confirmLabel={confirmLabel}
+      internal={internal}
+      onIntent={onIntent}
+      readRoute={readRoute ?? (() => ({}))}
+    />
   );
 }
 

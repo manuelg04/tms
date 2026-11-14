@@ -3,6 +3,7 @@ import { mutation, query } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
 import { resolveConsignmentNumberClaim } from "./model/consecutiveRange";
+import { expedienteRoute, syncTripRoute } from "./model/tripRouteRecords";
 import { assertStageEditable, deriveDispatchStage, effectiveConsignment, type LoadingOrderDraft } from "./model/dispatchWorkflow";
 import { initialDocumentLifecycle } from "./model/documentLifecycle";
 import { formatLoadingOrderNumber, normalizeLoadingOrderReservationToken, resolveLoadingOrderReservation } from "./model/loadingOrderReservation";
@@ -282,6 +283,7 @@ export const saveLoadingOrderDraft = mutation({
       entityId: expediente._id,
       createdAt: now
     });
+    await syncTripRoute(ctx, expediente._id);
     await refreshDispatchSearchText(ctx, expediente._id);
     if (draft.cargoDescription && isMerchandiseCode(draft.merchandiseCode)) {
       await rememberMerchandiseProduct(
@@ -516,6 +518,7 @@ export const saveConsignmentsDraft = mutation({
       detailsJson: JSON.stringify({ upserts: args.upserts.length, removals: removals.length }),
       createdAt: now
     });
+    await syncTripRoute(ctx, expediente._id);
     await refreshDispatchSearchText(ctx, expediente._id);
     return savedIds;
   }
@@ -614,8 +617,20 @@ export const saveManifestDraft = mutation({
     }
     const previous = expediente.manifestDraft?.moneyConfirmation;
     const moneyConfirmation = resolveMoneyConfirmation(review, args.moneyConfirmedKey, previous, (key) => ({ key, confirmedBy: actor._id, confirmedAt: now }));
+    const remesas = await ctx.db
+      .query("expedienteRemesas")
+      .withIndex("by_expediente_and_sequence", (q) => q.eq("expedienteId", expediente._id))
+      .collect();
+    const route = expedienteRoute({ loadingOrderDraft: expediente.loadingOrderDraft, manifestDraft: args.draft }, remesas);
     await ctx.db.patch("expedientes", expediente._id, {
-      manifestDraft: { ...args.draft, moneyConfirmation },
+      manifestDraft: {
+        ...args.draft,
+        originCityName: route.origin.city ?? args.draft.originCityName,
+        originMunicipalityCode: route.origin.code ?? args.draft.originMunicipalityCode,
+        destinationCityName: route.destination.city ?? args.draft.destinationCityName,
+        destinationMunicipalityCode: route.destination.code ?? args.draft.destinationMunicipalityCode,
+        moneyConfirmation
+      },
       updatedBy: actor._id,
       updatedAt: now
     });

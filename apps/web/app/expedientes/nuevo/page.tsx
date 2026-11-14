@@ -20,6 +20,7 @@ import { DEFAULT_PARTY_SITE } from "../../../convex/model/masterSync";
 import { loadingWindowEnd, optionalNumber, required, value } from "../../lib/form-data";
 import { Skeleton } from "../../components/skeleton";
 import { SolicitudPrefillLoader, SolicitudSummary, type SolicitudPrefill } from "./solicitud-prefill";
+import { TripRouteLine } from "../components/trip-route";
 
 type BaseState = {
   client: PartyPick | null;
@@ -155,6 +156,9 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
   const copied: Partial<Template["order"]> | undefined = template?.order ?? prefill?.defaults;
   const update = (patch: Partial<BaseState>) => setState((current) => ({ ...current, ...patch }));
   const today = new Date().toISOString().slice(0, 10);
+  const keepsRequestOrigin = Boolean(prefill?.state.senderMunicipality) && state.senderMunicipality === prefill?.state.senderMunicipality;
+  const keepsRequestDestination = Boolean(prefill?.state.recipientMunicipality) && state.recipientMunicipality === prefill?.state.recipientMunicipality;
+  const sameMunicipality = Boolean(state.senderMunicipality) && state.senderMunicipality === state.recipientMunicipality;
   const reserveLoadingOrderNumber = useMutation(api.dispatches.reserveLoadingOrderNumber);
   const upsertCustomer = useMutation(api.masterData.upsertCustomer);
   const upsertLocation = useMutation(api.masterData.upsertCustomerLocation);
@@ -193,6 +197,9 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
 
     try {
       if (!state.vehicle) throw new FormValidationError("vehicleId", "Selecciona una placa existente en maestros.");
+      if (sameMunicipality && data.get("urbanTrip") !== "on") {
+        throw new FormValidationError("recipientMunicipality", `El destino es el mismo municipio que el origen (${state.senderCity}). Elige el municipio de descargue o marca que es un viaje urbano.`);
+      }
       const preparedOrder = loadingOrderDraft(data);
       const senderId = required(data, "senderId");
       const clientDocument = value(data, "clientDocument") ?? senderId;
@@ -339,7 +346,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
               className="span-2"
               label="Nombre del remitente"
               onClear={() => update({ sender: null, senderName: "", senderIdType: "N", senderId: "", senderAddress: "", senderCity: "", senderMunicipality: "", senderPhone: "", senderCellphone: "", senderSiteCode: "" })}
-              onSelect={(party) => update({ sender: party, senderName: party.name, senderIdType: party.documentType, senderId: party.document, senderAddress: party.address ?? state.senderAddress, senderCity: party.city ?? state.senderCity, senderMunicipality: party.cityCode ?? state.senderMunicipality, senderPhone: party.phone ?? state.senderPhone, senderSiteCode: "" })}
+              onSelect={(party) => update({ sender: party, senderName: party.name, senderIdType: party.documentType, senderId: party.document, senderAddress: party.address ?? state.senderAddress, senderCity: keepsRequestOrigin ? state.senderCity : party.city ?? state.senderCity, senderMunicipality: keepsRequestOrigin ? state.senderMunicipality : party.cityCode ?? state.senderMunicipality, senderPhone: party.phone ?? state.senderPhone, senderSiteCode: "" })}
               onType={(name) => update({ sender: null, senderName: name })}
               required
               role="sender"
@@ -361,7 +368,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
               className="span-2"
               label="Nombre del destinatario"
               onClear={() => update({ recipient: null, recipientName: "", recipientIdType: "N", recipientId: "", recipientAddress: "", recipientCity: "", recipientMunicipality: "", recipientPhone: "", recipientCellphone: "", recipientSiteCode: "" })}
-              onSelect={(party) => update({ recipient: party, recipientName: party.name, recipientIdType: party.documentType, recipientId: party.document, recipientAddress: party.address ?? state.recipientAddress, recipientCity: party.city ?? state.recipientCity, recipientMunicipality: party.cityCode ?? state.recipientMunicipality, recipientPhone: party.phone ?? state.recipientPhone, recipientSiteCode: "" })}
+              onSelect={(party) => update({ recipient: party, recipientName: party.name, recipientIdType: party.documentType, recipientId: party.document, recipientAddress: party.address ?? state.recipientAddress, recipientCity: keepsRequestDestination ? state.recipientCity : party.city ?? state.recipientCity, recipientMunicipality: keepsRequestDestination ? state.recipientMunicipality : party.cityCode ?? state.recipientMunicipality, recipientPhone: party.phone ?? state.recipientPhone, recipientSiteCode: "" })}
               onType={(name) => update({ recipient: null, recipientName: name })}
               required
               role="recipient"
@@ -376,6 +383,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
             <Field label="Celular destinatario" name="recipientCellphone" onChange={(event) => update({ recipientCellphone: event.target.value })} type="tel" value={state.recipientCellphone} />
             <input name="recipientName" type="hidden" value={state.recipientName} />
             <input name="recipientCity" type="hidden" value={state.recipientCity} />
+            {sameMunicipality ? <FormField className="checkbox-field span-2"><span>Origen y destino iguales</span><span className="checkbox-control"><input name="urbanTrip" type="checkbox" /><em>Es un viaje urbano dentro de {state.senderCity}. Si el viaje es entre ciudades, corrige la ciudad del destinatario.</em></span></FormField> : null}
             <OrderPartySite document={state.recipientId} label="Sede del destinatario" name="recipientSiteCode" onParty={(party) => update({ recipient: party })} onSite={(siteCode) => update({ recipientSiteCode: siteCode })} party={state.recipient} role="recipient" siteCode={state.recipientSiteCode} />
 
             <div className="field-group-note"><strong>Datos del vehículo</strong></div>
@@ -408,7 +416,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
 
       {reservationError ? <div className="form-error" role="alert">{reservationError} <button className="link-button" onClick={() => setReservationAttempt((current) => current + 1)} type="button">Reintentar consecutivo</button></div> : null}
       <div className="guided-action-bar base-action-bar">
-        <span>Los demás documentos quedarán disponibles como borradores independientes.</span>
+        <span className="base-action-route"><TripRouteLine route={{ origin: state.senderCity || undefined, destination: state.recipientCity || undefined }} /></span>
         <div>
           <button className="ghost-button" disabled={saving || !me || !reservation} value="draft" type="submit">{savingAction === "draft" ? "Guardando…" : "Guardar borrador"}</button>
           <button className="primary-action" disabled={saving || !me || !reservation} value="open" type="submit">{savingAction === "open" ? "Guardando la orden…" : "Guardar orden"}</button>

@@ -5,6 +5,9 @@ import { appendAudit, requireActor, requireSameOrganization } from "./model/acce
 import { initialDocumentLifecycle } from "./model/documentLifecycle";
 import { moneyLimitsValidator } from "./model/draftValidators";
 import { loadMoneyLimits } from "./model/moneyLimits";
+import { currentManifestDocument } from "./model/currentManifest";
+import { sameMunicipality } from "./model/tripRoute";
+import { expedienteRouteReview } from "./model/tripRouteRecords";
 import { normalizeSearchText } from "./model/dispatchSearch";
 import {
   statusValidator,
@@ -444,7 +447,14 @@ export const detail = query({
       events: v.array(eventValidator),
       novelties: v.array(noveltyValidator),
       deliveryEvidence: v.array(deliveryEvidenceValidator),
-      moneyLimits: moneyLimitsValidator
+      moneyLimits: moneyLimitsValidator,
+      route: v.object({
+        origin: v.object({ code: v.optional(v.string()), city: v.optional(v.string()) }),
+        destination: v.object({ code: v.optional(v.string()), city: v.optional(v.string()) }),
+        sameMunicipality: v.boolean(),
+        blockers: v.array(v.string()),
+        differences: v.array(v.string())
+      })
     })
   ),
   handler: async (ctx, args) => {
@@ -504,6 +514,17 @@ export const detail = query({
         .take(200)
     ]);
     const deliveryEvidence = [];
+    const emitted = (state: string | undefined) => state === "authorized" || state === "fulfilled";
+    const routeReview = await expedienteRouteReview(
+      ctx,
+      expediente,
+      remesas,
+      {
+        orderEmitted: documents.some((document) => document.kind === "orden_cargue" && emitted(document.officialState)),
+        manifestEmitted: emitted(currentManifestDocument(expediente, documents)?.officialState)
+      },
+      { loading: loadingLocation, unloading: unloadingLocation }
+    );
 
     for (const row of deliveryRows) {
       const artifact = await ctx.db.get("evidenceArtifacts", row.evidenceArtifactId);
@@ -627,7 +648,14 @@ export const detail = query({
         resolvedBy: novelty.resolvedBy
       })),
       deliveryEvidence,
-      moneyLimits: await loadMoneyLimits(ctx, expediente.organizationId)
+      moneyLimits: await loadMoneyLimits(ctx, expediente.organizationId),
+      route: {
+        origin: routeReview.route.origin,
+        destination: routeReview.route.destination,
+        sameMunicipality: Boolean((routeReview.route.origin.code || routeReview.route.origin.city) && (routeReview.route.destination.code || routeReview.route.destination.city) && sameMunicipality(routeReview.route)),
+        blockers: routeReview.siteBlockers,
+        differences: routeReview.differences
+      }
     };
   }
 });

@@ -38,15 +38,55 @@ export function isOperacionesRequest(value: unknown): value is OperacionesReques
   return typeof record.expedienteId === "string" && typeof record.status === "string" && typeof record.vehicle === "object" && record.vehicle !== null;
 }
 
+const CITY_ALIASES: Record<string, string> = {
+  BTA: "BOGOTA",
+  BOG: "BOGOTA",
+  BGTA: "BOGOTA",
+  BGA: "BUCARAMANGA",
+  BMANGA: "BUCARAMANGA",
+  PCUESTA: "PIEDECUESTA",
+  PDCUESTA: "PIEDECUESTA",
+  BQUILLA: "BARRANQUILLA",
+  BQLLA: "BARRANQUILLA",
+  BAQ: "BARRANQUILLA",
+  CTG: "CARTAGENA",
+  CTGENA: "CARTAGENA",
+  MDE: "MEDELLIN",
+  MED: "MEDELLIN",
+  MLLIN: "MEDELLIN",
+  BTURA: "BUENAVENTURA",
+  BUN: "BUENAVENTURA",
+  SMARTA: "SANTA MARTA",
+  SMR: "SANTA MARTA",
+  VCIO: "VILLAVICENCIO",
+  VILLAVO: "VILLAVICENCIO",
+  BCABERMEJA: "BARRANCABERMEJA",
+  BARRANCA: "BARRANCABERMEJA",
+  CUC: "CUCUTA"
+};
+
+export function expandCity(text: string | undefined): string | undefined {
+  const city = clean(text);
+  if (!city) return undefined;
+  return CITY_ALIASES[nameKey(city).replace(/ /g, "")] ?? city;
+}
+
 export function splitRoute(request: Pick<OperacionesRequest, "route" | "origin" | "destination">): { origin?: string; destination?: string } {
-  const origin = clean(request.origin);
-  const destination = clean(request.destination);
-  if (origin && destination) return { origin, destination };
-  const parts = (request.route ?? "")
-    .split(/\s+-\s+|\s*[–—>/]\s*|\s+a\s+/i)
-    .map((part) => clean(part))
-    .filter((part): part is string => Boolean(part));
-  return { origin: origin ?? parts[0], destination: destination ?? (parts.length > 1 ? parts[parts.length - 1] : undefined) };
+  const givenOrigin = expandCity(request.origin);
+  const givenDestination = expandCity(request.destination);
+  const parts = givenOrigin && givenDestination ? [] : routeParts(request.route ?? "");
+  const origin = givenOrigin ?? parts[0];
+  const destination = givenDestination ?? (parts.length > 1 ? parts[parts.length - 1] : undefined);
+  if (origin && destination && nameKey(origin) === nameKey(destination)) return { origin, destination: undefined };
+  return { origin, destination };
+}
+
+function routeParts(route: string): string[] {
+  const split = (pattern: RegExp) => route.split(pattern).map((part) => expandCity(part)).filter((part): part is string => Boolean(part));
+  const spaced = split(/\s+-\s+|\s*(?:–|—|->|→|>|\/)\s*|\s+a\s+/i);
+  if (spaced.length > 1) return spaced;
+  const tight = split(/\s*-\s*/);
+  return tight.length === 2 ? tight : spaced;
 }
 
 export function parseTons(text: string | undefined): string | undefined {
@@ -152,8 +192,12 @@ export function pickByName<Row extends { name: string }>(rows: Row[] | undefined
 export function pickMunicipality<Row extends { name: string; isMunicipality: boolean; municipalityName: string }>(rows: Row[] | undefined, city: string | undefined): Row | null {
   const wanted = nameKey(city);
   if (!wanted || !rows) return null;
-  const municipalities = rows.filter((row) => row.isMunicipality && nameKey(row.name) === wanted);
-  return municipalities.length === 1 ? municipalities[0] : null;
+  const municipalities = rows.filter((row) => row.isMunicipality);
+  const exact = municipalities.filter((row) => nameKey(row.name) === wanted);
+  if (exact.length === 1) return exact[0];
+  if (exact.length > 1) return null;
+  const close = municipalities.filter((row) => nameKey(row.name).startsWith(`${wanted} `));
+  return close.length === 1 ? close[0] : null;
 }
 
 export function pickPackaging<Row extends { code: string; description: string }>(rows: Row[] | undefined, text: string | undefined): Row | null {

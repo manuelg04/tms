@@ -261,7 +261,7 @@ function NuevoDespachoForm({ sourceId, template, prefill }: { sourceId: string |
       await Promise.all([
         saveLoadingOrder({
           expedienteId: created.expedienteId,
-          draft: { ...preparedOrder, customerId }
+          draft: { ...preparedOrder, customerId, urbanTrip: sameMunicipality && data.get("urbanTrip") === "on" ? true : undefined }
         }),
         saveAssignment({ expedienteId: created.expedienteId, vehicleId: state.vehicle._id, driverId: assignedDriverId(state.vehicle, prefill) }),
         ...(prefill ? [linkSolicitud({

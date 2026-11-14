@@ -29,6 +29,7 @@ export const siteAppointmentDraftValidator = v.object({
 
 export const loadingOrderDraftValidator = v.object({
   orderNumber: v.optional(v.string()),
+  urbanTrip: v.optional(v.boolean()),
   expeditionDate: v.optional(v.string()),
   agencyCode: v.optional(v.string()),
   customerId: v.optional(v.id("customers")),

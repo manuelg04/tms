@@ -92,6 +92,7 @@ export function renderStage(input: {
           originCity: detail.route.origin.city,
           destinationCity: detail.route.destination.city,
           sameMunicipality: detail.route.sameMunicipality,
+          urbanTrip: detail.expediente.loadingOrderDraft?.urbanTrip === true,
           vehicle: detail.vehicle,
           trailer: detail.trailer,
           driver: detail.driver,

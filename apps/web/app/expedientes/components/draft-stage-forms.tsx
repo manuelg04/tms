@@ -20,6 +20,7 @@ import { RNDC_TEXT_LIMITS } from "../../../convex/model/rndcTextLimits";
 import { LimitedTextarea } from "../../components/fields/limited-textarea";
 
 type LoadingOrder = {
+  urbanTrip?: boolean;
   expeditionDate?: string;
   orderNumber?: string;
   agencyCode?: string;
@@ -125,6 +126,7 @@ type ManifestContext = {
   originCity?: string;
   destinationCity?: string;
   sameMunicipality?: boolean;
+  urbanTrip?: boolean;
   vehicle?: { plate: string; make?: string; line?: string; lineName?: string; modelYear?: string; configuration?: string; configurationLabel?: string; capacityTn?: string; ownerName?: string; ownerDocument?: string; possessorName?: string; possessorDocument?: string } | null;
   trailer?: { plate: string; trailerType?: string } | null;
   driver?: { document: string; name?: string } | null;
@@ -283,7 +285,7 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
   const key = remesa._id;
   const draft = remesa.draft ?? {};
   const effective = effectiveConsignment(draft, order);
-  const [consignmentClass, setConsignmentClass] = useState(effective.consignmentClass ?? "terrestre_carga");
+  const [consignmentClass, setConsignmentClass] = useState(effective.consignmentClass ?? (order?.urbanTrip && effective.loading?.municipalityCode && effective.loading.municipalityCode === effective.unloading?.municipalityCode ? "municipal" : "terrestre_carga"));
   const [sender, setSender] = useState<RemesaPartyEditorState>(() => remesaPartyState(effective.sender));
   const [recipient, setRecipient] = useState<RemesaPartyEditorState>(() => remesaPartyState(effective.recipient));
   const [loading, setLoading] = useState(() => ({
@@ -452,7 +454,7 @@ const MONEY_KEYS = ["freightTotal", "advance", "withholdingSource", "withholding
 
 export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: ManifestContext; draft: Manifest; onSubmit: (data: FormData) => void | Promise<void>; readOnly: boolean }) {
   const [money, setMoney] = useState<Record<(typeof MONEY_KEYS)[number], string>>({ freightTotal: draft.freightTotal ?? "", advance: draft.advance ?? "0", withholdingSource: draft.withholdingSource ?? "0", withholdingIca: draft.withholdingIca ?? "0", fopatContribution: draft.fopatContribution ?? "", adjustments: draft.adjustments ?? "0" });
-  const [manifestType, setManifestType] = useState<string>(normalizeManifestType(draft.manifestType) ?? "G");
+  const [manifestType, setManifestType] = useState<string>(normalizeManifestType(draft.manifestType) ?? (context.urbanTrip && context.sameMunicipality ? "U" : "G"));
   const urbanManifest = manifestType === "U" || manifestType === "V";
   const fopatValue = urbanManifest ? "0" : String(Math.round(Number(money.freightTotal || 0) * 0.001));
   const icaAmount = icaPesos(money.freightTotal, money.withholdingIca);
@@ -480,7 +482,7 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
         <Field label="Origen" name="originPreview" placeholder="—" readOnly value={context.originCity} />
         <Field label="Destino" name="destinationPreview" placeholder="—" readOnly value={context.destinationCity} />
         {context.sameMunicipality ? <div className="field-hint span-2 route-same-hint" role="alert">El origen y el destino son el mismo municipio. Si el viaje es entre ciudades, corrige el destino en la remesa antes de emitir; si es urbano, usa alcance Municipal y tipo «Viaje municipal o urbano».</div> : null}
-        <FormField><span>Alcance</span><select defaultValue={draft.operationScope ?? "intermunicipal"} name="operationScope"><option value="intermunicipal">Intermunicipal</option><option value="municipal">Municipal</option></select></FormField>
+        <FormField><span>Alcance</span><select defaultValue={draft.operationScope ?? (context.urbanTrip && context.sameMunicipality ? "municipal" : "intermunicipal")} name="operationScope"><option value="intermunicipal">Intermunicipal</option><option value="municipal">Municipal</option></select></FormField>
         <FormField className="checkbox-field"><span>Requiere seguimiento</span><span className="checkbox-control"><input defaultChecked={draft.requiresTracking ?? false} name="requiresTracking" type="checkbox" /><em>Marcar el viaje para control de tráfico</em></span></FormField>
 
         <div className="field-group-note"><strong>Datos del vehículo</strong></div>

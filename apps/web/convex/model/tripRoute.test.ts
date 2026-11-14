@@ -91,3 +91,12 @@ test("differences between drafts and emitted documents are reported", () => {
   assert.equal(notices.length, 1);
   assert.match(notices[0], /El manifiesto ya quedó con BOGOTA → BOGOTA y la orden de cargue dice BOGOTA → PIEDECUESTA/);
 });
+
+test("a multi-stop manifest starts at the first remesa and ends at the last one", () => {
+  const bucaramanga = { cityName: "BUCARAMANGA", municipalityCode: "68001000" };
+  const toBucaramanga = { recipient: { siteCode: "26", ...bucaramanga }, unloading: bucaramanga };
+  const toPiedecuesta = { recipient: { siteCode: "26", ...piedecuesta }, unloading: piedecuesta };
+  assert.equal(routeLabel(tripRoute(order, [toBucaramanga, toPiedecuesta])), "BOGOTA → PIEDECUESTA");
+  assert.equal(routeLabel(tripRoute(order, [toPiedecuesta, {}])), "BOGOTA → BOGOTA");
+  assert.equal(routeLabel(tripRoute(order, [toPiedecuesta])), "BOGOTA → PIEDECUESTA");
+});

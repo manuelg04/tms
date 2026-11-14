@@ -58,7 +58,9 @@ export function tripRoute(
   consignments: ReadonlyArray<ConsignmentDraft | null | undefined>,
   fallback?: Partial<TripRoute>
 ): TripRoute {
-  const current = consignments.length > 0 ? consignmentRoute(consignments[0], order) : orderRoute(order);
+  const first = consignments.length > 0 ? consignmentRoute(consignments[0], order) : orderRoute(order);
+  const last = consignments.length > 1 ? consignmentRoute(consignments[consignments.length - 1], order) : first;
+  const current: TripRoute = { origin: first.origin, destination: known(last.destination) ? last.destination : first.destination };
   const complete = (value: RouteEnd, other: RouteEnd | undefined): RouteEnd => {
     if (!known(value)) return other ?? {};
     if (!other || !sameEnd(value, other)) return value;

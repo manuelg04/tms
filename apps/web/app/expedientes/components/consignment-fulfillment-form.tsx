@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FormField, ValidatedForm } from "../../components/fields/form-validation";
+import { LimitedTextarea } from "../../components/fields/limited-textarea";
 import { bogotaLocalInput } from "../../../convex/model/monitoring";
 import { monitoringSummary, type LogisticsMoment, type RemesaMonitoring } from "../../lib/remesa-monitoring";
 
@@ -46,7 +47,7 @@ export function ConsignmentFulfillmentForm({ expedienteId, onSubmit, remesas }: 
             <Moment label="Entrada al cargue" max={latest} name={`${remesa._id}_loadingEntryAt`} value={remesa.fulfillmentDraft?.loadingEntryAt} />
             <Moment label="Entrada al descargue" max={latest} name={`${remesa._id}_unloadingEntryAt`} value={remesa.fulfillmentDraft?.unloadingEntryAt} />
             <MonitoringPanel loaded={monitoring.loaded} mode={monitoring.mode} monitoring={monitoring.byRemesa[remesa._id]} />
-            <FormField><span>Observaciones de entrega</span><textarea defaultValue={remesa.fulfillmentDraft?.observation} name={`${remesa._id}_observation`} rows={2} /></FormField>
+            <LimitedTextarea field="fulfillmentObservations" label="Observaciones de entrega" name={`${remesa._id}_observation`} rows={2} value={remesa.fulfillmentDraft?.observation} />
             {remesa.fulfillmentState === "fulfilled" ? <span className="fulfilled-lock">✓ Cumplida · Sólo lectura</span> : null}
           </fieldset>
         ))}
@@ -61,7 +62,7 @@ export function ManifestFulfillmentForm({ defaultDate, defaultObservation, onSub
       <div className="stage-form-heading"><span>07</span><div><h3 id="active-stage-title" tabIndex={-1}>Cumplido final</h3><p>Todas las remesas están cumplidas. Revisa la entrega de documentos y cierra el manifiesto.</p></div></div>
       <div className="manifest-fulfillment-card">
         <FormField><span>Fecha de entrega de documentos</span><input defaultValue={defaultDate} name="documentsDeliveryDate" required type="date" /></FormField>
-        <FormField><span>Observaciones del cierre</span><textarea defaultValue={defaultObservation} name="observation" rows={4} /></FormField>
+        <LimitedTextarea field="fulfillmentObservations" label="Observaciones del cierre" name="observation" rows={4} value={defaultObservation} />
       </div>
     </ValidatedForm>
   );

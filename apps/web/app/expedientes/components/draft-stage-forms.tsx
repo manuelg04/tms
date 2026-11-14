@@ -16,7 +16,8 @@ import { VehicleAssignmentPicker, type VehicleAssignmentValue } from "./vehicle-
 import { MANIFEST_TYPE_OPTIONS, effectiveConsignment, normalizeManifestType } from "../../../convex/model/dispatchWorkflow";
 import { amountInWords, manifestMoneyReview, type MoneyLimits } from "../../../convex/model/moneyChecks";
 import { companyCargoPolicy } from "../../lib/default-cargo-policy";
-import { RNDC_TEXT_LIMITS, fitRndcText, rndcTextLength, type RndcTextField } from "../../../convex/model/rndcTextLimits";
+import { RNDC_TEXT_LIMITS } from "../../../convex/model/rndcTextLimits";
+import { LimitedTextarea } from "../../components/fields/limited-textarea";
 
 type LoadingOrder = {
   expeditionDate?: string;
@@ -345,8 +346,9 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
       <Field className="span-2" label="Dirección remitente" name={`${key}_loadingAddress`} onChange={(event) => setLoading({ ...loading, address: event.target.value })} required value={loading.address} />
       <Field label="Teléfono remitente" name={`${key}_senderPhone`} onChange={(event) => setSender({ ...sender, phone: event.target.value })} required type="tel" value={sender.phone} />
       <Field label="Celular remitente" name={`${key}_senderCellphone`} onChange={(event) => setSender({ ...sender, cellphone: event.target.value })} type="tel" value={sender.cellphone} />
-      <Field label="Latitud cargue" name={`${key}_loadingLatitude`} placeholder="Opcional" value={loading.latitude} />
-      <Field label="Longitud cargue" name={`${key}_loadingLongitude`} placeholder="Opcional" value={loading.longitude} />
+      <input name={`${key}_loadingLatitude`} type="hidden" value={loading.latitude ?? ""} />
+      <input name={`${key}_loadingLongitude`} type="hidden" value={loading.longitude ?? ""} />
+      <div className="field-hint span-2">Las coordenadas no viajan en la remesa: el RNDC toma las de la sede registrada del remitente y del destinatario. Si el vehículo tiene monitoreo GPS, elige una sede que ya tenga coordenadas.</div>
       <DateField label="Cita de cargue" name={`${key}_loadingAppointment`} required value={dateTimeValue(loading.appointmentAt)} withTime />
       <Field label="Horas pactadas cargue" min="0" name={`${key}_loadingHours`} required step="0.5" type="number" value={loading.agreedHours ?? "1"} />
       <input name={`${key}_senderSiteCode`} type="hidden" value={sender.siteCode ?? ""} />
@@ -360,8 +362,8 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
       <Field className="span-2" label="Dirección destinatario" name={`${key}_unloadingAddress`} onChange={(event) => setUnloading({ ...unloading, address: event.target.value })} required value={unloading.address} />
       <Field label="Teléfono destinatario" name={`${key}_recipientPhone`} onChange={(event) => setRecipient({ ...recipient, phone: event.target.value })} required type="tel" value={recipient.phone} />
       <Field label="Celular destinatario" name={`${key}_recipientCellphone`} onChange={(event) => setRecipient({ ...recipient, cellphone: event.target.value })} type="tel" value={recipient.cellphone} />
-      <Field label="Latitud descargue" name={`${key}_unloadingLatitude`} placeholder="Opcional" value={unloading.latitude} />
-      <Field label="Longitud descargue" name={`${key}_unloadingLongitude`} placeholder="Opcional" value={unloading.longitude} />
+      <input name={`${key}_unloadingLatitude`} type="hidden" value={unloading.latitude ?? ""} />
+      <input name={`${key}_unloadingLongitude`} type="hidden" value={unloading.longitude ?? ""} />
       <DateField label="Cita de descargue" name={`${key}_unloadingAppointment`} required value={dateTimeValue(unloading.appointmentAt)} withTime />
       <Field label="Horas pactadas descargue" min="0" name={`${key}_unloadingHours`} required step="0.5" type="number" value={unloading.agreedHours ?? "2"} />
       <input name={`${key}_recipientSiteCode`} type="hidden" value={recipient.siteCode ?? ""} />
@@ -378,7 +380,7 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
       <div className="field-group-note"><strong>Datos de la póliza</strong></div>
       <Field label="Tomador del seguro" name={`${key}_policyHolderPreview`} readOnly value="Empresa de transporte" />
       <InsurerField className="span-2" insurerName={insurerName} label="Aseguradora" name={`${key}_insurerNit`} nit={insurer.nit || undefined} onClear={() => setInsurer({ nit: "", name: "" })} onSelect={(option) => setInsurer({ nit: option.insurerNit, name: option.name })} required />
-      <Field label="Nro. póliza" name={`${key}_policyNumber`} required value={draft.policyNumber || policyDefaults.number} />
+      <Field hint={`Máximo ${RNDC_TEXT_LIMITS.policyNumber} caracteres para el RNDC`} label="Nro. póliza" maxLength={(draft.policyNumber || policyDefaults.number || "").length <= RNDC_TEXT_LIMITS.policyNumber ? RNDC_TEXT_LIMITS.policyNumber : undefined} name={`${key}_policyNumber`} required value={draft.policyNumber || policyDefaults.number} />
       <DateField label="Vigencia final" name={`${key}_policyExpiresOn`} required value={draft.policyExpiresOn || policyDefaults.expiresOn} />
       <input name={`${key}_policyHolder`} type="hidden" value="transport_company" />
 
@@ -390,7 +392,7 @@ function RemesaCard({ context, order, readOnly, remesa }: { context: RemesaConte
             <FormField help={null} label={`Remisión ${index + 1} número`}><span className="remission-field-label">Nro. remisión</span><input aria-label={`Remisión ${index + 1} número`} defaultValue={line.remissionNumber} name={`${key}_rem${index}_number`} placeholder="Opcional" /></FormField>
             <FormField help={null} label={`Remisión ${index + 1} cantidad`}><span className="remission-field-label">Cantidad</span><input aria-label={`Remisión ${index + 1} cantidad`} defaultValue={line.quantity} name={`${key}_rem${index}_quantity`} placeholder={inherited(order.cargoQuantity)} required /></FormField>
             <FormField help={null} label={`Remisión ${index + 1} clase de bultos`}><span className="remission-field-label">Clase de bultos</span><input aria-label={`Remisión ${index + 1} clase de bultos`} defaultValue={line.packagingClass} name={`${key}_rem${index}_packagingClass`} placeholder={inherited(order.packagingCode)} required /></FormField>
-            <FormField help={null} label={`Remisión ${index + 1} descripción`}><span className="remission-field-label">Descripción</span><input aria-label={`Remisión ${index + 1} descripción`} defaultValue={line.description} name={`${key}_rem${index}_description`} placeholder={inherited(order.cargoDescription)} required /></FormField>
+            <FormField help={null} label={`Remisión ${index + 1} descripción`}><span className="remission-field-label">Descripción</span><input aria-label={`Remisión ${index + 1} descripción`} defaultValue={line.description} maxLength={index === 0 && (line.description ?? "").length <= RNDC_TEXT_LIMITS.cargoShortDescription ? RNDC_TEXT_LIMITS.cargoShortDescription : undefined} name={`${key}_rem${index}_description`} placeholder={inherited(order.cargoDescription)} required title={index === 0 ? `El RNDC recibe esta descripción con máximo ${RNDC_TEXT_LIMITS.cargoShortDescription} caracteres` : undefined} /></FormField>
             <FormField help={null} label={`Remisión ${index + 1} peso`}><span className="remission-field-label">Peso (TN)</span><input aria-label={`Remisión ${index + 1} peso`} defaultValue={line.weightTons} min="0" name={`${key}_rem${index}_weightTons`} placeholder={inherited(order.weightTons)} required step="0.001" type="number" /></FormField>
             <FormField help={null} label={`Remisión ${index + 1} volumen`}><span className="remission-field-label">Volumen (m³)</span><input aria-label={`Remisión ${index + 1} volumen`} defaultValue={line.volumeM3} min="0" name={`${key}_rem${index}_volumeM3`} placeholder={inherited(order.volumeM3)} step="0.01" type="number" /></FormField>
             <button aria-label={`Quitar remisión ${index + 1}`} className="ghost-button" disabled={remissions.length === 1} onClick={() => setRemissions(remissions.filter((row) => row.rowId !== line.rowId))} type="button">×</button>
@@ -524,23 +526,6 @@ export function ManifestForm({ context, draft, onSubmit, readOnly }: { context: 
       </fieldset>
     </ValidatedForm>
     </FieldHelpProvider>
-  );
-}
-
-export function LimitedTextarea({ className, field, label, name, rows, value }: { className?: string; field: RndcTextField; label: string; name: string; rows: number; value?: string }) {
-  const limit = RNDC_TEXT_LIMITS[field];
-  const [text, setText] = useState(value ?? "");
-  const length = rndcTextLength(text);
-  const over = length > limit;
-  return (
-    <FormField className={className}>
-      <span>{label}</span>
-      <textarea aria-describedby={`${name}-count`} aria-invalid={over || undefined} name={name} onChange={(event) => setText(event.target.value.length > limit && event.target.value.length > text.length ? event.target.value.slice(0, Math.max(limit, text.length)) : event.target.value)} rows={rows} value={text} />
-      <small className={over ? "text-count over" : "text-count"} id={`${name}-count`}>
-        {over ? `${length} de ${limit} caracteres: el RNDC rechaza el documento si pasa de ${limit}. Recorta ${length - limit}.` : `${length} de ${limit} caracteres`}
-      </small>
-      {over ? <button className="text-button" onClick={() => setText(fitRndcText(field, text))} type="button">Recortar a {limit}</button> : null}
-    </FormField>
   );
 }
 

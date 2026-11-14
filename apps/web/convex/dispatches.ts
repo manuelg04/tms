@@ -4,6 +4,7 @@ import type { Doc, Id } from "./_generated/dataModel";
 import { appendAudit, requireActor, requireSameOrganization } from "./model/access";
 import { resolveConsignmentNumberClaim } from "./model/consecutiveRange";
 import { expedienteRoute, syncTripRoute } from "./model/tripRouteRecords";
+import { rndcTextBlocker } from "./model/rndcTextLimits";
 import { assertStageEditable, deriveDispatchStage, effectiveConsignment, type LoadingOrderDraft } from "./model/dispatchWorkflow";
 import { initialDocumentLifecycle } from "./model/documentLifecycle";
 import { formatLoadingOrderNumber, normalizeLoadingOrderReservationToken, resolveLoadingOrderReservation } from "./model/loadingOrderReservation";
@@ -688,7 +689,8 @@ export const recordFulfillmentDraft = mutation({
       throw new ConvexError({ code: "INVALID_STATE", message: "Sólo una remesa autorizada y pendiente puede preparar su cumplido" });
     }
 
-    const errors = [...validateFulfillmentQuantities(args.draft), ...validateEntryTimes(args.draft, Date.now())];
+    const textBlocker = rndcTextBlocker("fulfillmentObservations", args.draft.observation);
+    const errors = [...validateFulfillmentQuantities(args.draft), ...validateEntryTimes(args.draft, Date.now()), ...(textBlocker ? [textBlocker] : [])];
 
     if (errors.length > 0) {
       throw new ConvexError({ code: "VALIDATION", message: errors[0], data: { errors } });
@@ -732,6 +734,11 @@ export const recordManifestFulfillmentDraft = mutation({
 
     if (remesas.length === 0 || remesas.some((remesa) => remesa.fulfillmentState !== "fulfilled")) {
       throw new ConvexError({ code: "INVALID_STATE", message: "Cumple todas las remesas antes de preparar el cumplido final" });
+    }
+
+    const textBlocker = rndcTextBlocker("fulfillmentObservations", args.draft.observation);
+    if (textBlocker) {
+      throw new ConvexError({ code: "VALIDATION", message: textBlocker, data: { errors: [textBlocker] } });
     }
 
     const now = Date.now();

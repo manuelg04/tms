@@ -1,8 +1,10 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { internalMutation } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
 import { rememberMerchandiseProduct } from "./model/merchandiseProducts";
+import { appendAudit } from "./model/access";
+import { archivedKey, rejectionUnlockProblem } from "./model/rejectionUnlock";
 
 export const TEST_ORDER_CODE = /^OS-(GUIDED|ASYNC|EARLY|TMP|REM|MAN|UI|SMOKE|E2E|TEST)-\d+$/i;
 
@@ -452,5 +454,45 @@ export const mergeCustomers = internalMutation({
       fieldsFilled: Object.keys(filled),
       rndcThirdParties
     };
+  }
+});
+
+export const unlockRejectedRemesa = internalMutation({
+  args: { operationId: v.id("rndcOperations"), actorId: v.id("users") },
+  returns: v.object({ remesaNumber: v.optional(v.string()), businessKey: v.string() }),
+  handler: async (ctx, args) => {
+    const operation = await ctx.db.get("rndcOperations", args.operationId);
+    if (!operation) throw new ConvexError("No existe la operación");
+    const remesa = operation.expedienteRemesaId ? await ctx.db.get("expedienteRemesas", operation.expedienteRemesaId) : null;
+    const document = operation.documentId ? await ctx.db.get("documents", operation.documentId) : null;
+    const problem = rejectionUnlockProblem(operation, remesa, document);
+    if (problem || !remesa || !document) throw new ConvexError(problem ?? "No se encontró la remesa");
+    const actor = await ctx.db.get("users", args.actorId);
+    if (!actor || actor.organizationId !== operation.organizationId) throw new ConvexError("Usuario inválido");
+    const now = Date.now();
+    const businessKey = archivedKey(operation.businessKey, operation._id);
+    const requestKey = archivedKey(operation.requestKey, operation._id);
+    await ctx.db.patch("rndcOperations", operation._id, { businessKey, requestKey, updatedAt: now });
+    const keys = await ctx.db
+      .query("rndcRequestKeys")
+      .withIndex("by_organization_and_request_key", (q) => q.eq("organizationId", operation.organizationId).eq("requestKey", operation.requestKey))
+      .collect();
+    for (const key of keys) {
+      if (key.operationId === operation._id) await ctx.db.patch("rndcRequestKeys", key._id, { requestKey });
+    }
+    await ctx.db.patch("expedienteRemesas", remesa._id, { officialState: "draft", updatedBy: actor._id, updatedAt: now });
+    await ctx.db.patch("documents", document._id, { officialState: "draft", status: "draft", updatedAt: now });
+    await appendAudit(ctx, {
+      organizationId: operation.organizationId,
+      actorType: "user",
+      actorId: actor._id,
+      action: "rndc_operation.rejection_unlocked",
+      entityType: "expediente_remesa",
+      entityId: remesa._id,
+      reason: "Rechazo del RNDC: se reabre la remesa para corregir y reenviar",
+      detailsJson: JSON.stringify({ operationId: operation._id, previousBusinessKey: operation.businessKey, businessKey }),
+      createdAt: now
+    });
+    return { remesaNumber: remesa.number, businessKey };
   }
 });

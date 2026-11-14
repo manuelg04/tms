@@ -16,7 +16,8 @@ export function DispatchRoutePlan({ expedienteId, origin, destination }: { exped
   const [editing, setEditing] = useState(false);
 
   if (!data) return null;
-  const { plan, canAssign, photos } = data;
+  const { plan, canAssign } = data;
+  const photos = data.photos ?? { vehicle: "", driver: "", hasVehicle: false, hasDriver: false };
   const missing: Array<{ target: "vehicle" | "driver"; label: string; available: boolean }> = [
     ...(photos.vehicle ? [] : [{ target: "vehicle" as const, label: "Foto del vehículo", available: photos.hasVehicle }]),
     ...(photos.driver ? [] : [{ target: "driver" as const, label: "Foto del conductor", available: photos.hasDriver }])

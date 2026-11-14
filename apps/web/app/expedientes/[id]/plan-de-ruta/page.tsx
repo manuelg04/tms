@@ -32,7 +32,8 @@ export default function RoutePlanSheetPage({ params }: { params: Promise<{ id: s
     );
   }
 
-  const { plan, sheet, photos } = data;
+  const { plan, sheet } = data;
+  const photos = data.photos ?? { vehicle: null, driver: null };
   const missingPhotos = [photos.vehicle ? "" : "la foto del vehículo", photos.driver ? "" : "la foto del conductor"].filter(Boolean);
   const departure = plan.departureAt.replace("T", " ");
   const arrival = plan.stops.at(-1)?.scheduledAt ?? "";

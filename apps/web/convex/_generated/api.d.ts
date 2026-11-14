@@ -70,6 +70,7 @@ import type * as model_reconciliationOutcome from "../model/reconciliationOutcom
 import type * as model_rndcCatalogs from "../model/rndcCatalogs.js";
 import type * as model_rndcOperationRecords from "../model/rndcOperationRecords.js";
 import type * as model_rndcReferenceCatalogRecords from "../model/rndcReferenceCatalogRecords.js";
+import type * as model_routePlanAutomation from "../model/routePlanAutomation.js";
 import type * as model_routeValidators from "../model/routeValidators.js";
 import type * as model_routes from "../model/routes.js";
 import type * as model_schemaMasterTables from "../model/schemaMasterTables.js";
@@ -165,6 +166,7 @@ declare const fullApi: ApiFromModules<{
   "model/rndcCatalogs": typeof model_rndcCatalogs;
   "model/rndcOperationRecords": typeof model_rndcOperationRecords;
   "model/rndcReferenceCatalogRecords": typeof model_rndcReferenceCatalogRecords;
+  "model/routePlanAutomation": typeof model_routePlanAutomation;
   "model/routeValidators": typeof model_routeValidators;
   "model/routes": typeof model_routes;
   "model/schemaMasterTables": typeof model_schemaMasterTables;

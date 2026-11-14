@@ -29,3 +29,13 @@ test("reopens a remesa only when the RNDC rejected every step", () => {
   assert.notEqual(rejectionUnlockProblem(rejected, { ...remesa, _id: "rem2" }, document), null);
   assert.notEqual(rejectionUnlockProblem(rejected, null, document), null);
 });
+
+test("reopens a rejected manifest through its own document", () => {
+  const manifest = { ...rejected, operationType: "emit_manifest", expedienteRemesaId: undefined, businessKey: "emit:exp:manifest:0900001", documentId: "man1" };
+  const manifestDocument = { _id: "man1", officialState: "pending" };
+  assert.equal(rejectionUnlockProblem(manifest, null, manifestDocument), null);
+  assert.notEqual(rejectionUnlockProblem(manifest, null, { ...manifestDocument, officialState: "authorized" }), null);
+  assert.notEqual(rejectionUnlockProblem(manifest, null, { ...manifestDocument, _id: "other" }), null);
+  assert.notEqual(rejectionUnlockProblem(manifest, remesa, manifestDocument), null);
+  assert.notEqual(rejectionUnlockProblem({ ...manifest, status: "succeeded" }, null, manifestDocument), null);
+});

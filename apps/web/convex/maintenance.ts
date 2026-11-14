@@ -459,14 +459,18 @@ export const mergeCustomers = internalMutation({
 
 export const unlockRejectedRemesa = internalMutation({
   args: { operationId: v.id("rndcOperations"), actorId: v.id("users") },
-  returns: v.object({ remesaNumber: v.optional(v.string()), businessKey: v.string() }),
+  returns: v.object({ remesaNumber: v.optional(v.string()), documentNumber: v.optional(v.string()), businessKey: v.string() }),
   handler: async (ctx, args) => {
     const operation = await ctx.db.get("rndcOperations", args.operationId);
     if (!operation) throw new ConvexError("No existe la operación");
     const remesa = operation.expedienteRemesaId ? await ctx.db.get("expedienteRemesas", operation.expedienteRemesaId) : null;
     const document = operation.documentId ? await ctx.db.get("documents", operation.documentId) : null;
     const problem = rejectionUnlockProblem(operation, remesa, document);
-    if (problem || !remesa || !document) throw new ConvexError(problem ?? "No se encontró la remesa");
+    if (problem || !document) throw new ConvexError(problem ?? "No se encontró el documento");
+    if (operation.operationType === "emit_manifest") {
+      const expediente = operation.expedienteId ? await ctx.db.get("expedientes", operation.expedienteId) : null;
+      if (!expediente || expediente.manifestDocumentId !== document._id) throw new ConvexError("El documento no es el manifiesto del despacho");
+    }
     const actor = await ctx.db.get("users", args.actorId);
     if (!actor || actor.organizationId !== operation.organizationId) throw new ConvexError("Usuario inválido");
     const now = Date.now();
@@ -480,19 +484,19 @@ export const unlockRejectedRemesa = internalMutation({
     for (const key of keys) {
       if (key.operationId === operation._id) await ctx.db.patch("rndcRequestKeys", key._id, { requestKey });
     }
-    await ctx.db.patch("expedienteRemesas", remesa._id, { officialState: "draft", updatedBy: actor._id, updatedAt: now });
+    if (remesa) await ctx.db.patch("expedienteRemesas", remesa._id, { officialState: "draft", updatedBy: actor._id, updatedAt: now });
     await ctx.db.patch("documents", document._id, { officialState: "draft", status: "draft", updatedAt: now });
     await appendAudit(ctx, {
       organizationId: operation.organizationId,
       actorType: "user",
       actorId: actor._id,
       action: "rndc_operation.rejection_unlocked",
-      entityType: "expediente_remesa",
-      entityId: remesa._id,
-      reason: "Rechazo del RNDC: se reabre la remesa para corregir y reenviar",
+      entityType: remesa ? "expediente_remesa" : "document",
+      entityId: remesa ? remesa._id : document._id,
+      reason: remesa ? "Rechazo del RNDC: se reabre la remesa para corregir y reenviar" : "Rechazo del RNDC: se reabre el manifiesto para corregir y reenviar",
       detailsJson: JSON.stringify({ operationId: operation._id, previousBusinessKey: operation.businessKey, businessKey }),
       createdAt: now
     });
-    return { remesaNumber: remesa.number, businessKey };
+    return { remesaNumber: remesa?.number, documentNumber: document.number, businessKey };
   }
 });
